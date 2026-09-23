@@ -18,6 +18,13 @@ public static class PolylineSampling
         if (sampleCount < (closed ? 3 : 2) || sampleCount > 1_000_000)
             throw new ArgumentOutOfRangeException(nameof(sampleCount));
         Point2[] points = PathInput.CopyClean(path, nameof(path), closed);
+        return ResampleValidated(points, sampleCount, closed);
+    }
+
+    // The alignment caller already owns and validates this snapshot. Zero-length
+    // edges from duplicate vertices add zero cumulative length; no second copy is needed.
+    internal static Point2[] ResampleValidated(Point2[] points, int sampleCount, bool closed)
+    {
         double minX = points[0].X, maxX = minX, minY = points[0].Y, maxY = minY;
         for (int i = 1; i < points.Length; i++)
         {
@@ -25,7 +32,7 @@ public static class PolylineSampling
             minY = Math.Min(minY, points[i].Y); maxY = Math.Max(maxY, points[i].Y);
         }
         double span = Math.Max(maxX - minX, maxY - minY);
-        if (!(span > 0)) throw new ArgumentException("Sampling requires a nonzero-length path.", nameof(path));
+        if (!(span > 0)) throw new ArgumentException("Sampling requires a nonzero-length path.", "path");
 
         int edgeCount = closed ? points.Length : points.Length - 1;
         var cumulative = new double[edgeCount + 1];
@@ -38,7 +45,7 @@ public static class PolylineSampling
         }
         double total = cumulative[edgeCount];
         if (!(total > 0) || double.IsInfinity(total))
-            throw new ArgumentException("Path length cannot be represented.", nameof(path));
+            throw new ArgumentException("Path length cannot be represented.", "path");
 
         var result = new Point2[sampleCount];
         result[0] = points[0];

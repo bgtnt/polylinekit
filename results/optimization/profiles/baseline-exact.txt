@@ -1,0 +1,37 @@
+Top 20 Functions (Exclusive)                                                  Inclusive           Exclusive
+1.  ClipperBase.Split(class Clipper2Lib.Active,value class Clipper2Lib.Poi    28.48%              22.37%
+    nt64)
+2.  .ctor(int32)                                                              12.06%              12.06%
+3.  AffineTransform2D.Apply(class System.Collections.Generic.IReadOnlyList    10.07%              9.97%
+    `1<value class PolylineKit.Point2>)
+4.  ClipperBase.BuildPaths(class Clipper2Lib.Paths64,class Clipper2Lib.Pat    11.52%              9.87%
+    hs64)
+5.  ClipperEngine.AddPathsToVertexList(class Clipper2Lib.Paths64,value cla    9.36%               8.78%
+    ss Clipper2Lib.PathType,bool,class System.Collections.Generic.List`1<v
+    alue class Clipper2Lib.LocalMinima>,class Clipper2Lib.VertexPoolList)
+6.  __Canon].set_Capacity(int32)                                              6.84%               6.17%
+7.  Point2].ToArray()                                                         5.74%               4.89%
+8.  PointD].set_Capacity(int32)                                               4.33%               4.14%
+9.  PolylineSampling.ResampleByArcLength(class System.Collections.Generic.    11.7%               3.94%
+    IReadOnlyList`1<value class PolylineKit.Point2>,int32,bool)
+10. ClipperBase.ExecuteInternal(value class Clipper2Lib.ClipType,value cla    32.92%              3.1%
+    ss Clipper2Lib.FillRule)
+11. PolylineAlignment.FitSimilarity(class System.Collections.Generic.IRead    19.24%              2.93%
+    OnlyList`1<value class PolylineKit.Point2>,class System.Collections.Ge
+    neric.IReadOnlyList`1<value class PolylineKit.Point2>,class PolylineKi
+    t.AlignmentOptions)
+12. ClipperD.Execute(value class Clipper2Lib.ClipType,value class Clipper2    46.63%              2.15%
+    Lib.FillRule,class Clipper2Lib.PathsD,class Clipper2Lib.PathsD)
+13. .ctor(int32)                                                              1.83%               1.83%
+14. __Canon].set_Capacity(int32)                                              1.8%                1.65%
+15. Buffer.MemmoveInternal(unsigned int8&,unsigned int8&,unsigned int)        1.05%               1.05%
+16. Thread.<PollGC>g__PollGCWorker|70_0()                                     1%                  1%
+17. ClipperBase.InsertLocalMinimaIntoAEL(int64)                               0.56%               0.51%
+18. PathInput.CopyClean(class System.Collections.Generic.IReadOnlyList`1<v    18.1%               0.23%
+    alue class PolylineKit.Point2>,class System.String,bool)
+19. PolylineComparison.Compare(class System.Collections.Generic.IReadOnlyL    70.13%              0.23%
+    ist`1<value class PolylineKit.Point2>,class System.Collections.Generic
+    .IReadOnlyList`1<value class PolylineKit.Point2>,value class PolylineK
+    it.AreaComparisonKind,value class PolylineKit.PathFillRule,int32,bool)
+
+20. ClipperBase.DoHorizontal(class Clipper2Lib.Active)                        0.38%               0.23%

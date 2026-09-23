@@ -56,6 +56,11 @@ public readonly struct AffineTransform2D
     {
         if (points is null) throw new ArgumentNullException(nameof(points));
         var result = new Point2[points.Count];
+        if (points is Point2[] array)
+        {
+            for (int i = 0; i < array.Length; i++) result[i] = Apply(array[i]);
+            return result;
+        }
         for (int i = 0; i < points.Count; i++) result[i] = Apply(points[i]);
         return result;
     }

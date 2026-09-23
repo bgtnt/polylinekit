@@ -66,10 +66,8 @@ public static class PolylineAlignment
         bool reversal = options.AllowReversal, phases = closed && options.SearchClosedPhase;
         if (n < 3 || n > 1024) throw new ArgumentOutOfRangeException(nameof(options), "SampleCount must be from 3 to 1024.");
         // Preserve duplicate and explicit closing vertices in the output snapshot.
-        PathInput.CopyClean(moving, nameof(moving), closed);
-        var original = new Point2[moving.Count];
-        for (int i = 0; i < original.Length; i++) original[i] = moving[i];
-        Point2[] xs = PolylineSampling.ResampleByArcLength(original, n, closed);
+        Point2[] original = PathInput.CopyValidated(moving, nameof(moving));
+        Point2[] xs = PolylineSampling.ResampleValidated(original, n, closed);
         Point2[] ys = PolylineSampling.ResampleByArcLength(reference, n, closed);
         var x = Normalize(xs); var y = Normalize(ys);
         double bestError = double.PositiveInfinity, bestAngle = 0, bestScale = 0;
@@ -78,11 +76,13 @@ public static class PolylineAlignment
         for (int phase = 0; phase < (phases ? n : 1); phase++)
         {
             double dot = 0, cross = 0;
+            int target = closed ? phase : reverse != 0 ? n - 1 : 0;
             for (int i = 0; i < n; i++)
             {
-                Point2 a = x.Points[i], b = y.Points[Index(i, phase, reverse != 0, closed, n)];
+                Point2 a = x.Points[i], b = y.Points[target];
                 dot += a.X * b.X + a.Y * b.Y;
                 cross += a.X * b.Y - a.Y * b.X;
+                target = NextIndex(target, reverse != 0, n);
             }
             double magnitude = Math.Sqrt(dot * dot + cross * cross);
             // An orientation from cancellation-level covariance is arbitrary and unstable.
@@ -95,12 +95,14 @@ public static class PolylineAlignment
             double xFactor = scaling ? fitFactor : x.Span / residualUnit;
             double yFactor = scaling ? 1 : y.Span / residualUnit;
             double error = 0;
+            target = closed ? phase : reverse != 0 ? n - 1 : 0;
             for (int i = 0; i < n; i++)
             {
-                Point2 a = x.Points[i], b = y.Points[Index(i, phase, reverse != 0, closed, n)];
+                Point2 a = x.Points[i], b = y.Points[target];
                 double dx = xFactor * (cos * a.X - sin * a.Y) - yFactor * b.X;
                 double dy = xFactor * (sin * a.X + cos * a.Y) - yFactor * b.Y;
                 error += dx * dx + dy * dy;
+                target = NextIndex(target, reverse != 0, n);
             }
             if (error < bestError)
             {
@@ -146,6 +148,10 @@ public static class PolylineAlignment
 
     private static int Index(int i, int phase, bool reverse, bool closed, int n) =>
         closed ? (phase + (reverse ? n - i : i)) % n : reverse ? n - 1 - i : i;
+
+    // Same correspondence and iteration order as Index, without division per sample.
+    private static int NextIndex(int current, bool reverse, int n) =>
+        reverse ? (current == 0 ? n - 1 : current - 1) : (current + 1 == n ? 0 : current + 1);
 
     private static double PositiveRatioProduct(double numerator, double factor, double denominator)
     {

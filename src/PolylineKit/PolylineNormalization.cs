@@ -12,10 +12,10 @@ public enum BoundsScaling
 /// <summary>A deterministic bounds transformation with the transformed path and its provenance.</summary>
 public sealed class NormalizationResult
 {
-    internal NormalizationResult(Point2[] points, AffineTransform2D transform, Bounds2D original, BoundsScaling strategy)
+    internal NormalizationResult(Point2[] points, AffineTransform2D transform, Bounds2D original, Bounds2D bounds, BoundsScaling strategy)
     {
         Points = Array.AsReadOnly(points); Transform = transform; OriginalBounds = original;
-        Bounds = Bounds2D.FromPoints(points); Strategy = strategy;
+        Bounds = bounds; Strategy = strategy;
     }
     /// <summary>Transformed points in original order.</summary>
     public IReadOnlyList<Point2> Points { get; }
@@ -73,11 +73,11 @@ public static class PolylineNormalization
         AffineTransform2D transform = AffineTransform2D.Translation(-from.X, -from.Y)
             .Then(AffineTransform2D.Scaling(sx, sy)).Then(AffineTransform2D.Translation(to.X, to.Y));
         Point2[] transformed = transform.Apply(points);
-        ValidatePrecision(points, transformed, source, target, sx, sy);
-        return new(transformed, transform, source, scaling);
+        Bounds2D actualBounds = ValidatePrecisionAndBounds(points, transformed, source, target, sx, sy);
+        return new(transformed, transform, source, actualBounds, scaling);
     }
 
-    private static void ValidatePrecision(IReadOnlyList<Point2> original, Point2[] transformed,
+    private static Bounds2D ValidatePrecisionAndBounds(IReadOnlyList<Point2> original, Point2[] transformed,
         Bounds2D source, Bounds2D target, double sx, double sy)
     {
         double width = source.Width * sx, height = source.Height * sy;
@@ -87,6 +87,7 @@ public static class PolylineNormalization
         const double machineEpsilon = 2.2204460492503131e-16;
         double tolerance = 1e-10 * extent + 8 * machineEpsilon * targetMagnitude + 8 * double.Epsilon;
         Point2 center = target.Center;
+        double minX = double.PositiveInfinity, minY = minX, maxX = double.NegativeInfinity, maxY = maxX;
         for (int i = 0; i < transformed.Length; i++)
         {
             // Source-minimum subtraction preserves representable local displacements, even when
@@ -95,6 +96,11 @@ public static class PolylineNormalization
             double expectedY = ((original[i].Y - source.MinY) * sy - height / 2) + center.Y;
             if (Math.Abs(transformed[i].X - expectedX) > tolerance || Math.Abs(transformed[i].Y - expectedY) > tolerance)
                 throw new ArgumentException("The affine normalization loses significant precision. Translate input coordinates closer to the origin before normalizing.", "points");
+            // Apply already validates every output coordinate. Measure the actual rounded
+            // points, rather than inferring bounds from the ideal transformation.
+            minX = Math.Min(minX, transformed[i].X); maxX = Math.Max(maxX, transformed[i].X);
+            minY = Math.Min(minY, transformed[i].Y); maxY = Math.Max(maxY, transformed[i].Y);
         }
+        return new Bounds2D(minX, minY, maxX, maxY);
     }
 }

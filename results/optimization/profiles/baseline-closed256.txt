@@ -1,0 +1,38 @@
+Top 20 Functions (Exclusive)                                                  Inclusive           Exclusive
+1.  Point2].ToArray()                                                         28.01%              26.63%
+2.  PolylineAlignment.FitSimilarity(class System.Collections.Generic.IRead    98.3%               24.16%
+    OnlyList`1<value class PolylineKit.Point2>,class System.Collections.Ge
+    neric.IReadOnlyList`1<value class PolylineKit.Point2>,class PolylineKi
+    t.AlignmentOptions)
+3.  PolylineSampling.ResampleByArcLength(class System.Collections.Generic.    69.48%              23.59%
+    IReadOnlyList`1<value class PolylineKit.Point2>,int32,bool)
+4.  .ctor(int32)                                                              20.41%              20.41%
+5.  AffineTransform2D.Apply(class System.Collections.Generic.IReadOnlyList    1.95%               1.93%
+    `1<value class PolylineKit.Point2>)
+6.  Buffer.MemmoveInternal(unsigned int8&,unsigned int8&,unsigned int)        1.38%               1.38%
+7.  CultureData.GetLocaleInfoCore(value class LocaleNumberData)               0.2%                0.2%
+8.  GenericsHelpers.ClassWithSlotAndModule(int,value class GenericHandleAr    0.15%               0.15%
+    gs*)
+9.  PathInput.CopyClean(class System.Collections.Generic.IReadOnlyList`1<v    48.57%              0.13%
+    alue class PolylineKit.Point2>,class System.String,bool)
+10. EventPipeMetadataGenerator.GenerateMetadata(int32,class System.String,    0.12%               0.12%
+    int64,unsigned int32,unsigned int32,value class System.Diagnostics.Tra
+    cing.EventOpcode,value class System.Diagnostics.Tracing.EventParameter
+    Info[])
+11. Experiments!Program.<<Main>$>g__ProfileOptimization|0_6(class System.S    99.07%              0.1%
+    tring[])
+12. Thread.<PollGC>g__PollGCWorker|70_0()                                     0.1%                0.1%
+13. TypeNameParserHelpers.GetFullTypeNameLength(value class System.ReadOnl    0.15%               0.09%
+    ySpan`1<wchar>,bool&)
+14. OptimizationBenchmarks+<>c.<CreateFixtures>b__13_0(int32)                 0.15%               0.05%
+15. SearchValues.Create(value class System.ReadOnlySpan`1<wchar>)             0.05%               0.05%
+16. __Canon].Fill(value class System.ReadOnlySpan`1<!0>,value class System    0.2%                0.05%
+    .Span`1<!1>,class System.Func`2<!0,!1>)
+17. Guid.TryFormatCore(value class System.Span`1<!!0>,int32&,value class S    0.05%               0.05%
+    ystem.ReadOnlySpan`1<wchar>)
+18. Point2].Fill(value class System.ReadOnlySpan`1<!0>,value class System.    0.05%               0.05%
+    Span`1<!1>,class System.Func`2<!0,!1>)
+19. EtwEventProvider.HandleEnableNotification(class System.Diagnostics.Tra    0.2%                0.05%
+    cing.EventProvider,unsigned int8*,unsigned int8,int64,int64,value clas
+    s EVENT_FILTER_DESCRIPTOR*)
+20. OptimizationBenchmarks.CreateCases(class Fixture)                         0.05%               0.05%

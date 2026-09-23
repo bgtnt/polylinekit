@@ -17,7 +17,7 @@ return args.FirstOrDefault() switch
 
 static int RunChecks()
 {
-    int total = Checks.Run() + AlignmentChecks.Run() + ComparisonChecks.Run() + NumericReviewChecks.Run() + GenLipReviewChecks.Run();
+    int total = Checks.Run() + AlignmentChecks.Run() + ComparisonChecks.Run() + NumericReviewChecks.Run() + GenLipReviewChecks.Run() + OptimizationChecks.Run();
     Console.WriteLine($"PASS: {total} total checks."); return 0;
 }
 static int WriteEvidence(string[] args) { Evidence.Write(args.ElementAtOrDefault(1) ?? "results/geometry"); return 0; }

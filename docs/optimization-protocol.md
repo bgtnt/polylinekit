@@ -57,7 +57,7 @@ No pre-normalized or cached result substitutes for a primary workflow.
 Four separately built variants run on the same .NET 10 runtime and hardware:
 
 1. Original `netstandard2.0` core at the baseline revision.
-2. Portable cleanup with redundant allocation/copy removal only.
+2. Portable cleanup with redundant allocation/copy removal, array specialization and equivalent cyclic-index iteration (same reduction order).
 3. The modern `net10.0` scalar core, with explicit SIMD disabled.
 4. The same modern core with supported SIMD enabled.
 

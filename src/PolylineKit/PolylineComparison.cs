@@ -58,7 +58,7 @@ public static class PolylineComparison
         if (kind != AreaComparisonKind.EndpointBridged && kind != AreaComparisonKind.FilledRegionDifference)
             throw new ArgumentOutOfRangeException(nameof(kind));
         NormalizationResult p = PolylineNormalization.ToUnitBounds(first, scaling), q = PolylineNormalization.ToUnitBounds(second, scaling);
-        return new(p, q, Compare(p.Points, q.Points, kind, fillRule, decimalPrecision, includeContours));
+        return new(p, q, Compare(p.Points, q.Points, kind, fillRule, decimalPrecision, includeContours, p.Bounds.Union(q.Bounds)));
     }
 
     /// <summary>Fills the closed walk first + reverse(second), joining their respective ends with straight segments.</summary>
@@ -84,7 +84,7 @@ public static class PolylineComparison
         Compare(first, second, AreaComparisonKind.FilledRegionDifference, fillRule, decimalPrecision, includeContours);
 
     private static AreaComparisonResult Compare(IReadOnlyList<Point2> first, IReadOnlyList<Point2> second,
-        AreaComparisonKind kind, PathFillRule rule, int precision, bool includeContours)
+        AreaComparisonKind kind, PathFillRule rule, int precision, bool includeContours, Bounds2D? knownBounds = null)
     {
         if (rule != PathFillRule.NonZero && rule != PathFillRule.EvenOdd) throw new ArgumentOutOfRangeException(nameof(rule));
         if (precision < -8 || precision > 8) throw new ArgumentOutOfRangeException(nameof(precision), "Decimal precision must be between -8 and 8.");
@@ -92,7 +92,7 @@ public static class PolylineComparison
         Point2[] p = PathInput.CopyClean(first, nameof(first), closed), q = PathInput.CopyClean(second, nameof(second), closed);
         int minimum = closed ? 3 : 2;
         if (p.Length < minimum || q.Length < minimum) throw new ArgumentException($"Each path requires at least {minimum} vertices after duplicate removal.");
-        Bounds2D bounds = Bounds2D.FromPoints(p).Union(Bounds2D.FromPoints(q));
+        Bounds2D bounds = knownBounds ?? Bounds2D.FromPoints(p).Union(Bounds2D.FromPoints(q));
         Point2 origin = bounds.Center;
         // Keep the largest extent along Clipper's sweep direction. Both supported fill rules are
         // invariant under this common axis exchange. Undo it for diagnostic contours.
@@ -110,22 +110,34 @@ public static class PolylineComparison
         }
         else
         {
-            PathD combined = Convert(p), reverse = Convert(q);
-            for (int i = reverse.Count - 1; i >= 0; i--) combined.Add(reverse[i]);
+            PathD combined = new(p.Length + q.Length);
+            for (int i = 0; i < p.Length; i++) combined.Add(ConvertPoint(p[i]));
+            for (int i = q.Length - 1; i >= 0; i--) combined.Add(ConvertPoint(q[i]));
             resolved = Clipper.Union(new PathsD { combined }, new PathsD(), clipperRule, precision);
         }
         // Signed contour summation subtracts holes; Abs on each contour would fill them incorrectly.
         double area = Math.Abs(Clipper.Area(resolved));
-        var contours = new List<IReadOnlyList<Point2>>(includeContours ? resolved.Count : 0);
+        IReadOnlyList<IReadOnlyList<Point2>> contours = Array.Empty<IReadOnlyList<Point2>>();
         if (includeContours)
+        {
+            var collected = new IReadOnlyList<Point2>[resolved.Count];
+            int index = 0;
             foreach (PathD path in resolved)
             {
                 Point2[] points = path.Select(v => transpose ? new Point2(v.y + origin.X, v.x + origin.Y) : new Point2(v.x + origin.X, v.y + origin.Y)).ToArray();
                 if (transpose) Array.Reverse(points);
-                contours.Add(Array.AsReadOnly(points));
+                collected[index++] = Array.AsReadOnly(points);
             }
-        return new(area, bounds, kind, rule, precision, contours.AsReadOnly());
+            contours = Array.AsReadOnly(collected);
+        }
+        return new(area, bounds, kind, rule, precision, contours);
 
-        PathD Convert(Point2[] path) => new(path.Select(v => transpose ? new PointD(v.Y - origin.Y, v.X - origin.X) : new PointD(v.X - origin.X, v.Y - origin.Y)));
+        PointD ConvertPoint(Point2 v) => transpose ? new PointD(v.Y - origin.Y, v.X - origin.X) : new PointD(v.X - origin.X, v.Y - origin.Y);
+        PathD Convert(Point2[] path)
+        {
+            var result = new PathD(path.Length);
+            for (int i = 0; i < path.Length; i++) result.Add(ConvertPoint(path[i]));
+            return result;
+        }
     }
 }
