@@ -27,7 +27,23 @@ dotnet restore PolylineKit.slnx --locked-mode
 pwsh -File scripts/benchmark.ps1 -Suite Transforms -OutputDirectory artifacts/transform-benchmarks
 ```
 
-The output records source revision, runtime, OS, CPU, operation values and every batch sample. Performance data is added in the subsequent evidence commit so the measured source revision can be recorded without a self-referential hash.
+The output records source revision, runtime, OS, CPU, operation values and every batch sample. Measured source: [`6d12758319ea38f1dede8aa3f2836b12162eabd0`](https://github.com/bgtnt/polylinekit/commit/6d12758319ea38f1dede8aa3f2836b12162eabd0). This evidence is committed afterwards so that the measured revision is unambiguous.
+
+Environment: .NET SDK 10.0.401, runtime .NET 10.0.12, Windows build 26200 (runtime OS string `Microsoft Windows 10.0.26200`), Intel64 Family 6 Model 158 Stepping 12. Three separate processes produced **60 measurements and 540 timed batch samples**. Every pipeline output was zero area on this exact transformed-copy family; direct-fit RMS ranged from approximately `6.6e-16` to `3.6e-15`.
+
+Median of the three per-process medians, in **microseconds per operation**:
+
+| Operation | 16 vertices | 64 | 256 | 1024 | Allocated bytes/op at 1024 (rounded) |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| EndpointBridgedArea | 7.23 | 23.23 | 86.61 | 342.02 | 536,057 |
+| NormalizeOnePath | 0.82 | 2.81 | 10.38 | 40.69 | 16,576 |
+| NormalizeAndCompare | 10.21 | 32.44 | 121.82 | 455.46 | 593,673 |
+| SimilarityFit64 | 5.76 | 10.31 | 27.76 | 97.42 | 153,288 |
+| NormalizeAlignCompare | 15.60 | 39.04 | 134.57 | 511.07 | 905,553 |
+
+At 1024 vertices the complete pipeline's process medians range from **507.24 to 516.96 microseconds**. Its allocations are substantial (about 0.91 MB per call); this implementation favors inspectable immutable results and correctness over pooling. These timings do not justify a universal speed claim, and they do not measure closed phase search. Raw area before alignment and after normalization alone remain nonzero, as expected because normalization does not undo rotation.
+
+Evidence: [exact inputs](../results/transforms/inputs.json), [run 1](../results/transforms/run-1.json), [run 2](../results/transforms/run-2.json), [run 3](../results/transforms/run-3.json), [summary including ranges and allocations](../results/transforms/summary.json). The summary rounds timings to 0.001 microseconds; raw samples retain full precision.
 
 ## Practical limits
 
