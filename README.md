@@ -45,7 +45,7 @@ Normalized area is a geometric ratio, **not a calibrated similarity percentage**
 
 ## Build and verify
 
-The core targets **.NET Standard 2.0** for consumer compatibility; examples and experiments target **.NET 10**. The core has one runtime package dependency, **Clipper2 2.0.0**, for general polygon fill/Boolean operations. The graph integral, transforms, normalization, resampling and fitting are original implementations. There is no dependency on RtTools or MPR001.
+The core targets **.NET Standard 2.0** for consumer compatibility and **.NET 10** for optional packed-double SIMD transformations; examples and experiments target .NET 10. The core has one runtime package dependency, **Clipper2 2.0.0**, for general polygon fill/Boolean operations. The graph integral, transforms, normalization, resampling and fitting are original implementations. There is no dependency on RtTools or MPR001.
 
 Install the .NET 10 SDK and run:
 
@@ -55,6 +55,10 @@ dotnet build PolylineKit.slnx -c Release --no-restore
 dotnet run --project experiments/PolylineKit.Experiments -c Release --no-build -- check
 dotnet run --project examples/Basic -c Release --no-build
 ```
+
+Run `pwsh -File scripts/verify-implementations.ps1` after building to check both
+targets, forced scalar dispatch, the no-AVX path and the no-intrinsics fallback.
+The script checks the actual loaded target and feature flags.
 
 Checks use a deterministic console harness, **not `dotnet test`**. Failures exit nonzero. CI runs the checks and example on Windows and Linux. Use a project reference while the API is under review; no NuGet release is part of this work.
 
@@ -66,6 +70,14 @@ pwsh -File scripts/benchmark.ps1 -Suite Transforms -OutputDirectory artifacts/tr
 ```
 
 The script rejects tracked changes and non-ignored untracked files before stamping measurements with HEAD, and disables tiered compilation. Keep scratch outputs under ignored `artifacts/`. Fixture construction is outside timing. See the [transformation evaluation](docs/comparison-evaluation.md), original [LIP/GenLIP experiment](docs/report.md), and [independent-review follow-up](docs/review-follow-up.md).
+
+The [allocation/SIMD evaluation](docs/optimization-evaluation.md) compares the
+original core, portable cleanup, modern scalar and SIMD with the same frozen
+harness. On the measured Windows x64 machine, the final normalize → align → area
+workflows at 256/1024 vertices use 24–28% less time; explicit SIMD contributes
+about 7–10% relative to the modern scalar workflow. All raw samples, source/DLL
+hashes, exact inputs and reproduction commands are included. These are workload
+and hardware-specific measurements, not general speed guarantees.
 
 ## Research scope and provenance
 

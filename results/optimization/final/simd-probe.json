@@ -1,13 +1,13 @@
 {
   "Metadata": {
     "Protocol": "polylinekit-optimization-v1",
-    "Variant": "cleanup",
-    "CoreRevision": "3142658f08705500675615aa0bef4f49f59edc9e",
+    "Variant": "simd",
+    "CoreRevision": "2d76cc72babbf29673252cb573b054946aba2632",
     "HarnessRevision": "c74fed307eca6bc2715ef910238e3b475c381824",
-    "CoreTarget": ".NETStandard,Version=v2.0",
-    "CoreDllSha256": "bf50b07676d6f529a91ff2f9f8c2d26802b791477aab58ad5d6b6ab1218988c5",
+    "CoreTarget": ".NETCoreApp,Version=v10.0",
+    "CoreDllSha256": "8db89f6f26126699ffd7c2b4927292a95d71a6fbfb4b30654fb022bc0964da77",
     "InputsSha256": "88544e92592d961e323908103fdf8152a5cc789213de51960b81baadc544eeae",
-    "Utc": "2026-09-23T16:11:06.7643266+00:00",
+    "Utc": "2026-09-23T16:19:45.5935928+00:00",
     "Runtime": ".NET 10.0.12",
     "OS": "Microsoft Windows 10.0.26200",
     "Architecture": "X64",

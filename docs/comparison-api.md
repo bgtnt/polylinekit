@@ -44,6 +44,16 @@ Results provide `Points`, `Transform`, `OriginalBounds`, `Bounds` and `Strategy`
 
 `AffineTransform2D` stores six coefficients for `x' = M11*x + M12*y + OffsetX`, `y' = M21*x + M22*y + OffsetY`. `a.Then(b)` applies `a` first, then `b`. Factories provide identity, translation, rotation in radians and uniform/axis scaling. `Apply` preserves count, duplicate points and ordering. The default struct value is a zero map; use `Identity` explicitly.
 
+The .NET 10 target optionally uses packed-double SIMD for `Point2[]` arrays of
+at least 32 points. Other lists, small arrays, unsupported hardware/layout and
+arrays too large for double-span reinterpretation use scalar dispatch. The
+.NET Standard 2.0 target stays portable. SIMD retains the scalar expression order,
+validation and output snapshot contract; no FMA or reduction reordering is used.
+To force scalar application for diagnosis, set
+`AppContext.SetSwitch("PolylineKit.DisableSimd", true)`. Set it to `false` to allow
+hardware dispatch again. The switch is process-wide. See the
+[measured scope and limits](optimization-evaluation.md).
+
 `PolylineSampling.ResampleByArcLength(path, sampleCount = 64, closed = false)` places equidistant samples along cumulative segment length. Open sampling includes both endpoints; closed sampling includes the closing edge and omits the repeated final sample. Adjacent duplicates are ignored. Count limits are 2..1,000,000 (open) and 3..1,000,000 (closed). Zero-length paths are rejected. Length arithmetic is rescaled against unnecessary underflow/overflow.
 
 ## Similarity alignment

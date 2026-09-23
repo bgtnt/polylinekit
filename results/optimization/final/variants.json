@@ -18,17 +18,17 @@
     },
     {
       "Name": "modern-scalar",
-      "CoreRevision": "53d9d2db12d91a68dcfcd53ef56563eedc896325",
+      "CoreRevision": "2d76cc72babbf29673252cb573b054946aba2632",
       "Directory": "artifacts/optimization/variants/modern-scalar",
       "ForceScalar": true,
-      "CoreDllSha256": "38F21E8F58A5BAB687F3F6C9130333409FBBC571A53E858FBBE4B1C9F52B2D44"
+      "CoreDllSha256": "8DB89F6F26126699FFD7C2B4927292A95D71A6FBFB4B30654FB022BC0964DA77"
     },
     {
       "Name": "simd",
-      "CoreRevision": "53d9d2db12d91a68dcfcd53ef56563eedc896325",
+      "CoreRevision": "2d76cc72babbf29673252cb573b054946aba2632",
       "Directory": "artifacts/optimization/variants/simd",
       "ForceScalar": false,
-      "CoreDllSha256": "38F21E8F58A5BAB687F3F6C9130333409FBBC571A53E858FBBE4B1C9F52B2D44"
+      "CoreDllSha256": "8DB89F6F26126699FFD7C2B4927292A95D71A6FBFB4B30654FB022BC0964DA77"
     }
   ]
 }
