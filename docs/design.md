@@ -14,7 +14,9 @@ This is the unweighted sum of the nonnegative lobe areas. Each lobe is bounded b
 
 The public method is `PolylineArea.BetweenGraphs(IReadOnlyList<Point2>, IReadOnlyList<Point2>)`. Inputs must increase in x, except consecutive identical points. Both domain endpoints must match **exactly**. Duplicate vertices are accepted without allocation. Vertical segments, backtracking, closed paths, empty/constant-x paths and nonfinite coordinates are rejected. Coordinates must have magnitude at most `1e100`, bounding intermediate arithmetic. This does not supply an absolute error guarantee: ordinary double rounding and underflow still apply, and lost input precision cannot be recovered.
 
-Normalization and alignment are separate operations; see [comparison-api.md](comparison-api.md). An individual path reversal is rejected by `BetweenGraphs`. A common reversal can be reordered to increasing x by the caller. A common translation preserves the mathematical area; common uniform scaling by `s` multiplies it by `s²`. General rotations can destroy the graph contract. Zero means identical graphs, including different collinear subdivisions; it does not characterize arbitrary 2D strokes.
+Normalization and alignment are separate operations; see [comparison-api.md](comparison-api.md). An individual path reversal is rejected by `BetweenGraphs`. A common reversal can be reordered to increasing x by the caller. A common translation preserves the mathematical area; common uniform scaling by `s` multiplies it by `s²`. General rotations can destroy the graph contract. In exact arithmetic, zero means identical graphs, including different collinear subdivisions; finite-precision evaluation can introduce nonzero area or erase separation. It does not characterize arbitrary 2D strokes.
+
+For a concrete numerical limit, let `m = 9007199254740992` (`2^53`), `p = [(-m,1),(m,-1)]`, and `q = [(-m,1),(1,-1/m),(m,-1)]`. All coordinates are exactly representable, and both describe `y=-x/m`, so exact area is zero. The current double implementation returns **1**: interpolation loses the small x offset and accumulates its tiny y error across the wide domain. The review regression retains this input and a case-specific error ceiling of 1; this is not an error guarantee for other inputs. No epsilon clamp hides the result. Arbitrary-precision integration is outside this implementation.
 
 ## Implementation and independent checks
 
@@ -60,5 +62,19 @@ The core targets `netstandard2.0`. The original graph-only implementation had no
 Clipper's `PathsD` operations quantize internally. The oracle explicitly uses decimal precision 8 and limits fixture coordinate magnitudes to `1e6`. Very small faces can disappear; tolerances account for this, and analytic checks retain authority below that scale. `Abs(Area(unresolvedCombinedPath))` is never used as an unsigned-area oracle.
 
 The author's unpublished `RtTools.Geometry`, including its .NET 10 version, was inspected **for ideas only**. Its intersection ordering, graph traversal and per-region accumulation motivated making region diagnostics independently inspectable. No private source, binaries or original fixtures are included. The old MPR001 application did not participate in correctness or speed measurements.
+
+### Decisions from the legacy inspection
+
+The inspected artifacts were the old application's path comparison/merge methods and the locally linked RtTools polygon area, polyline and segment-intersection methods. They illustrate an earlier experiment; they are neither the specification nor a correctness oracle for this implementation.
+
+| Observation from private-source inspection | Decision for the fresh implementation |
+| --- | --- |
+| Bounds fitting independently scaled x and y; its score combined squared doubled-area, a transformation penalty and template-bounds normalization. | Expose uniform and explicitly named Stretch normalization, keep transform parameters separate, and report raw area and a named joint-rectangle ratio. The new score deliberately does not reproduce the OCR score. |
+| The merge chose a traversal direction by comparing the template's first point with the two input endpoints. No cyclic closed-stroke correspondence contract was present. | Preserve caller order in area comparison; connectors, optional reversal and sampled closed-phase search are explicit policies. No hidden sorting or endpoint matching. |
+| Rotation search minimized the input's own bounds area over a coarse angle range. Trapezoid preparation used section-dependent scaling. | Name the current bounds operation and sampled least-squares similarity objective. Do not label either as optimal area registration or general affine/projective fitting. |
+| Polygon processing enumerated nonadjacent edge pairs, built an intersection graph and summed absolute areas, with recursive/fallback handling of complex pieces. This was more than a linear shoelace pass. | First isolate the graph-domain integral, where lobe counting and an independent geometric oracle agree and a linear merge is sufficient. Broader fill-based methods have separately named semantics. |
+| The segment overlap branch required strict interval overlap on both axes, missing axis-aligned overlaps; it could return a sentinel point for a diagonal overlap. Complex fallback behavior did not establish consistent traversal multiplicity. | Do not transplant the intersection graph or claim that NonZero/EvenOdd reproduces legacy counted regions. Use Clipper for explicitly defined general fills, with independent analytic fixtures and precision limits. |
+
+These are a decision trail from source inspection, not a public certification of the private library. No legacy source or probe fixtures were transferred to PolylineKit.
 
 Clipper's active-edge processing illustrates why a general robust arrangement engine is substantial. We reuse its released binary for the named general fill/Boolean operations. The small graph sweep exploits the stronger graph contract. The broader API explicitly specifies fill and correspondence policies instead of silently loosening the graph integral's input contract.

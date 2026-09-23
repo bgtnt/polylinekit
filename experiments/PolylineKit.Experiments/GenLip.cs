@@ -14,16 +14,24 @@ internal static class GenLip
     {
         if (!(d > 0) || !double.IsFinite(d)) throw new ArgumentOutOfRangeException(nameof(d));
         p = Geometry.Clean(p); q = Geometry.Clean(q);
+        bool graphP = Geometry.IncreasingX(p), graphQ = Geometry.IncreasingX(q);
+        // Conservative admission rule of this reconstruction: require the entire
+        // component route to be simple, including portions classified as bad.
+        // Increasing-x graphs are already simple, retaining the linear fast path.
+        if (!graphP) RequireSimple(p);
+        if (!graphQ) RequireSimple(q);
         double denominator = Geometry.Length(p) + Geometry.Length(q), score = 0;
         int goodGroups = 0, badPairs = 0, i = 1, j = 1, startP = 0, startQ = 0, certifiedP = 0, certifiedQ = 0;
         double lengthP = 0, lengthQ = 0;
-        bool graphs = Geometry.IncreasingX(p) && Geometry.IncreasingX(q);
+        bool graphs = graphP && graphQ;
         while (true)
         {
             Point2 dp = Geometry.Sub(p[i], p[i - 1]), dq = Geometry.Sub(q[j], q[j - 1]);
             bool goodDirection = Geometry.Dot(dp, dq) > 0 && (parallelIsGood || Geometry.Cross(dp, dq) != 0);
-            bool good = goodDirection && (certifiedP == startP || certifiedQ == startQ ||
-                (graphs && p[i].X == q[j].X) || ConnectorClear(p, q, startP, i, startQ, j));
+            // A first pair needs the same connector test as an extended group.
+            // Equal-x endpoints on increasing-x paths admit only endpoint contact.
+            bool good = goodDirection && ((graphs && p[i].X == q[j].X) ||
+                ConnectorClear(p, q, startP, i, startQ, j));
             if (good)
             {
                 if (i > certifiedP) lengthP += Geometry.Length(p[i - 1], p[i]);
@@ -67,7 +75,6 @@ internal static class GenLip
                 score += LipGraphs.Measure(a, b, wholeLength: denominator);
             else
             {
-                RequireSimple(a); RequireSimple(b);
                 score += LipPolygons.Regions(a, b, denominator).Sum(r => r.Area * r.Weight);
             }
             goodGroups++;
@@ -86,23 +93,30 @@ internal static class GenLip
         return (Math.Max(ta, tb) + lp * lq * (1 - cosine) / 2) * ((lp + lq) / wholeLength);
     }
 
-    private static bool ConnectorClear(Point2[] p, Point2[] q, int pi, int pe, int qi, int qe)
+    internal static bool ConnectorClear(Point2[] p, Point2[] q, int pi, int pe, int qi, int qe)
     {
         Point2 a = p[pe], b = q[qe];
         return Clear(p, pi, pe) && Clear(q, qi, qe);
         bool Clear(Point2[] path, int first, int last)
         {
             for (int k = first + 1; k <= last; k++)
-                if (Geometry.Intersection(a, b, path[k - 1], path[k], out double t, out _) && t > 0 && t < 1)
+            {
+                SegmentContact contact = Geometry.Contact(a, b, path[k - 1], path[k], out double t, out _);
+                if (contact == SegmentContact.Overlap || (contact == SegmentContact.Point && t > 0 && t < 1))
                     return false;
+            }
             return true;
         }
     }
-    private static void RequireSimple(Point2[] path)
+    internal static void RequireSimple(Point2[] path)
     {
         for (int i = 1; i < path.Length; i++)
-        for (int j = i + 2; j < path.Length; j++)
-            if (Geometry.Intersection(path[i - 1], path[i], path[j - 1], path[j], out _, out _))
-                throw new NotSupportedException("The certified subpath is not simple (Definition 4).");
+        for (int j = i + 1; j < path.Length; j++)
+        {
+            SegmentContact contact = Geometry.Contact(path[i - 1], path[i], path[j - 1], path[j], out _, out _);
+            // Adjacent segments may share their common vertex, but may not retrace.
+            if (contact == SegmentContact.Overlap || (j > i + 1 && contact == SegmentContact.Point))
+                throw new NotSupportedException("This reconstruction requires simple component routes; self-contact or retracing is unsupported.");
+        }
     }
 }

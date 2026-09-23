@@ -65,7 +65,7 @@ pwsh -File scripts/benchmark.ps1 -OutputDirectory artifacts/graph-benchmarks
 pwsh -File scripts/benchmark.ps1 -Suite Transforms -OutputDirectory artifacts/transform-benchmarks
 ```
 
-The script requires committed tracked changes and disables tiered compilation. Fixture construction is outside timing. See the [transformation evaluation](docs/comparison-evaluation.md) and original [LIP/GenLIP experiment](docs/report.md).
+The script rejects tracked changes and non-ignored untracked files before stamping measurements with HEAD, and disables tiered compilation. Keep scratch outputs under ignored `artifacts/`. Fixture construction is outside timing. See the [transformation evaluation](docs/comparison-evaluation.md), original [LIP/GenLIP experiment](docs/report.md), and [independent-review follow-up](docs/review-follow-up.md).
 
 ## Research scope and provenance
 

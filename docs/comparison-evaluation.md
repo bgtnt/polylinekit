@@ -4,7 +4,7 @@ The current implementation adds usable, explicitly named preparation and compari
 
 ## Correctness
 
-Release build and example pass with zero compiler warnings/errors. The console harness executes **1751 checks**: 1351 original geometric/formula checks, 329 comparison/normalization checks, and 71 alignment/sampling checks.
+At the measured revision, Release build and example passed with zero compiler warnings/errors. The console harness executed **1751 checks**: 1351 original geometric/formula checks, 329 comparison/normalization checks, and 71 alignment/sampling checks. The subsequent [independent-review follow-up](review-follow-up.md) records added regressions and the current validation count.
 
 The new checks cover analytical endpoint-bridged areas and filled-region XOR, graph-oracle agreement, holes, repeated loops and fill parity, overlaps, collinear subdivisions, traversal direction, optional closing points, immutable snapshots, precision rejection and undefined rectangle normalization. They explicitly reproduce the parallel-segment normalization limitation.
 

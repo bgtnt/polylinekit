@@ -26,10 +26,11 @@ The paper is not an executable specification. The following choices are visible 
 | `next` inequalities | Use the printed `>=` inequalities, evaluated simultaneously. At an exhausted side, advance the remaining side to satisfy the described traversal to both ends. |
 | Held segment becomes bad | Reject with `NotSupportedException`; ownership/rollback is ambiguous. No double counting. |
 | One side ends immediately after a bad pair | Reject the unpaired tail. No invented zero-length segment. |
-| Incident endpoint contact with connector | Ordinary incidence is allowed; interior connector crossings fail goodness. |
+| Incident endpoint contact with connector | Ordinary endpoint incidence is allowed; interior contact and positive-length collinear overlap fail goodness, including the first examined pair. Equal-x endpoints on increasing-x graphs use the equivalent geometric shortcut. |
 | `d` | Explicit positive parameter, default `1e-6` in coordinate units; analytic checks include another value. It matters in degenerate bad pairs. |
 | Parallel classification | Default follows the strict inequality. `parallelIsGood` is a separately labelled correction, never silently enabled. |
 | Zero-length segments | Remove exact consecutive duplicates before GenLIP processing. |
+| Component-route admission | Conservatively require each entire cleaned input route to be simple, even across bad-pair partitions. Reject adjacent retracing, nonadjacent crossings/contacts and collinear overlap. This is a restriction of this reconstruction, not a claim about all admissible trajectories in the paper. Strict increasing-x graphs need no pairwise validation; other inputs incur quadratic checks using ordinary double predicates. |
 | General arrangements | Reject crossing orders incompatible with the polygon construction; these are not silently interpreted through a Clipper fill rule. |
 | Lookahead | `p>0` is not implemented. Its effect on cases involving bad pairs is unassessed. |
 

@@ -2,6 +2,8 @@ using PolylineKit;
 
 namespace PolylineKit.Experiments;
 
+internal enum SegmentContact { None, Point, Overlap }
+
 internal static class Geometry
 {
     public static Point2 Sub(Point2 a, Point2 b) => new(a.X - b.X, a.Y - b.Y);
@@ -54,5 +56,34 @@ internal static class Geometry
         t = Cross(ca, s) / determinant;
         u = Cross(ca, r) / determinant;
         return t >= 0 && t <= 1 && u >= 0 && u <= 1;
+    }
+
+    // Classifies endpoint contact separately from positive-length collinear overlap.
+    // first/last are the contact interval on a->b. This uses ordinary binary64
+    // determinants and exact comparisons, not adaptive/exact geometric predicates.
+    public static SegmentContact Contact(Point2 a, Point2 b, Point2 c, Point2 d,
+        out double first, out double last)
+    {
+        first = last = 0;
+        if (Same(a, b))
+            return Cross(Sub(d, c), Sub(a, c)) == 0 &&
+                   a.X >= Math.Min(c.X, d.X) && a.X <= Math.Max(c.X, d.X) &&
+                   a.Y >= Math.Min(c.Y, d.Y) && a.Y <= Math.Max(c.Y, d.Y)
+                ? SegmentContact.Point : SegmentContact.None;
+        Point2 r = Sub(b, a), s = Sub(d, c);
+        if (Cross(r, s) != 0)
+        {
+            if (!Intersection(a, b, c, d, out double t, out _)) return SegmentContact.None;
+            first = last = t;
+            return SegmentContact.Point;
+        }
+        if (Cross(r, Sub(c, a)) != 0) return SegmentContact.None;
+        bool useX = Math.Abs(r.X) >= Math.Abs(r.Y);
+        double tc = useX ? (c.X - a.X) / r.X : (c.Y - a.Y) / r.Y;
+        double td = useX ? (d.X - a.X) / r.X : (d.Y - a.Y) / r.Y;
+        first = Math.Max(0, Math.Min(tc, td));
+        last = Math.Min(1, Math.Max(tc, td));
+        if (first > last) return SegmentContact.None;
+        return first == last ? SegmentContact.Point : SegmentContact.Overlap;
     }
 }

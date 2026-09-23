@@ -10,8 +10,10 @@ public static class PolylineArea
     /// nonfinite coordinates and coordinate magnitudes above 1e100 are rejected.
     /// Endpoints are joined vertically. No normalization, resampling or alignment is applied.
     /// Returns squared coordinate units. O(n+m) time and O(1) auxiliary storage.
-    /// Zero means the same piecewise linear graph, irrespective of collinear subdivision.
-    /// Floating point rounding can erase separations smaller than the input representation.
+    /// In exact arithmetic, zero characterizes the same graph and collinear subdivision preserves area.
+    /// Double arithmetic can both erase small separations and introduce nonzero area for identical
+    /// geometry represented with different vertices. Intermediate interpolation error, even with
+    /// exactly representable inputs, can accumulate over a wide domain. No absolute error bound is promised.
     /// </remarks>
     /// <exception cref="ArgumentNullException">An input is null.</exception>
     /// <exception cref="ArgumentException">An input violates the graph contract.</exception>
