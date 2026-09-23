@@ -59,9 +59,28 @@ internal static class OptimizationChecks
             }
             PointsEqual("apply preserves input", snapshot, input);
         }
-        Point2[] limits = [new(1e100, -1e100), new(-1e100, 1e100), new(0, -0.0), new(double.Epsilon, -double.Epsilon)];
-        PointsEqual("exact coordinate bound accepted", InMode(true, () => AffineTransform2D.Identity.Apply(limits)),
-            InMode(false, () => AffineTransform2D.Identity.Apply(limits)));
+        Point2[] special = [new(1e100, -1e100), new(-1e100, 1e100), new(0.0, -0.0),
+            new(-0.0, 0.0), new(-0.0, -0.0), new(double.Epsilon, -double.Epsilon),
+            new(2 * double.Epsilon, -2 * double.Epsilon),
+            new(BitConverter.Int64BitsToDouble(0x0010000000000000), -BitConverter.Int64BitsToDouble(0x0010000000000000))];
+        // Reach the SIMD threshold and cover both packed lanes, successive vector
+        // boundaries, and odd scalar tails. Rotations put every special value in each role.
+        foreach (int count in new[] { 32, 33, 64, 65 })
+        foreach (int shift in Enumerable.Range(0, special.Length))
+        {
+            Point2[] limits = [.. Enumerable.Range(0, count).Select(i => special[(i + shift) % special.Length])];
+            foreach (AffineTransform2D transform in new[]
+            {
+                AffineTransform2D.Identity,
+                AffineTransform2D.Scaling(.5, -.5),
+                new AffineTransform2D(1, 0, 0, 1, -0.0, -0.0)
+            })
+            {
+                Point2[] expected = [.. limits.Select(p => transform.Apply(p))];
+                PointsEqual("boundary scalar point/array agreement", expected, InMode(true, () => transform.Apply(limits)));
+                PointsEqual("SIMD bound, signed-zero and subnormal bit patterns", expected, InMode(false, () => transform.Apply(limits)));
+            }
+        }
         var originals = Stroke(33, 1);
         var result = InMode(false, () => AffineTransform2D.Identity.Apply(originals));
         Point2 old = result[0]; originals[0] = new Point2(999, 999);

@@ -1,0 +1,265 @@
+; Assembly listing for method PolylineKit.SimdTransforms:Apply256(byref,PolylineKit.Point2[],PolylineKit.Point2[]) (FullOpts)
+; Emitting BLENDED_CODE for generic X64 + VEX on Windows
+; FullOpts code
+; optimized code
+; rsp based frame
+; fully interruptible
+; No PGO data
+; 0 inlinees with PGO data; 24 single block inlinees; 6 inlinees without PGO data
+
+G_M000_IG01:                ;; offset=0x0000
+       push     r15
+       push     r14
+       push     r13
+       push     r12
+       push     rdi
+       push     rsi
+       push     rbp
+       push     rbx
+       sub      rsp, 264
+       vmovaps  xmmword ptr [rsp+0xF0], xmm6
+       vmovaps  xmmword ptr [rsp+0xE0], xmm7
+       vmovaps  xmmword ptr [rsp+0xD0], xmm8
+       vmovaps  xmmword ptr [rsp+0xC0], xmm9
+       vmovaps  xmmword ptr [rsp+0xB0], xmm10
+       vmovaps  xmmword ptr [rsp+0xA0], xmm11
+       vmovaps  xmmword ptr [rsp+0x90], xmm12
+       vmovaps  xmmword ptr [rsp+0x80], xmm13
+       mov      rdi, rcx
+       mov      rsi, rdx
+       mov      rbx, r8
+ 
+G_M000_IG02:                ;; offset=0x0064
+       test     rsi, rsi
+       je       SHORT G_M000_IG04
+ 
+G_M000_IG03:                ;; offset=0x0069
+       lea      rbp, bword ptr [rsi+0x10]
+       mov      r14d, dword ptr [rsi+0x08]
+       jmp      SHORT G_M000_IG05
+ 
+G_M000_IG04:                ;; offset=0x0073
+       xor      rbp, rbp
+       xor      r14d, r14d
+ 
+G_M000_IG05:                ;; offset=0x0078
+       mov      r8d, r14d
+       shl      r8, 4
+       shr      r8, 3
+       cmp      r8, 0x7FFFFFFF
+       ja       G_M000_IG21
+       test     rbx, rbx
+       je       SHORT G_M000_IG07
+ 
+G_M000_IG06:                ;; offset=0x0095
+       lea      r14, bword ptr [rbx+0x10]
+       mov      r8d, dword ptr [rbx+0x08]
+       jmp      SHORT G_M000_IG08
+ 
+G_M000_IG07:                ;; offset=0x009F
+       xor      r14, r14
+       xor      r8d, r8d
+ 
+G_M000_IG08:                ;; offset=0x00A5
+       mov      r8d, r8d
+       shl      r8, 4
+       shr      r8, 3
+       cmp      r8, 0x7FFFFFFF
+       ja       G_M000_IG21
+       vmovsd   xmm0, qword ptr [rdi]
+       vmovsd   xmm1, qword ptr [rdi+0x10]
+       vmovaps  xmm2, xmm1
+       vunpcklpd xmm0, xmm0, xmm2
+       vmovsd   xmm2, qword ptr [rdi]
+       vunpcklpd xmm1, xmm2, xmm1
+       vinsertf128 ymm6, ymm0, xmm1
+       vmovsd   xmm0, qword ptr [rdi+0x08]
+       vmovaps  xmm1, xmm0
+       vmovsd   xmm2, qword ptr [rdi+0x18]
+       vmovaps  xmm3, xmm2
+       vunpcklpd xmm1, xmm1, xmm3
+       vunpcklpd xmm0, xmm0, xmm2
+       vinsertf128 ymm7, ymm1, xmm0
+       vmovsd   xmm0, qword ptr [rdi+0x20]
+       vmovaps  xmm1, xmm0
+       vmovsd   xmm2, qword ptr [rdi+0x28]
+       vmovaps  xmm3, xmm2
+       vunpcklpd xmm1, xmm1, xmm3
+       vunpcklpd xmm0, xmm0, xmm2
+       vinsertf128 ymm8, ymm1, xmm0
+       vbroadcastsd ymm9, qword ptr [reloc @RWD00]
+       xor      r15d, r15d
+       jmp      G_M000_IG13
+ 
+G_M000_IG09:                ;; offset=0x012D
+       vshufpd  ymm2, ymm0, ymm0, 0
+       vmulpd   ymm2, ymm2, ymm6
+       vshufpd  ymm0, ymm0, ymm0, 15
+       vmulpd   ymm0, ymm0, ymm7
+       vaddpd   ymm0, ymm0, ymm2
+       vaddpd   ymm0, ymm0, ymm8
+       vandpd   ymm1, ymm1, ymm0
+       vcmplepd ymm1, ymm1, ymm9
+       vpcmpeqd ymm2, ymm2, ymm2
+       vptest   ymm1, ymm2
+       jae      SHORT G_M000_IG10
+       vmovups  ymmword ptr [r14+8*r8], ymm0
+       jmp      G_M000_IG12
+ 
+G_M000_IG10:                ;; offset=0x0168
+       mov      r8d, r15d
+       mov      r12d, r8d
+       lea      eax, [r12+0x02]
+       mov      dword ptr [rsp+0x2C], eax
+       cmp      r15d, eax
+       jge      G_M000_IG12
+ 
+G_M000_IG11:                ;; offset=0x0180
+       cmp      r12d, r13d
+       jae      G_M000_IG20
+       mov      r10, r12
+       shl      r10, 4
+       mov      qword ptr [rsp+0x30], r10
+       vmovups  xmm0, xmmword ptr [rsi+r10+0x10]
+       vmovups  xmmword ptr [rsp+0x40], xmm0
+       lea      r8, [rsp+0x40]
+       lea      rdx, [rsp+0x50]
+       mov      rcx, rdi
+       vextractf128 xmm10, ymm9
+       vextractf128 xmm11, ymm6
+       vextractf128 xmm12, ymm7
+       vextractf128 xmm13, ymm8
+       call     [PolylineKit.AffineTransform2D:Apply(PolylineKit.Point2):PolylineKit.Point2:this]
+       cmp      r12d, dword ptr [rbx+0x08]
+       jae      G_M000_IG20
+       vmovups  xmm0, xmmword ptr [rsp+0x50]
+       mov      r8, qword ptr [rsp+0x30]
+       vmovups  xmmword ptr [rbx+r8+0x10], xmm0
+       inc      r12d
+       mov      eax, dword ptr [rsp+0x2C]
+       cmp      r12d, eax
+       vinsertf128 ymm9, ymm9, xmm10
+       vinsertf128 ymm6, ymm6, xmm11
+       vinsertf128 ymm7, ymm7, xmm12
+       vinsertf128 ymm8, ymm8, xmm13
+       mov      dword ptr [rsp+0x2C], eax
+       jl       G_M000_IG11
+ 
+G_M000_IG12:                ;; offset=0x0215
+       lea      r8d, [r15+0x02]
+       mov      r15d, r8d
+ 
+G_M000_IG13:                ;; offset=0x021C
+       mov      r8d, dword ptr [rsi+0x08]
+       mov      r13d, r8d
+       lea      r8d, [r15+0x01]
+       cmp      r13d, r8d
+       jle      G_M000_IG17
+ 
+G_M000_IG14:                ;; offset=0x0230
+       movsxd   r8, r15d
+       add      r8, r8
+       vmovups  ymm0, ymmword ptr [rbp+8*r8]
+       vbroadcastsd ymm1, qword ptr [reloc @RWD08]
+       vandpd   ymm2, ymm1, ymm0
+       vcmplepd ymm2, ymm2, ymm9
+       vpcmpeqd ymm3, ymm3, ymm3
+       vptest   ymm2, ymm3
+       jb       G_M000_IG09
+ 
+G_M000_IG15:                ;; offset=0x025F
+       mov      eax, r15d
+       mov      r12d, eax
+       lea      eax, [r12+0x02]
+       mov      dword ptr [rsp+0x2C], eax
+       cmp      r15d, eax
+       jge      SHORT G_M000_IG12
+ 
+G_M000_IG16:                ;; offset=0x0273
+       cmp      r12d, r13d
+       jae      G_M000_IG20
+       mov      r10, r12
+       shl      r10, 4
+       mov      qword ptr [rsp+0x38], r10
+       vmovups  xmm0, xmmword ptr [rsi+r10+0x10]
+       vmovups  xmmword ptr [rsp+0x40], xmm0
+       lea      r8, [rsp+0x40]
+       lea      rdx, [rsp+0x60]
+       mov      rcx, rdi
+       vextractf128 xmm10, ymm9
+       vextractf128 xmm11, ymm6
+       vextractf128 xmm12, ymm7
+       vextractf128 xmm13, ymm8
+       call     [PolylineKit.AffineTransform2D:Apply(PolylineKit.Point2):PolylineKit.Point2:this]
+       cmp      r12d, dword ptr [rbx+0x08]
+       jae      G_M000_IG20
+       vmovups  xmm0, xmmword ptr [rsp+0x60]
+       mov      r8, qword ptr [rsp+0x38]
+       vmovups  xmmword ptr [rbx+r8+0x10], xmm0
+       inc      r12d
+       mov      r8d, dword ptr [rsp+0x2C]
+       cmp      r12d, r8d
+       vinsertf128 ymm9, ymm9, xmm10
+       vinsertf128 ymm6, ymm6, xmm11
+       vinsertf128 ymm7, ymm7, xmm12
+       vinsertf128 ymm8, ymm8, xmm13
+       mov      dword ptr [rsp+0x2C], r8d
+       jl       G_M000_IG16
+       jmp      G_M000_IG12
+ 
+G_M000_IG17:                ;; offset=0x030F
+       cmp      r13d, r15d
+       jle      SHORT G_M000_IG19
+ 
+G_M000_IG18:                ;; offset=0x0314
+       cmp      r15d, r13d
+       jae      G_M000_IG20
+       mov      r8d, r15d
+       shl      r8, 4
+       vmovups  xmm0, xmmword ptr [rsi+r8+0x10]
+       vmovups  xmmword ptr [rsp+0x40], xmm0
+       lea      r8, [rsp+0x40]
+       lea      rdx, [rsp+0x70]
+       mov      rcx, rdi
+       call     [PolylineKit.AffineTransform2D:Apply(PolylineKit.Point2):PolylineKit.Point2:this]
+       cmp      r15d, dword ptr [rbx+0x08]
+       jae      SHORT G_M000_IG20
+       mov      eax, r15d
+       shl      rax, 4
+       vmovups  xmm0, xmmword ptr [rsp+0x70]
+       vmovups  xmmword ptr [rbx+rax+0x10], xmm0
+ 
+G_M000_IG19:                ;; offset=0x035D
+       vzeroupper 
+       vmovaps  xmm6, xmmword ptr [rsp+0xF0]
+       vmovaps  xmm7, xmmword ptr [rsp+0xE0]
+       vmovaps  xmm8, xmmword ptr [rsp+0xD0]
+       vmovaps  xmm9, xmmword ptr [rsp+0xC0]
+       vmovaps  xmm10, xmmword ptr [rsp+0xB0]
+       vmovaps  xmm11, xmmword ptr [rsp+0xA0]
+       vmovaps  xmm12, xmmword ptr [rsp+0x90]
+       vmovaps  xmm13, xmmword ptr [rsp+0x80]
+       add      rsp, 264
+       pop      rbx
+       pop      rbp
+       pop      rsi
+       pop      rdi
+       pop      r12
+       pop      r13
+       pop      r14
+       pop      r15
+       ret      
+ 
+G_M000_IG20:                ;; offset=0x03BC
+       call     CORINFO_HELP_RNGCHKFAIL
+       int3     
+ 
+G_M000_IG21:                ;; offset=0x03C2
+       call     CORINFO_HELP_OVERFLOW
+       int3     
+ 
+RWD00  	dq	54B249AD2594C37Dh
+RWD08  	dq	7FFFFFFFFFFFFFFFh
+
+; Total bytes of code 968
+

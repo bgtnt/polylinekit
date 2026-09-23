@@ -1,0 +1,484 @@
+{
+  "Metadata": {
+    "Protocol": "polylinekit-optimization-v1",
+    "Variant": "modern-scalar",
+    "CoreRevision": "53d9d2db12d91a68dcfcd53ef56563eedc896325",
+    "HarnessRevision": "c74fed307eca6bc2715ef910238e3b475c381824",
+    "CoreTarget": ".NETCoreApp,Version=v10.0",
+    "CoreDllSha256": "38f21e8f58a5bab687f3f6c9130333409fbbc571a53e858fbbe4b1c9f52b2d44",
+    "InputsSha256": "88544e92592d961e323908103fdf8152a5cc789213de51960b81baadc544eeae",
+    "Utc": "2026-09-23T16:11:07.1718894+00:00",
+    "Runtime": ".NET 10.0.12",
+    "OS": "Microsoft Windows 10.0.26200",
+    "Architecture": "X64",
+    "CPU": "Intel64 Family 6 Model 158 Stepping 12, GenuineIntel",
+    "Processors": 16,
+    "StopwatchFrequency": 10000000,
+    "TieredCompilation": "0",
+    "ReadyToRun": null,
+    "EnableHWIntrinsic": null,
+    "ForceScalar": "1",
+    "Hardware": {
+      "Vector128": true,
+      "Vector256": true,
+      "Sse2": true,
+      "Avx": true,
+      "Avx2": true,
+      "Fma": true,
+      "AdvSimd": false
+    },
+    "WarmupMilliseconds": 60,
+    "MinimumCalibrationMilliseconds": 20,
+    "Batches": 9,
+    "Cases": 48,
+    "OpenSamples": 64,
+    "ClosedSamples": [
+      64,
+      256
+    ],
+    "Area": {
+      "DecimalPrecision": 6,
+      "FillRule": "NonZero",
+      "IncludeContours": false
+    },
+    "Correspondence": {
+      "AllowScaling": true,
+      "AllowReversal": false,
+      "SearchClosedPhase": true
+    }
+  },
+  "Values": [
+    {
+      "Name": "exact/normalize-align-area",
+      "Vertices": 16,
+      "Family": "open-exact",
+      "Stage": "NormalizeAlignArea",
+      "Primary": true,
+      "AlignmentSamples": 64,
+      "Value": 0
+    },
+    {
+      "Name": "perturbed/normalize-align-area",
+      "Vertices": 16,
+      "Family": "open-perturbed",
+      "Stage": "NormalizeAlignArea",
+      "Primary": true,
+      "AlignmentSamples": 64,
+      "Value": 0.009893311266499966
+    },
+    {
+      "Name": "graph/integral",
+      "Vertices": 16,
+      "Family": "graph",
+      "Stage": "BetweenGraphs",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "Value": 0.029993694501678082
+    },
+    {
+      "Name": "exact/normalize",
+      "Vertices": 16,
+      "Family": "open-exact",
+      "Stage": "NormalizeOnePath",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "Value": 5.261788718678437
+    },
+    {
+      "Name": "exact/apply",
+      "Vertices": 16,
+      "Family": "open-exact",
+      "Stage": "AffineApply",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "Value": 226.94596053317568
+    },
+    {
+      "Name": "exact/fit64",
+      "Vertices": 16,
+      "Family": "open-exact",
+      "Stage": "OpenFit",
+      "Primary": false,
+      "AlignmentSamples": 64,
+      "Value": 6.593723637656933E-16
+    },
+    {
+      "Name": "perturbed/fit64",
+      "Vertices": 16,
+      "Family": "open-perturbed",
+      "Stage": "OpenFit",
+      "Primary": false,
+      "AlignmentSamples": 64,
+      "Value": 0.04264408835205522
+    },
+    {
+      "Name": "closed/fit64",
+      "Vertices": 16,
+      "Family": "closed-asymmetric",
+      "Stage": "ClosedPhaseFit",
+      "Primary": false,
+      "AlignmentSamples": 64,
+      "Value": 0.02981802261059955
+    },
+    {
+      "Name": "closed/fit256",
+      "Vertices": 16,
+      "Family": "closed-asymmetric",
+      "Stage": "ClosedPhaseFit",
+      "Primary": false,
+      "AlignmentSamples": 256,
+      "Value": 0.0033348091654649406
+    },
+    {
+      "Name": "exact/bridge",
+      "Vertices": 16,
+      "Family": "open-exact",
+      "Stage": "EndpointBridgedArea",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "Value": 19.4657060998855
+    },
+    {
+      "Name": "perturbed/bridge",
+      "Vertices": 16,
+      "Family": "open-perturbed",
+      "Stage": "EndpointBridgedArea",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "Value": 19.447269418447
+    },
+    {
+      "Name": "closed/xor",
+      "Vertices": 16,
+      "Family": "closed-asymmetric",
+      "Stage": "FilledRegionDifference",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "Value": 12.465097824476997
+    },
+    {
+      "Name": "exact/normalize-align-area",
+      "Vertices": 64,
+      "Family": "open-exact",
+      "Stage": "NormalizeAlignArea",
+      "Primary": true,
+      "AlignmentSamples": 64,
+      "Value": 0
+    },
+    {
+      "Name": "perturbed/normalize-align-area",
+      "Vertices": 64,
+      "Family": "open-perturbed",
+      "Stage": "NormalizeAlignArea",
+      "Primary": true,
+      "AlignmentSamples": 64,
+      "Value": 0.010462830844500018
+    },
+    {
+      "Name": "graph/integral",
+      "Vertices": 64,
+      "Family": "graph",
+      "Stage": "BetweenGraphs",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "Value": 0.033034459324086336
+    },
+    {
+      "Name": "exact/normalize",
+      "Vertices": 64,
+      "Family": "open-exact",
+      "Stage": "NormalizeOnePath",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "Value": 5.246455378921348
+    },
+    {
+      "Name": "exact/apply",
+      "Vertices": 64,
+      "Family": "open-exact",
+      "Stage": "AffineApply",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "Value": 226.2082651304878
+    },
+    {
+      "Name": "exact/fit64",
+      "Vertices": 64,
+      "Family": "open-exact",
+      "Stage": "OpenFit",
+      "Primary": false,
+      "AlignmentSamples": 64,
+      "Value": 8.457515282635386E-16
+    },
+    {
+      "Name": "perturbed/fit64",
+      "Vertices": 64,
+      "Family": "open-perturbed",
+      "Stage": "OpenFit",
+      "Primary": false,
+      "AlignmentSamples": 64,
+      "Value": 0.045182506473167856
+    },
+    {
+      "Name": "closed/fit64",
+      "Vertices": 64,
+      "Family": "closed-asymmetric",
+      "Stage": "ClosedPhaseFit",
+      "Primary": false,
+      "AlignmentSamples": 64,
+      "Value": 0.004832606373949782
+    },
+    {
+      "Name": "closed/fit256",
+      "Vertices": 64,
+      "Family": "closed-asymmetric",
+      "Stage": "ClosedPhaseFit",
+      "Primary": false,
+      "AlignmentSamples": 256,
+      "Value": 0.00481539273721917
+    },
+    {
+      "Name": "exact/bridge",
+      "Vertices": 64,
+      "Family": "open-exact",
+      "Stage": "EndpointBridgedArea",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "Value": 19.522508875664002
+    },
+    {
+      "Name": "perturbed/bridge",
+      "Vertices": 64,
+      "Family": "open-perturbed",
+      "Stage": "EndpointBridgedArea",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "Value": 19.5021828566275
+    },
+    {
+      "Name": "closed/xor",
+      "Vertices": 64,
+      "Family": "closed-asymmetric",
+      "Stage": "FilledRegionDifference",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "Value": 12.967888231642
+    },
+    {
+      "Name": "exact/normalize-align-area",
+      "Vertices": 256,
+      "Family": "open-exact",
+      "Stage": "NormalizeAlignArea",
+      "Primary": true,
+      "AlignmentSamples": 64,
+      "Value": 0
+    },
+    {
+      "Name": "perturbed/normalize-align-area",
+      "Vertices": 256,
+      "Family": "open-perturbed",
+      "Stage": "NormalizeAlignArea",
+      "Primary": true,
+      "AlignmentSamples": 64,
+      "Value": 0.010498951574499957
+    },
+    {
+      "Name": "graph/integral",
+      "Vertices": 256,
+      "Family": "graph",
+      "Stage": "BetweenGraphs",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "Value": 0.03321037196181735
+    },
+    {
+      "Name": "exact/normalize",
+      "Vertices": 256,
+      "Family": "open-exact",
+      "Stage": "NormalizeOnePath",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "Value": 5.246029072501534
+    },
+    {
+      "Name": "exact/apply",
+      "Vertices": 256,
+      "Family": "open-exact",
+      "Stage": "AffineApply",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "Value": 226.0777864741977
+    },
+    {
+      "Name": "exact/fit64",
+      "Vertices": 256,
+      "Family": "open-exact",
+      "Stage": "OpenFit",
+      "Primary": false,
+      "AlignmentSamples": 64,
+      "Value": 9.274361014294598E-16
+    },
+    {
+      "Name": "perturbed/fit64",
+      "Vertices": 256,
+      "Family": "open-perturbed",
+      "Stage": "OpenFit",
+      "Primary": false,
+      "AlignmentSamples": 64,
+      "Value": 0.045273457052922135
+    },
+    {
+      "Name": "closed/fit64",
+      "Vertices": 256,
+      "Family": "closed-asymmetric",
+      "Stage": "ClosedPhaseFit",
+      "Primary": false,
+      "AlignmentSamples": 64,
+      "Value": 0.0035778821755734296
+    },
+    {
+      "Name": "closed/fit256",
+      "Vertices": 256,
+      "Family": "closed-asymmetric",
+      "Stage": "ClosedPhaseFit",
+      "Primary": false,
+      "AlignmentSamples": 256,
+      "Value": 0.0035743537057062384
+    },
+    {
+      "Name": "exact/bridge",
+      "Vertices": 256,
+      "Family": "open-exact",
+      "Stage": "EndpointBridgedArea",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "Value": 19.525794653038993
+    },
+    {
+      "Name": "perturbed/bridge",
+      "Vertices": 256,
+      "Family": "open-perturbed",
+      "Stage": "EndpointBridgedArea",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "Value": 19.505294539759504
+    },
+    {
+      "Name": "closed/xor",
+      "Vertices": 256,
+      "Family": "closed-asymmetric",
+      "Stage": "FilledRegionDifference",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "Value": 13.002190606115503
+    },
+    {
+      "Name": "exact/normalize-align-area",
+      "Vertices": 1024,
+      "Family": "open-exact",
+      "Stage": "NormalizeAlignArea",
+      "Primary": true,
+      "AlignmentSamples": 64,
+      "Value": 0
+    },
+    {
+      "Name": "perturbed/normalize-align-area",
+      "Vertices": 1024,
+      "Family": "open-perturbed",
+      "Stage": "NormalizeAlignArea",
+      "Primary": true,
+      "AlignmentSamples": 64,
+      "Value": 0.01050119899050009
+    },
+    {
+      "Name": "graph/integral",
+      "Vertices": 1024,
+      "Family": "graph",
+      "Stage": "BetweenGraphs",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "Value": 0.03322111903847499
+    },
+    {
+      "Name": "exact/normalize",
+      "Vertices": 1024,
+      "Family": "open-exact",
+      "Stage": "NormalizeOnePath",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "Value": 5.246496521285933
+    },
+    {
+      "Name": "exact/apply",
+      "Vertices": 1024,
+      "Family": "open-exact",
+      "Stage": "AffineApply",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "Value": 226.04812536278072
+    },
+    {
+      "Name": "exact/fit64",
+      "Vertices": 1024,
+      "Family": "open-exact",
+      "Stage": "OpenFit",
+      "Primary": false,
+      "AlignmentSamples": 64,
+      "Value": 3.61248545091451E-15
+    },
+    {
+      "Name": "perturbed/fit64",
+      "Vertices": 1024,
+      "Family": "open-perturbed",
+      "Stage": "OpenFit",
+      "Primary": false,
+      "AlignmentSamples": 64,
+      "Value": 0.045279938618794494
+    },
+    {
+      "Name": "closed/fit64",
+      "Vertices": 1024,
+      "Family": "closed-asymmetric",
+      "Stage": "ClosedPhaseFit",
+      "Primary": false,
+      "AlignmentSamples": 64,
+      "Value": 0.0034936664696986657
+    },
+    {
+      "Name": "closed/fit256",
+      "Vertices": 1024,
+      "Family": "closed-asymmetric",
+      "Stage": "ClosedPhaseFit",
+      "Primary": false,
+      "AlignmentSamples": 256,
+      "Value": 0.003492806117612613
+    },
+    {
+      "Name": "exact/bridge",
+      "Vertices": 1024,
+      "Family": "open-exact",
+      "Stage": "EndpointBridgedArea",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "Value": 19.525991681695004
+    },
+    {
+      "Name": "perturbed/bridge",
+      "Vertices": 1024,
+      "Family": "open-perturbed",
+      "Stage": "EndpointBridgedArea",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "Value": 19.50547464674849
+    },
+    {
+      "Name": "closed/xor",
+      "Vertices": 1024,
+      "Family": "closed-asymmetric",
+      "Stage": "FilledRegionDifference",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "Value": 13.00434689702601
+    }
+  ]
+}

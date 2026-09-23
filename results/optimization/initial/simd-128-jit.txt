@@ -1,0 +1,168 @@
+; Assembly listing for method PolylineKit.SimdTransforms:Apply128(byref,PolylineKit.Point2[],PolylineKit.Point2[]) (FullOpts)
+; Emitting BLENDED_CODE for generic X64 on Windows
+; FullOpts code
+; optimized code
+; rsp based frame
+; fully interruptible
+; No PGO data
+; 0 inlinees with PGO data; 18 single block inlinees; 4 inlinees without PGO data
+
+G_M000_IG01:                ;; offset=0x0000
+       push     r15
+       push     r14
+       push     r13
+       push     rdi
+       push     rsi
+       push     rbp
+       push     rbx
+       sub      rsp, 144
+       movaps   xmmword ptr [rsp+0x80], xmm6
+       movaps   xmmword ptr [rsp+0x70], xmm7
+       movaps   xmmword ptr [rsp+0x60], xmm8
+       movaps   xmmword ptr [rsp+0x50], xmm9
+       mov      rsi, rcx
+       mov      rbx, rdx
+       mov      rdi, r8
+ 
+G_M000_IG02:                ;; offset=0x0033
+       test     rbx, rbx
+       je       SHORT G_M000_IG04
+ 
+G_M000_IG03:                ;; offset=0x0038
+       lea      rbp, bword ptr [rbx+0x10]
+       mov      r8d, dword ptr [rbx+0x08]
+       jmp      SHORT G_M000_IG05
+ 
+G_M000_IG04:                ;; offset=0x0042
+       xor      rbp, rbp
+       xor      r8d, r8d
+ 
+G_M000_IG05:                ;; offset=0x0047
+       mov      r8d, r8d
+       shl      r8, 4
+       shr      r8, 3
+       cmp      r8, 0x7FFFFFFF
+       ja       G_M000_IG17
+       test     rdi, rdi
+       je       SHORT G_M000_IG07
+ 
+G_M000_IG06:                ;; offset=0x0064
+       lea      r14, bword ptr [rdi+0x10]
+       mov      r8d, dword ptr [rdi+0x08]
+       jmp      SHORT G_M000_IG08
+ 
+G_M000_IG07:                ;; offset=0x006E
+       xor      r14, r14
+       xor      r8d, r8d
+ 
+G_M000_IG08:                ;; offset=0x0074
+       mov      r8d, r8d
+       shl      r8, 4
+       shr      r8, 3
+       cmp      r8, 0x7FFFFFFF
+       ja       G_M000_IG17
+       movsd    xmm6, qword ptr [rsi]
+       movsd    xmm0, qword ptr [rsi+0x10]
+       unpcklpd xmm6, xmm0
+       movsd    xmm7, qword ptr [rsi+0x08]
+       movsd    xmm0, qword ptr [rsi+0x18]
+       unpcklpd xmm7, xmm0
+       movsd    xmm8, qword ptr [rsi+0x20]
+       movsd    xmm0, qword ptr [rsi+0x28]
+       unpcklpd xmm8, xmm0
+       movddup  xmm9, qword ptr [reloc @RWD00]
+       xor      r15d, r15d
+       jmp      SHORT G_M000_IG11
+ 
+G_M000_IG09:                ;; offset=0x00C5
+       movups   xmmword ptr [r14+8*r8], xmm0
+ 
+G_M000_IG10:                ;; offset=0x00CA
+       inc      r15d
+ 
+G_M000_IG11:                ;; offset=0x00CD
+       cmp      dword ptr [rbx+0x08], r15d
+       jle      G_M000_IG15
+ 
+G_M000_IG12:                ;; offset=0x00D7
+       movsxd   r8, r15d
+       add      r8, r8
+       movups   xmm0, xmmword ptr [rbp+8*r8]
+       movddup  xmm1, qword ptr [reloc @RWD08]
+       movaps   xmm2, xmm0
+       andpd    xmm2, xmm1
+       cmplepd  xmm2, xmm9
+       pcmpeqd  xmm3, xmm3
+       ptest    xmm2, xmm3
+       jae      SHORT G_M000_IG14
+ 
+G_M000_IG13:                ;; offset=0x0103
+       movaps   xmm2, xmm0
+       shufpd   xmm2, xmm0, 0
+       mulpd    xmm2, xmm6
+       shufpd   xmm0, xmm0, 3
+       mulpd    xmm0, xmm7
+       addpd    xmm0, xmm2
+       addpd    xmm0, xmm8
+       andpd    xmm1, xmm0
+       cmplepd  xmm1, xmm9
+       pcmpeqd  xmm2, xmm2
+       ptest    xmm1, xmm2
+       jb       SHORT G_M000_IG09
+       mov      r13, r15
+       shl      r13, 4
+       movups   xmm0, xmmword ptr [rbx+r13+0x10]
+       movups   xmmword ptr [rsp+0x20], xmm0
+       lea      r8, [rsp+0x20]
+       lea      rdx, [rsp+0x40]
+       mov      rcx, rsi
+       call     [PolylineKit.AffineTransform2D:Apply(PolylineKit.Point2):PolylineKit.Point2:this]
+       cmp      r15d, dword ptr [rdi+0x08]
+       jae      SHORT G_M000_IG16
+       movups   xmm0, xmmword ptr [rsp+0x40]
+       movups   xmmword ptr [rdi+r13+0x10], xmm0
+       jmp      G_M000_IG10
+ 
+G_M000_IG14:                ;; offset=0x0171
+       mov      r13, r15
+       shl      r13, 4
+       movups   xmm0, xmmword ptr [rbx+r13+0x10]
+       movups   xmmword ptr [rsp+0x20], xmm0
+       lea      r8, [rsp+0x20]
+       lea      rdx, [rsp+0x30]
+       mov      rcx, rsi
+       call     [PolylineKit.AffineTransform2D:Apply(PolylineKit.Point2):PolylineKit.Point2:this]
+       cmp      r15d, dword ptr [rdi+0x08]
+       jae      SHORT G_M000_IG16
+       movups   xmm0, xmmword ptr [rsp+0x30]
+       movups   xmmword ptr [rdi+r13+0x10], xmm0
+       jmp      G_M000_IG10
+ 
+G_M000_IG15:                ;; offset=0x01AC
+       movaps   xmm6, xmmword ptr [rsp+0x80]
+       movaps   xmm7, xmmword ptr [rsp+0x70]
+       movaps   xmm8, xmmword ptr [rsp+0x60]
+       movaps   xmm9, xmmword ptr [rsp+0x50]
+       add      rsp, 144
+       pop      rbx
+       pop      rbp
+       pop      rsi
+       pop      rdi
+       pop      r13
+       pop      r14
+       pop      r15
+       ret      
+ 
+G_M000_IG16:                ;; offset=0x01D7
+       call     CORINFO_HELP_RNGCHKFAIL
+       int3     
+ 
+G_M000_IG17:                ;; offset=0x01DD
+       call     CORINFO_HELP_OVERFLOW
+       int3     
+ 
+RWD00  	dq	54B249AD2594C37Dh
+RWD08  	dq	7FFFFFFFFFFFFFFFh
+
+; Total bytes of code 483
+

@@ -10,8 +10,8 @@ namespace PolylineKit;
 /// </summary>
 internal static class SimdTransforms
 {
-    // A starting experimental threshold, not a measured recommendation. Smaller inputs
-    // continue through the existing scalar method, including its validation behavior.
+    // Fixed before measurement; see docs/optimization-evaluation.md for the tested cases.
+    // Smaller inputs retain scalar dispatch and its validation behavior.
     internal const int MinimumPointCount = 32;
     private static readonly bool HasPackedXyLayout = CheckPackedXyLayout();
 
@@ -23,6 +23,7 @@ internal static class SimdTransforms
     internal static bool TryApply(AffineTransform2D transform, IReadOnlyList<Point2> input, Point2[] output)
     {
         if (input is not Point2[] points || points.Length < MinimumPointCount ||
+            points.Length > int.MaxValue / 2 || // XY reinterpretation must fit a Span<double>.
             output.Length != points.Length || !HasPackedXyLayout ||
             (AppContext.TryGetSwitch("PolylineKit.DisableSimd", out bool disabled) && disabled))
             return false;

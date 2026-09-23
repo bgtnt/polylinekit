@@ -1,0 +1,2837 @@
+{
+  "Metadata": {
+    "Protocol": "polylinekit-optimization-v1",
+    "Variant": "modern-scalar",
+    "CoreRevision": "53d9d2db12d91a68dcfcd53ef56563eedc896325",
+    "HarnessRevision": "c74fed307eca6bc2715ef910238e3b475c381824",
+    "CoreTarget": ".NETCoreApp,Version=v10.0",
+    "CoreDllSha256": "38f21e8f58a5bab687f3f6c9130333409fbbc571a53e858fbbe4b1c9f52b2d44",
+    "InputsSha256": "88544e92592d961e323908103fdf8152a5cc789213de51960b81baadc544eeae",
+    "Utc": "2026-09-23T16:12:04.9214086+00:00",
+    "Runtime": ".NET 10.0.12",
+    "OS": "Microsoft Windows 10.0.26200",
+    "Architecture": "X64",
+    "CPU": "Intel64 Family 6 Model 158 Stepping 12, GenuineIntel",
+    "Processors": 16,
+    "StopwatchFrequency": 10000000,
+    "TieredCompilation": "0",
+    "ReadyToRun": null,
+    "EnableHWIntrinsic": null,
+    "ForceScalar": "1",
+    "Hardware": {
+      "Vector128": true,
+      "Vector256": true,
+      "Sse2": true,
+      "Avx": true,
+      "Avx2": true,
+      "Fma": true,
+      "AdvSimd": false
+    },
+    "WarmupMilliseconds": 60,
+    "MinimumCalibrationMilliseconds": 20,
+    "Batches": 9,
+    "Cases": 48,
+    "OpenSamples": 64,
+    "ClosedSamples": [
+      64,
+      256
+    ],
+    "Area": {
+      "DecimalPrecision": 6,
+      "FillRule": "NonZero",
+      "IncludeContours": false
+    },
+    "Correspondence": {
+      "AllowScaling": true,
+      "AllowReversal": false,
+      "SearchClosedPhase": true
+    }
+  },
+  "Run": 1,
+  "Measurements": [
+    {
+      "Case": "exact/normalize-align-area",
+      "Vertices": 16,
+      "Family": "open-exact",
+      "Stage": "NormalizeAlignArea",
+      "Primary": true,
+      "AlignmentSamples": 64,
+      "MedianNanoseconds": 12766.552734375,
+      "MedianBytes": 21936,
+      "Value": 0,
+      "Samples": [
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 13559.27734375,
+          "BytesPerOperation": 21936
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 12711.1328125,
+          "BytesPerOperation": 21936
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 12944.140625,
+          "BytesPerOperation": 21936
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 12733.59375,
+          "BytesPerOperation": 21936
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 12766.552734375,
+          "BytesPerOperation": 21936
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 12983.30078125,
+          "BytesPerOperation": 21936
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 12704.736328125,
+          "BytesPerOperation": 21936
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 12825.78125,
+          "BytesPerOperation": 21936
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 12745.5078125,
+          "BytesPerOperation": 21936
+        }
+      ]
+    },
+    {
+      "Case": "perturbed/normalize-align-area",
+      "Vertices": 16,
+      "Family": "open-perturbed",
+      "Stage": "NormalizeAlignArea",
+      "Primary": true,
+      "AlignmentSamples": 64,
+      "MedianNanoseconds": 14393.26171875,
+      "MedianBytes": 21832,
+      "Value": 0.009893311266499966,
+      "Samples": [
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 14656.396484375,
+          "BytesPerOperation": 21832
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 14668.017578125,
+          "BytesPerOperation": 21832
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 14291.2109375,
+          "BytesPerOperation": 21832
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 14224.853515625,
+          "BytesPerOperation": 21832
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 14393.26171875,
+          "BytesPerOperation": 21832
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 14462.158203125,
+          "BytesPerOperation": 21832
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 14197.75390625,
+          "BytesPerOperation": 21832
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 14445.99609375,
+          "BytesPerOperation": 21832
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 14250.29296875,
+          "BytesPerOperation": 21832
+        }
+      ]
+    },
+    {
+      "Case": "graph/integral",
+      "Vertices": 16,
+      "Family": "graph",
+      "Stage": "BetweenGraphs",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "MedianNanoseconds": 927.9083251953125,
+      "MedianBytes": 0,
+      "Value": 0.029993694501678082,
+      "Samples": [
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 928.851318359375,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 927.9083251953125,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 920.8648681640625,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 933.8775634765625,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 920.8984375,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 934.979248046875,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 953.3203125,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 922.613525390625,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 926.5411376953125,
+          "BytesPerOperation": 0
+        }
+      ]
+    },
+    {
+      "Case": "exact/normalize",
+      "Vertices": 16,
+      "Family": "open-exact",
+      "Stage": "NormalizeOnePath",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "MedianNanoseconds": 673.614501953125,
+      "MedianBytes": 448,
+      "Value": 5.261788718678437,
+      "Samples": [
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 792.4468994140625,
+          "BytesPerOperation": 448
+        },
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 679.364013671875,
+          "BytesPerOperation": 448
+        },
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 671.258544921875,
+          "BytesPerOperation": 448
+        },
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 692.169189453125,
+          "BytesPerOperation": 448
+        },
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 673.614501953125,
+          "BytesPerOperation": 448
+        },
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 671.990966796875,
+          "BytesPerOperation": 448
+        },
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 671.8994140625,
+          "BytesPerOperation": 448
+        },
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 670.538330078125,
+          "BytesPerOperation": 448
+        },
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 675.0274658203125,
+          "BytesPerOperation": 448
+        }
+      ]
+    },
+    {
+      "Case": "exact/apply",
+      "Vertices": 16,
+      "Family": "open-exact",
+      "Stage": "AffineApply",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "MedianNanoseconds": 235.8917236328125,
+      "MedianBytes": 280,
+      "Value": 226.94596053317568,
+      "Samples": [
+        {
+          "Iterations": 131072,
+          "NanosecondsPerOperation": 237.53433227539062,
+          "BytesPerOperation": 280
+        },
+        {
+          "Iterations": 131072,
+          "NanosecondsPerOperation": 277.4406433105469,
+          "BytesPerOperation": 280
+        },
+        {
+          "Iterations": 131072,
+          "NanosecondsPerOperation": 264.13421630859375,
+          "BytesPerOperation": 280
+        },
+        {
+          "Iterations": 131072,
+          "NanosecondsPerOperation": 262.8814697265625,
+          "BytesPerOperation": 280
+        },
+        {
+          "Iterations": 131072,
+          "NanosecondsPerOperation": 235.46600341796875,
+          "BytesPerOperation": 280
+        },
+        {
+          "Iterations": 131072,
+          "NanosecondsPerOperation": 235.22567749023438,
+          "BytesPerOperation": 280
+        },
+        {
+          "Iterations": 131072,
+          "NanosecondsPerOperation": 235.8917236328125,
+          "BytesPerOperation": 280
+        },
+        {
+          "Iterations": 131072,
+          "NanosecondsPerOperation": 234.2132568359375,
+          "BytesPerOperation": 280
+        },
+        {
+          "Iterations": 131072,
+          "NanosecondsPerOperation": 234.96017456054688,
+          "BytesPerOperation": 280
+        }
+      ]
+    },
+    {
+      "Case": "exact/fit64",
+      "Vertices": 16,
+      "Family": "open-exact",
+      "Stage": "OpenFit",
+      "Primary": false,
+      "AlignmentSamples": 64,
+      "MedianNanoseconds": 4611.24267578125,
+      "MedianBytes": 6640,
+      "Value": 6.593723637656933E-16,
+      "Samples": [
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 4745.947265625,
+          "BytesPerOperation": 6640
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 4619.3115234375,
+          "BytesPerOperation": 6640
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 4745.8984375,
+          "BytesPerOperation": 6640
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 4589.24560546875,
+          "BytesPerOperation": 6640
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 4666.0888671875,
+          "BytesPerOperation": 6640
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 4549.57275390625,
+          "BytesPerOperation": 6640
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 4611.24267578125,
+          "BytesPerOperation": 6640
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 4585.46142578125,
+          "BytesPerOperation": 6640
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 4553.67431640625,
+          "BytesPerOperation": 6640
+        }
+      ]
+    },
+    {
+      "Case": "perturbed/fit64",
+      "Vertices": 16,
+      "Family": "open-perturbed",
+      "Stage": "OpenFit",
+      "Primary": false,
+      "AlignmentSamples": 64,
+      "MedianNanoseconds": 4623.828125,
+      "MedianBytes": 6640,
+      "Value": 0.04264408835205522,
+      "Samples": [
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 6364.36767578125,
+          "BytesPerOperation": 6640
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 4976.7822265625,
+          "BytesPerOperation": 6640
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 4653.57666015625,
+          "BytesPerOperation": 6640
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 4625.79345703125,
+          "BytesPerOperation": 6640
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 4599.560546875,
+          "BytesPerOperation": 6640
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 4621.78955078125,
+          "BytesPerOperation": 6640
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 4601.0498046875,
+          "BytesPerOperation": 6640
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 4590.6982421875,
+          "BytesPerOperation": 6640
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 4623.828125,
+          "BytesPerOperation": 6640
+        }
+      ]
+    },
+    {
+      "Case": "closed/fit64",
+      "Vertices": 16,
+      "Family": "closed-asymmetric",
+      "Stage": "ClosedPhaseFit",
+      "Primary": false,
+      "AlignmentSamples": 64,
+      "MedianNanoseconds": 24649.8046875,
+      "MedianBytes": 6656,
+      "Value": 0.02981802261059955,
+      "Samples": [
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 24704.98046875,
+          "BytesPerOperation": 6656
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 24541.89453125,
+          "BytesPerOperation": 6656
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 24871.6796875,
+          "BytesPerOperation": 6656
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 24666.69921875,
+          "BytesPerOperation": 6656
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 24649.8046875,
+          "BytesPerOperation": 6656
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 24555.37109375,
+          "BytesPerOperation": 6656
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 24806.54296875,
+          "BytesPerOperation": 6656
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 24510.25390625,
+          "BytesPerOperation": 6656
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 24538.671875,
+          "BytesPerOperation": 6656
+        }
+      ]
+    },
+    {
+      "Case": "closed/fit256",
+      "Vertices": 16,
+      "Family": "closed-asymmetric",
+      "Stage": "ClosedPhaseFit",
+      "Primary": false,
+      "AlignmentSamples": 256,
+      "MedianNanoseconds": 319492.96875,
+      "MedianBytes": 22016,
+      "Value": 0.0033348091654649406,
+      "Samples": [
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 313446.09375,
+          "BytesPerOperation": 22016
+        },
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 310946.875,
+          "BytesPerOperation": 22016
+        },
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 340954.6875,
+          "BytesPerOperation": 22016
+        },
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 319492.96875,
+          "BytesPerOperation": 22016
+        },
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 311796.875,
+          "BytesPerOperation": 22016
+        },
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 324390.625,
+          "BytesPerOperation": 22016
+        },
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 321426.5625,
+          "BytesPerOperation": 22016
+        },
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 320168.75,
+          "BytesPerOperation": 22016
+        },
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 313316.40625,
+          "BytesPerOperation": 22016
+        }
+      ]
+    },
+    {
+      "Case": "exact/bridge",
+      "Vertices": 16,
+      "Family": "open-exact",
+      "Stage": "EndpointBridgedArea",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "MedianNanoseconds": 6520.1171875,
+      "MedianBytes": 11120,
+      "Value": 19.4657060998855,
+      "Samples": [
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6420.3369140625,
+          "BytesPerOperation": 11120
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6740.2587890625,
+          "BytesPerOperation": 11120
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6244.7998046875,
+          "BytesPerOperation": 11120
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6449.5361328125,
+          "BytesPerOperation": 11120
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6321.5576171875,
+          "BytesPerOperation": 11120
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6648.681640625,
+          "BytesPerOperation": 11120
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6520.1171875,
+          "BytesPerOperation": 11120
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6726.2451171875,
+          "BytesPerOperation": 11120
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6895.849609375,
+          "BytesPerOperation": 11120
+        }
+      ]
+    },
+    {
+      "Case": "perturbed/bridge",
+      "Vertices": 16,
+      "Family": "open-perturbed",
+      "Stage": "EndpointBridgedArea",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "MedianNanoseconds": 6109.3017578125,
+      "MedianBytes": 10248,
+      "Value": 19.447269418447,
+      "Samples": [
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6057.8369140625,
+          "BytesPerOperation": 10248
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6812.646484375,
+          "BytesPerOperation": 10248
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6217.3828125,
+          "BytesPerOperation": 10248
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6434.5703125,
+          "BytesPerOperation": 10248
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 5971.9482421875,
+          "BytesPerOperation": 10248
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6065.576171875,
+          "BytesPerOperation": 10248
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6109.3017578125,
+          "BytesPerOperation": 10248
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6109.619140625,
+          "BytesPerOperation": 10248
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6044.4091796875,
+          "BytesPerOperation": 10248
+        }
+      ]
+    },
+    {
+      "Case": "closed/xor",
+      "Vertices": 16,
+      "Family": "closed-asymmetric",
+      "Stage": "FilledRegionDifference",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "MedianNanoseconds": 6411.9384765625,
+      "MedianBytes": 11176,
+      "Value": 12.465097824476997,
+      "Samples": [
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6468.408203125,
+          "BytesPerOperation": 11176
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 7012.98828125,
+          "BytesPerOperation": 11176
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6506.3720703125,
+          "BytesPerOperation": 11176
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6246.240234375,
+          "BytesPerOperation": 11176
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6411.9384765625,
+          "BytesPerOperation": 11176
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6495.7763671875,
+          "BytesPerOperation": 11176
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6258.6669921875,
+          "BytesPerOperation": 11176
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6341.3330078125,
+          "BytesPerOperation": 11176
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6332.7880859375,
+          "BytesPerOperation": 11176
+        }
+      ]
+    },
+    {
+      "Case": "exact/normalize-align-area",
+      "Vertices": 64,
+      "Family": "open-exact",
+      "Stage": "NormalizeAlignArea",
+      "Primary": true,
+      "AlignmentSamples": 64,
+      "MedianNanoseconds": 31492.578125,
+      "MedianBytes": 55368,
+      "Value": 0,
+      "Samples": [
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 31899.90234375,
+          "BytesPerOperation": 55368
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 31492.578125,
+          "BytesPerOperation": 55368
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 32735.9375,
+          "BytesPerOperation": 55368
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 31485.25390625,
+          "BytesPerOperation": 55368
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 31740.625,
+          "BytesPerOperation": 55368
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 31296.2890625,
+          "BytesPerOperation": 55368
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 31448.2421875,
+          "BytesPerOperation": 55368
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 30923.92578125,
+          "BytesPerOperation": 55368
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 32792.578125,
+          "BytesPerOperation": 55368
+        }
+      ]
+    },
+    {
+      "Case": "perturbed/normalize-align-area",
+      "Vertices": 64,
+      "Family": "open-perturbed",
+      "Stage": "NormalizeAlignArea",
+      "Primary": true,
+      "AlignmentSamples": 64,
+      "MedianNanoseconds": 36657.03125,
+      "MedianBytes": 48320,
+      "Value": 0.010462830844500018,
+      "Samples": [
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 38191.11328125,
+          "BytesPerOperation": 48320
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 36690.234375,
+          "BytesPerOperation": 48320
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 36293.5546875,
+          "BytesPerOperation": 48320
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 36657.03125,
+          "BytesPerOperation": 48320
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 36786.23046875,
+          "BytesPerOperation": 48320
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 36628.41796875,
+          "BytesPerOperation": 48320
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 35774.609375,
+          "BytesPerOperation": 48320
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 35704.00390625,
+          "BytesPerOperation": 48320
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 36862.40234375,
+          "BytesPerOperation": 48320
+        }
+      ]
+    },
+    {
+      "Case": "graph/integral",
+      "Vertices": 64,
+      "Family": "graph",
+      "Stage": "BetweenGraphs",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "MedianNanoseconds": 3609.521484375,
+      "MedianBytes": 0,
+      "Value": 0.033034459324086336,
+      "Samples": [
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 3609.521484375,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 3601.2451171875,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 3608.0322265625,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 3596.2158203125,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 3680.1025390625,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 3713.4033203125,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 3610.2294921875,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 3638.330078125,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 3607.55615234375,
+          "BytesPerOperation": 0
+        }
+      ]
+    },
+    {
+      "Case": "exact/normalize",
+      "Vertices": 64,
+      "Family": "open-exact",
+      "Stage": "NormalizeOnePath",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "MedianNanoseconds": 2219.62890625,
+      "MedianBytes": 1216,
+      "Value": 5.246455378921348,
+      "Samples": [
+        {
+          "Iterations": 16384,
+          "NanosecondsPerOperation": 2357.391357421875,
+          "BytesPerOperation": 1216
+        },
+        {
+          "Iterations": 16384,
+          "NanosecondsPerOperation": 2219.62890625,
+          "BytesPerOperation": 1216
+        },
+        {
+          "Iterations": 16384,
+          "NanosecondsPerOperation": 2458.074951171875,
+          "BytesPerOperation": 1216
+        },
+        {
+          "Iterations": 16384,
+          "NanosecondsPerOperation": 2175.5615234375,
+          "BytesPerOperation": 1216
+        },
+        {
+          "Iterations": 16384,
+          "NanosecondsPerOperation": 2215.71044921875,
+          "BytesPerOperation": 1216
+        },
+        {
+          "Iterations": 16384,
+          "NanosecondsPerOperation": 2318.804931640625,
+          "BytesPerOperation": 1216
+        },
+        {
+          "Iterations": 16384,
+          "NanosecondsPerOperation": 2166.4794921875,
+          "BytesPerOperation": 1216
+        },
+        {
+          "Iterations": 16384,
+          "NanosecondsPerOperation": 2155.87158203125,
+          "BytesPerOperation": 1216
+        },
+        {
+          "Iterations": 16384,
+          "NanosecondsPerOperation": 2338.48876953125,
+          "BytesPerOperation": 1216
+        }
+      ]
+    },
+    {
+      "Case": "exact/apply",
+      "Vertices": 64,
+      "Family": "open-exact",
+      "Stage": "AffineApply",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "MedianNanoseconds": 867.816162109375,
+      "MedianBytes": 1048,
+      "Value": 226.2082651304878,
+      "Samples": [
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 868.658447265625,
+          "BytesPerOperation": 1048
+        },
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 861.7645263671875,
+          "BytesPerOperation": 1048
+        },
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 882.40966796875,
+          "BytesPerOperation": 1048
+        },
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 858.233642578125,
+          "BytesPerOperation": 1048
+        },
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 870.3826904296875,
+          "BytesPerOperation": 1048
+        },
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 874.2279052734375,
+          "BytesPerOperation": 1048
+        },
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 866.986083984375,
+          "BytesPerOperation": 1048
+        },
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 867.816162109375,
+          "BytesPerOperation": 1048
+        },
+        {
+          "Iterations": 32768,
+          "NanosecondsPerOperation": 860.1348876953125,
+          "BytesPerOperation": 1048
+        }
+      ]
+    },
+    {
+      "Case": "exact/fit64",
+      "Vertices": 64,
+      "Family": "open-exact",
+      "Stage": "OpenFit",
+      "Primary": false,
+      "AlignmentSamples": 64,
+      "MedianNanoseconds": 7054.833984375,
+      "MedianBytes": 9712,
+      "Value": 8.457515282635386E-16,
+      "Samples": [
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 7587.841796875,
+          "BytesPerOperation": 9712
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 7039.453125,
+          "BytesPerOperation": 9712
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6969.4580078125,
+          "BytesPerOperation": 9712
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 7065.8203125,
+          "BytesPerOperation": 9712
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 7047.16796875,
+          "BytesPerOperation": 9712
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 7054.833984375,
+          "BytesPerOperation": 9712
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 7127.880859375,
+          "BytesPerOperation": 9712
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 7008.5693359375,
+          "BytesPerOperation": 9712
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 7086.572265625,
+          "BytesPerOperation": 9712
+        }
+      ]
+    },
+    {
+      "Case": "perturbed/fit64",
+      "Vertices": 64,
+      "Family": "open-perturbed",
+      "Stage": "OpenFit",
+      "Primary": false,
+      "AlignmentSamples": 64,
+      "MedianNanoseconds": 7050.3173828125,
+      "MedianBytes": 9712,
+      "Value": 0.045182506473167856,
+      "Samples": [
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 7203.9794921875,
+          "BytesPerOperation": 9712
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 7052.978515625,
+          "BytesPerOperation": 9712
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 7129.3701171875,
+          "BytesPerOperation": 9712
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 7020.5078125,
+          "BytesPerOperation": 9712
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 7008.59375,
+          "BytesPerOperation": 9712
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 6971.142578125,
+          "BytesPerOperation": 9712
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 7039.35546875,
+          "BytesPerOperation": 9712
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 7052.587890625,
+          "BytesPerOperation": 9712
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 7050.3173828125,
+          "BytesPerOperation": 9712
+        }
+      ]
+    },
+    {
+      "Case": "closed/fit64",
+      "Vertices": 64,
+      "Family": "closed-asymmetric",
+      "Stage": "ClosedPhaseFit",
+      "Primary": false,
+      "AlignmentSamples": 64,
+      "MedianNanoseconds": 27170.60546875,
+      "MedianBytes": 9728,
+      "Value": 0.004832606373949782,
+      "Samples": [
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 27393.06640625,
+          "BytesPerOperation": 9728
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 27170.60546875,
+          "BytesPerOperation": 9728
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 28328.90625,
+          "BytesPerOperation": 9728
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 27118.75,
+          "BytesPerOperation": 9728
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 26993.65234375,
+          "BytesPerOperation": 9728
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 27463.96484375,
+          "BytesPerOperation": 9728
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 27121.97265625,
+          "BytesPerOperation": 9728
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 27096.875,
+          "BytesPerOperation": 9728
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 27828.515625,
+          "BytesPerOperation": 9728
+        }
+      ]
+    },
+    {
+      "Case": "closed/fit256",
+      "Vertices": 64,
+      "Family": "closed-asymmetric",
+      "Stage": "ClosedPhaseFit",
+      "Primary": false,
+      "AlignmentSamples": 256,
+      "MedianNanoseconds": 315284.375,
+      "MedianBytes": 25088,
+      "Value": 0.00481539273721917,
+      "Samples": [
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 313573.4375,
+          "BytesPerOperation": 25088
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 316451.5625,
+          "BytesPerOperation": 25088
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 314742.1875,
+          "BytesPerOperation": 25088
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 317890.625,
+          "BytesPerOperation": 25088
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 313737.5,
+          "BytesPerOperation": 25088
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 323393.75,
+          "BytesPerOperation": 25088
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 314964.0625,
+          "BytesPerOperation": 25088
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 315284.375,
+          "BytesPerOperation": 25088
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 358723.4375,
+          "BytesPerOperation": 25088
+        }
+      ]
+    },
+    {
+      "Case": "exact/bridge",
+      "Vertices": 64,
+      "Family": "open-exact",
+      "Stage": "EndpointBridgedArea",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "MedianNanoseconds": 20472.0703125,
+      "MedianBytes": 30888,
+      "Value": 19.522508875664002,
+      "Samples": [
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 20458.49609375,
+          "BytesPerOperation": 30888
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 20472.0703125,
+          "BytesPerOperation": 30888
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 20752.05078125,
+          "BytesPerOperation": 30888
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 21051.3671875,
+          "BytesPerOperation": 30888
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 20936.23046875,
+          "BytesPerOperation": 30888
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 20389.84375,
+          "BytesPerOperation": 30888
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 20591.40625,
+          "BytesPerOperation": 30888
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 20071.875,
+          "BytesPerOperation": 30888
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 20345.99609375,
+          "BytesPerOperation": 30888
+        }
+      ]
+    },
+    {
+      "Case": "perturbed/bridge",
+      "Vertices": 64,
+      "Family": "open-perturbed",
+      "Stage": "EndpointBridgedArea",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "MedianNanoseconds": 20031.54296875,
+      "MedianBytes": 30360,
+      "Value": 19.5021828566275,
+      "Samples": [
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 20031.54296875,
+          "BytesPerOperation": 30360
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 20311.1328125,
+          "BytesPerOperation": 30360
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 19816.9921875,
+          "BytesPerOperation": 30360
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 20367.96875,
+          "BytesPerOperation": 30360
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 21240.8203125,
+          "BytesPerOperation": 30360
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 19851.171875,
+          "BytesPerOperation": 30360
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 19753.515625,
+          "BytesPerOperation": 30360
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 19742.87109375,
+          "BytesPerOperation": 30360
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 20438.0859375,
+          "BytesPerOperation": 30360
+        }
+      ]
+    },
+    {
+      "Case": "closed/xor",
+      "Vertices": 64,
+      "Family": "closed-asymmetric",
+      "Stage": "FilledRegionDifference",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "MedianNanoseconds": 21905.95703125,
+      "MedianBytes": 33112,
+      "Value": 12.967888231642,
+      "Samples": [
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 22346.58203125,
+          "BytesPerOperation": 33112
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 22036.23046875,
+          "BytesPerOperation": 33112
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 21649.609375,
+          "BytesPerOperation": 33112
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 21859.66796875,
+          "BytesPerOperation": 33112
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 23277.05078125,
+          "BytesPerOperation": 33112
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 21905.95703125,
+          "BytesPerOperation": 33112
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 22076.26953125,
+          "BytesPerOperation": 33112
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 21699.8046875,
+          "BytesPerOperation": 33112
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 21763.57421875,
+          "BytesPerOperation": 33112
+        }
+      ]
+    },
+    {
+      "Case": "exact/normalize-align-area",
+      "Vertices": 256,
+      "Family": "open-exact",
+      "Stage": "NormalizeAlignArea",
+      "Primary": true,
+      "AlignmentSamples": 64,
+      "MedianNanoseconds": 105779.6875,
+      "MedianBytes": 189248,
+      "Value": 0,
+      "Samples": [
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 110035.15625,
+          "BytesPerOperation": 189248
+        },
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 103652.34375,
+          "BytesPerOperation": 189248
+        },
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 106091.40625,
+          "BytesPerOperation": 189248
+        },
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 106474.609375,
+          "BytesPerOperation": 189248
+        },
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 105480.078125,
+          "BytesPerOperation": 189248
+        },
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 104688.671875,
+          "BytesPerOperation": 189248
+        },
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 105859.375,
+          "BytesPerOperation": 189248
+        },
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 105779.6875,
+          "BytesPerOperation": 189248
+        },
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 103517.578125,
+          "BytesPerOperation": 189248
+        }
+      ]
+    },
+    {
+      "Case": "perturbed/normalize-align-area",
+      "Vertices": 256,
+      "Family": "open-perturbed",
+      "Stage": "NormalizeAlignArea",
+      "Primary": true,
+      "AlignmentSamples": 64,
+      "MedianNanoseconds": 124151.953125,
+      "MedianBytes": 158480,
+      "Value": 0.010498951574499957,
+      "Samples": [
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 124037.890625,
+          "BytesPerOperation": 158480
+        },
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 122893.359375,
+          "BytesPerOperation": 158480
+        },
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 123078.515625,
+          "BytesPerOperation": 158480
+        },
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 124151.953125,
+          "BytesPerOperation": 158480
+        },
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 126437.5,
+          "BytesPerOperation": 158480
+        },
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 129714.84375,
+          "BytesPerOperation": 158480
+        },
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 128046.875,
+          "BytesPerOperation": 158480
+        },
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 146487.109375,
+          "BytesPerOperation": 158480
+        },
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 123000.390625,
+          "BytesPerOperation": 158480
+        }
+      ]
+    },
+    {
+      "Case": "graph/integral",
+      "Vertices": 256,
+      "Family": "graph",
+      "Stage": "BetweenGraphs",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "MedianNanoseconds": 14736.181640625,
+      "MedianBytes": 0,
+      "Value": 0.03321037196181735,
+      "Samples": [
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 14433.251953125,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 14848.291015625,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 14736.181640625,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 15724.951171875,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 14250.68359375,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 14506.103515625,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 14523.4375,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 15300.048828125,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 15339.35546875,
+          "BytesPerOperation": 0
+        }
+      ]
+    },
+    {
+      "Case": "exact/normalize",
+      "Vertices": 256,
+      "Family": "open-exact",
+      "Stage": "NormalizeOnePath",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "MedianNanoseconds": 8232.275390625,
+      "MedianBytes": 4288,
+      "Value": 5.246029072501534,
+      "Samples": [
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 8833.69140625,
+          "BytesPerOperation": 4288
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 8386.5478515625,
+          "BytesPerOperation": 4288
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 8444.1650390625,
+          "BytesPerOperation": 4288
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 8232.275390625,
+          "BytesPerOperation": 4288
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 8355.1025390625,
+          "BytesPerOperation": 4288
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 8186.7431640625,
+          "BytesPerOperation": 4288
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 8015.771484375,
+          "BytesPerOperation": 4288
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 7974.8291015625,
+          "BytesPerOperation": 4288
+        },
+        {
+          "Iterations": 4096,
+          "NanosecondsPerOperation": 8076.6357421875,
+          "BytesPerOperation": 4288
+        }
+      ]
+    },
+    {
+      "Case": "exact/apply",
+      "Vertices": 256,
+      "Family": "open-exact",
+      "Stage": "AffineApply",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "MedianNanoseconds": 3302.880859375,
+      "MedianBytes": 4120,
+      "Value": 226.0777864741977,
+      "Samples": [
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 3302.880859375,
+          "BytesPerOperation": 4120
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 3409.53369140625,
+          "BytesPerOperation": 4120
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 3308.251953125,
+          "BytesPerOperation": 4120
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 3292.5048828125,
+          "BytesPerOperation": 4120
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 3254.2236328125,
+          "BytesPerOperation": 4120
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 3326.708984375,
+          "BytesPerOperation": 4120
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 3263.26904296875,
+          "BytesPerOperation": 4120
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 3246.97265625,
+          "BytesPerOperation": 4120
+        },
+        {
+          "Iterations": 8192,
+          "NanosecondsPerOperation": 3453.62548828125,
+          "BytesPerOperation": 4120
+        }
+      ]
+    },
+    {
+      "Case": "exact/fit64",
+      "Vertices": 256,
+      "Family": "open-exact",
+      "Stage": "OpenFit",
+      "Primary": false,
+      "AlignmentSamples": 64,
+      "MedianNanoseconds": 16631.201171875,
+      "MedianBytes": 22000,
+      "Value": 9.274361014294598E-16,
+      "Samples": [
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 16949.31640625,
+          "BytesPerOperation": 22000
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 16554.736328125,
+          "BytesPerOperation": 22000
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 16596.337890625,
+          "BytesPerOperation": 22000
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 16614.599609375,
+          "BytesPerOperation": 22000
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 17276.513671875,
+          "BytesPerOperation": 22000
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 17375.5859375,
+          "BytesPerOperation": 22000
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 16464.0625,
+          "BytesPerOperation": 22000
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 17799.853515625,
+          "BytesPerOperation": 22000
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 16631.201171875,
+          "BytesPerOperation": 22000
+        }
+      ]
+    },
+    {
+      "Case": "perturbed/fit64",
+      "Vertices": 256,
+      "Family": "open-perturbed",
+      "Stage": "OpenFit",
+      "Primary": false,
+      "AlignmentSamples": 64,
+      "MedianNanoseconds": 17392.724609375,
+      "MedianBytes": 22000,
+      "Value": 0.045273457052922135,
+      "Samples": [
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 17028.173828125,
+          "BytesPerOperation": 22000
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 17756.005859375,
+          "BytesPerOperation": 22000
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 18218.798828125,
+          "BytesPerOperation": 22000
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 17035.009765625,
+          "BytesPerOperation": 22000
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 17392.724609375,
+          "BytesPerOperation": 22000
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 19020.068359375,
+          "BytesPerOperation": 22000
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 18417.08984375,
+          "BytesPerOperation": 22000
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 16568.896484375,
+          "BytesPerOperation": 22000
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 16503.466796875,
+          "BytesPerOperation": 22000
+        }
+      ]
+    },
+    {
+      "Case": "closed/fit64",
+      "Vertices": 256,
+      "Family": "closed-asymmetric",
+      "Stage": "ClosedPhaseFit",
+      "Primary": false,
+      "AlignmentSamples": 64,
+      "MedianNanoseconds": 37013.28125,
+      "MedianBytes": 22016,
+      "Value": 0.0035778821755734296,
+      "Samples": [
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 38064.94140625,
+          "BytesPerOperation": 22016
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 36848.2421875,
+          "BytesPerOperation": 22016
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 37013.28125,
+          "BytesPerOperation": 22016
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 36824.8046875,
+          "BytesPerOperation": 22016
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 36827.44140625,
+          "BytesPerOperation": 22016
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 37014.16015625,
+          "BytesPerOperation": 22016
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 38492.3828125,
+          "BytesPerOperation": 22016
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 37621.97265625,
+          "BytesPerOperation": 22016
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 36526.46484375,
+          "BytesPerOperation": 22016
+        }
+      ]
+    },
+    {
+      "Case": "closed/fit256",
+      "Vertices": 256,
+      "Family": "closed-asymmetric",
+      "Stage": "ClosedPhaseFit",
+      "Primary": false,
+      "AlignmentSamples": 256,
+      "MedianNanoseconds": 324956.25,
+      "MedianBytes": 37376,
+      "Value": 0.0035743537057062384,
+      "Samples": [
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 327900,
+          "BytesPerOperation": 37376
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 325675,
+          "BytesPerOperation": 37376
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 325831.25,
+          "BytesPerOperation": 37376
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 324809.375,
+          "BytesPerOperation": 37376
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 324956.25,
+          "BytesPerOperation": 37376
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 324259.375,
+          "BytesPerOperation": 37376
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 324470.3125,
+          "BytesPerOperation": 37376
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 327503.125,
+          "BytesPerOperation": 37376
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 323090.625,
+          "BytesPerOperation": 37376
+        }
+      ]
+    },
+    {
+      "Case": "exact/bridge",
+      "Vertices": 256,
+      "Family": "open-exact",
+      "Stage": "EndpointBridgedArea",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "MedianNanoseconds": 77240.0390625,
+      "MedianBytes": 112152,
+      "Value": 19.525794653038993,
+      "Samples": [
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 76040.4296875,
+          "BytesPerOperation": 112152
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 79472.265625,
+          "BytesPerOperation": 112152
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 75983.0078125,
+          "BytesPerOperation": 112152
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 77523.6328125,
+          "BytesPerOperation": 112152
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 80019.140625,
+          "BytesPerOperation": 112152
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 76043.359375,
+          "BytesPerOperation": 112152
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 77240.0390625,
+          "BytesPerOperation": 112152
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 76192.96875,
+          "BytesPerOperation": 112152
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 78681.640625,
+          "BytesPerOperation": 112152
+        }
+      ]
+    },
+    {
+      "Case": "perturbed/bridge",
+      "Vertices": 256,
+      "Family": "open-perturbed",
+      "Stage": "EndpointBridgedArea",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "MedianNanoseconds": 75852.734375,
+      "MedianBytes": 110472,
+      "Value": 19.505294539759504,
+      "Samples": [
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 75522.65625,
+          "BytesPerOperation": 110472
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 75852.734375,
+          "BytesPerOperation": 110472
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 78066.015625,
+          "BytesPerOperation": 110472
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 78147.265625,
+          "BytesPerOperation": 110472
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 76592.3828125,
+          "BytesPerOperation": 110472
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 74414.84375,
+          "BytesPerOperation": 110472
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 75218.75,
+          "BytesPerOperation": 110472
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 74397.0703125,
+          "BytesPerOperation": 110472
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 80444.53125,
+          "BytesPerOperation": 110472
+        }
+      ]
+    },
+    {
+      "Case": "closed/xor",
+      "Vertices": 256,
+      "Family": "closed-asymmetric",
+      "Stage": "FilledRegionDifference",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "MedianNanoseconds": 86371.484375,
+      "MedianBytes": 120712,
+      "Value": 13.002190606115503,
+      "Samples": [
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 84651.171875,
+          "BytesPerOperation": 120712
+        },
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 83637.5,
+          "BytesPerOperation": 120712
+        },
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 86371.484375,
+          "BytesPerOperation": 120712
+        },
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 82566.40625,
+          "BytesPerOperation": 120712
+        },
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 83428.125,
+          "BytesPerOperation": 120712
+        },
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 86930.859375,
+          "BytesPerOperation": 120712
+        },
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 90852.34375,
+          "BytesPerOperation": 120712
+        },
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 86429.296875,
+          "BytesPerOperation": 120712
+        },
+        {
+          "Iterations": 256,
+          "NanosecondsPerOperation": 87375.78125,
+          "BytesPerOperation": 120712
+        }
+      ]
+    },
+    {
+      "Case": "exact/normalize-align-area",
+      "Vertices": 1024,
+      "Family": "open-exact",
+      "Stage": "NormalizeAlignArea",
+      "Primary": true,
+      "AlignmentSamples": 64,
+      "MedianNanoseconds": 409634.375,
+      "MedianBytes": 724368,
+      "Value": 0,
+      "Samples": [
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 415115.625,
+          "BytesPerOperation": 724368
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 401435.9375,
+          "BytesPerOperation": 724368
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 410392.1875,
+          "BytesPerOperation": 724368
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 401950,
+          "BytesPerOperation": 724368
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 409337.5,
+          "BytesPerOperation": 724368
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 403918.75,
+          "BytesPerOperation": 724368
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 417064.0625,
+          "BytesPerOperation": 724368
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 409634.375,
+          "BytesPerOperation": 724368
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 429212.5,
+          "BytesPerOperation": 724368
+        }
+      ]
+    },
+    {
+      "Case": "perturbed/normalize-align-area",
+      "Vertices": 1024,
+      "Family": "open-perturbed",
+      "Stage": "NormalizeAlignArea",
+      "Primary": true,
+      "AlignmentSamples": 64,
+      "MedianNanoseconds": 477821.875,
+      "MedianBytes": 566112,
+      "Value": 0.01050119899050009,
+      "Samples": [
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 478781.25,
+          "BytesPerOperation": 566112
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 474354.6875,
+          "BytesPerOperation": 566112
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 473875,
+          "BytesPerOperation": 566112
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 499076.5625,
+          "BytesPerOperation": 566112
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 466057.8125,
+          "BytesPerOperation": 566112
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 469395.3125,
+          "BytesPerOperation": 566112
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 477821.875,
+          "BytesPerOperation": 566112
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 486970.3125,
+          "BytesPerOperation": 566112
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 484359.375,
+          "BytesPerOperation": 566112
+        }
+      ]
+    },
+    {
+      "Case": "graph/integral",
+      "Vertices": 1024,
+      "Family": "graph",
+      "Stage": "BetweenGraphs",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "MedianNanoseconds": 56800.5859375,
+      "MedianBytes": 0,
+      "Value": 0.03322111903847499,
+      "Samples": [
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 56800.5859375,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 56774.8046875,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 57015.8203125,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 57325.9765625,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 56678.125,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 56701.3671875,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 58391.2109375,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 56776.953125,
+          "BytesPerOperation": 0
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 57677.34375,
+          "BytesPerOperation": 0
+        }
+      ]
+    },
+    {
+      "Case": "exact/normalize",
+      "Vertices": 1024,
+      "Family": "open-exact",
+      "Stage": "NormalizeOnePath",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "MedianNanoseconds": 31547.265625,
+      "MedianBytes": 16576,
+      "Value": 5.246496521285933,
+      "Samples": [
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 34753.125,
+          "BytesPerOperation": 16576
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 32665.72265625,
+          "BytesPerOperation": 16576
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 31322.36328125,
+          "BytesPerOperation": 16576
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 32390.625,
+          "BytesPerOperation": 16576
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 31547.265625,
+          "BytesPerOperation": 16576
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 30892.08984375,
+          "BytesPerOperation": 16576
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 31395.3125,
+          "BytesPerOperation": 16576
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 32113.671875,
+          "BytesPerOperation": 16576
+        },
+        {
+          "Iterations": 1024,
+          "NanosecondsPerOperation": 31235.64453125,
+          "BytesPerOperation": 16576
+        }
+      ]
+    },
+    {
+      "Case": "exact/apply",
+      "Vertices": 1024,
+      "Family": "open-exact",
+      "Stage": "AffineApply",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "MedianNanoseconds": 13164.599609375,
+      "MedianBytes": 16408,
+      "Value": 226.04812536278072,
+      "Samples": [
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 12858.7890625,
+          "BytesPerOperation": 16408
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 13267.1875,
+          "BytesPerOperation": 16408
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 13253.955078125,
+          "BytesPerOperation": 16408
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 13054.443359375,
+          "BytesPerOperation": 16408
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 13674.609375,
+          "BytesPerOperation": 16408
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 12795.01953125,
+          "BytesPerOperation": 16408
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 12848.095703125,
+          "BytesPerOperation": 16408
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 13164.599609375,
+          "BytesPerOperation": 16408
+        },
+        {
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 13729.150390625,
+          "BytesPerOperation": 16408
+        }
+      ]
+    },
+    {
+      "Case": "exact/fit64",
+      "Vertices": 1024,
+      "Family": "open-exact",
+      "Stage": "OpenFit",
+      "Primary": false,
+      "AlignmentSamples": 64,
+      "MedianNanoseconds": 54638.0859375,
+      "MedianBytes": 71152,
+      "Value": 3.61248545091451E-15,
+      "Samples": [
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 54601.7578125,
+          "BytesPerOperation": 71152
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 54277.34375,
+          "BytesPerOperation": 71152
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 54518.5546875,
+          "BytesPerOperation": 71152
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 56004.6875,
+          "BytesPerOperation": 71152
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 55646.484375,
+          "BytesPerOperation": 71152
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 54599.609375,
+          "BytesPerOperation": 71152
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 54638.0859375,
+          "BytesPerOperation": 71152
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 56435.3515625,
+          "BytesPerOperation": 71152
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 62956.4453125,
+          "BytesPerOperation": 71152
+        }
+      ]
+    },
+    {
+      "Case": "perturbed/fit64",
+      "Vertices": 1024,
+      "Family": "open-perturbed",
+      "Stage": "OpenFit",
+      "Primary": false,
+      "AlignmentSamples": 64,
+      "MedianNanoseconds": 55732.6171875,
+      "MedianBytes": 71152,
+      "Value": 0.045279938618794494,
+      "Samples": [
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 55732.6171875,
+          "BytesPerOperation": 71152
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 64346.2890625,
+          "BytesPerOperation": 71152
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 63422.265625,
+          "BytesPerOperation": 71152
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 55223.2421875,
+          "BytesPerOperation": 71152
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 55765.0390625,
+          "BytesPerOperation": 71152
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 58205.6640625,
+          "BytesPerOperation": 71152
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 55149.609375,
+          "BytesPerOperation": 71152
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 55367.578125,
+          "BytesPerOperation": 71152
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 54915.4296875,
+          "BytesPerOperation": 71152
+        }
+      ]
+    },
+    {
+      "Case": "closed/fit64",
+      "Vertices": 1024,
+      "Family": "closed-asymmetric",
+      "Stage": "ClosedPhaseFit",
+      "Primary": false,
+      "AlignmentSamples": 64,
+      "MedianNanoseconds": 75362.890625,
+      "MedianBytes": 71168,
+      "Value": 0.0034936664696986657,
+      "Samples": [
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 75120.5078125,
+          "BytesPerOperation": 71168
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 75655.46875,
+          "BytesPerOperation": 71168
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 74675.5859375,
+          "BytesPerOperation": 71168
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 76813.671875,
+          "BytesPerOperation": 71168
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 74410.3515625,
+          "BytesPerOperation": 71168
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 75362.890625,
+          "BytesPerOperation": 71168
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 76887.3046875,
+          "BytesPerOperation": 71168
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 74967.578125,
+          "BytesPerOperation": 71168
+        },
+        {
+          "Iterations": 512,
+          "NanosecondsPerOperation": 76573.2421875,
+          "BytesPerOperation": 71168
+        }
+      ]
+    },
+    {
+      "Case": "closed/fit256",
+      "Vertices": 1024,
+      "Family": "closed-asymmetric",
+      "Stage": "ClosedPhaseFit",
+      "Primary": false,
+      "AlignmentSamples": 256,
+      "MedianNanoseconds": 361203.125,
+      "MedianBytes": 86528,
+      "Value": 0.003492806117612613,
+      "Samples": [
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 361579.6875,
+          "BytesPerOperation": 86528
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 361203.125,
+          "BytesPerOperation": 86528
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 376937.5,
+          "BytesPerOperation": 86528
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 360698.4375,
+          "BytesPerOperation": 86528
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 372371.875,
+          "BytesPerOperation": 86528
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 361090.625,
+          "BytesPerOperation": 86528
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 368065.625,
+          "BytesPerOperation": 86528
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 360298.4375,
+          "BytesPerOperation": 86528
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 359510.9375,
+          "BytesPerOperation": 86528
+        }
+      ]
+    },
+    {
+      "Case": "exact/bridge",
+      "Vertices": 1024,
+      "Family": "open-exact",
+      "Stage": "EndpointBridgedArea",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "MedianNanoseconds": 303674.21875,
+      "MedianBytes": 437008,
+      "Value": 19.525991681695004,
+      "Samples": [
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 314922.65625,
+          "BytesPerOperation": 437008
+        },
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 299932.03125,
+          "BytesPerOperation": 437008
+        },
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 303674.21875,
+          "BytesPerOperation": 437008
+        },
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 308859.375,
+          "BytesPerOperation": 437008
+        },
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 312307.03125,
+          "BytesPerOperation": 437008
+        },
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 303179.6875,
+          "BytesPerOperation": 437008
+        },
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 301141.40625,
+          "BytesPerOperation": 437008
+        },
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 313487.5,
+          "BytesPerOperation": 437008
+        },
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 302577.34375,
+          "BytesPerOperation": 437008
+        }
+      ]
+    },
+    {
+      "Case": "perturbed/bridge",
+      "Vertices": 1024,
+      "Family": "open-perturbed",
+      "Stage": "EndpointBridgedArea",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "MedianNanoseconds": 294927.34375,
+      "MedianBytes": 430816,
+      "Value": 19.50547464674849,
+      "Samples": [
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 296273.4375,
+          "BytesPerOperation": 430816
+        },
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 296717.96875,
+          "BytesPerOperation": 430816
+        },
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 293217.1875,
+          "BytesPerOperation": 430816
+        },
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 300228.90625,
+          "BytesPerOperation": 430816
+        },
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 294471.875,
+          "BytesPerOperation": 430816
+        },
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 294404.6875,
+          "BytesPerOperation": 430816
+        },
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 297247.65625,
+          "BytesPerOperation": 430816
+        },
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 294927.34375,
+          "BytesPerOperation": 430816
+        },
+        {
+          "Iterations": 128,
+          "NanosecondsPerOperation": 294083.59375,
+          "BytesPerOperation": 430816
+        }
+      ]
+    },
+    {
+      "Case": "closed/xor",
+      "Vertices": 1024,
+      "Family": "closed-asymmetric",
+      "Stage": "FilledRegionDifference",
+      "Primary": false,
+      "AlignmentSamples": null,
+      "MedianNanoseconds": 342120.3125,
+      "MedianBytes": 470968,
+      "Value": 13.00434689702601,
+      "Samples": [
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 344750,
+          "BytesPerOperation": 470968
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 366593.75,
+          "BytesPerOperation": 470968
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 342878.125,
+          "BytesPerOperation": 470968
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 332482.8125,
+          "BytesPerOperation": 470968
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 343764.0625,
+          "BytesPerOperation": 470968
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 331817.1875,
+          "BytesPerOperation": 470968
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 331071.875,
+          "BytesPerOperation": 470968
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 327465.625,
+          "BytesPerOperation": 470968
+        },
+        {
+          "Iterations": 64,
+          "NanosecondsPerOperation": 342120.3125,
+          "BytesPerOperation": 470968
+        }
+      ]
+    }
+  ]
+}
