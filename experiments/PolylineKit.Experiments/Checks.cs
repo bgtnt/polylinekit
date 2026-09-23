@@ -73,6 +73,7 @@ internal static class Checks
             Near(f.Name + " GenLIP certificate", LipGraphs.Measure(f.P, f.Q), gen.Score, 1e-9);
             True(f.Name + " good groups", gen.GoodGroups == 1 && gen.BadPairs == 0);
             Near(f.Name + " Clipper", PolylineArea.BetweenGraphs(f.P, f.Q), ClipperOracle.Between(f.P, f.Q), 2e-5);
+            Near(f.Name + " Clipper transpose control", PolylineArea.BetweenGraphs(f.P, f.Q), ClipperOracle.Between(f.P.Select(p => new Point2(p.Y, p.X)).ToArray(), f.Q.Select(p => new Point2(p.Y, p.X)).ToArray()), 2e-5);
         }
         Point2[] axis = [new(0,0), new(2,0)];
         Near("duplicates", 1, PolylineArea.BetweenGraphs([new(0,0), new(0,0), new(2,0)], [new(0,0), new(1,1), new(1,1), new(2,0)]));

@@ -27,13 +27,15 @@ internal static class Benchmarks
             List<Lobe> lobes = []; LipGraphs.Measure(f.P, f.Q, lobes);
             string inputHash = Convert.ToHexString(SHA256.HashData(JsonSerializer.SerializeToUtf8Bytes(f, Evidence.JsonOptions)));
             PathsD prepared = new() { new PathD(f.P.Concat(f.Q.Reverse()).Select(p => new PointD(p.X, p.Y))) };
+            PathsD transposed = new() { new PathD(f.P.Concat(f.Q.Reverse()).Select(p => new PointD(p.Y, p.X))) };
             var methods = new (string Name, Func<double> Invoke)[]
             {
                 ("UnsignedGraphArea", () => PolylineArea.BetweenGraphs(f.P, f.Q)),
                 ("LipGraphSweep", () => LipGraphs.Measure(f.P, f.Q)),
                 ("GenLipP0", () => GenLip.Measure(f.P, f.Q).Score),
                 ("ClipperFull", () => ClipperOracle.Between(f.P, f.Q)),
-                ("ClipperPrepared", () => Math.Abs(Clipper.Area(Clipper.Union(prepared, new PathsD(), FillRule.NonZero, ClipperOracle.Precision))))
+                ("ClipperPrepared", () => Math.Abs(Clipper.Area(Clipper.Union(prepared, new PathsD(), FillRule.NonZero, ClipperOracle.Precision)))),
+                ("ClipperPreparedTransposed", () => Math.Abs(Clipper.Area(Clipper.Union(transposed, new PathsD(), FillRule.NonZero, ClipperOracle.Precision))))
             };
             // Rotate method order by run to reduce consistent order effects.
             foreach (var method in methods.Skip((run - 1) % methods.Length).Concat(methods.Take((run - 1) % methods.Length)))
