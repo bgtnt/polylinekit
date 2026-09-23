@@ -59,6 +59,9 @@ query can use `--query path.json` instead of `--sample`:
 dotnet run --project examples/StrokeTemplates -c Release -- --data artifacts/recognition/data --freeze results/recognition/frozen.json --query my-query.json --seed 1729 --method rms --output artifacts/consumer/imported.html
 ```
 
+HTML and export outputs must have distinct full paths and must not reuse the
+query, frozen configuration or selected dataset JSONL input path.
+
 Minimal fresh-input example:
 
 ```json

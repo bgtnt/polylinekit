@@ -42,6 +42,48 @@ def writer_fixture():
     return data, rows
 
 
+def performance_fixture():
+    quality, metadata = {}, {}
+    cases = []
+    for dataset in analyze.METHODS:
+        metadata[dataset] = {"freezeSha256": "frozen", "inputSha256": dataset + "-input", "configuration": {"dataset": dataset}}
+        for seed in analyze.SEEDS:
+            for method in analyze.METHODS[dataset]:
+                row = prediction(dataset + "/q", method)
+                row.update(dataset=dataset, seed=seed)
+                if dataset == "pendigits":
+                    row.pop("writerId")
+                    excluded = prediction(dataset + "/u", method, "unsupported")
+                    excluded.update(dataset=dataset, seed=seed)
+                    excluded.pop("writerId")
+                    quality[analyze.row_key(excluded)] = excluded
+                quality[analyze.row_key(row)] = row
+                query = {key: row[key] for key in ("sampleId", "status", "predictedLabel", "templateId", "score")}
+                query.update(elapsedTicks=1, allocatedBytes=100)
+                cases.append({"dataset": dataset, "seed": seed, "method": method,
+                    "heldOutWriter": "s02" if dataset == "dollar" else None, "templateIds": ["template"], "templateCount": 1,
+                    "officialQueryCount": 1 if dataset == "dollar" else 2, "supportedQueryCount": 1,
+                    "unsupportedQueryCount": 0 if dataset == "dollar" else 1, "configuration": {"dataset": dataset},
+                    "sharedSamples": 64, "nativeSamples": 0, "warmupSequence": ["development/q"],
+                    "warmupQueries": 100, "warmupMilliseconds": 3000, "failures": 0,
+                    "p50Microseconds": 1000, "p95Microseconds": 1000, "medianBytesPerQuery": 100, "meanBytesPerQuery": 100,
+                    "bankConstructionMilliseconds": 1, "bankConstructionAllocatedBytes": 1000,
+                    "retainedPreparedBankBytes": -5, "totalProcessingMilliseconds": 2, "measuredGcCollections": [0, 0, 0],
+                    "scoringOnly": {"nanosecondsPerQuery": 50, "bytesPerQuery": 0}, "queries": [query]})
+    runs = []
+    for variant in analyze.VARIANTS:
+        for number in (1, 2, 3):
+            measurements = copy.deepcopy(cases)
+            for case in measurements:
+                case["variant"] = variant
+                case["retainedPreparedBankBytes"] = (number - 2) * 5 - 5
+            runs.append({"variant": variant, "run": number, "forceScalar": variant != "cached-simd",
+                         "coreTarget": ".NETCoreApp,Version=v10.0", "stopwatchFrequency": 1000,
+                         "freezeSha256": "frozen", "inputHashes": {dataset: dataset + "-input" for dataset in analyze.METHODS},
+                         "measurements": measurements})
+    return runs, quality, metadata
+
+
 class AnalysisChecks(unittest.TestCase):
     def test_failures_and_unsupported_preserve_different_denominators(self):
         data = {"a": {"supported": True}, "b": {"supported": True}, "c": {"supported": False}}
@@ -62,6 +104,19 @@ class AnalysisChecks(unittest.TestCase):
         for key in ("bothCorrect", "baselineOnlyCorrect", "candidateOnlyCorrect", "bothWrong"):
             self.assertEqual(result[key], 1)
         self.assertEqual(result["accuracyDifference"], 0)
+
+    def test_replay_selection_uses_first_ordinal_successful_correction_and_regression(self):
+        rows = {}
+        for identifier in ("c", "b", "a"):
+            for method in ("rms", "combined"):
+                guessed = "a" if (identifier == "b") == (method == "rms") else "b"
+                row = prediction(identifier, method, guessed=guessed)
+                row["dataset"] = "pendigits"
+                rows[analyze.row_key(row)] = row
+        selected = analyze.pendigits_replay_cases(rows)["cases"]
+        self.assertEqual([(r["kind"], r["sampleId"]) for r in selected],
+                         [("combined-correct-rms-wrong", "a"), ("rms-correct-combined-wrong", "b")])
+        self.assertNotIn("strokes", str(selected))
 
     def test_complete_grid_and_ten_writer_blocks(self):
         data, rows = writer_fixture()
@@ -199,6 +254,59 @@ class AnalysisChecks(unittest.TestCase):
                 content = (Path(directory) / name).read_bytes()
                 self.assertNotIn(b"\r\n", content)
                 self.assertFalse(content.startswith(b"\xef\xbb\xbf"))
+
+
+class PerformanceChecks(unittest.TestCase):
+    def test_nine_runs_validate_predictions_and_preserve_negative_retained_noise(self):
+        runs, quality, metadata = performance_fixture()
+        result = analyze.performance_rows(runs, quality, metadata)
+        self.assertEqual(result["runs"], 9)
+        self.assertEqual(result["cases"], 243)
+        self.assertEqual(len(result["summaries"]), 27)
+        self.assertTrue(result["qualityAgreement"]["exact"])
+        self.assertTrue(result["variantAgreement"]["exact"])
+        self.assertEqual(result["variantAgreement"]["comparedRows"], 216)
+        self.assertEqual(result["summaries"][0]["retainedPreparedBankBytes"], {"median": -5, "minimum": -10, "maximum": 0})
+
+    def test_missing_and_duplicate_process_runs_fail(self):
+        runs, quality, metadata = performance_fixture()
+        for bad in (runs[:-1], runs + [runs[0]]):
+            with self.assertRaisesRegex(ValueError, "three variants"):
+                analyze.performance_rows(bad, quality, metadata)
+
+    def test_query_identity_cannot_silently_change(self):
+        runs, quality, metadata = performance_fixture()
+        runs[0]["measurements"][0]["queries"][0]["sampleId"] = "missing"
+        with self.assertRaisesRegex(ValueError, "query identities"):
+            analyze.performance_rows(runs, quality, metadata)
+
+    def test_one_ulp_score_change_is_reported_against_quality_and_variants(self):
+        runs, quality, metadata = performance_fixture()
+        query = runs[-1]["measurements"][0]["queries"][0]
+        query["score"] = math.nextafter(query["score"], math.inf)
+        result = analyze.performance_rows(runs, quality, metadata)
+        self.assertFalse(result["qualityAgreement"]["exact"])
+        self.assertFalse(result["variantAgreement"]["exact"])
+        self.assertEqual(len(result["qualityAgreement"]["deviations"]), 1)
+        self.assertEqual(len(result["variantAgreement"]["deviations"]), 1)
+
+    def test_switch_and_quantile_errors_fail(self):
+        original, quality, metadata = performance_fixture()
+        for kind in ("switch", "quantile"):
+            runs = copy.deepcopy(original)
+            if kind == "switch":
+                runs[0]["forceScalar"] = False
+            else:
+                runs[0]["measurements"][0]["p95Microseconds"] = 999
+            with self.subTest(kind=kind), self.assertRaises(ValueError):
+                analyze.performance_rows(runs, quality, metadata)
+
+    def test_compressed_json_reader(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "case.json.gz"
+            with gzip.open(path, "wt", encoding="utf-8", newline="\n") as stream:
+                json.dump({"value": [1, "x"]}, stream)
+            self.assertEqual(analyze.read_json(path), {"value": [1, "x"]})
 
 
 if __name__ == "__main__":

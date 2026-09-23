@@ -11,6 +11,7 @@ try
     if (options.Help) { Console.WriteLine(ReplayOptions.Usage); return 0; }
     if (options.Check) { ConsumerChecks.Run(); return 0; }
     ReplayInput input = options.Demo ? DemoFixtures.Create() : ReplayInput.Load(options);
+    options.ValidateOutputPaths(input.Bank.Dataset);
     ReplayResult result = ReplayMatcher.Match(input, options.Method);
     if (options.Demo)
     {

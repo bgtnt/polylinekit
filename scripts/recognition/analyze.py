@@ -11,6 +11,7 @@ import math
 from pathlib import Path
 import platform
 import random
+import statistics
 import struct
 import sys
 
@@ -18,6 +19,7 @@ SEEDS = (1729, 2718, 31415)
 METHODS = {"dollar": ("rms", "area", "combined", "protractor"),
            "pendigits": ("rms", "area", "combined", "protractor", "dtw")}
 SCORE_FIELDS = ("score", "rms", "area", "margin")
+VARIANTS = ("uncached-scalar", "cached-scalar", "cached-simd")
 
 
 def require(condition: bool, message: str) -> None:
@@ -37,6 +39,12 @@ def read_jsonl(path: Path):
             row = json.loads(line, parse_constant=invalid_constant)
             require(isinstance(row, dict), f"Expected JSON object: {path}:{index}")
             yield row
+
+
+def read_json(path: Path):
+    opener = gzip.open if path.suffix == ".gz" else open
+    with opener(path, "rt", encoding="utf-8") as stream:
+        return json.load(stream, parse_constant=invalid_constant)
 
 
 def row_key(row: dict) -> tuple:
@@ -272,6 +280,23 @@ def analyze_rows(rows: dict, data: dict) -> dict:
     return result
 
 
+def pendigits_replay_cases(rows: dict) -> dict:
+    dataset, seed = "pendigits", 1729
+    cases = []
+    identifiers = sorted({row["sampleId"] for row in rows.values() if row["dataset"] == dataset and row["seed"] == seed})
+    for kind, rms_correct, combined_correct in (("combined-correct-rms-wrong", False, True),
+                                                ("rms-correct-combined-wrong", True, False)):
+        for identifier in identifiers:
+            rms, combined = rows.get((dataset, seed, identifier, "rms")), rows.get((dataset, seed, identifier, "combined"))
+            if rms and combined and rms["status"] == combined["status"] == "ok" and correct(rms) == rms_correct and correct(combined) == combined_correct:
+                cases.append({"kind": kind, "dataset": dataset, "seed": seed, "sampleId": identifier,
+                              "trueLabel": rms["trueLabel"], "predictions": [rows[dataset, seed, identifier, method]
+                                  for method in METHODS[dataset] if (dataset, seed, identifier, method) in rows]})
+                break
+    return {"selection": "First ordinal sampleId in Pendigits seed 1729 for each requested correction/regression; both methods successfully classified the sample",
+            "purpose": "Post-evaluation illustrative replay cases, not parameter-selection inputs; no raw coordinates", "cases": cases}
+
+
 def flatten(value, prefix: str = "") -> dict:
     if isinstance(value, dict):
         result = {prefix + "{object}": True}
@@ -376,6 +401,160 @@ def compare_markdown(report: dict) -> str:
     return "\n".join(lines)
 
 
+def range_summary(values: list[float]) -> dict:
+    require(bool(values) and all(finite_number(value) for value in values), "Missing/nonfinite performance values")
+    return {"median": statistics.median(values), "minimum": min(values), "maximum": max(values)}
+
+
+def performance_rows(runs: list[dict], quality: dict, quality_metadata: dict) -> dict:
+    expected_runs = {(variant, run) for variant in VARIANTS for run in (1, 2, 3)}
+    actual_runs = [(run["variant"], run["run"]) for run in runs]
+    require(len(actual_runs) == len(set(actual_runs)) and set(actual_runs) == expected_runs,
+            "Performance requires exactly three variants and three independent runs")
+    expected_cases = {(dataset, seed, method) for dataset in METHODS for seed in SEEDS for method in METHODS[dataset]}
+    reference = runs[0]
+    metadata_fields = ("protocol", "implementationId", "sourceRevision", "freezeSourceRevision", "freezeSha256",
+                       "inputHashes", "runtime", "os", "architecture", "cpu", "processors", "coreTarget",
+                       "coreDllSha256", "engineDllSha256", "serverGc", "gcLatencyMode", "stopwatchFrequency",
+                       "tieredCompilation", "tieredPgo", "readyToRun", "enableHardwareIntrinsics", "vector128", "vector256")
+    core_fields = ("status", "predictedLabel", "templateId", "score")
+    groups = defaultdict(list)
+    bank_settings = {}
+    selected_quality = {}
+    for dataset, seed, method in sorted(expected_cases):
+        available = [r for r in quality.values() if (r["dataset"], r["seed"], r["method"]) == (dataset, seed, method)]
+        require(bool(available), f"Missing quality reference case: {dataset}/{seed}/{method}")
+        writer = min(r["writerId"] for r in available) if dataset == "dollar" else None
+        selected = [r for r in available if dataset != "dollar" or r["writerId"] == writer]
+        selected_quality[dataset, seed, method] = (writer, selected)
+    deviations = []
+    scores = {variant: {"compared": 0, "bitwiseEqual": 0, "maxAbsoluteDifference": 0.0} for variant in VARIANTS}
+    variant_reference = {}
+    variant_changed = []
+    variant_comparisons = 0
+    variant_scores = {"compared": 0, "bitwiseEqual": 0, "maxAbsoluteDifference": 0.0}
+    for run in sorted(runs, key=lambda r: (VARIANTS.index(r["variant"]), r["run"])):
+        validate_finite_values(run)
+        variant = run["variant"]
+        require(run.get("forceScalar") is (variant != "cached-simd"), "Variant/scalar-switch mismatch")
+        require(run.get("coreTarget") == ".NETCoreApp,Version=v10.0", "Application timings must load the net10.0 core")
+        require(finite_number(run.get("stopwatchFrequency")) and run["stopwatchFrequency"] > 0, "Invalid stopwatch frequency")
+        for field in metadata_fields:
+            require(run.get(field) == reference.get(field), f"Inconsistent performance metadata: {field}")
+        case_keys = [(c["dataset"], c["seed"], c["method"]) for c in run["measurements"]]
+        require(len(case_keys) == len(set(case_keys)) and set(case_keys) == expected_cases, "Incomplete/duplicate performance cases")
+        for case in run["measurements"]:
+            key = case["dataset"], case["seed"], case["method"]
+            dataset, seed, method = key
+            writer, official = selected_quality[key]
+            require(case.get("heldOutWriter") == writer, "Performance selected the wrong held-out writer")
+            require(case["variant"] == variant, "Case/file variant mismatch")
+            meta = quality_metadata[dataset]
+            require(run["freezeSha256"] == meta["freezeSha256"] and run["inputHashes"][dataset] == meta["inputSha256"],
+                    "Performance and quality use different frozen inputs")
+            require(case["configuration"] == meta["configuration"], "Performance configuration differs from quality")
+            supported = {r["sampleId"]: r for r in official if r["status"] != "unsupported"}
+            require(case["officialQueryCount"] == len(official) and case["supportedQueryCount"] == len(supported) and
+                    case["unsupportedQueryCount"] == len(official) - len(supported), "Performance coverage denominator mismatch")
+            measured = {r["sampleId"]: r for r in case["queries"]}
+            require(len(measured) == len(case["queries"]) and measured.keys() == supported.keys(),
+                    "Performance query identities differ from supported quality bank")
+            require(case["templateCount"] == len(case["templateIds"]) == len(set(case["templateIds"])), "Invalid performance template IDs")
+            settings = {field: case.get(field) for field in ("templateIds", "configuration", "sharedSamples", "nativeSamples", "warmupSequence")}
+            if key in bank_settings:
+                require(settings == bank_settings[key], "Frozen bank/preparation/warmup differs across variants or runs")
+            else:
+                bank_settings[key] = settings
+            require(case["failures"] == sum(q["status"] != "ok" for q in measured.values()), "Performance failure count mismatch")
+            require(case["warmupQueries"] >= 100 and case["warmupMilliseconds"] >= 3000, "Insufficient declared warmup")
+            ticks, allocations = [], []
+            for identifier, query in sorted(measured.items()):
+                expected = supported[identifier]
+                require(query["status"] in ("ok", "failed"), "Unsupported/unknown record entered performance scoring")
+                require(isinstance(query["elapsedTicks"], int) and query["elapsedTicks"] >= 0 and
+                        isinstance(query["allocatedBytes"], int) and query["allocatedBytes"] >= 0, "Invalid query timing/allocation")
+                ticks.append(query["elapsedTicks"])
+                allocations.append(query["allocatedBytes"])
+                if query["status"] == "ok":
+                    require(finite_number(query.get("score")), "Missing/nonfinite performance score")
+                    require(query.get("templateId") in case["templateIds"], "Winner outside the declared performance bank")
+                else:
+                    require(query.get("score") is None and query.get("predictedLabel") is None and query.get("templateId") is None,
+                            "Failed performance row contains a winner")
+                differing = [field for field in core_fields if not same_value(query.get(field), expected.get(field))]
+                if differing:
+                    deviations.append({"variant": variant, "run": run["run"], "dataset": dataset, "seed": seed,
+                                       "method": method, "sampleId": identifier, "fields": differing,
+                                       "performance": {f: query.get(f) for f in core_fields}, "quality": {f: expected.get(f) for f in core_fields}})
+                if finite_number(query.get("score")) and finite_number(expected.get("score")):
+                    score = scores[variant]
+                    score["compared"] += 1
+                    score["bitwiseEqual"] += same_value(query["score"], expected["score"])
+                    score["maxAbsoluteDifference"] = max(score["maxAbsoluteDifference"], abs(query["score"] - expected["score"]))
+                # Compare every later variant/run with uncached scalar run 1, excluding timing fields.
+                query_identity = dataset, seed, method, identifier
+                comparable = {f: query.get(f) for f in core_fields}
+                if query_identity in variant_reference:
+                    variant_comparisons += 1
+                    previous = variant_reference[query_identity]
+                    if finite_number(comparable["score"]) and finite_number(previous["score"]):
+                        variant_scores["compared"] += 1
+                        variant_scores["bitwiseEqual"] += same_value(comparable["score"], previous["score"])
+                        variant_scores["maxAbsoluteDifference"] = max(variant_scores["maxAbsoluteDifference"], abs(comparable["score"] - previous["score"]))
+                    if any(not same_value(comparable[f], previous[f]) for f in core_fields):
+                        variant_changed.append({"variant": variant, "run": run["run"], "key": list(query_identity),
+                                                "baseline": variant_reference[query_identity], "current": comparable})
+                else:
+                    variant_reference[query_identity] = comparable
+            # Recompute reported quantiles from all measured rows; failures remain in both lists.
+            micros = sorted(t * 1e6 / run["stopwatchFrequency"] for t in ticks)
+            allocated = sorted(allocations)
+            for field, values, proportion in (("p50Microseconds", micros, .5), ("p95Microseconds", micros, .95),
+                                               ("medianBytesPerQuery", allocated, .5)):
+                require(same_value(case[field], values[math.ceil(proportion * len(values)) - 1]), "Reported query quantile mismatch: " + field)
+            require(same_value(case["meanBytesPerQuery"], sum(allocated) / len(allocated)), "Reported mean allocation mismatch")
+            groups[variant, dataset, method].append({"run": run["run"], "seed": seed, "measurement": case})
+    metrics_to_summarize = ("p50Microseconds", "p95Microseconds", "medianBytesPerQuery", "meanBytesPerQuery",
+                            "bankConstructionMilliseconds", "bankConstructionAllocatedBytes", "retainedPreparedBankBytes", "totalProcessingMilliseconds")
+    summaries = []
+    for (variant, dataset, method), cases in sorted(groups.items(), key=lambda x: (VARIANTS.index(x[0][0]), x[0][1], x[0][2])):
+        require(len(cases) == 9, "Expected nine seed/run observations per summary")
+        item = {"variant": variant, "dataset": dataset, "method": method, "cases": len(cases),
+                "heldOutWriters": sorted({c["measurement"]["heldOutWriter"] for c in cases if c["measurement"].get("heldOutWriter")}),
+                "supportedQueriesPerCase": range_summary([c["measurement"]["supportedQueryCount"] for c in cases]),
+                "failures": sum(c["measurement"]["failures"] for c in cases),
+                **{field: range_summary([c["measurement"][field] for c in cases]) for field in metrics_to_summarize},
+                "scoringOnlyNanosecondsPerQuery": range_summary([c["measurement"]["scoringOnly"]["nanosecondsPerQuery"] for c in cases]),
+                "scoringOnlyBytesPerQuery": range_summary([c["measurement"]["scoringOnly"]["bytesPerQuery"] for c in cases]),
+                "measuredGcCollectionCounts": [sum(c["measurement"]["measuredGcCollections"][g] for c in cases) for g in range(3)],
+                "observations": [{"run": c["run"], "seed": c["seed"], **{f: c["measurement"][f] for f in metrics_to_summarize}} for c in cases]}
+        summaries.append(item)
+    return {"runs": len(runs), "cases": sum(len(run["measurements"]) for run in runs), "summaries": summaries,
+            "qualityAgreement": {"exact": not deviations, "scoreFieldsByVariant": scores, "deviations": deviations},
+            "variantAgreement": {"exact": not variant_changed, "comparedRows": variant_comparisons, "deviations": variant_changed,
+                                 "scores": variant_scores,
+                                 "reference": "uncached-scalar run 1; status, winning class, template ID, binary64 score"},
+            "metadata": {field: reference.get(field) for field in metadata_fields},
+            "summaryUnit": "Median and minimum/maximum across nine case statistics (3 frozen seeds x 3 independent process runs); not pooled query percentiles or a confidence interval",
+            "scope": "Dollar uses the first ordinal held-out writer, Pendigits all supported test queries. Uncached scalar is attribution only. Retained-bank measurements preserve negative GC noise. GC pause durations were not measured."}
+
+
+def performance_markdown(report: dict) -> str:
+    result = report["performance"]
+    lines = ["# Application performance", "", result["summaryUnit"] + ".", result["scope"], "",
+             f"Quality winner/status/score agreement: **{result['qualityAgreement']['exact']}**. Cross-variant/run agreement: **{result['variantAgreement']['exact']}**.", "",
+             "Each cell is median [minimum, maximum] of nine case observations.", "",
+             "| Variant | Dataset | Method | p50 µs | p95 µs | Median B/query | Retained bank B | Total pass ms |",
+             "|---|---|---|---:|---:|---:|---:|---:|"]
+    def cell(values):
+        return f"{values['median']:.3f} [{values['minimum']:.3f}, {values['maximum']:.3f}]"
+    for row in result["summaries"]:
+        lines.append(f"| {row['variant']} | {row['dataset']} | {row['method']} | " + " | ".join(cell(row[field]) for field in
+                     ("p50Microseconds", "p95Microseconds", "medianBytesPerQuery", "retainedPreparedBankBytes", "totalProcessingMilliseconds")) + " |")
+    lines += ["", "Construction costs, allocations, GC collection counts, scoring-only diagnostics and individual seed/run observations are in JSON. Construction precedes warmup and can include first-use JIT; retained bytes are incremental live managed memory, not allocations.", ""]
+    return "\n".join(lines)
+
+
 def write_report(output: Path, report: dict, markdown: str) -> None:
     output.mkdir(parents=True, exist_ok=True)
     (output / "summary.json").write_bytes((json.dumps(report, indent=2, ensure_ascii=False, allow_nan=False) + "\n").encode("utf-8"))
@@ -393,6 +572,10 @@ def main() -> int:
     compare.add_argument("--left", type=Path, required=True)
     compare.add_argument("--right", type=Path, required=True)
     compare.add_argument("--output", type=Path, required=True)
+    performance = commands.add_parser("performance")
+    performance.add_argument("--results", type=Path, required=True)
+    performance.add_argument("--quality", type=Path, required=True)
+    performance.add_argument("--output", type=Path, required=True)
     commands.add_parser("check")
     args = parser.parse_args()
     if args.command == "check":
@@ -402,12 +585,30 @@ def main() -> int:
         return 0 if unittest.TextTestRunner(verbosity=2).run(suite).wasSuccessful() else 1
     provenance = {"analysisVersion": "polylinekit-recognition-analysis-v1", "python": platform.python_version(),
                   "scriptSha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest()}
+    if args.command == "performance":
+        paths = sorted(list(args.results.glob("*-run-*.json")) + list(args.results.glob("*-run-*.json.gz")))
+        require(bool(paths), "No application performance JSON files")
+        runs = [read_json(path) for path in paths]
+        quality, quality_sources = load_predictions(args.quality)
+        metadata = {dataset: read_json(args.quality / (dataset + "-evaluation.json")) for dataset in METHODS}
+        result = performance_rows(runs, quality, metadata)
+        report = {**provenance, "performanceFiles": [{"file": path.name, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()} for path in paths],
+                  "qualityFiles": quality_sources,
+                  "qualityMetadataFiles": [{"file": dataset + "-evaluation.json", "sha256": hashlib.sha256((args.quality / (dataset + "-evaluation.json")).read_bytes()).hexdigest()} for dataset in METHODS],
+                  "performance": result}
+        write_report(args.output, report, performance_markdown(report))
+        exact = result["qualityAgreement"]["exact"] and result["variantAgreement"]["exact"]
+        print(f"Validated {result['runs']} performance runs and {result['cases']} cases; exact winner/score agreement: {exact}")
+        return 0 if exact else 1
     if args.command == "analyze":
         predictions, sources = load_predictions(args.results)
         data, input_sources = load_data(args.data, {r["dataset"] for r in predictions.values()})
         report = {**provenance, "predictionFiles": sources, "inputFiles": input_sources,
                   "datasets": analyze_rows(predictions, data)}
         write_report(args.output, report, analysis_markdown(report))
+        if "pendigits" in report["datasets"]:
+            replay = {**provenance, "predictionFiles": sources, **pendigits_replay_cases(predictions)}
+            (args.output / "replay-cases.json").write_bytes((json.dumps(replay, indent=2, ensure_ascii=False, allow_nan=False) + "\n").encode("utf-8"))
         print("Validated complete held-out grid; wrote quality summary JSON/Markdown.")
         return 0
     left, left_sources = load_predictions(args.left)

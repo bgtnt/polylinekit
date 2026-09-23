@@ -37,6 +37,22 @@ internal sealed class ReplayOptions
     public int Seed { get; private set; } = 1729;
     public bool Contours { get; private set; }
 
+    public void ValidateOutputPaths(string selectedDataset)
+    {
+        StringComparison comparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+        string output = Path.GetFullPath(Output ?? throw new ArgumentException("An HTML output path is required."));
+        string? export = Export is null ? null : Path.GetFullPath(Export);
+        if (export is not null && string.Equals(output, export, comparison))
+            throw new ArgumentException("HTML output and query export must use different file paths.");
+        var inputs = new List<string>();
+        if (Freeze is not null) inputs.Add(Path.GetFullPath(Freeze));
+        if (Query is not null) inputs.Add(Path.GetFullPath(Query));
+        if (Data is not null) inputs.Add(Path.GetFullPath(Path.Combine(Data, selectedDataset + ".jsonl")));
+        foreach (string input in inputs)
+            if (string.Equals(output, input, comparison) || (export is not null && string.Equals(export, input, comparison)))
+                throw new ArgumentException($"Output files must not overwrite a query, frozen configuration or dataset input: {input}");
+    }
+
     public static ReplayOptions Parse(string[] args)
     {
         var result = new ReplayOptions();

@@ -41,6 +41,7 @@ Remove-Item Env:POLYLINEKIT_FORCE_SCALAR
 python scripts/recognition/analyze.py analyze --data artifacts/recognition/data --results artifacts/reproduction/quality --output artifacts/reproduction/analysis
 python scripts/recognition/analyze.py compare --left artifacts/reproduction/quality --right artifacts/reproduction/scalar --output artifacts/reproduction/scalar-comparison
 pwsh -File scripts/recognition/benchmark.ps1 -OutputDirectory artifacts/reproduction/performance
+python scripts/recognition/analyze.py performance --results artifacts/reproduction/performance --quality artifacts/reproduction/quality --output artifacts/reproduction/performance-summary
 ```
 
 Performance requires a clean committed tree and a Release build, and runs

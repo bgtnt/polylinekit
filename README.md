@@ -82,6 +82,19 @@ and hardware-specific measurements, not general speed guarantees.
 
 ## Research scope and provenance
 
+The [frozen unistroke evaluation](docs/recognition-evaluation.md) adds a runnable
+[stroke replay consumer](examples/StrokeTemplates/README.md) and public $1/Pendigits
+evidence. Under the declared banks and policies, gesture RMS reaches 97.15%;
+area alone reaches 85.32%. A frozen digit RMS/area combination reaches 85.43%
+on supported single strokes versus RMS 84.33% and DTW 89.04%. Only 78.44% of
+official digit test inputs are supported. These are protocol-specific results,
+not raster OCR or general recognition claims. Exact data splits, failures,
+numerical agreement and application costs are published with reproduction commands.
+
+```sh
+dotnet run --project examples/StrokeTemplates -c Release -- --demo artifacts/consumer/demo.html --contours
+```
+
 The original graph experiment found a reproducible stability advantage over LIP's intersection-dependent area weights in a near-touch case. It does **not** establish scientific novelty, universal trajectory similarity, or an improvement to Clipper's polygon engine. The original [mathematical contract](docs/design.md), [baseline reconstruction limits](docs/baselines.md) and [inputs and measurements](results/geometry/geometry.json) remain available.
 
 Original code is MIT-licensed. The author's unpublished RtTools.Geometry was inspected for ideas only. Neither it nor MPR001 is included, linked, or used as a test oracle or benchmark. No third-party algorithm source was copied. Clipper2 is a released dependency under its own [license](THIRD-PARTY-NOTICES.md).

@@ -1,0 +1,187 @@
+{
+  "analysisVersion": "polylinekit-recognition-analysis-v1",
+  "python": "3.12.14",
+  "scriptSha256": "3b1c22c828162bd87b07d3d0529e967e78a4e97f0de93a673ee0f359d1a33ec0",
+  "predictionFiles": [
+    {
+      "file": "dollar-predictions.jsonl.gz",
+      "sha256": "5e0ab395a4c086610b9c229d2b9729a7d625f87cc02b63a67bd6d6511ec05e76"
+    },
+    {
+      "file": "pendigits-predictions.jsonl.gz",
+      "sha256": "cbf5db41129521dabc959f5c355b178632a147941132a3f678646d84a7b9cb78"
+    }
+  ],
+  "selection": "First ordinal sampleId in Pendigits seed 1729 for each requested correction/regression; both methods successfully classified the sample",
+  "purpose": "Post-evaluation illustrative replay cases, not parameter-selection inputs; no raw coordinates",
+  "cases": [
+    {
+      "kind": "combined-correct-rms-wrong",
+      "dataset": "pendigits",
+      "seed": 1729,
+      "sampleId": "pendigits/pendigits-orig.tes/000118",
+      "trueLabel": "1",
+      "predictions": [
+        {
+          "dataset": "pendigits",
+          "seed": 1729,
+          "sampleId": "pendigits/pendigits-orig.tes/000118",
+          "trueLabel": "1",
+          "method": "rms",
+          "status": "ok",
+          "predictedLabel": "2",
+          "templateId": "pendigits/pendigits-orig.tra/009106",
+          "score": 0.1384171484805157,
+          "rms": 0.1384171484805157,
+          "area": 0.1419141995305,
+          "rotationDegrees": 0,
+          "margin": 0.010149751580698807
+        },
+        {
+          "dataset": "pendigits",
+          "seed": 1729,
+          "sampleId": "pendigits/pendigits-orig.tes/000118",
+          "trueLabel": "1",
+          "method": "area",
+          "status": "ok",
+          "predictedLabel": "1",
+          "templateId": "pendigits/pendigits-orig.tra/005198",
+          "score": 0.07293475758300003,
+          "rms": 0.3602757734972643,
+          "area": 0.07293475758300003,
+          "rotationDegrees": 0,
+          "margin": 0.060834860919000006
+        },
+        {
+          "dataset": "pendigits",
+          "seed": 1729,
+          "sampleId": "pendigits/pendigits-orig.tes/000118",
+          "trueLabel": "1",
+          "method": "combined",
+          "status": "ok",
+          "predictedLabel": "1",
+          "templateId": "pendigits/pendigits-orig.tra/005285",
+          "score": 0.3673672096256282,
+          "rms": 0.1485669000612145,
+          "area": 0.11063063682500003,
+          "rotationDegrees": 0,
+          "margin": 0.008494028428588707
+        },
+        {
+          "dataset": "pendigits",
+          "seed": 1729,
+          "sampleId": "pendigits/pendigits-orig.tes/000118",
+          "trueLabel": "1",
+          "method": "protractor",
+          "status": "ok",
+          "predictedLabel": "2",
+          "templateId": "pendigits/pendigits-orig.tra/009106",
+          "score": 0.2948462182118688,
+          "rms": 0.1384171484805157,
+          "area": 0.1419141995305,
+          "rotationDegrees": 0,
+          "margin": 0.07565051718927646
+        },
+        {
+          "dataset": "pendigits",
+          "seed": 1729,
+          "sampleId": "pendigits/pendigits-orig.tes/000118",
+          "trueLabel": "1",
+          "method": "dtw",
+          "status": "ok",
+          "predictedLabel": "1",
+          "templateId": "pendigits/pendigits-orig.tra/009283",
+          "score": 0.008116913208242227,
+          "rms": 0.27143940591267374,
+          "area": 0.083733523892,
+          "rotationDegrees": 0,
+          "margin": 0.006376210560168171
+        }
+      ]
+    },
+    {
+      "kind": "rms-correct-combined-wrong",
+      "dataset": "pendigits",
+      "seed": 1729,
+      "sampleId": "pendigits/pendigits-orig.tes/000003",
+      "trueLabel": "9",
+      "predictions": [
+        {
+          "dataset": "pendigits",
+          "seed": 1729,
+          "sampleId": "pendigits/pendigits-orig.tes/000003",
+          "trueLabel": "9",
+          "method": "rms",
+          "status": "ok",
+          "predictedLabel": "9",
+          "templateId": "pendigits/pendigits-orig.tra/003593",
+          "score": 0.19313921357430466,
+          "rms": 0.19313921357430466,
+          "area": 0.2361796139605,
+          "rotationDegrees": 0,
+          "margin": 0.017785231535104862
+        },
+        {
+          "dataset": "pendigits",
+          "seed": 1729,
+          "sampleId": "pendigits/pendigits-orig.tes/000003",
+          "trueLabel": "9",
+          "method": "area",
+          "status": "ok",
+          "predictedLabel": "5",
+          "templateId": "pendigits/pendigits-orig.tra/007070",
+          "score": 0.14414561362500006,
+          "rms": 0.25433585508530854,
+          "area": 0.14414561362500006,
+          "rotationDegrees": 0,
+          "margin": 0.011104521006000068
+        },
+        {
+          "dataset": "pendigits",
+          "seed": 1729,
+          "sampleId": "pendigits/pendigits-orig.tes/000003",
+          "trueLabel": "9",
+          "method": "combined",
+          "status": "ok",
+          "predictedLabel": "5",
+          "templateId": "pendigits/pendigits-orig.tra/008401",
+          "score": 0.5566500555610612,
+          "rms": 0.21092444510940953,
+          "area": 0.19763806488900007,
+          "rotationDegrees": 0,
+          "margin": 0.0008077442308291882
+        },
+        {
+          "dataset": "pendigits",
+          "seed": 1729,
+          "sampleId": "pendigits/pendigits-orig.tes/000003",
+          "trueLabel": "9",
+          "method": "protractor",
+          "status": "ok",
+          "predictedLabel": "5",
+          "templateId": "pendigits/pendigits-orig.tra/008401",
+          "score": 0.36428946580217125,
+          "rms": 0.21092444510940953,
+          "area": 0.19763806488900007,
+          "rotationDegrees": 0,
+          "margin": 0.07161729348064655
+        },
+        {
+          "dataset": "pendigits",
+          "seed": 1729,
+          "sampleId": "pendigits/pendigits-orig.tes/000003",
+          "trueLabel": "9",
+          "method": "dtw",
+          "status": "ok",
+          "predictedLabel": "9",
+          "templateId": "pendigits/pendigits-orig.tra/006556",
+          "score": 0.025244444587913084,
+          "rms": 0.3265637481537158,
+          "area": 0.21092333805150004,
+          "rotationDegrees": 0,
+          "margin": 0.0005213670332345349
+        }
+      ]
+    }
+  ]
+}

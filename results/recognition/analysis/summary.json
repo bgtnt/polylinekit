@@ -1,7 +1,7 @@
 {
   "analysisVersion": "polylinekit-recognition-analysis-v1",
   "python": "3.12.14",
-  "scriptSha256": "8f2e5e61bb4bd48e68c713068a59d496429010ccc857ac4b0e70bfb4ff9a919b",
+  "scriptSha256": "3b1c22c828162bd87b07d3d0529e967e78a4e97f0de93a673ee0f359d1a33ec0",
   "predictionFiles": [
     {
       "file": "dollar-predictions.jsonl.gz",

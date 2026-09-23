@@ -88,6 +88,24 @@ internal static class ConsumerChecks
             True("query JSON round-trip includes time and provenance", JsonSerializer.Serialize(roundTrip, RecognitionFiles.Json) == JsonSerializer.Serialize(query, RecognitionFiles.Json));
             string output = Path.Combine(directory, "inspection.html");
             string[] ReplayArgs(params string[] tail) => ["--data", directory, "--freeze", frozenPath, "--output", output, .. tail];
+            ReplayOptions.Parse(ReplayArgs("--sample", query.SampleId)).ValidateOutputPaths("pendigits");
+            True("distinct output and inputs are accepted", true);
+            foreach (string inputPath in new[] { frozenPath, queryPath, dataPath })
+            {
+                string equivalentInput = Path.Combine(Path.GetDirectoryName(inputPath)!, ".", Path.GetFileName(inputPath));
+                Reject("HTML cannot overwrite input " + Path.GetFileName(inputPath), () => ReplayOptions.Parse(
+                    ["--data", directory, "--freeze", frozenPath, "--query", queryPath, "--output", equivalentInput]).ValidateOutputPaths("pendigits"));
+                Reject("export cannot overwrite input " + Path.GetFileName(inputPath), () => ReplayOptions.Parse(
+                    ReplayArgs("--query", queryPath, "--export", equivalentInput)).ValidateOutputPaths("pendigits"));
+            }
+            Reject("HTML and export cannot alias", () => ReplayOptions.Parse(
+                ReplayArgs("--query", queryPath, "--export", Path.Combine(directory, ".", "inspection.html"))).ValidateOutputPaths("pendigits"));
+            Reject("demo HTML and export cannot alias", () => ReplayOptions.Parse(
+                ["--demo", output, "--export", Path.Combine(directory, ".", "inspection.html")]).ValidateOutputPaths("synthetic"));
+            ReplayOptions caseVariant = ReplayOptions.Parse(
+                ["--data", directory, "--freeze", frozenPath, "--query", queryPath, "--output", queryPath.ToUpperInvariant()]);
+            if (OperatingSystem.IsWindows()) Reject("Windows path matching ignores case", () => caseVariant.ValidateOutputPaths("pendigits"));
+            else { caseVariant.ValidateOutputPaths("pendigits"); True("Unix path matching preserves case", true); }
             ReplayInput loaded = ReplayInput.Load(ReplayOptions.Parse(ReplayArgs("--sample", query.SampleId)));
             True("dataset-ID replay uses the frozen bank", loaded.Templates.Length == 50 && loaded.Query.SampleId == query.SampleId);
             ReplayResult replay = ReplayMatcher.Match(loaded, "rms");
