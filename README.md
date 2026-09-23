@@ -55,7 +55,7 @@ Three independent timing processes, with allocations and all individual samples:
 pwsh -File scripts/benchmark.ps1 -OutputDirectory artifacts/reproduced-benchmarks
 ```
 
-The script requires committed tracked changes and sets `DOTNET_TieredCompilation=0`. Fixture generation is outside timing. See [benchmark methodology](report-link-placeholder) for interpretation and the manual cross-platform equivalent.
+The script requires committed tracked changes and sets `DOTNET_TieredCompilation=0`. Fixture generation is outside timing. See [benchmark methodology](docs/report.md#benchmark-methodology) for interpretation and the manual cross-platform equivalent.
 
 Pack, inspect metadata/dependencies and install from a local feed into an isolated fresh consumer:
 
