@@ -1,0 +1,20 @@
+[
+  {
+    "dataset": "dollar",
+    "tiltDegrees": 0,
+    "areaWeight": 0,
+    "rmsScale": 0.5099972905931485,
+    "areaScale": 0.35309751205325013,
+    "protractorOrientationSensitive": true,
+    "dtwWindow": 8
+  },
+  {
+    "dataset": "pendigits",
+    "tiltDegrees": 0,
+    "areaWeight": 0.25,
+    "rmsScale": 0.41011948065015064,
+    "areaScale": 0.289071219296,
+    "protractorOrientationSensitive": true,
+    "dtwWindow": 63
+  }
+]

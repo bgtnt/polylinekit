@@ -11,6 +11,7 @@ internal static class ComparisonChecks
     {
         passed = 0;
         CheckAreaSemantics();
+        CheckFilledRegionOverlap();
         CheckGraphAgreement();
         CheckNormalization();
         CheckTransformsAndBounds();
@@ -26,7 +27,8 @@ internal static class ComparisonChecks
         var rectangle = PolylineComparison.EndpointBridgedArea(bottom, top, includeContours: true);
         Near("rectangle bridge area", 4, rectangle.RawArea);
         Near("union rectangle denominator", 4, rectangle.UnionBoundsArea);
-        Near("rectangle normalized area", 1, rectangle.NormalizedArea!.Value);
+        Near("rectangle bounds area ratio", 1, rectangle.BoundsAreaRatio!.Value);
+        Near("compatibility alias forwards bounds ratio", rectangle.BoundsAreaRatio.Value, rectangle.NormalizedArea!.Value);
         // This denominator measures occupancy of the joint rectangle, not distance: changing
         // a resolvable positive gap between equal-length parallel segments leaves the ratio at one.
         foreach (double gap in new[] { 1e-4, .01, 1, 100 })
@@ -34,11 +36,12 @@ internal static class ComparisonChecks
             Point2[] parallel = [new(0, gap), new(2, gap)];
             var parallelResult = PolylineComparison.EndpointBridgedArea(bottom, parallel);
             Near("parallel gap raw area " + gap, 2 * gap, parallelResult.RawArea);
-            Near("parallel gap normalized occupancy " + gap, 1, parallelResult.NormalizedArea!.Value);
+            Near("parallel gap bounds occupancy " + gap, 1, parallelResult.BoundsAreaRatio!.Value);
         }
         var collinearIdentity = PolylineComparison.EndpointBridgedArea(bottom, bottom);
         Near("collinear identity raw area", 0, collinearIdentity.RawArea);
-        True("collinear identity normalized area is undefined", collinearIdentity.NormalizedArea is null);
+        True("collinear identity bounds ratio is undefined", collinearIdentity.BoundsAreaRatio is null);
+        True("compatibility alias preserves undefined ratio", collinearIdentity.NormalizedArea is null);
         True("bridge metadata", rectangle.Kind == AreaComparisonKind.EndpointBridged && rectangle.FillRule == PathFillRule.NonZero && rectangle.DecimalPrecision == 6);
         Near("returned contours preserve orientation and area", 4, rectangle.Contours.Sum(SignedArea));
         True("contours are optional", PolylineComparison.EndpointBridgedArea(bottom, top).Contours.Count == 0);
@@ -60,7 +63,7 @@ internal static class ComparisonChecks
         var difference = PolylineComparison.FilledRegionDifference(square, moved, includeContours: true);
         Near("overlapping square symmetric difference", 4, difference.RawArea);
         Near("difference rectangle denominator", 6, difference.UnionBoundsArea);
-        Near("difference normalized area", 2.0 / 3, difference.NormalizedArea!.Value);
+        Near("difference bounds area ratio", 2.0 / 3, difference.BoundsAreaRatio!.Value);
         True("filled-region metadata", difference.Kind == AreaComparisonKind.FilledRegionDifference);
         Near("filled-region exchange symmetry", difference.RawArea, PolylineComparison.FilledRegionDifference(moved, square).RawArea);
         Point2[] triangle = [new(0, 0), new(2, 0), new(0, 2)];
@@ -87,15 +90,15 @@ internal static class ComparisonChecks
 
         var collapsed = PolylineComparison.EndpointBridgedArea(bottom, [new(1, 0), new(3, 0)]);
         Near("overlapping collinear paths area", 0, collapsed.RawArea);
-        True("zero-area denominator is undefined", collapsed.NormalizedArea is null);
+        True("zero-area denominator is undefined", collapsed.BoundsAreaRatio is null);
         var collinearClosed = PolylineComparison.FilledRegionDifference(emptyRegion, [new(1, 0), new(2, 0), new(3, 0)]);
         Near("collinear filled paths have no area", 0, collinearClosed.RawArea);
-        True("collinear filled normalization is undefined", collinearClosed.NormalizedArea is null);
+        True("collinear filled normalization is undefined", collinearClosed.BoundsAreaRatio is null);
 
         var transform = AffineTransform2D.Scaling(3).Then(AffineTransform2D.Translation(10, -12));
         var transformed = PolylineComparison.EndpointBridgedArea(transform.Apply(bottom), transform.Apply(top));
         Near("common uniform transform scales area quadratically", 36, transformed.RawArea);
-        Near("common uniform transform preserves area ratio", 1, transformed.NormalizedArea!.Value);
+        Near("common uniform transform preserves area ratio", 1, transformed.BoundsAreaRatio!.Value);
         var transpose = new AffineTransform2D(0, 1, 1, 0, 0, 0);
         Near("common axis exchange preserves filled difference", difference.RawArea,
             PolylineComparison.FilledRegionDifference(transpose.Apply(square), transpose.Apply(moved), includeContours: true).Contours.Sum(SignedArea));
@@ -107,6 +110,104 @@ internal static class ComparisonChecks
         bottom[0] = new(100, 100); top[0] = new(200, 200);
         Near("comparison result owns its data", 4, stored.Contours.Sum(SignedArea));
         Near("comparison original bounds remain stable", 4, stored.UnionBoundsArea);
+    }
+
+    private static void CheckFilledRegionOverlap()
+    {
+        Point2[] square = [new(0, 0), new(1, 0), new(1, 1), new(0, 1)];
+        Point2[] offset = AffineTransform2D.Translation(.5, .5).Apply(square);
+        Point2[] far = AffineTransform2D.Translation(100, 100).Apply(square);
+        Point2[] diagonal = [new(0, 0), new(1, 1), new(2, 2)];
+        Point2[] large = AffineTransform2D.Scaling(2).Apply(square);
+        Point2[] hole = Fixtures.Contours()["hole-with-retraced-bridge"];
+        Point2[] inner = [new(1, 1), new(3, 1), new(3, 3), new(1, 3)];
+        foreach (PathFillRule rule in new[] { PathFillRule.NonZero, PathFillRule.EvenOdd })
+        {
+            var identity = PolylineComparison.FilledRegionOverlap(square, square, rule);
+            Overlap("identity " + rule, identity, 0, 1, 0, 1);
+            Overlap("reverse identity independent fill " + rule,
+                PolylineComparison.FilledRegionOverlap(square, square.Reverse().ToArray(), rule), 0, 1, 0, 1);
+            Overlap("closing duplicate identity " + rule,
+                PolylineComparison.FilledRegionOverlap(square.Concat([square[0]]).ToArray(), square, rule), 0, 1, 0, 1);
+            Point2[] cyclic = [square[2], square[3], square[0], square[1]];
+            Overlap("cyclic start identity " + rule, PolylineComparison.FilledRegionOverlap(square, cyclic, rule), 0, 1, 0, 1);
+
+            var overlap = PolylineComparison.FilledRegionOverlap(square, offset, rule, decimalPrecision: 8);
+            Overlap("diagonal offset " + rule, overlap, 1.5, 1.75, 6.0 / 7, 1.0 / 7);
+            Near("offset bounds ratio differs from Jaccard " + rule, 2.0 / 3,
+                PolylineComparison.FilledRegionDifference(square, offset, rule, decimalPrecision: 8).BoundsAreaRatio!.Value);
+            True("overlap metadata " + rule, overlap.FillRule == rule && overlap.DecimalPrecision == 8);
+            Near("overlap original bounds " + rule, 2.25, overlap.UnionBounds.Area);
+            Overlap("overlapping opposite winding independent fill " + rule,
+                PolylineComparison.FilledRegionOverlap(square, offset.Reverse().ToArray(), rule), 1.5, 1.75, 6.0 / 7, 1.0 / 7);
+            Overlap("exchange symmetry " + rule, PolylineComparison.FilledRegionOverlap(offset, square, rule), 1.5, 1.75, 6.0 / 7, 1.0 / 7);
+            Overlap("containment " + rule, PolylineComparison.FilledRegionOverlap(large, square, rule), 3, 4, .75, .25);
+            Overlap("edge touching " + rule, PolylineComparison.FilledRegionOverlap(square,
+                AffineTransform2D.Translation(1, 0).Apply(square), rule), 2, 2, 1, 0);
+            Overlap("vertex touching " + rule, PolylineComparison.FilledRegionOverlap(square,
+                AffineTransform2D.Translation(1, 1).Apply(square), rule), 2, 2, 1, 0);
+            Overlap("far disjoint " + rule, PolylineComparison.FilledRegionOverlap(square, far, rule), 2, 2, 1, 0);
+            Near("far bounding rectangle is not union area " + rule, 2.0 / 10201,
+                PolylineComparison.FilledRegionDifference(square, far, rule).BoundsAreaRatio!.Value);
+
+            Overlap("hole subtraction identity " + rule, PolylineComparison.FilledRegionOverlap(hole, hole.Reverse().ToArray(), rule), 0, 12, 0, 1);
+            Overlap("region inside hole has no overlap " + rule, PolylineComparison.FilledRegionOverlap(hole, inner, rule), 16, 16, 1, 0);
+            Overlap("one zero-area region " + rule, PolylineComparison.FilledRegionOverlap(diagonal, square, rule), 1, 1, 1, 0);
+            var empty = PolylineComparison.FilledRegionOverlap(diagonal, diagonal.Reverse().ToArray(), rule);
+            Near("both zero regions XOR " + rule, 0, empty.SymmetricDifferenceArea);
+            Near("both zero regions union " + rule, 0, empty.UnionArea);
+            True("both empty ratios undefined despite positive rectangle " + rule,
+                empty.JaccardDistance is null && empty.IntersectionOverUnion is null && empty.UnionBounds.Area > 0);
+            Point2[] tiny = AffineTransform2D.Scaling(1e-9).Apply(square);
+            var collapsed = PolylineComparison.FilledRegionOverlap(tiny, tiny, rule, decimalPrecision: 6);
+            Near("precision-collapsed union " + rule, 0, collapsed.UnionArea);
+            True("precision-collapsed ratios undefined " + rule, collapsed.JaccardDistance is null && collapsed.IntersectionOverUnion is null);
+
+            var map = AffineTransform2D.Scaling(3).Then(AffineTransform2D.Translation(17, -11));
+            Overlap("common scale and translation " + rule,
+                PolylineComparison.FilledRegionOverlap(map.Apply(square), map.Apply(offset), rule), 13.5, 15.75, 6.0 / 7, 1.0 / 7);
+            var transpose = new AffineTransform2D(0, 1, 1, 0, 0, 0);
+            Overlap("common axis exchange " + rule,
+                PolylineComparison.FilledRegionOverlap(transpose.Apply(square), transpose.Apply(offset), rule), 1.5, 1.75, 6.0 / 7, 1.0 / 7);
+            // Rectangular bounds force the sweep-axis exchange rather than only a square tie.
+            var stretch = AffineTransform2D.Scaling(3, 1);
+            Overlap("rectangular sweep axis " + rule,
+                PolylineComparison.FilledRegionOverlap(stretch.Apply(square), stretch.Apply(offset), rule), 4.5, 5.25, 6.0 / 7, 1.0 / 7);
+            var subdivided = Fixtures.Subdivide(square.Concat([square[0]]).ToArray(), 3);
+            Overlap("collinear subdivision " + rule, PolylineComparison.FilledRegionOverlap(subdivided, offset, rule), 1.5, 1.75, 6.0 / 7, 1.0 / 7);
+            Near("XOR-only and overlap share exact preparation " + rule,
+                PolylineComparison.FilledRegionDifference(square, offset, rule, decimalPrecision: 8).RawArea,
+                overlap.SymmetricDifferenceArea, 0);
+        }
+        Point2[] twice = Fixtures.Contours()["square-twice"];
+        Overlap("NonZero repeated traversal counts once", PolylineComparison.FilledRegionOverlap(twice, diagonal), 4, 4, 1, 0);
+        var evenRepeated = PolylineComparison.FilledRegionOverlap(twice, diagonal, PathFillRule.EvenOdd);
+        True("EvenOdd repeat has no filled union", evenRepeated.UnionArea == 0 && evenRepeated.JaccardDistance is null && evenRepeated.IntersectionOverUnion is null);
+        Overlap("bow tie lobes do not cancel", PolylineComparison.FilledRegionOverlap(Fixtures.Contours()["bow-tie"], diagonal), 2, 2, 1, 0);
+
+        Point2[] originalSquare = square.ToArray(), originalOffset = offset.ToArray();
+        var stored = PolylineComparison.FilledRegionOverlap(square, offset);
+        Sequence("overlap preserves first input", originalSquare, square);
+        Sequence("overlap preserves second input", originalOffset, offset);
+        square[0] = new(999, 999); offset[0] = new(-999, -999);
+        Overlap("overlap result detached from inputs", stored, 1.5, 1.75, 6.0 / 7, 1.0 / 7);
+        Near("stored overlap bounds detached", 2.25, stored.UnionBounds.Area);
+        Reject<ArgumentNullException>("overlap null", () => PolylineComparison.FilledRegionOverlap(null!, originalSquare));
+        Reject<ArgumentException>("overlap empty", () => PolylineComparison.FilledRegionOverlap([], originalSquare));
+        Reject<ArgumentException>("overlap insufficient vertices", () => PolylineComparison.FilledRegionOverlap([new(0, 0), new(1, 0)], originalSquare));
+        Reject<ArgumentOutOfRangeException>("overlap invalid fill rule", () => PolylineComparison.FilledRegionOverlap(originalSquare, originalSquare, (PathFillRule)99));
+        Reject<ArgumentOutOfRangeException>("overlap invalid precision", () => PolylineComparison.FilledRegionOverlap(originalSquare, originalSquare, decimalPrecision: 9));
+        Reject<ArgumentOutOfRangeException>("overlap clipping range", () => PolylineComparison.FilledRegionOverlap(
+            AffineTransform2D.Scaling(1e8).Apply(originalSquare), originalSquare, decimalPrecision: 8));
+    }
+
+    private static void Overlap(string name, FilledRegionOverlapResult actual, double difference, double union, double distance, double iou)
+    {
+        Near(name + " XOR", difference, actual.SymmetricDifferenceArea);
+        Near(name + " union", union, actual.UnionArea);
+        True(name + " defined ratios", actual.JaccardDistance.HasValue && actual.IntersectionOverUnion.HasValue);
+        Near(name + " Jaccard", distance, actual.JaccardDistance!.Value);
+        Near(name + " IoU", iou, actual.IntersectionOverUnion!.Value);
     }
 
     private static void CheckGraphAgreement()

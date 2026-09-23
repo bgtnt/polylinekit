@@ -1,0 +1,22 @@
+{
+  "protocol": "polylinekit-recognition-v1",
+  "sourceRevision": "3f13fefd479fc6c4a7eccdb3c97e70fd79e29647",
+  "freezeSha256": "52343119b70e9528ba537edb9ff03595f90f50e8f312a58035ba82f45290d1b6",
+  "inputSha256": "906a456eb997b424f92b0e4056a66ef255353479be75307c05f84b5100f4bdca",
+  "configuration": {
+    "dataset": "dollar",
+    "tiltDegrees": 0,
+    "areaWeight": 0,
+    "rmsScale": 0.5099972905931485,
+    "areaScale": 0.35309751205325013,
+    "protractorOrientationSensitive": true,
+    "dtwWindow": 8
+  },
+  "predictions": 57600,
+  "scalarForced": true,
+  "runtime": ".NET 10.0.12",
+  "os": "Microsoft Windows 10.0.26200",
+  "vector128": true,
+  "vector256": true,
+  "auxiliaryScoreMeaning": "RMS/area/angle are shared-preparation diagnostics; Protractor/DTW native scores use their declared preparation."
+}
