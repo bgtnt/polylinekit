@@ -200,7 +200,8 @@ DLL hashes identify the binaries separately from generated Git/build metadata.
 
 ## Numerical agreement and checks
 
-The complete scalar and accelerated evaluation produced **110,070 identical
+On the published Windows environment, the complete scalar and accelerated
+evaluation produced **110,070 identical
 prediction rows**, including unsupported outcomes. All 98,760 successful rows
 have bitwise-identical exported score, RMS, area and margin fields, with unchanged
 winning template, class and rotation. See the
@@ -208,6 +209,25 @@ winning template, class and rotation. See the
 ties and smallest positive class margins. This audits exported winners/diagnostics,
 not every unexported candidate score. Analytical engine checks also exercise
 nonzero transforms, ownership and one-ULP ranking differences.
+
+This same-environment result is not a cross-platform bitwise guarantee. The
+independent review dated 23 September 2026 reported a full rerun of commit
+`3176123dfc951bb559e4a834900d3c3140fa8778` on Ubuntu 24.04 x64, SDK 10.0.100 /
+runtime 10.0.0, compared with the published Windows SDK 10.0.401 / runtime 10.0.12
+results. All 110,070 rows matched by key, with no changed predicted classes,
+winning templates or statuses. Only native Protractor score/margin fields
+differed: 2425 rows, with maximum absolute differences of
+`4.8711035205428743e-15` for scores and `5.2735593669694936e-15` for margins.
+RMS, area, DTW and combined rows were identical. These are reviewer-reported
+observations; the independent rerun's raw outputs are not included here.
+
+Microsoft documents that [`Math.Acos`](https://learn.microsoft.com/en-us/dotnet/api/system.math.acos?view=net-10.0)
+uses the underlying C runtime and exact results can vary by operating system or
+architecture. This is consistent with the observation, but the review did not
+isolate which transcendental call or runtime difference caused each discrepancy.
+The strict comparison still reports every difference and returns failure for
+nonidentical rows. Inspect numeric differences separately from classification
+disagreements; scores are not rounded and tie rules are not relaxed.
 
 Local validation includes 3584 existing/core geometry checks in five assembly/ISA
 modes; 147 engine, 70 split/pipeline and 93 consumer checks in four runtime modes;

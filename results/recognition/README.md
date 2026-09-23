@@ -49,6 +49,14 @@ sequentially. Keep other builds, tests and profilers idle during measurement.
 It retains normal runtime tiering. This differs deliberately from the previous
 synthetic microbenchmarks, whose tiering policy is documented separately.
 
+The scalar comparison above uses two runs in the same environment. Comparing a
+rerun with the committed Windows quality results can expose tiny native Protractor
+score/margin differences across operating systems or runtimes, even when every
+class, winning template and status agrees. The strict `compare` command reports
+these differences and exits nonzero; it does not round scores or relax tie rules.
+See [numerical agreement and checks](../../docs/recognition-evaluation.md#numerical-agreement-and-checks)
+for the independent Linux review's observations and their scope.
+
 To reproduce development selection separately, use `develop <data> <output>
 <source-revision>` and then `freeze <data> <development-output> <freeze-path>
 <source-revision>`. Do not replace the committed freeze while reviewing held-out

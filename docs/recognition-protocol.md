@@ -18,7 +18,7 @@ classification settings will be selected from these timing passes.
 Import axes remain unchanged: $1 uses its screen coordinates; Pendigits keeps
 the source tablet columns. Missing axis/writer documentation is not reconstructed
 from class labels. The existing 7-Zip 26.02 executable is a development-only
-UNIX-compress decoder, with its hash/version recorded by the importer.
+UNIX-compress decoder, with its version recorded by the importer.
 
 ## Deliverable 2: one reproducible evaluation harness
 
