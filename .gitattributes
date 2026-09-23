@@ -2,3 +2,4 @@
 *.svg text
 # Preserve raw evidence bytes: recorded SHA-256 includes original line endings.
 results/optimization/** -text -whitespace
+results/recognition/** -text -whitespace
