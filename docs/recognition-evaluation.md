@@ -185,16 +185,16 @@ was added after seeing the test results.
 Across cached variants, median incremental retained banks are approximately
 126–169 KB for shared preparation and 16.6–17.3 KB for native Protractor. Treat
 these as noisy process-GC snapshots, not precise object-size guarantees: one
-Protractor observation is **−4,428,760 bytes** because other managed lifetimes
-changed between collections. The raw negative value is preserved. Per-query
-allocation counters are a separate measurement and agree between cached scalar
+Protractor observation is **−4,428,760 bytes**, consistent with unrelated managed
+lifetimes and GC measurement noise. The raw negative value is preserved. Median
+per-query allocation counters are a separate measurement and agree between cached scalar
 and SIMD. Median cached-SIMD full passes are 5.45 ms for 480 gesture RMS queries,
 605.4 ms for gesture area, 27.2 ms for 2744 digit RMS queries, 3289.9 ms for digit
 combination and 3766.2 ms for DTW. These pass times include measurement bookkeeping.
 
 All **243 cases and 422,280 timed queries** retain exactly the quality run's
 winning class, template, status and binary64 score. No faster variant changes the
-answer or drops failed inputs. Timing binaries were built immediately before
+answer or drops timed supported inputs. Timing binaries were built immediately before
 the timing-source commit; measured source content matches that commit, and exact
 DLL hashes identify the binaries separately from generated Git/build metadata.
 
