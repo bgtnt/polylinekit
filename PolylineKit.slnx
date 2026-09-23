@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/examples/">
+    <Project Path="examples/Basic/Basic.csproj" />
+  </Folder>
+  <Folder Name="/experiments/">
+    <Project Path="experiments/PolylineKit.Experiments/PolylineKit.Experiments.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/PolylineKit/PolylineKit.csproj" />
+  </Folder>
+</Solution>

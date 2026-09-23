@@ -1,0 +1,276 @@
+[
+  {
+    "Name": "square-once",
+    "Input": [
+      {
+        "X": 0,
+        "Y": 0
+      },
+      {
+        "X": 2,
+        "Y": 0
+      },
+      {
+        "X": 2,
+        "Y": 2
+      },
+      {
+        "X": 0,
+        "Y": 2
+      },
+      {
+        "X": 0,
+        "Y": 0
+      }
+    ],
+    "Areas": {
+      "NonZero": 4,
+      "EvenOdd": 4,
+      "AbsoluteWinding": 4,
+      "Signed": 4
+    },
+    "ClipperNonZero": 4,
+    "ClipperEvenOdd": 4
+  },
+  {
+    "Name": "square-twice",
+    "Input": [
+      {
+        "X": 0,
+        "Y": 0
+      },
+      {
+        "X": 2,
+        "Y": 0
+      },
+      {
+        "X": 2,
+        "Y": 2
+      },
+      {
+        "X": 0,
+        "Y": 2
+      },
+      {
+        "X": 0,
+        "Y": 0
+      },
+      {
+        "X": 2,
+        "Y": 0
+      },
+      {
+        "X": 2,
+        "Y": 2
+      },
+      {
+        "X": 0,
+        "Y": 2
+      },
+      {
+        "X": 0,
+        "Y": 0
+      }
+    ],
+    "Areas": {
+      "NonZero": 4,
+      "EvenOdd": 0,
+      "AbsoluteWinding": 8,
+      "Signed": 8
+    },
+    "ClipperNonZero": 4,
+    "ClipperEvenOdd": 0
+  },
+  {
+    "Name": "square-forward-backward",
+    "Input": [
+      {
+        "X": 0,
+        "Y": 0
+      },
+      {
+        "X": 2,
+        "Y": 0
+      },
+      {
+        "X": 2,
+        "Y": 2
+      },
+      {
+        "X": 0,
+        "Y": 2
+      },
+      {
+        "X": 0,
+        "Y": 0
+      },
+      {
+        "X": 0,
+        "Y": 2
+      },
+      {
+        "X": 2,
+        "Y": 2
+      },
+      {
+        "X": 2,
+        "Y": 0
+      },
+      {
+        "X": 0,
+        "Y": 0
+      }
+    ],
+    "Areas": {
+      "NonZero": 0,
+      "EvenOdd": 0,
+      "AbsoluteWinding": 0,
+      "Signed": 0
+    },
+    "ClipperNonZero": 0,
+    "ClipperEvenOdd": 0
+  },
+  {
+    "Name": "bow-tie",
+    "Input": [
+      {
+        "X": 0,
+        "Y": 0
+      },
+      {
+        "X": 2,
+        "Y": 2
+      },
+      {
+        "X": 0,
+        "Y": 2
+      },
+      {
+        "X": 2,
+        "Y": 0
+      }
+    ],
+    "Areas": {
+      "NonZero": 2,
+      "EvenOdd": 2,
+      "AbsoluteWinding": 2,
+      "Signed": 0
+    },
+    "ClipperNonZero": 2,
+    "ClipperEvenOdd": 2
+  },
+  {
+    "Name": "overlapping-squares",
+    "Input": [
+      {
+        "X": 0,
+        "Y": 0
+      },
+      {
+        "X": 2,
+        "Y": 0
+      },
+      {
+        "X": 2,
+        "Y": 2
+      },
+      {
+        "X": 0,
+        "Y": 2
+      },
+      {
+        "X": 0,
+        "Y": 0
+      },
+      {
+        "X": 1,
+        "Y": 0
+      },
+      {
+        "X": 3,
+        "Y": 0
+      },
+      {
+        "X": 3,
+        "Y": 2
+      },
+      {
+        "X": 1,
+        "Y": 2
+      },
+      {
+        "X": 1,
+        "Y": 0
+      },
+      {
+        "X": 0,
+        "Y": 0
+      }
+    ],
+    "Areas": {
+      "NonZero": 6,
+      "EvenOdd": 4,
+      "AbsoluteWinding": 8,
+      "Signed": 8
+    },
+    "ClipperNonZero": 6,
+    "ClipperEvenOdd": 4
+  },
+  {
+    "Name": "hole-with-retraced-bridge",
+    "Input": [
+      {
+        "X": 0,
+        "Y": 0
+      },
+      {
+        "X": 4,
+        "Y": 0
+      },
+      {
+        "X": 4,
+        "Y": 4
+      },
+      {
+        "X": 0,
+        "Y": 4
+      },
+      {
+        "X": 0,
+        "Y": 0
+      },
+      {
+        "X": 1,
+        "Y": 1
+      },
+      {
+        "X": 1,
+        "Y": 3
+      },
+      {
+        "X": 3,
+        "Y": 3
+      },
+      {
+        "X": 3,
+        "Y": 1
+      },
+      {
+        "X": 1,
+        "Y": 1
+      },
+      {
+        "X": 0,
+        "Y": 0
+      }
+    ],
+    "Areas": {
+      "NonZero": 12,
+      "EvenOdd": 12,
+      "AbsoluteWinding": 12,
+      "Signed": 12
+    },
+    "ClipperNonZero": 12,
+    "ClipperEvenOdd": 12
+  }
+]
