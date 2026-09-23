@@ -9,7 +9,10 @@
         "contentHash": "2X23RZxJrjRjOSZc20aqXY9jpmHLekDRy4PIMfrsi2LPNzxFYlnuqzX/nLdk77fbURHUeX+gMhUn2a1z9/wMTQ=="
       },
       "polylinekit": {
-        "type": "Project"
+        "type": "Project",
+        "dependencies": {
+          "Clipper2": "[2.0.0, )"
+        }
       }
     }
   }

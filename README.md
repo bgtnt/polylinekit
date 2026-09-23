@@ -1,72 +1,74 @@
 # PolylineKit
 
-Small experimental C# tools for the **unsigned area between piecewise linear graphs over the same x interval**, with reproducible comparisons against LIP, a documented GenLIP reconstruction and Clipper2.
+Experimental C# methods for polyline area comparison, bounds normalization, arc-length resampling and similarity alignment. Each operation states what it measures and returns its transformation or diagnostics. The API is still open for review; NuGet packaging and publication are out of scope at this stage.
 
-The experiment finds a real stability advantage over LIP's intersection-dependent area weights in a near-touch case. It does **not** establish a universal trajectory similarity method, new mathematics, or a replacement for Clipper's general polygon engine. Read the [decision and measurements](docs/report.md), [mathematical contract](docs/design.md) and [baseline limitations](docs/baselines.md) before relying on a score.
+## Choose the operation
 
-## Use the candidate API
+| Method | Meaning |
+| --- | --- |
+| `PolylineArea.BetweenGraphs(p, q)` | Integral of absolute vertical separation on a shared x interval; increasing-x graphs only. |
+| `PolylineComparison.EndpointBridgedArea(p, q)` | Fill area of the closed walk `p + reverse(q)`, joined by straight endpoint connectors. |
+| `PolylineComparison.FilledRegionDifference(p, q)` | Symmetric difference area of two independently filled closed contours. |
+| `PolylineNormalization.ToUnitBounds(p)` | Center and fit a path inside a unit square; return transformed points and affine map. |
+| `PolylineNormalization.MatchBounds(p, q)` | Center and fit `p` inside `q`'s bounds, with uniform or independent axis scaling. |
+| `PolylineAlignment.FitSimilarity(p, q)` | Sample along arc length, then fit translation, rotation and optional uniform scale. |
+| `PolylineSampling.ResampleByArcLength(p)` | Equidistant samples along an open or closed path. |
+
+These area operations are different definitions, not interchangeable implementations of a universal distance. Read the [comparison and transformation contracts](docs/comparison-api.md), including fill rules, precision, closed-path phase and degenerate cases.
+
+## Compare, normalize, align
 
 ```csharp
 using PolylineKit;
-Point2[] p = [new(0, 0), new(2, 0)];
-Point2[] q = [new(0, 0), new(1, 1), new(2, 0)];
-double area = PolylineArea.BetweenGraphs(p, q); // 1 square coordinate unit
+
+Point2[] reference = [new(0, 0), new(2, 0), new(2, 1), new(1, 2), new(3, 3)];
+Point2[] moving = AffineTransform2D.Scaling(2.5)
+    .Then(AffineTransform2D.Rotation(0.4))
+    .Then(AffineTransform2D.Translation(10, -7)).Apply(reference);
+
+// Independent bounds normalization removes location and bounds size, not rotation.
+var normalized = PolylineComparison.CompareNormalized(
+    reference, moving, AreaComparisonKind.EndpointBridged);
+
+// Fit the rotation, translation and uniform scale.
+var fit = PolylineAlignment.FitSimilarity(moving, reference);
+var comparison = PolylineComparison.EndpointBridgedArea(reference, fit.AlignedPoints);
+double area = comparison.RawArea;          // Approximately zero, within clipping precision.
+double? score = comparison.NormalizedArea; // Area / joint bounding rectangle area.
+double rms = fit.RmsError;                 // Sampled residual in reference units.
+AffineTransform2D transform = fit.Transform;
 ```
 
-The result is in squared coordinate units; smaller means less accumulated vertical separation. Divide by the common x span for mean absolute vertical separation. This is not a percentage, alignment result or maximum-deviation bound.
+For closed filled shapes, use `FilledRegionDifference`. For closed stroke alignment, use `new AlignmentOptions { Closed = true }`; this searches discrete cyclic sample shifts. Reversed traversal is opt-in. Alignment minimizes sampled squared distances, **not area**. A runnable example is in [examples/Basic](examples/Basic/Program.cs).
 
-Requirements: both paths increase in x and have exactly the same domain endpoints. Unequal sampling, collinear subdivisions, mutual crossings and consecutive identical points are supported. Vertical segments, backtracking and closed paths are rejected. The comparison uses existing coordinates; normalization and alignment are separate and currently unimplemented. See the full [numeric contract](docs/design.md).
+Normalized area is a geometric ratio, **not a calibrated similarity percentage**. Parallel equal-length horizontal segments have ratio 1 for every positive gap in exact geometry (subject to clipping precision); identical collinear paths return `null` because the denominator is zero. Raw area and RMS retain different information. Area alone cannot bound the worst local deviation or distinguish every traversal.
 
-`PolylineKit.0.1.0-alpha.1` is a **local prerelease for independent review**. It targets `netstandard2.0` and has no external runtime packages. It has **not** been published to NuGet.org, and the API can change. The experiment targets .NET 10; its only third-party package is Clipper2 2.0.0.
+## Build and verify
 
-## Three small examples
+The core targets **.NET Standard 2.0** for consumer compatibility; examples and experiments target **.NET 10**. The core has one runtime package dependency, **Clipper2 2.0.0**, for general polygon fill/Boolean operations. The graph integral, transforms, normalization, resampling and fitting are original implementations. There is no dependency on RtTools or MPR001.
 
-One triangle gives area 1:
-
-![Triangle](https://raw.githubusercontent.com/bgtnt/polylinekit/main/results/geometry/triangle.svg)
-
-Opposite lobes add rather than cancel:
-
-![Crossing lobes](https://raw.githubusercontent.com/bgtnt/polylinekit/main/results/geometry/crossing.svg)
-
-Near-touch geometry changes little while LIP's region weights change substantially:
-
-![Near touch](https://raw.githubusercontent.com/bgtnt/polylinekit/main/results/geometry/near-touch.svg)
-
-The near-touch drawing enlarges epsilon; the exact measured coordinates and per-region areas/weights are in [geometry.json](results/geometry/geometry.json).
-
-## Reproduce
-
-Install the .NET 10 SDK, then run from this repository:
+Install the .NET 10 SDK and run:
 
 ```sh
 dotnet restore PolylineKit.slnx --locked-mode
 dotnet build PolylineKit.slnx -c Release --no-restore
 dotnet run --project experiments/PolylineKit.Experiments -c Release --no-build -- check
 dotnet run --project examples/Basic -c Release --no-build
-dotnet run --project experiments/PolylineKit.Experiments -c Release --no-build -- evidence artifacts/reproduced-geometry
 ```
 
-Checks are a deterministic console harness, **not a `dotnet test` project**. A failed check throws and exits nonzero. CI runs this same command on Windows and Linux.
+Checks use a deterministic console harness, **not `dotnet test`**. Failures exit nonzero. CI runs the checks and example on Windows and Linux. Use a project reference while the API is under review; no NuGet release is part of this work.
 
-Three independent timing processes, with allocations and all individual samples:
+Three independent benchmark processes, recording timing and allocations:
 
 ```powershell
-pwsh -File scripts/benchmark.ps1 -OutputDirectory artifacts/reproduced-benchmarks
+pwsh -File scripts/benchmark.ps1 -OutputDirectory artifacts/graph-benchmarks
+pwsh -File scripts/benchmark.ps1 -Suite Transforms -OutputDirectory artifacts/transform-benchmarks
 ```
 
-The script requires committed tracked changes and sets `DOTNET_TieredCompilation=0`. Fixture generation is outside timing. See [benchmark methodology](docs/report.md#benchmark-methodology) for interpretation and the manual cross-platform equivalent.
+The script requires committed tracked changes and disables tiered compilation. Fixture construction is outside timing. See the [transformation evaluation](docs/comparison-evaluation.md) and original [LIP/GenLIP experiment](docs/report.md).
 
-Pack, inspect metadata/dependencies and install from a local feed into an isolated fresh consumer:
+## Research scope and provenance
 
-```powershell
-pwsh -File scripts/verify-package.ps1
-```
+The original graph experiment found a reproducible stability advantage over LIP's intersection-dependent area weights in a near-touch case. It does **not** establish scientific novelty, universal trajectory similarity, or an improvement to Clipper's polygon engine. The original [mathematical contract](docs/design.md), [baseline reconstruction limits](docs/baselines.md) and [inputs and measurements](results/geometry/geometry.json) remain available.
 
-The package is written to `artifacts/packages/PolylineKit.0.1.0-alpha.1.nupkg`. The script uses a fresh package cache and restores the consumer from that local feed only.
-
-## Scope and provenance
-
-Original code is MIT-licensed. All implementation was written afresh; the author's unpublished RtTools.Geometry was inspected for ideas only. Neither it nor MPR001 is included, linked or used as a test oracle or benchmark. No third-party algorithm source is copied. [Sources and reconstruction choices](docs/baselines.md) distinguish published definitions from implementation policies.
-
-General contours remain experimental: NonZero, EvenOdd and net winding multiplicity give different answers for repeated loops. Those operations are not exposed as a generic path-distance API. [Complex-contour evidence](results/geometry/contours.json) makes this distinction explicit.
+Original code is MIT-licensed. The author's unpublished RtTools.Geometry was inspected for ideas only. Neither it nor MPR001 is included, linked, or used as a test oracle or benchmark. No third-party algorithm source was copied. Clipper2 is a released dependency under its own [license](THIRD-PARTY-NOTICES.md).

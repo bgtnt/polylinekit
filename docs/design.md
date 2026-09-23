@@ -1,5 +1,7 @@
 # Mathematical contract and design
 
+This document preserves the graph-integral foundation of the original experiment. General fill-based comparisons, normalization and sampled alignment are specified separately in [comparison-api.md](comparison-api.md). They do not extend the graph integral's mathematical guarantees to arbitrary strokes.
+
 ## Candidate operation
 
 For two piecewise linear graphs `p(x)` and `q(x)` on the **same** interval `[a,b]`, define
@@ -12,7 +14,7 @@ This is the unweighted sum of the nonnegative lobe areas. Each lobe is bounded b
 
 The public method is `PolylineArea.BetweenGraphs(IReadOnlyList<Point2>, IReadOnlyList<Point2>)`. Inputs must increase in x, except consecutive identical points. Both domain endpoints must match **exactly**. Duplicate vertices are accepted without allocation. Vertical segments, backtracking, closed paths, empty/constant-x paths and nonfinite coordinates are rejected. Coordinates must have magnitude at most `1e100`, bounding intermediate arithmetic. This does not supply an absolute error guarantee: ordinary double rounding and underflow still apply, and lost input precision cannot be recovered.
 
-Normalization and alignment are separate concerns and are **not implemented** in this experiment. An individual path reversal is rejected. A common reversal can be reordered to increasing x by the caller. A common translation preserves the mathematical area; common uniform scaling by `s` multiplies it by `s²`. General rotations can destroy the graph contract. Zero means identical graphs, including different collinear subdivisions; it does not characterize arbitrary 2D strokes.
+Normalization and alignment are separate operations; see [comparison-api.md](comparison-api.md). An individual path reversal is rejected by `BetweenGraphs`. A common reversal can be reordered to increasing x by the caller. A common translation preserves the mathematical area; common uniform scaling by `s` multiplies it by `s²`. General rotations can destroy the graph contract. Zero means identical graphs, including different collinear subdivisions; it does not characterize arbitrary 2D strokes.
 
 ## Implementation and independent checks
 
@@ -53,10 +55,10 @@ For the supported graph pair, winding magnitude is at most one almost everywhere
 
 ## Dependency and source decisions
 
-The shipped `netstandard2.0` package has **no external runtime package dependencies**. The SDK's NETStandard.Library reference assets are build inputs, not shipped runtime packages. The experiment alone references Clipper2 **2.0.0**, locked with a NuGet content hash; its package declares no dependencies. No source from Clipper, RtTools, MPR001 or a third-party LIP implementation is embedded.
+The core targets `netstandard2.0`. The original graph-only implementation had no external runtime dependency; the current general fill-based API references Clipper2 **2.0.0**, locked with a NuGet content hash. The SDK's NETStandard.Library reference assets are build inputs. No source from Clipper, RtTools, MPR001 or a third-party LIP implementation is embedded. Packaging/publication is not part of the current scope.
 
 Clipper's `PathsD` operations quantize internally. The oracle explicitly uses decimal precision 8 and limits fixture coordinate magnitudes to `1e6`. Very small faces can disappear; tolerances account for this, and analytic checks retain authority below that scale. `Abs(Area(unresolvedCombinedPath))` is never used as an unsigned-area oracle.
 
 The author's unpublished `RtTools.Geometry`, including its .NET 10 version, was inspected **for ideas only**. Its intersection ordering, graph traversal and per-region accumulation motivated making region diagnostics independently inspectable. No private source, binaries or original fixtures are included. The old MPR001 application did not participate in correctness or speed measurements.
 
-Clipper's active-edge processing illustrates why a general robust arrangement engine is substantial. We reuse its released binary in experiments instead of writing a competing general-purpose engine. The small production sweep exploits the stronger graph contract. Broader path support must begin with a separately agreed correspondence/multiplicity definition, not more permissive input validation.
+Clipper's active-edge processing illustrates why a general robust arrangement engine is substantial. We reuse its released binary for the named general fill/Boolean operations. The small graph sweep exploits the stronger graph contract. The broader API explicitly specifies fill and correspondence policies instead of silently loosening the graph integral's input contract.

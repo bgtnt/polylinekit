@@ -1,5 +1,7 @@
 # Evaluation and continuation decision
 
+**Historical graph experiment.** The results below describe the original source revision and its graph-domain conclusions. Current comparison, normalization and alignment APIs are covered by [comparison-api.md](comparison-api.md) and [comparison-evaluation.md](comparison-evaluation.md). Their addition does not establish a new LIP advantage for general contours. References below to local packaging describe the earlier experiment; packaging is outside the current task.
+
 **Continue with a small graph-area utility for independent review. Do not expand it into a universal polyline matcher on this evidence.** The measurable advantage is continuity under bounded geometric perturbations, compared with the published LIP regional weighting. A simpler, allocation-free implementation is also useful on this domain. This is an established area integral, not a newly discovered algorithm.
 
 Repository: **https://github.com/bgtnt/polylinekit**.

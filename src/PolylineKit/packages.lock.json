@@ -2,6 +2,12 @@
   "version": 1,
   "dependencies": {
     ".NETStandard,Version=v2.0": {
+      "Clipper2": {
+        "type": "Direct",
+        "requested": "[2.0.0, )",
+        "resolved": "2.0.0",
+        "contentHash": "2X23RZxJrjRjOSZc20aqXY9jpmHLekDRy4PIMfrsi2LPNzxFYlnuqzX/nLdk77fbURHUeX+gMhUn2a1z9/wMTQ=="
+      },
       "NETStandard.Library": {
         "type": "Direct",
         "requested": "[2.0.3, )",
