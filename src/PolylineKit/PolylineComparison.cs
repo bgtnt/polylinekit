@@ -35,7 +35,9 @@ public sealed class AreaComparisonResult
     /// <summary>Area of UnionBounds; not the area of the union of two filled shapes.</summary>
     public double UnionBoundsArea => UnionBounds.Area;
     /// <summary>RawArea / UnionBoundsArea; null when rectangle area is zero. No clamping hides rounding.</summary>
-    public double? NormalizedArea => UnionBoundsArea > 0 ? RawArea / UnionBoundsArea : null;
+    public double? BoundsAreaRatio => UnionBoundsArea > 0 ? RawArea / UnionBoundsArea : null;
+    /// <summary>Compatibility alias for BoundsAreaRatio; this is a rectangle occupancy ratio, not a similarity score.</summary>
+    public double? NormalizedArea => BoundsAreaRatio;
     /// <summary>The operation that produced this result.</summary>
     public AreaComparisonKind Kind { get; }
     /// <summary>The chosen interpretation of self intersections and repeats.</summary>
@@ -83,30 +85,42 @@ public static class PolylineComparison
         PathFillRule fillRule = PathFillRule.NonZero, int decimalPrecision = 6, bool includeContours = false) =>
         Compare(first, second, AreaComparisonKind.FilledRegionDifference, fillRule, decimalPrecision, includeContours);
 
+    /// <summary>Measures the union and symmetric difference of two independently filled closed paths.</summary>
+    /// <remarks>
+    /// Closure is implicit and at least three vertices after consecutive duplicate removal are required.
+    /// Both Boolean operations use the same cleaned pair, common origin, axis exchange, fill rule and
+    /// decimal precision. Jaccard distance and IoU are undefined when the quantized union has zero area.
+    /// This compares filled regions; it does not interpret open strokes as gesture similarity.
+    /// </remarks>
+    public static FilledRegionOverlapResult FilledRegionOverlap(IReadOnlyList<Point2> first, IReadOnlyList<Point2> second,
+        PathFillRule fillRule = PathFillRule.NonZero, int decimalPrecision = 6)
+    {
+        PreparedPair pair = Prepare(first, second, true, fillRule, decimalPrecision);
+        var subject = new PathsD { ConvertPath(pair.First, pair.Origin, pair.Transpose) };
+        var clip = new PathsD { ConvertPath(pair.Second, pair.Origin, pair.Transpose) };
+        // Keep independently interpreted regions in separate subject/clip sets. A single subject
+        // set could cancel overlapping opposite windings (NonZero), or any overlap (EvenOdd).
+        PathsD difference = Clipper.Xor(subject, clip, pair.ClipperRule, decimalPrecision);
+        PathsD union = Clipper.Union(subject, clip, pair.ClipperRule, decimalPrecision);
+        return new FilledRegionOverlapResult(Math.Abs(Clipper.Area(difference)), Math.Abs(Clipper.Area(union)),
+            pair.Bounds, fillRule, decimalPrecision);
+    }
+
     private static AreaComparisonResult Compare(IReadOnlyList<Point2> first, IReadOnlyList<Point2> second,
         AreaComparisonKind kind, PathFillRule rule, int precision, bool includeContours, Bounds2D? knownBounds = null)
     {
-        if (rule != PathFillRule.NonZero && rule != PathFillRule.EvenOdd) throw new ArgumentOutOfRangeException(nameof(rule));
-        if (precision < -8 || precision > 8) throw new ArgumentOutOfRangeException(nameof(precision), "Decimal precision must be between -8 and 8.");
         bool closed = kind == AreaComparisonKind.FilledRegionDifference;
-        Point2[] p = PathInput.CopyClean(first, nameof(first), closed), q = PathInput.CopyClean(second, nameof(second), closed);
-        int minimum = closed ? 3 : 2;
-        if (p.Length < minimum || q.Length < minimum) throw new ArgumentException($"Each path requires at least {minimum} vertices after duplicate removal.");
-        Bounds2D bounds = knownBounds ?? Bounds2D.FromPoints(p).Union(Bounds2D.FromPoints(q));
-        Point2 origin = bounds.Center;
-        // Keep the largest extent along Clipper's sweep direction. Both supported fill rules are
-        // invariant under this common axis exchange. Undo it for diagnostic contours.
-        bool transpose = bounds.Width > bounds.Height;
-        double scale = Math.Pow(10, precision);
-        double extent = Math.Max(bounds.Width, bounds.Height);
-        if (extent * scale > 1e14)
-            throw new ArgumentOutOfRangeException(nameof(precision), "Coordinate extent exceeds the conservative clipping range; normalize or reduce decimal precision.");
-        FillRule clipperRule = rule == PathFillRule.NonZero ? FillRule.NonZero : FillRule.EvenOdd;
+        PreparedPair pair = Prepare(first, second, closed, rule, precision, knownBounds);
+        Point2[] p = pair.First, q = pair.Second;
+        Bounds2D bounds = pair.Bounds;
+        Point2 origin = pair.Origin;
+        bool transpose = pair.Transpose;
+        FillRule clipperRule = pair.ClipperRule;
         PathsD resolved;
         if (closed)
         {
             // Clipper applies the fill rule separately to the subject and clip sets before XOR.
-            resolved = Clipper.Xor(new PathsD { Convert(p) }, new PathsD { Convert(q) }, clipperRule, precision);
+            resolved = Clipper.Xor(new PathsD { ConvertPath(p, origin, transpose) }, new PathsD { ConvertPath(q, origin, transpose) }, clipperRule, precision);
         }
         else
         {
@@ -133,11 +147,46 @@ public static class PolylineComparison
         return new(area, bounds, kind, rule, precision, contours);
 
         PointD ConvertPoint(Point2 v) => transpose ? new PointD(v.Y - origin.Y, v.X - origin.X) : new PointD(v.X - origin.X, v.Y - origin.Y);
-        PathD Convert(Point2[] path)
+    }
+
+    private static PreparedPair Prepare(IReadOnlyList<Point2> first, IReadOnlyList<Point2> second, bool closed,
+        PathFillRule rule, int precision, Bounds2D? knownBounds = null)
+    {
+        if (rule != PathFillRule.NonZero && rule != PathFillRule.EvenOdd) throw new ArgumentOutOfRangeException(nameof(rule));
+        if (precision < -8 || precision > 8) throw new ArgumentOutOfRangeException(nameof(precision), "Decimal precision must be between -8 and 8.");
+        Point2[] p = PathInput.CopyClean(first, nameof(first), closed), q = PathInput.CopyClean(second, nameof(second), closed);
+        int minimum = closed ? 3 : 2;
+        if (p.Length < minimum || q.Length < minimum) throw new ArgumentException($"Each path requires at least {minimum} vertices after duplicate removal.");
+        Bounds2D bounds = knownBounds ?? Bounds2D.FromPoints(p).Union(Bounds2D.FromPoints(q));
+        double scale = Math.Pow(10, precision);
+        double extent = Math.Max(bounds.Width, bounds.Height);
+        if (extent * scale > 1e14)
+            throw new ArgumentOutOfRangeException(nameof(precision), "Coordinate extent exceeds the conservative clipping range; normalize or reduce decimal precision.");
+        return new PreparedPair(p, q, bounds, rule == PathFillRule.NonZero ? FillRule.NonZero : FillRule.EvenOdd);
+    }
+
+    private static PathD ConvertPath(Point2[] path, Point2 origin, bool transpose)
+    {
+        var result = new PathD(path.Length);
+        for (int i = 0; i < path.Length; i++)
         {
-            var result = new PathD(path.Length);
-            for (int i = 0; i < path.Length; i++) result.Add(ConvertPoint(path[i]));
-            return result;
+            Point2 point = path[i];
+            result.Add(transpose ? new PointD(point.Y - origin.Y, point.X - origin.X) : new PointD(point.X - origin.X, point.Y - origin.Y));
         }
+        return result;
+    }
+
+    private readonly struct PreparedPair
+    {
+        internal PreparedPair(Point2[] first, Point2[] second, Bounds2D bounds, FillRule rule)
+        { First = first; Second = second; Bounds = bounds; ClipperRule = rule; }
+        internal Point2[] First { get; }
+        internal Point2[] Second { get; }
+        internal Bounds2D Bounds { get; }
+        internal Point2 Origin => Bounds.Center;
+        // Keep the largest extent along Clipper's sweep direction. Both supported fill rules are
+        // invariant under this common axis exchange. Diagnostic contours undo it.
+        internal bool Transpose => Bounds.Width > Bounds.Height;
+        internal FillRule ClipperRule { get; }
     }
 }

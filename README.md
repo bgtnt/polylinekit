@@ -9,6 +9,7 @@ Experimental C# methods for polyline area comparison, bounds normalization, arc-
 | `PolylineArea.BetweenGraphs(p, q)` | Integral of absolute vertical separation on a shared x interval; increasing-x graphs only. |
 | `PolylineComparison.EndpointBridgedArea(p, q)` | Fill area of the closed walk `p + reverse(q)`, joined by straight endpoint connectors. |
 | `PolylineComparison.FilledRegionDifference(p, q)` | Symmetric difference area of two independently filled closed contours. |
+| `PolylineComparison.FilledRegionOverlap(p, q)` | Filled union/XOR areas, Jaccard distance and intersection-over-union. |
 | `PolylineNormalization.ToUnitBounds(p)` | Center and fit a path inside a unit square; return transformed points and affine map. |
 | `PolylineNormalization.MatchBounds(p, q)` | Center and fit `p` inside `q`'s bounds, with uniform or independent axis scaling. |
 | `PolylineAlignment.FitSimilarity(p, q)` | Sample along arc length, then fit translation, rotation and optional uniform scale. |
@@ -34,14 +35,14 @@ var normalized = PolylineComparison.CompareNormalized(
 var fit = PolylineAlignment.FitSimilarity(moving, reference);
 var comparison = PolylineComparison.EndpointBridgedArea(reference, fit.AlignedPoints);
 double area = comparison.RawArea;          // Approximately zero, within clipping precision.
-double? score = comparison.NormalizedArea; // Area / joint bounding rectangle area.
+double? score = comparison.BoundsAreaRatio; // Area / joint bounding rectangle area.
 double rms = fit.RmsError;                 // Sampled residual in reference units.
 AffineTransform2D transform = fit.Transform;
 ```
 
 For closed filled shapes, use `FilledRegionDifference`. For closed stroke alignment, use `new AlignmentOptions { Closed = true }`; this searches discrete cyclic sample shifts. Reversed traversal is opt-in. Alignment minimizes sampled squared distances, **not area**. A runnable example is in [examples/Basic](examples/Basic/Program.cs).
 
-Normalized area is a geometric ratio, **not a calibrated similarity percentage**. Parallel equal-length horizontal segments have ratio 1 for every positive gap in exact geometry (subject to clipping precision); identical collinear paths return `null` because the denominator is zero. Raw area and RMS retain different information. Area alone cannot bound the worst local deviation or distinguish every traversal.
+Bounds-area ratio is a geometric ratio, **not a calibrated similarity percentage**. `NormalizedArea` remains a compatibility alias. Parallel equal-length horizontal segments have ratio 1 for every positive gap in exact geometry (subject to clipping precision); identical collinear paths return `null` because the denominator is zero. Raw area and RMS retain different information. Area alone cannot bound the worst local deviation or distinguish every traversal. For independently filled regions, `FilledRegionOverlap` instead divides by their filled union; Jaccard distance and IoU are null when that quantized union has zero area.
 
 ## Build and verify
 

@@ -18,11 +18,29 @@ For arbitrary walks, this is **not** the sum of every bounded face independent o
 | --- | --- |
 | `RawArea` | Nonnegative area in squared input-coordinate units. |
 | `UnionBounds`, `UnionBoundsArea` | Joint axis-aligned bounding **rectangle**, not the filled union of contours. |
-| `NormalizedArea` | `RawArea / UnionBoundsArea`; `null` when the rectangle has zero area. No clamping. |
+| `BoundsAreaRatio` | `RawArea / UnionBoundsArea`; `null` when the rectangle has zero area. No clamping. |
+| `NormalizedArea` | Warning-free compatibility alias for `BoundsAreaRatio`. |
 | `Kind`, `FillRule`, `DecimalPrecision` | Requested operation and clipping grid. |
 | `Contours` | Optional resolved boundaries in original coordinates; signed outer area positive, hole area negative. |
 
 For parallel segments `(0,0)-(L,0)` and `(0,h)-(L,h)`, both raw area and rectangle area equal `L*|h|`, so the normalized ratio is 1 for every nonzero gap in exact geometry. At `h=0`, it is undefined (`null`). Subprecision gaps may collapse under clipping quantization. This denominator is **not a universal closeness measure**. Raw area, a fixed reference scale, or sampled RMS may better answer the application question.
+
+### Filled-region Jaccard and IoU
+
+`FilledRegionOverlap(p, q, fillRule, decimalPrecision)` returns the filled XOR and
+union areas computed with the same cleaned inputs, origin shift, axis exchange,
+fill rule and precision. Each input is filled independently; opposite contour
+orientations do not cancel their overlap. Holes subtract from each result.
+
+`JaccardDistance = SymmetricDifferenceArea / UnionArea`, and
+`IntersectionOverUnion = 1 - JaccardDistance`. Both are nullable and return null
+when the quantized filled union has zero area. A zero-area contour against a
+positive-area contour gives distance 1 / IoU 0. No clamp hides numeric errors.
+The XOR-only method still avoids an unrequested union operation.
+
+Two unit squares translated by (100,100) have XOR area 2, bounds ratio 2/10201
+and Jaccard distance 1. Translation by (.5,.5) gives XOR 1.5, bounds ratio 2/3,
+union 1.75 and Jaccard 6/7. These region scores have no open-stroke interpretation.
 
 ## Clipping precision
 
