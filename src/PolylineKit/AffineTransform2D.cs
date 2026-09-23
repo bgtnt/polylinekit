@@ -58,6 +58,9 @@ public readonly struct AffineTransform2D
         var result = new Point2[points.Count];
         if (points is Point2[] array)
         {
+#if NET10_0_OR_GREATER
+            if (array.Length >= SimdTransforms.MinimumPointCount && SimdTransforms.TryApply(this, array, result)) return result;
+#endif
             for (int i = 0; i < array.Length; i++) result[i] = Apply(array[i]);
             return result;
         }

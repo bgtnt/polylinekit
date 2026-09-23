@@ -17,6 +17,9 @@ return args.FirstOrDefault() switch
 
 static int RunChecks()
 {
+    var target = (System.Runtime.Versioning.TargetFrameworkAttribute)typeof(PolylineKit.Point2).Assembly
+        .GetCustomAttributes(typeof(System.Runtime.Versioning.TargetFrameworkAttribute), false).Single();
+    Console.WriteLine($"Core target: {target.FrameworkName}; Vector128={System.Runtime.Intrinsics.Vector128.IsHardwareAccelerated}; Vector256={System.Runtime.Intrinsics.Vector256.IsHardwareAccelerated}; force-scalar={Environment.GetEnvironmentVariable("POLYLINEKIT_FORCE_SCALAR")}");
     int total = Checks.Run() + AlignmentChecks.Run() + ComparisonChecks.Run() + NumericReviewChecks.Run() + GenLipReviewChecks.Run() + OptimizationChecks.Run();
     Console.WriteLine($"PASS: {total} total checks."); return 0;
 }
