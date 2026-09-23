@@ -128,6 +128,11 @@ public static class RecognitionSplits
             bank.TemplateIds.Intersect(bank.QueryIds, StringComparer.Ordinal).Any()) throw new InvalidDataException("Bank IDs overlap or repeat.");
         if (bank.TemplateIds.Any(id => !records.ContainsKey(id) || !records[id].Supported || records[id].Dataset != bank.Dataset) ||
             bank.QueryIds.Any(id => !records.ContainsKey(id) || records[id].Dataset != bank.Dataset)) throw new InvalidDataException("Invalid bank sample.");
+        if (bank.Dataset == "dollar" && (bank.Split != "main" || string.IsNullOrWhiteSpace(bank.HeldOutWriter) ||
+                bank.TemplateIds.Any(id => string.IsNullOrWhiteSpace(records[id].WriterId))))
+            throw new InvalidDataException("Dollar banks require main split and explicit template/held-out writer identities.");
+        if (bank.Dataset == "pendigits" && (bank.Split != "test" || bank.HeldOutWriter is not null))
+            throw new InvalidDataException("Pendigits banks use the official test split without inferred writer identities.");
         if (bank.Dataset == "dollar" && (bank.TemplateIds.Any(id => records[id].Split != "main" || records[id].WriterId == bank.HeldOutWriter) ||
             bank.QueryIds.Any(id => records[id].Split != "main" || records[id].WriterId != bank.HeldOutWriter))) throw new InvalidDataException("Writer leakage.");
         if (bank.Dataset == "pendigits" && (bank.TemplateIds.Any(id => records[id].Split != "train") ||

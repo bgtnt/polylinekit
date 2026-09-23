@@ -1,9 +1,11 @@
 <Solution>
   <Folder Name="/examples/">
     <Project Path="examples/Basic/Basic.csproj" />
+    <Project Path="examples/StrokeTemplates/StrokeTemplates.csproj" />
   </Folder>
   <Folder Name="/experiments/">
     <Project Path="experiments/PolylineKit.Experiments/PolylineKit.Experiments.csproj" />
+    <Project Path="experiments/PolylineKit.Recognition/PolylineKit.Recognition.csproj" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/PolylineKit/PolylineKit.csproj" />

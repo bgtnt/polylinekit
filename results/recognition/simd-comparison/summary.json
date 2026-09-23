@@ -1,0 +1,3816 @@
+{
+  "analysisVersion": "polylinekit-recognition-analysis-v1",
+  "python": "3.12.14",
+  "scriptSha256": "0388421a5b0525857a56f53c95660158abc168c68d625d630f8e6836dec1852d",
+  "leftFiles": [
+    {
+      "file": "dollar-predictions.jsonl.gz",
+      "sha256": "5e0ab395a4c086610b9c229d2b9729a7d625f87cc02b63a67bd6d6511ec05e76"
+    },
+    {
+      "file": "pendigits-predictions.jsonl.gz",
+      "sha256": "cbf5db41129521dabc959f5c355b178632a147941132a3f678646d84a7b9cb78"
+    }
+  ],
+  "rightFiles": [
+    {
+      "file": "dollar-predictions.jsonl.gz",
+      "sha256": "5e0ab395a4c086610b9c229d2b9729a7d625f87cc02b63a67bd6d6511ec05e76"
+    },
+    {
+      "file": "pendigits-predictions.jsonl.gz",
+      "sha256": "cbf5db41129521dabc959f5c355b178632a147941132a3f678646d84a7b9cb78"
+    }
+  ],
+  "comparison": {
+    "exact": true,
+    "leftRows": 110070,
+    "rightRows": 110070,
+    "matchedRows": 110070,
+    "missingFromRight": [],
+    "missingFromLeft": [],
+    "changedRows": 0,
+    "changedPredictions": 0,
+    "changedStatuses": 0,
+    "numericFields": {
+      "area": {
+        "compared": 98760,
+        "bitwiseEqual": 98760,
+        "maxAbsoluteDifference": 0.0
+      },
+      "margin": {
+        "compared": 98760,
+        "bitwiseEqual": 98760,
+        "maxAbsoluteDifference": 0.0
+      },
+      "rms": {
+        "compared": 98760,
+        "bitwiseEqual": 98760,
+        "maxAbsoluteDifference": 0.0
+      },
+      "rotationDegrees": {
+        "compared": 98760,
+        "bitwiseEqual": 98760,
+        "maxAbsoluteDifference": 0.0
+      },
+      "score": {
+        "compared": 98760,
+        "bitwiseEqual": 98760,
+        "maxAbsoluteDifference": 0.0
+      },
+      "seed": {
+        "compared": 110070,
+        "bitwiseEqual": 110070,
+        "maxAbsoluteDifference": 0.0
+      }
+    },
+    "differences": [],
+    "marginsByMethod": {
+      "dollar/area": {
+        "left": {
+          "exactDistinctClassTies": 0,
+          "smallestPositiveMargin": 1.3012066999933125e-05,
+          "closest": [
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s06/slow/left_curly_brace06.xml",
+              "method": "area",
+              "predictedLabel": "left_sq_bracket",
+              "templateId": "dollar/xml_logs/s08/slow/left_sq_bracket05.xml",
+              "score": 0.04843443932900003,
+              "margin": 1.3012066999933125e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s07/fast/left_sq_bracket05.xml",
+              "method": "area",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s10/slow/left_curly_brace04.xml",
+              "score": 0.0554375184605,
+              "margin": 1.801531700008213e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s06/medium/check08.xml",
+              "method": "area",
+              "predictedLabel": "v",
+              "templateId": "dollar/xml_logs/s08/fast/v07.xml",
+              "score": 0.07513310752799997,
+              "margin": 3.090286500005701e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s06/fast/x01.xml",
+              "method": "area",
+              "predictedLabel": "x",
+              "templateId": "dollar/xml_logs/s09/slow/x10.xml",
+              "score": 0.14157807183650004,
+              "margin": 3.192672049995293e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s08/fast/right_sq_bracket07.xml",
+              "method": "area",
+              "predictedLabel": "right_sq_bracket",
+              "templateId": "dollar/xml_logs/s02/medium/right_sq_bracket03.xml",
+              "score": 0.27501583781049976,
+              "margin": 3.8786172000315755e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s07/medium/pigtail05.xml",
+              "method": "area",
+              "predictedLabel": "pigtail",
+              "templateId": "dollar/xml_logs/s04/medium/pigtail03.xml",
+              "score": 0.18016271544949997,
+              "margin": 5.12086250000765e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s03/slow/check05.xml",
+              "method": "area",
+              "predictedLabel": "v",
+              "templateId": "dollar/xml_logs/s08/fast/v07.xml",
+              "score": 0.059898013116999986,
+              "margin": 6.1032204500009735e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s10/fast/left_sq_bracket05.xml",
+              "method": "area",
+              "predictedLabel": "triangle",
+              "templateId": "dollar/xml_logs/s03/fast/triangle05.xml",
+              "score": 0.24195917033300005,
+              "margin": 6.644264249991427e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s07/fast/check06.xml",
+              "method": "area",
+              "predictedLabel": "check",
+              "templateId": "dollar/xml_logs/s11/medium/check02.xml",
+              "score": 0.09484121901199997,
+              "margin": 7.112016100001284e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s09/slow/left_sq_bracket03.xml",
+              "method": "area",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s11/fast/left_curly_brace07.xml",
+              "score": 0.04225937022,
+              "margin": 8.292457000002446e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s08/fast/triangle10.xml",
+              "method": "area",
+              "predictedLabel": "triangle",
+              "templateId": "dollar/xml_logs/s04/slow/triangle10.xml",
+              "score": 0.23069424977949998,
+              "margin": 8.533359949999819e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s11/medium/right_curly_brace07.xml",
+              "method": "area",
+              "predictedLabel": "question_mark",
+              "templateId": "dollar/xml_logs/s08/fast/question_mark05.xml",
+              "score": 0.0911180125305,
+              "margin": 8.860289399999222e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s05/medium/x02.xml",
+              "method": "area",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s07/fast/left_curly_brace06.xml",
+              "score": 0.19608070691250007,
+              "margin": 0.00010467931199997782
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s09/medium/check05.xml",
+              "method": "area",
+              "predictedLabel": "check",
+              "templateId": "dollar/xml_logs/s05/medium/check05.xml",
+              "score": 0.09392605002949998,
+              "margin": 0.00010659835700004006
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s07/fast/v03.xml",
+              "method": "area",
+              "predictedLabel": "v",
+              "templateId": "dollar/xml_logs/s10/medium/v01.xml",
+              "score": 0.0947520910695,
+              "margin": 0.00011472899249997948
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s06/fast/star05.xml",
+              "method": "area",
+              "predictedLabel": "caret",
+              "templateId": "dollar/xml_logs/s09/medium/caret10.xml",
+              "score": 0.2291262635095,
+              "margin": 0.00012178753149993948
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s04/slow/left_sq_bracket09.xml",
+              "method": "area",
+              "predictedLabel": "left_sq_bracket",
+              "templateId": "dollar/xml_logs/s08/slow/left_sq_bracket05.xml",
+              "score": 0.03211933770300001,
+              "margin": 0.0001273649449999928
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s11/medium/left_sq_bracket04.xml",
+              "method": "area",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s04/medium/left_curly_brace06.xml",
+              "score": 0.17452614293699997,
+              "margin": 0.00012786548650006724
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s07/slow/star08.xml",
+              "method": "area",
+              "predictedLabel": "check",
+              "templateId": "dollar/xml_logs/s10/medium/check07.xml",
+              "score": 0.1801217265575,
+              "margin": 0.00013016992849998466
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s02/slow/pigtail02.xml",
+              "method": "area",
+              "predictedLabel": "pigtail",
+              "templateId": "dollar/xml_logs/s04/fast/pigtail06.xml",
+              "score": 0.30674677909949993,
+              "margin": 0.00013955280850003193
+            }
+          ],
+          "meaning": "best different-class score minus winner; native score units; no epsilon near-tie threshold"
+        },
+        "right": {
+          "exactDistinctClassTies": 0,
+          "smallestPositiveMargin": 1.3012066999933125e-05,
+          "closest": [
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s06/slow/left_curly_brace06.xml",
+              "method": "area",
+              "predictedLabel": "left_sq_bracket",
+              "templateId": "dollar/xml_logs/s08/slow/left_sq_bracket05.xml",
+              "score": 0.04843443932900003,
+              "margin": 1.3012066999933125e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s07/fast/left_sq_bracket05.xml",
+              "method": "area",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s10/slow/left_curly_brace04.xml",
+              "score": 0.0554375184605,
+              "margin": 1.801531700008213e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s06/medium/check08.xml",
+              "method": "area",
+              "predictedLabel": "v",
+              "templateId": "dollar/xml_logs/s08/fast/v07.xml",
+              "score": 0.07513310752799997,
+              "margin": 3.090286500005701e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s06/fast/x01.xml",
+              "method": "area",
+              "predictedLabel": "x",
+              "templateId": "dollar/xml_logs/s09/slow/x10.xml",
+              "score": 0.14157807183650004,
+              "margin": 3.192672049995293e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s08/fast/right_sq_bracket07.xml",
+              "method": "area",
+              "predictedLabel": "right_sq_bracket",
+              "templateId": "dollar/xml_logs/s02/medium/right_sq_bracket03.xml",
+              "score": 0.27501583781049976,
+              "margin": 3.8786172000315755e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s07/medium/pigtail05.xml",
+              "method": "area",
+              "predictedLabel": "pigtail",
+              "templateId": "dollar/xml_logs/s04/medium/pigtail03.xml",
+              "score": 0.18016271544949997,
+              "margin": 5.12086250000765e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s03/slow/check05.xml",
+              "method": "area",
+              "predictedLabel": "v",
+              "templateId": "dollar/xml_logs/s08/fast/v07.xml",
+              "score": 0.059898013116999986,
+              "margin": 6.1032204500009735e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s10/fast/left_sq_bracket05.xml",
+              "method": "area",
+              "predictedLabel": "triangle",
+              "templateId": "dollar/xml_logs/s03/fast/triangle05.xml",
+              "score": 0.24195917033300005,
+              "margin": 6.644264249991427e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s07/fast/check06.xml",
+              "method": "area",
+              "predictedLabel": "check",
+              "templateId": "dollar/xml_logs/s11/medium/check02.xml",
+              "score": 0.09484121901199997,
+              "margin": 7.112016100001284e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s09/slow/left_sq_bracket03.xml",
+              "method": "area",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s11/fast/left_curly_brace07.xml",
+              "score": 0.04225937022,
+              "margin": 8.292457000002446e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s08/fast/triangle10.xml",
+              "method": "area",
+              "predictedLabel": "triangle",
+              "templateId": "dollar/xml_logs/s04/slow/triangle10.xml",
+              "score": 0.23069424977949998,
+              "margin": 8.533359949999819e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s11/medium/right_curly_brace07.xml",
+              "method": "area",
+              "predictedLabel": "question_mark",
+              "templateId": "dollar/xml_logs/s08/fast/question_mark05.xml",
+              "score": 0.0911180125305,
+              "margin": 8.860289399999222e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s05/medium/x02.xml",
+              "method": "area",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s07/fast/left_curly_brace06.xml",
+              "score": 0.19608070691250007,
+              "margin": 0.00010467931199997782
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s09/medium/check05.xml",
+              "method": "area",
+              "predictedLabel": "check",
+              "templateId": "dollar/xml_logs/s05/medium/check05.xml",
+              "score": 0.09392605002949998,
+              "margin": 0.00010659835700004006
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s07/fast/v03.xml",
+              "method": "area",
+              "predictedLabel": "v",
+              "templateId": "dollar/xml_logs/s10/medium/v01.xml",
+              "score": 0.0947520910695,
+              "margin": 0.00011472899249997948
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s06/fast/star05.xml",
+              "method": "area",
+              "predictedLabel": "caret",
+              "templateId": "dollar/xml_logs/s09/medium/caret10.xml",
+              "score": 0.2291262635095,
+              "margin": 0.00012178753149993948
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s04/slow/left_sq_bracket09.xml",
+              "method": "area",
+              "predictedLabel": "left_sq_bracket",
+              "templateId": "dollar/xml_logs/s08/slow/left_sq_bracket05.xml",
+              "score": 0.03211933770300001,
+              "margin": 0.0001273649449999928
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s11/medium/left_sq_bracket04.xml",
+              "method": "area",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s04/medium/left_curly_brace06.xml",
+              "score": 0.17452614293699997,
+              "margin": 0.00012786548650006724
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s07/slow/star08.xml",
+              "method": "area",
+              "predictedLabel": "check",
+              "templateId": "dollar/xml_logs/s10/medium/check07.xml",
+              "score": 0.1801217265575,
+              "margin": 0.00013016992849998466
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s02/slow/pigtail02.xml",
+              "method": "area",
+              "predictedLabel": "pigtail",
+              "templateId": "dollar/xml_logs/s04/fast/pigtail06.xml",
+              "score": 0.30674677909949993,
+              "margin": 0.00013955280850003193
+            }
+          ],
+          "meaning": "best different-class score minus winner; native score units; no epsilon near-tie threshold"
+        }
+      },
+      "dollar/combined": {
+        "left": {
+          "exactDistinctClassTies": 0,
+          "smallestPositiveMargin": 0.0001133948574035537,
+          "closest": [
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s05/slow/left_curly_brace04.xml",
+              "method": "combined",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s07/medium/left_curly_brace08.xml",
+              "score": 0.14645700651818236,
+              "margin": 0.0001133948574035537
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s08/medium/circle10.xml",
+              "method": "combined",
+              "predictedLabel": "circle",
+              "templateId": "dollar/xml_logs/s10/slow/circle04.xml",
+              "score": 0.5161219243024243,
+              "margin": 0.00013761043391591343
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s08/medium/right_curly_brace01.xml",
+              "method": "combined",
+              "predictedLabel": "right_sq_bracket",
+              "templateId": "dollar/xml_logs/s06/slow/right_sq_bracket09.xml",
+              "score": 0.2264040595207802,
+              "margin": 0.00016293872995445935
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s07/medium/right_curly_brace08.xml",
+              "method": "combined",
+              "predictedLabel": "right_curly_brace",
+              "templateId": "dollar/xml_logs/s05/slow/right_curly_brace02.xml",
+              "score": 0.23913350778004852,
+              "margin": 0.0001807263354317301
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s02/slow/left_curly_brace03.xml",
+              "method": "combined",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s07/medium/left_curly_brace08.xml",
+              "score": 0.25335870933588095,
+              "margin": 0.00019913946708199903
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s02/medium/triangle09.xml",
+              "method": "combined",
+              "predictedLabel": "circle",
+              "templateId": "dollar/xml_logs/s05/fast/circle04.xml",
+              "score": 0.34936962973872787,
+              "margin": 0.00027871267795465116
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s08/medium/arrow05.xml",
+              "method": "combined",
+              "predictedLabel": "pigtail",
+              "templateId": "dollar/xml_logs/s04/medium/pigtail03.xml",
+              "score": 0.32863941298326776,
+              "margin": 0.00038504165426511694
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s05/fast/right_sq_bracket07.xml",
+              "method": "combined",
+              "predictedLabel": "right_curly_brace",
+              "templateId": "dollar/xml_logs/s02/slow/right_curly_brace03.xml",
+              "score": 0.4788777814908039,
+              "margin": 0.0004240883695851849
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s05/medium/right_curly_brace10.xml",
+              "method": "combined",
+              "predictedLabel": "right_sq_bracket",
+              "templateId": "dollar/xml_logs/s02/slow/right_sq_bracket03.xml",
+              "score": 0.25821395053972734,
+              "margin": 0.00048802777870349257
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s04/medium/circle06.xml",
+              "method": "combined",
+              "predictedLabel": "triangle",
+              "templateId": "dollar/xml_logs/s11/slow/triangle05.xml",
+              "score": 0.38339644152727337,
+              "margin": 0.000496311766750468
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s10/fast/pigtail07.xml",
+              "method": "combined",
+              "predictedLabel": "arrow",
+              "templateId": "dollar/xml_logs/s08/medium/arrow08.xml",
+              "score": 0.4733397970000425,
+              "margin": 0.0005386963113666043
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s06/slow/left_curly_brace10.xml",
+              "method": "combined",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s07/medium/left_curly_brace08.xml",
+              "score": 0.16218607080455885,
+              "margin": 0.000540258250657788
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s05/medium/check05.xml",
+              "method": "combined",
+              "predictedLabel": "v",
+              "templateId": "dollar/xml_logs/s08/fast/v07.xml",
+              "score": 0.19196991039817332,
+              "margin": 0.0006083949398360822
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s11/slow/triangle06.xml",
+              "method": "combined",
+              "predictedLabel": "triangle",
+              "templateId": "dollar/xml_logs/s06/medium/triangle10.xml",
+              "score": 0.3406500739169113,
+              "margin": 0.0006531241429876267
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s03/medium/left_curly_brace08.xml",
+              "method": "combined",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s10/slow/left_curly_brace04.xml",
+              "score": 0.14744488766575248,
+              "margin": 0.0006622910247478242
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s08/fast/left_curly_brace01.xml",
+              "method": "combined",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s09/fast/left_curly_brace01.xml",
+              "score": 0.33089060153617683,
+              "margin": 0.0007566549758890595
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s05/medium/left_sq_bracket02.xml",
+              "method": "combined",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s04/medium/left_curly_brace06.xml",
+              "score": 0.21152331084349413,
+              "margin": 0.0008806186725045795
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s08/medium/check07.xml",
+              "method": "combined",
+              "predictedLabel": "v",
+              "templateId": "dollar/xml_logs/s04/medium/v01.xml",
+              "score": 0.3113885863651963,
+              "margin": 0.0009128970868898523
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s06/slow/left_curly_brace04.xml",
+              "method": "combined",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s07/medium/left_curly_brace08.xml",
+              "score": 0.19219546024666787,
+              "margin": 0.0009658391215783824
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s08/slow/left_curly_brace01.xml",
+              "method": "combined",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s07/medium/left_curly_brace08.xml",
+              "score": 0.33398348604195915,
+              "margin": 0.0010330374701952305
+            }
+          ],
+          "meaning": "best different-class score minus winner; native score units; no epsilon near-tie threshold"
+        },
+        "right": {
+          "exactDistinctClassTies": 0,
+          "smallestPositiveMargin": 0.0001133948574035537,
+          "closest": [
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s05/slow/left_curly_brace04.xml",
+              "method": "combined",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s07/medium/left_curly_brace08.xml",
+              "score": 0.14645700651818236,
+              "margin": 0.0001133948574035537
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s08/medium/circle10.xml",
+              "method": "combined",
+              "predictedLabel": "circle",
+              "templateId": "dollar/xml_logs/s10/slow/circle04.xml",
+              "score": 0.5161219243024243,
+              "margin": 0.00013761043391591343
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s08/medium/right_curly_brace01.xml",
+              "method": "combined",
+              "predictedLabel": "right_sq_bracket",
+              "templateId": "dollar/xml_logs/s06/slow/right_sq_bracket09.xml",
+              "score": 0.2264040595207802,
+              "margin": 0.00016293872995445935
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s07/medium/right_curly_brace08.xml",
+              "method": "combined",
+              "predictedLabel": "right_curly_brace",
+              "templateId": "dollar/xml_logs/s05/slow/right_curly_brace02.xml",
+              "score": 0.23913350778004852,
+              "margin": 0.0001807263354317301
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s02/slow/left_curly_brace03.xml",
+              "method": "combined",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s07/medium/left_curly_brace08.xml",
+              "score": 0.25335870933588095,
+              "margin": 0.00019913946708199903
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s02/medium/triangle09.xml",
+              "method": "combined",
+              "predictedLabel": "circle",
+              "templateId": "dollar/xml_logs/s05/fast/circle04.xml",
+              "score": 0.34936962973872787,
+              "margin": 0.00027871267795465116
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s08/medium/arrow05.xml",
+              "method": "combined",
+              "predictedLabel": "pigtail",
+              "templateId": "dollar/xml_logs/s04/medium/pigtail03.xml",
+              "score": 0.32863941298326776,
+              "margin": 0.00038504165426511694
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s05/fast/right_sq_bracket07.xml",
+              "method": "combined",
+              "predictedLabel": "right_curly_brace",
+              "templateId": "dollar/xml_logs/s02/slow/right_curly_brace03.xml",
+              "score": 0.4788777814908039,
+              "margin": 0.0004240883695851849
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s05/medium/right_curly_brace10.xml",
+              "method": "combined",
+              "predictedLabel": "right_sq_bracket",
+              "templateId": "dollar/xml_logs/s02/slow/right_sq_bracket03.xml",
+              "score": 0.25821395053972734,
+              "margin": 0.00048802777870349257
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s04/medium/circle06.xml",
+              "method": "combined",
+              "predictedLabel": "triangle",
+              "templateId": "dollar/xml_logs/s11/slow/triangle05.xml",
+              "score": 0.38339644152727337,
+              "margin": 0.000496311766750468
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s10/fast/pigtail07.xml",
+              "method": "combined",
+              "predictedLabel": "arrow",
+              "templateId": "dollar/xml_logs/s08/medium/arrow08.xml",
+              "score": 0.4733397970000425,
+              "margin": 0.0005386963113666043
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s06/slow/left_curly_brace10.xml",
+              "method": "combined",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s07/medium/left_curly_brace08.xml",
+              "score": 0.16218607080455885,
+              "margin": 0.000540258250657788
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s05/medium/check05.xml",
+              "method": "combined",
+              "predictedLabel": "v",
+              "templateId": "dollar/xml_logs/s08/fast/v07.xml",
+              "score": 0.19196991039817332,
+              "margin": 0.0006083949398360822
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s11/slow/triangle06.xml",
+              "method": "combined",
+              "predictedLabel": "triangle",
+              "templateId": "dollar/xml_logs/s06/medium/triangle10.xml",
+              "score": 0.3406500739169113,
+              "margin": 0.0006531241429876267
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s03/medium/left_curly_brace08.xml",
+              "method": "combined",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s10/slow/left_curly_brace04.xml",
+              "score": 0.14744488766575248,
+              "margin": 0.0006622910247478242
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s08/fast/left_curly_brace01.xml",
+              "method": "combined",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s09/fast/left_curly_brace01.xml",
+              "score": 0.33089060153617683,
+              "margin": 0.0007566549758890595
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s05/medium/left_sq_bracket02.xml",
+              "method": "combined",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s04/medium/left_curly_brace06.xml",
+              "score": 0.21152331084349413,
+              "margin": 0.0008806186725045795
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s08/medium/check07.xml",
+              "method": "combined",
+              "predictedLabel": "v",
+              "templateId": "dollar/xml_logs/s04/medium/v01.xml",
+              "score": 0.3113885863651963,
+              "margin": 0.0009128970868898523
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s06/slow/left_curly_brace04.xml",
+              "method": "combined",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s07/medium/left_curly_brace08.xml",
+              "score": 0.19219546024666787,
+              "margin": 0.0009658391215783824
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s08/slow/left_curly_brace01.xml",
+              "method": "combined",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s07/medium/left_curly_brace08.xml",
+              "score": 0.33398348604195915,
+              "margin": 0.0010330374701952305
+            }
+          ],
+          "meaning": "best different-class score minus winner; native score units; no epsilon near-tie threshold"
+        }
+      },
+      "dollar/protractor": {
+        "left": {
+          "exactDistinctClassTies": 0,
+          "smallestPositiveMargin": 6.245396365095468e-06,
+          "closest": [
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s05/slow/circle10.xml",
+              "method": "protractor",
+              "predictedLabel": "circle",
+              "templateId": "dollar/xml_logs/s04/medium/circle02.xml",
+              "score": 0.1630740102997359,
+              "margin": 6.245396365095468e-06
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s05/slow/right_curly_brace08.xml",
+              "method": "protractor",
+              "predictedLabel": "right_sq_bracket",
+              "templateId": "dollar/xml_logs/s06/slow/right_sq_bracket05.xml",
+              "score": 0.18340488585672204,
+              "margin": 9.495237774520549e-06
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s10/fast/left_sq_bracket06.xml",
+              "method": "protractor",
+              "predictedLabel": "left_sq_bracket",
+              "templateId": "dollar/xml_logs/s02/fast/left_sq_bracket09.xml",
+              "score": 0.31430096143842196,
+              "margin": 1.3439546021620785e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s11/slow/triangle08.xml",
+              "method": "protractor",
+              "predictedLabel": "triangle",
+              "templateId": "dollar/xml_logs/s06/medium/triangle10.xml",
+              "score": 0.34456979285988387,
+              "margin": 2.5784196610867394e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s05/medium/circle09.xml",
+              "method": "protractor",
+              "predictedLabel": "rectangle",
+              "templateId": "dollar/xml_logs/s04/slow/rectangle01.xml",
+              "score": 0.1481856010235347,
+              "margin": 7.14499735162688e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s04/slow/right_curly_brace06.xml",
+              "method": "protractor",
+              "predictedLabel": "right_sq_bracket",
+              "templateId": "dollar/xml_logs/s06/slow/right_sq_bracket09.xml",
+              "score": 0.2019021445432559,
+              "margin": 8.788830189465635e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s05/medium/right_curly_brace10.xml",
+              "method": "protractor",
+              "predictedLabel": "right_curly_brace",
+              "templateId": "dollar/xml_logs/s04/slow/right_curly_brace02.xml",
+              "score": 0.18687698291078858,
+              "margin": 0.00010548051920475365
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s07/medium/right_curly_brace03.xml",
+              "method": "protractor",
+              "predictedLabel": "right_sq_bracket",
+              "templateId": "dollar/xml_logs/s06/slow/right_sq_bracket05.xml",
+              "score": 0.2312308513686718,
+              "margin": 0.0001747565681270713
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s10/fast/circle01.xml",
+              "method": "protractor",
+              "predictedLabel": "circle",
+              "templateId": "dollar/xml_logs/s05/fast/circle04.xml",
+              "score": 0.2317139718385113,
+              "margin": 0.0001783723269341564
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s08/fast/circle03.xml",
+              "method": "protractor",
+              "predictedLabel": "rectangle",
+              "templateId": "dollar/xml_logs/s05/fast/rectangle10.xml",
+              "score": 0.190359860222186,
+              "margin": 0.0002102531207911762
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s09/fast/x08.xml",
+              "method": "protractor",
+              "predictedLabel": "x",
+              "templateId": "dollar/xml_logs/s08/fast/x01.xml",
+              "score": 0.4947108378617291,
+              "margin": 0.0002883689744820339
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s11/fast/triangle07.xml",
+              "method": "protractor",
+              "predictedLabel": "circle",
+              "templateId": "dollar/xml_logs/s05/fast/circle04.xml",
+              "score": 0.35110789704186496,
+              "margin": 0.0003199541102769654
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s05/slow/arrow10.xml",
+              "method": "protractor",
+              "predictedLabel": "caret",
+              "templateId": "dollar/xml_logs/s11/medium/caret08.xml",
+              "score": 0.5677296349674957,
+              "margin": 0.00033476929020725965
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s05/medium/check05.xml",
+              "method": "protractor",
+              "predictedLabel": "v",
+              "templateId": "dollar/xml_logs/s08/fast/v07.xml",
+              "score": 0.15633190707638214,
+              "margin": 0.00037442110515195637
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s05/fast/left_curly_brace03.xml",
+              "method": "protractor",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s10/slow/left_curly_brace04.xml",
+              "score": 0.22425494539775906,
+              "margin": 0.00039324477609767317
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s02/medium/triangle05.xml",
+              "method": "protractor",
+              "predictedLabel": "triangle",
+              "templateId": "dollar/xml_logs/s04/slow/triangle06.xml",
+              "score": 0.3449276071037865,
+              "margin": 0.0004165615806868139
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s05/medium/check10.xml",
+              "method": "protractor",
+              "predictedLabel": "check",
+              "templateId": "dollar/xml_logs/s10/slow/check10.xml",
+              "score": 0.19758188024256268,
+              "margin": 0.00047683215981941807
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s05/fast/left_curly_brace02.xml",
+              "method": "protractor",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s11/fast/left_curly_brace07.xml",
+              "score": 0.27056422791486756,
+              "margin": 0.0005483516954612466
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s03/slow/left_curly_brace03.xml",
+              "method": "protractor",
+              "predictedLabel": "left_sq_bracket",
+              "templateId": "dollar/xml_logs/s06/medium/left_sq_bracket06.xml",
+              "score": 0.14878578658329478,
+              "margin": 0.0005613994943409473
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s07/slow/right_curly_brace10.xml",
+              "method": "protractor",
+              "predictedLabel": "right_sq_bracket",
+              "templateId": "dollar/xml_logs/s06/slow/right_sq_bracket09.xml",
+              "score": 0.19675826212257816,
+              "margin": 0.0005934972811051376
+            }
+          ],
+          "meaning": "best different-class score minus winner; native score units; no epsilon near-tie threshold"
+        },
+        "right": {
+          "exactDistinctClassTies": 0,
+          "smallestPositiveMargin": 6.245396365095468e-06,
+          "closest": [
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s05/slow/circle10.xml",
+              "method": "protractor",
+              "predictedLabel": "circle",
+              "templateId": "dollar/xml_logs/s04/medium/circle02.xml",
+              "score": 0.1630740102997359,
+              "margin": 6.245396365095468e-06
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s05/slow/right_curly_brace08.xml",
+              "method": "protractor",
+              "predictedLabel": "right_sq_bracket",
+              "templateId": "dollar/xml_logs/s06/slow/right_sq_bracket05.xml",
+              "score": 0.18340488585672204,
+              "margin": 9.495237774520549e-06
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s10/fast/left_sq_bracket06.xml",
+              "method": "protractor",
+              "predictedLabel": "left_sq_bracket",
+              "templateId": "dollar/xml_logs/s02/fast/left_sq_bracket09.xml",
+              "score": 0.31430096143842196,
+              "margin": 1.3439546021620785e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s11/slow/triangle08.xml",
+              "method": "protractor",
+              "predictedLabel": "triangle",
+              "templateId": "dollar/xml_logs/s06/medium/triangle10.xml",
+              "score": 0.34456979285988387,
+              "margin": 2.5784196610867394e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s05/medium/circle09.xml",
+              "method": "protractor",
+              "predictedLabel": "rectangle",
+              "templateId": "dollar/xml_logs/s04/slow/rectangle01.xml",
+              "score": 0.1481856010235347,
+              "margin": 7.14499735162688e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s04/slow/right_curly_brace06.xml",
+              "method": "protractor",
+              "predictedLabel": "right_sq_bracket",
+              "templateId": "dollar/xml_logs/s06/slow/right_sq_bracket09.xml",
+              "score": 0.2019021445432559,
+              "margin": 8.788830189465635e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s05/medium/right_curly_brace10.xml",
+              "method": "protractor",
+              "predictedLabel": "right_curly_brace",
+              "templateId": "dollar/xml_logs/s04/slow/right_curly_brace02.xml",
+              "score": 0.18687698291078858,
+              "margin": 0.00010548051920475365
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s07/medium/right_curly_brace03.xml",
+              "method": "protractor",
+              "predictedLabel": "right_sq_bracket",
+              "templateId": "dollar/xml_logs/s06/slow/right_sq_bracket05.xml",
+              "score": 0.2312308513686718,
+              "margin": 0.0001747565681270713
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s10/fast/circle01.xml",
+              "method": "protractor",
+              "predictedLabel": "circle",
+              "templateId": "dollar/xml_logs/s05/fast/circle04.xml",
+              "score": 0.2317139718385113,
+              "margin": 0.0001783723269341564
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s08/fast/circle03.xml",
+              "method": "protractor",
+              "predictedLabel": "rectangle",
+              "templateId": "dollar/xml_logs/s05/fast/rectangle10.xml",
+              "score": 0.190359860222186,
+              "margin": 0.0002102531207911762
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s09/fast/x08.xml",
+              "method": "protractor",
+              "predictedLabel": "x",
+              "templateId": "dollar/xml_logs/s08/fast/x01.xml",
+              "score": 0.4947108378617291,
+              "margin": 0.0002883689744820339
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s11/fast/triangle07.xml",
+              "method": "protractor",
+              "predictedLabel": "circle",
+              "templateId": "dollar/xml_logs/s05/fast/circle04.xml",
+              "score": 0.35110789704186496,
+              "margin": 0.0003199541102769654
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s05/slow/arrow10.xml",
+              "method": "protractor",
+              "predictedLabel": "caret",
+              "templateId": "dollar/xml_logs/s11/medium/caret08.xml",
+              "score": 0.5677296349674957,
+              "margin": 0.00033476929020725965
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s05/medium/check05.xml",
+              "method": "protractor",
+              "predictedLabel": "v",
+              "templateId": "dollar/xml_logs/s08/fast/v07.xml",
+              "score": 0.15633190707638214,
+              "margin": 0.00037442110515195637
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s05/fast/left_curly_brace03.xml",
+              "method": "protractor",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s10/slow/left_curly_brace04.xml",
+              "score": 0.22425494539775906,
+              "margin": 0.00039324477609767317
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s02/medium/triangle05.xml",
+              "method": "protractor",
+              "predictedLabel": "triangle",
+              "templateId": "dollar/xml_logs/s04/slow/triangle06.xml",
+              "score": 0.3449276071037865,
+              "margin": 0.0004165615806868139
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s05/medium/check10.xml",
+              "method": "protractor",
+              "predictedLabel": "check",
+              "templateId": "dollar/xml_logs/s10/slow/check10.xml",
+              "score": 0.19758188024256268,
+              "margin": 0.00047683215981941807
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s05/fast/left_curly_brace02.xml",
+              "method": "protractor",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s11/fast/left_curly_brace07.xml",
+              "score": 0.27056422791486756,
+              "margin": 0.0005483516954612466
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s03/slow/left_curly_brace03.xml",
+              "method": "protractor",
+              "predictedLabel": "left_sq_bracket",
+              "templateId": "dollar/xml_logs/s06/medium/left_sq_bracket06.xml",
+              "score": 0.14878578658329478,
+              "margin": 0.0005613994943409473
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s07/slow/right_curly_brace10.xml",
+              "method": "protractor",
+              "predictedLabel": "right_sq_bracket",
+              "templateId": "dollar/xml_logs/s06/slow/right_sq_bracket09.xml",
+              "score": 0.19675826212257816,
+              "margin": 0.0005934972811051376
+            }
+          ],
+          "meaning": "best different-class score minus winner; native score units; no epsilon near-tie threshold"
+        }
+      },
+      "dollar/rms": {
+        "left": {
+          "exactDistinctClassTies": 0,
+          "smallestPositiveMargin": 5.783107004300736e-05,
+          "closest": [
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s05/slow/left_curly_brace04.xml",
+              "method": "rms",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s07/medium/left_curly_brace08.xml",
+              "score": 0.07469267651265608,
+              "margin": 5.783107004300736e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s08/medium/circle10.xml",
+              "method": "rms",
+              "predictedLabel": "circle",
+              "templateId": "dollar/xml_logs/s10/slow/circle04.xml",
+              "score": 0.2632207830099585,
+              "margin": 7.018094845445688e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s08/medium/right_curly_brace01.xml",
+              "method": "rms",
+              "predictedLabel": "right_sq_bracket",
+              "templateId": "dollar/xml_logs/s06/slow/right_sq_bracket09.xml",
+              "score": 0.11546545693488781,
+              "margin": 8.309831080946517e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s07/medium/right_curly_brace08.xml",
+              "method": "rms",
+              "predictedLabel": "right_curly_brace",
+              "templateId": "dollar/xml_logs/s05/slow/right_curly_brace02.xml",
+              "score": 0.12195744105786034,
+              "margin": 9.216994140900936e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s02/slow/left_curly_brace03.xml",
+              "method": "rms",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s07/medium/left_curly_brace08.xml",
+              "score": 0.1292122553094763,
+              "margin": 0.00010156058866198081
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s02/medium/triangle09.xml",
+              "method": "rms",
+              "predictedLabel": "circle",
+              "templateId": "dollar/xml_logs/s05/fast/circle04.xml",
+              "score": 0.17817756458228268,
+              "margin": 0.00014214271061083195
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s08/medium/arrow05.xml",
+              "method": "rms",
+              "predictedLabel": "pigtail",
+              "templateId": "dollar/xml_logs/s04/medium/pigtail03.xml",
+              "score": 0.16760521020358934,
+              "margin": 0.00019637020044072084
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s05/fast/right_sq_bracket07.xml",
+              "method": "rms",
+              "predictedLabel": "right_curly_brace",
+              "templateId": "dollar/xml_logs/s02/slow/right_curly_brace03.xml",
+              "score": 0.24422637108556777,
+              "margin": 0.00021628391946051928
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s05/medium/right_curly_brace10.xml",
+              "method": "rms",
+              "predictedLabel": "right_sq_bracket",
+              "templateId": "dollar/xml_logs/s02/slow/right_sq_bracket03.xml",
+              "score": 0.13168841516861418,
+              "margin": 0.0002488928448729777
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s04/medium/circle06.xml",
+              "method": "rms",
+              "predictedLabel": "triangle",
+              "templateId": "dollar/xml_logs/s11/slow/triangle05.xml",
+              "score": 0.1955311464019639,
+              "margin": 0.0002531176563322357
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s10/fast/pigtail07.xml",
+              "method": "rms",
+              "predictedLabel": "arrow",
+              "templateId": "dollar/xml_logs/s08/medium/arrow08.xml",
+              "score": 0.24140201399993258,
+              "margin": 0.00027473365924948756
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s06/slow/left_curly_brace10.xml",
+              "method": "rms",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s07/medium/left_curly_brace08.xml",
+              "score": 0.08271445668227355,
+              "margin": 0.00027553024405607696
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s05/medium/check05.xml",
+              "method": "rms",
+              "predictedLabel": "v",
+              "templateId": "dollar/xml_logs/s08/fast/v07.xml",
+              "score": 0.09790413417847788,
+              "margin": 0.00031027977092698555
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s11/slow/triangle06.xml",
+              "method": "rms",
+              "predictedLabel": "triangle",
+              "templateId": "dollar/xml_logs/s06/medium/triangle10.xml",
+              "score": 0.17373061473798052,
+              "margin": 0.0003330915433446824
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s03/medium/left_curly_brace08.xml",
+              "method": "rms",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s10/slow/left_curly_brace04.xml",
+              "score": 0.0751964932213449,
+              "margin": 0.00033776662820554637
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s08/fast/left_curly_brace01.xml",
+              "method": "rms",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s09/fast/left_curly_brace01.xml",
+              "score": 0.16875331026618728,
+              "margin": 0.0003858919876172373
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s05/medium/left_sq_bracket02.xml",
+              "method": "rms",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s04/medium/left_curly_brace06.xml",
+              "score": 0.10787631542747435,
+              "margin": 0.0004491131370230744
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s08/medium/check07.xml",
+              "method": "rms",
+              "predictedLabel": "v",
+              "templateId": "dollar/xml_logs/s04/medium/v01.xml",
+              "score": 0.15880733536788072,
+              "margin": 0.00046557504090419255
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s06/slow/left_curly_brace04.xml",
+              "method": "rms",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s07/medium/left_curly_brace08.xml",
+              "score": 0.09801916399010378,
+              "margin": 0.0004925753351538442
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s08/slow/left_curly_brace01.xml",
+              "method": "rms",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s07/medium/left_curly_brace08.xml",
+              "score": 0.17033067298425378,
+              "margin": 0.0005268463108807908
+            }
+          ],
+          "meaning": "best different-class score minus winner; native score units; no epsilon near-tie threshold"
+        },
+        "right": {
+          "exactDistinctClassTies": 0,
+          "smallestPositiveMargin": 5.783107004300736e-05,
+          "closest": [
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s05/slow/left_curly_brace04.xml",
+              "method": "rms",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s07/medium/left_curly_brace08.xml",
+              "score": 0.07469267651265608,
+              "margin": 5.783107004300736e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s08/medium/circle10.xml",
+              "method": "rms",
+              "predictedLabel": "circle",
+              "templateId": "dollar/xml_logs/s10/slow/circle04.xml",
+              "score": 0.2632207830099585,
+              "margin": 7.018094845445688e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s08/medium/right_curly_brace01.xml",
+              "method": "rms",
+              "predictedLabel": "right_sq_bracket",
+              "templateId": "dollar/xml_logs/s06/slow/right_sq_bracket09.xml",
+              "score": 0.11546545693488781,
+              "margin": 8.309831080946517e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s07/medium/right_curly_brace08.xml",
+              "method": "rms",
+              "predictedLabel": "right_curly_brace",
+              "templateId": "dollar/xml_logs/s05/slow/right_curly_brace02.xml",
+              "score": 0.12195744105786034,
+              "margin": 9.216994140900936e-05
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s02/slow/left_curly_brace03.xml",
+              "method": "rms",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s07/medium/left_curly_brace08.xml",
+              "score": 0.1292122553094763,
+              "margin": 0.00010156058866198081
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s02/medium/triangle09.xml",
+              "method": "rms",
+              "predictedLabel": "circle",
+              "templateId": "dollar/xml_logs/s05/fast/circle04.xml",
+              "score": 0.17817756458228268,
+              "margin": 0.00014214271061083195
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s08/medium/arrow05.xml",
+              "method": "rms",
+              "predictedLabel": "pigtail",
+              "templateId": "dollar/xml_logs/s04/medium/pigtail03.xml",
+              "score": 0.16760521020358934,
+              "margin": 0.00019637020044072084
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s05/fast/right_sq_bracket07.xml",
+              "method": "rms",
+              "predictedLabel": "right_curly_brace",
+              "templateId": "dollar/xml_logs/s02/slow/right_curly_brace03.xml",
+              "score": 0.24422637108556777,
+              "margin": 0.00021628391946051928
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s05/medium/right_curly_brace10.xml",
+              "method": "rms",
+              "predictedLabel": "right_sq_bracket",
+              "templateId": "dollar/xml_logs/s02/slow/right_sq_bracket03.xml",
+              "score": 0.13168841516861418,
+              "margin": 0.0002488928448729777
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s04/medium/circle06.xml",
+              "method": "rms",
+              "predictedLabel": "triangle",
+              "templateId": "dollar/xml_logs/s11/slow/triangle05.xml",
+              "score": 0.1955311464019639,
+              "margin": 0.0002531176563322357
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s10/fast/pigtail07.xml",
+              "method": "rms",
+              "predictedLabel": "arrow",
+              "templateId": "dollar/xml_logs/s08/medium/arrow08.xml",
+              "score": 0.24140201399993258,
+              "margin": 0.00027473365924948756
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s06/slow/left_curly_brace10.xml",
+              "method": "rms",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s07/medium/left_curly_brace08.xml",
+              "score": 0.08271445668227355,
+              "margin": 0.00027553024405607696
+            },
+            {
+              "dataset": "dollar",
+              "seed": 31415,
+              "sampleId": "dollar/xml_logs/s05/medium/check05.xml",
+              "method": "rms",
+              "predictedLabel": "v",
+              "templateId": "dollar/xml_logs/s08/fast/v07.xml",
+              "score": 0.09790413417847788,
+              "margin": 0.00031027977092698555
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s11/slow/triangle06.xml",
+              "method": "rms",
+              "predictedLabel": "triangle",
+              "templateId": "dollar/xml_logs/s06/medium/triangle10.xml",
+              "score": 0.17373061473798052,
+              "margin": 0.0003330915433446824
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s03/medium/left_curly_brace08.xml",
+              "method": "rms",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s10/slow/left_curly_brace04.xml",
+              "score": 0.0751964932213449,
+              "margin": 0.00033776662820554637
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s08/fast/left_curly_brace01.xml",
+              "method": "rms",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s09/fast/left_curly_brace01.xml",
+              "score": 0.16875331026618728,
+              "margin": 0.0003858919876172373
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s05/medium/left_sq_bracket02.xml",
+              "method": "rms",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s04/medium/left_curly_brace06.xml",
+              "score": 0.10787631542747435,
+              "margin": 0.0004491131370230744
+            },
+            {
+              "dataset": "dollar",
+              "seed": 2718,
+              "sampleId": "dollar/xml_logs/s08/medium/check07.xml",
+              "method": "rms",
+              "predictedLabel": "v",
+              "templateId": "dollar/xml_logs/s04/medium/v01.xml",
+              "score": 0.15880733536788072,
+              "margin": 0.00046557504090419255
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s06/slow/left_curly_brace04.xml",
+              "method": "rms",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s07/medium/left_curly_brace08.xml",
+              "score": 0.09801916399010378,
+              "margin": 0.0004925753351538442
+            },
+            {
+              "dataset": "dollar",
+              "seed": 1729,
+              "sampleId": "dollar/xml_logs/s08/slow/left_curly_brace01.xml",
+              "method": "rms",
+              "predictedLabel": "left_curly_brace",
+              "templateId": "dollar/xml_logs/s07/medium/left_curly_brace08.xml",
+              "score": 0.17033067298425378,
+              "margin": 0.0005268463108807908
+            }
+          ],
+          "meaning": "best different-class score minus winner; native score units; no epsilon near-tie threshold"
+        }
+      },
+      "pendigits/area": {
+        "left": {
+          "exactDistinctClassTies": 0,
+          "smallestPositiveMargin": 8.629405000154522e-07,
+          "closest": [
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/001633",
+              "method": "area",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/002371",
+              "score": 0.12144037118799995,
+              "margin": 8.629405000154522e-07
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/000801",
+              "method": "area",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/007605",
+              "score": 0.13308440982300007,
+              "margin": 7.468745999966719e-06
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/004211",
+              "method": "area",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/004141",
+              "score": 0.11293688033799992,
+              "margin": 8.798630000084184e-06
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/000435",
+              "method": "area",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/000366",
+              "score": 0.08653504910299997,
+              "margin": 1.8802130000009076e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002671",
+              "method": "area",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/006852",
+              "score": 0.12666535356099998,
+              "margin": 2.4640054000019118e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000281",
+              "method": "area",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/007259",
+              "score": 0.08202846044950007,
+              "margin": 2.4911012999895288e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003309",
+              "method": "area",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/004126",
+              "score": 0.13903228342699997,
+              "margin": 3.325067850004637e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/001564",
+              "method": "area",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/005370",
+              "score": 0.1461990804774999,
+              "margin": 3.609949500002485e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/003845",
+              "method": "area",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/006852",
+              "score": 0.125093952235,
+              "margin": 3.677977450006198e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/001633",
+              "method": "area",
+              "predictedLabel": "3",
+              "templateId": "pendigits/pendigits-orig.tra/006708",
+              "score": 0.12977468123749994,
+              "margin": 4.4109378500051255e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/001673",
+              "method": "area",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/006184",
+              "score": 0.06981184581199996,
+              "margin": 5.813962600002831e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/002067",
+              "method": "area",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/007885",
+              "score": 0.14551366009850003,
+              "margin": 5.937168799996506e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/001563",
+              "method": "area",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/006448",
+              "score": 0.04058143306000001,
+              "margin": 6.1168636999967e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/001473",
+              "method": "area",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/006688",
+              "score": 0.10618084275349998,
+              "margin": 8.027410250001366e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/002572",
+              "method": "area",
+              "predictedLabel": "2",
+              "templateId": "pendigits/pendigits-orig.tra/007900",
+              "score": 0.09586268403299998,
+              "margin": 8.45569560000009e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/001196",
+              "method": "area",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/008401",
+              "score": 0.10925819729250012,
+              "margin": 9.780186199986884e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000601",
+              "method": "area",
+              "predictedLabel": "3",
+              "templateId": "pendigits/pendigits-orig.tra/004429",
+              "score": 0.1053251806885,
+              "margin": 0.00010168366199997392
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/001163",
+              "method": "area",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/008830",
+              "score": 0.07614639222799999,
+              "margin": 0.00010478712099999676
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/000264",
+              "method": "area",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/006852",
+              "score": 0.12433398546849994,
+              "margin": 0.00010718904550006958
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002380",
+              "method": "area",
+              "predictedLabel": "9",
+              "templateId": "pendigits/pendigits-orig.tra/009176",
+              "score": 0.172319213463,
+              "margin": 0.00010960938899995387
+            }
+          ],
+          "meaning": "best different-class score minus winner; native score units; no epsilon near-tie threshold"
+        },
+        "right": {
+          "exactDistinctClassTies": 0,
+          "smallestPositiveMargin": 8.629405000154522e-07,
+          "closest": [
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/001633",
+              "method": "area",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/002371",
+              "score": 0.12144037118799995,
+              "margin": 8.629405000154522e-07
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/000801",
+              "method": "area",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/007605",
+              "score": 0.13308440982300007,
+              "margin": 7.468745999966719e-06
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/004211",
+              "method": "area",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/004141",
+              "score": 0.11293688033799992,
+              "margin": 8.798630000084184e-06
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/000435",
+              "method": "area",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/000366",
+              "score": 0.08653504910299997,
+              "margin": 1.8802130000009076e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002671",
+              "method": "area",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/006852",
+              "score": 0.12666535356099998,
+              "margin": 2.4640054000019118e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000281",
+              "method": "area",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/007259",
+              "score": 0.08202846044950007,
+              "margin": 2.4911012999895288e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003309",
+              "method": "area",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/004126",
+              "score": 0.13903228342699997,
+              "margin": 3.325067850004637e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/001564",
+              "method": "area",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/005370",
+              "score": 0.1461990804774999,
+              "margin": 3.609949500002485e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/003845",
+              "method": "area",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/006852",
+              "score": 0.125093952235,
+              "margin": 3.677977450006198e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/001633",
+              "method": "area",
+              "predictedLabel": "3",
+              "templateId": "pendigits/pendigits-orig.tra/006708",
+              "score": 0.12977468123749994,
+              "margin": 4.4109378500051255e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/001673",
+              "method": "area",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/006184",
+              "score": 0.06981184581199996,
+              "margin": 5.813962600002831e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/002067",
+              "method": "area",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/007885",
+              "score": 0.14551366009850003,
+              "margin": 5.937168799996506e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/001563",
+              "method": "area",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/006448",
+              "score": 0.04058143306000001,
+              "margin": 6.1168636999967e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/001473",
+              "method": "area",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/006688",
+              "score": 0.10618084275349998,
+              "margin": 8.027410250001366e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/002572",
+              "method": "area",
+              "predictedLabel": "2",
+              "templateId": "pendigits/pendigits-orig.tra/007900",
+              "score": 0.09586268403299998,
+              "margin": 8.45569560000009e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/001196",
+              "method": "area",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/008401",
+              "score": 0.10925819729250012,
+              "margin": 9.780186199986884e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000601",
+              "method": "area",
+              "predictedLabel": "3",
+              "templateId": "pendigits/pendigits-orig.tra/004429",
+              "score": 0.1053251806885,
+              "margin": 0.00010168366199997392
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/001163",
+              "method": "area",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/008830",
+              "score": 0.07614639222799999,
+              "margin": 0.00010478712099999676
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/000264",
+              "method": "area",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/006852",
+              "score": 0.12433398546849994,
+              "margin": 0.00010718904550006958
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002380",
+              "method": "area",
+              "predictedLabel": "9",
+              "templateId": "pendigits/pendigits-orig.tra/009176",
+              "score": 0.172319213463,
+              "margin": 0.00010960938899995387
+            }
+          ],
+          "meaning": "best different-class score minus winner; native score units; no epsilon near-tie threshold"
+        }
+      },
+      "pendigits/combined": {
+        "left": {
+          "exactDistinctClassTies": 0,
+          "smallestPositiveMargin": 2.611022402798646e-05,
+          "closest": [
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000946",
+              "method": "combined",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/006940",
+              "score": 0.3764580384568822,
+              "margin": 2.611022402798646e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/000166",
+              "method": "combined",
+              "predictedLabel": "3",
+              "templateId": "pendigits/pendigits-orig.tra/005883",
+              "score": 0.3961699357959692,
+              "margin": 0.00020386783246933993
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003636",
+              "method": "combined",
+              "predictedLabel": "9",
+              "templateId": "pendigits/pendigits-orig.tra/003593",
+              "score": 0.5952751765098332,
+              "margin": 0.00021475801993731114
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000780",
+              "method": "combined",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/007259",
+              "score": 0.33488945923347857,
+              "margin": 0.00041342742385325204
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/001145",
+              "method": "combined",
+              "predictedLabel": "3",
+              "templateId": "pendigits/pendigits-orig.tra/001288",
+              "score": 0.5549667233317315,
+              "margin": 0.0004405752263185736
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/001774",
+              "method": "combined",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/007070",
+              "score": 0.6084046677053359,
+              "margin": 0.0004958026185023501
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/000158",
+              "method": "combined",
+              "predictedLabel": "2",
+              "templateId": "pendigits/pendigits-orig.tra/006099",
+              "score": 0.439908823615934,
+              "margin": 0.0005130869174577168
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003265",
+              "method": "combined",
+              "predictedLabel": "2",
+              "templateId": "pendigits/pendigits-orig.tra/009106",
+              "score": 0.4198410568543377,
+              "margin": 0.0005192192238949733
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/002375",
+              "method": "combined",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/008606",
+              "score": 0.35545884014738727,
+              "margin": 0.0005200717718851777
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/004080",
+              "method": "combined",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/002400",
+              "score": 0.33492051198975975,
+              "margin": 0.0006130813553877901
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002867",
+              "method": "combined",
+              "predictedLabel": "2",
+              "templateId": "pendigits/pendigits-orig.tra/005074",
+              "score": 0.4343119880340297,
+              "margin": 0.0006540798558135053
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002143",
+              "method": "combined",
+              "predictedLabel": "3",
+              "templateId": "pendigits/pendigits-orig.tra/008317",
+              "score": 0.42466987163560455,
+              "margin": 0.000704512783278155
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/002776",
+              "method": "combined",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/008401",
+              "score": 0.6166878981907931,
+              "margin": 0.0007754977874063762
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000003",
+              "method": "combined",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/008401",
+              "score": 0.5566500555610612,
+              "margin": 0.0008077442308291882
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/000539",
+              "method": "combined",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/004141",
+              "score": 0.4122924069869512,
+              "margin": 0.0008990871164040182
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/001737",
+              "method": "combined",
+              "predictedLabel": "2",
+              "templateId": "pendigits/pendigits-orig.tra/005074",
+              "score": 0.5016576471076424,
+              "margin": 0.0009935934898168686
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/003618",
+              "method": "combined",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/002074",
+              "score": 0.5229065441542948,
+              "margin": 0.0009976676587217792
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/004081",
+              "method": "combined",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/002400",
+              "score": 0.4463586754054653,
+              "margin": 0.0010285578201041923
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/001474",
+              "method": "combined",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/008606",
+              "score": 0.5215137161425593,
+              "margin": 0.001058832113565944
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/002932",
+              "method": "combined",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/005285",
+              "score": 0.4599772720509558,
+              "margin": 0.001233815246358294
+            }
+          ],
+          "meaning": "best different-class score minus winner; native score units; no epsilon near-tie threshold"
+        },
+        "right": {
+          "exactDistinctClassTies": 0,
+          "smallestPositiveMargin": 2.611022402798646e-05,
+          "closest": [
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000946",
+              "method": "combined",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/006940",
+              "score": 0.3764580384568822,
+              "margin": 2.611022402798646e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/000166",
+              "method": "combined",
+              "predictedLabel": "3",
+              "templateId": "pendigits/pendigits-orig.tra/005883",
+              "score": 0.3961699357959692,
+              "margin": 0.00020386783246933993
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003636",
+              "method": "combined",
+              "predictedLabel": "9",
+              "templateId": "pendigits/pendigits-orig.tra/003593",
+              "score": 0.5952751765098332,
+              "margin": 0.00021475801993731114
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000780",
+              "method": "combined",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/007259",
+              "score": 0.33488945923347857,
+              "margin": 0.00041342742385325204
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/001145",
+              "method": "combined",
+              "predictedLabel": "3",
+              "templateId": "pendigits/pendigits-orig.tra/001288",
+              "score": 0.5549667233317315,
+              "margin": 0.0004405752263185736
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/001774",
+              "method": "combined",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/007070",
+              "score": 0.6084046677053359,
+              "margin": 0.0004958026185023501
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/000158",
+              "method": "combined",
+              "predictedLabel": "2",
+              "templateId": "pendigits/pendigits-orig.tra/006099",
+              "score": 0.439908823615934,
+              "margin": 0.0005130869174577168
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003265",
+              "method": "combined",
+              "predictedLabel": "2",
+              "templateId": "pendigits/pendigits-orig.tra/009106",
+              "score": 0.4198410568543377,
+              "margin": 0.0005192192238949733
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/002375",
+              "method": "combined",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/008606",
+              "score": 0.35545884014738727,
+              "margin": 0.0005200717718851777
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/004080",
+              "method": "combined",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/002400",
+              "score": 0.33492051198975975,
+              "margin": 0.0006130813553877901
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002867",
+              "method": "combined",
+              "predictedLabel": "2",
+              "templateId": "pendigits/pendigits-orig.tra/005074",
+              "score": 0.4343119880340297,
+              "margin": 0.0006540798558135053
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002143",
+              "method": "combined",
+              "predictedLabel": "3",
+              "templateId": "pendigits/pendigits-orig.tra/008317",
+              "score": 0.42466987163560455,
+              "margin": 0.000704512783278155
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/002776",
+              "method": "combined",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/008401",
+              "score": 0.6166878981907931,
+              "margin": 0.0007754977874063762
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000003",
+              "method": "combined",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/008401",
+              "score": 0.5566500555610612,
+              "margin": 0.0008077442308291882
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/000539",
+              "method": "combined",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/004141",
+              "score": 0.4122924069869512,
+              "margin": 0.0008990871164040182
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/001737",
+              "method": "combined",
+              "predictedLabel": "2",
+              "templateId": "pendigits/pendigits-orig.tra/005074",
+              "score": 0.5016576471076424,
+              "margin": 0.0009935934898168686
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/003618",
+              "method": "combined",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/002074",
+              "score": 0.5229065441542948,
+              "margin": 0.0009976676587217792
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/004081",
+              "method": "combined",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/002400",
+              "score": 0.4463586754054653,
+              "margin": 0.0010285578201041923
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/001474",
+              "method": "combined",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/008606",
+              "score": 0.5215137161425593,
+              "margin": 0.001058832113565944
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/002932",
+              "method": "combined",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/005285",
+              "score": 0.4599772720509558,
+              "margin": 0.001233815246358294
+            }
+          ],
+          "meaning": "best different-class score minus winner; native score units; no epsilon near-tie threshold"
+        }
+      },
+      "pendigits/dtw": {
+        "left": {
+          "exactDistinctClassTies": 0,
+          "smallestPositiveMargin": 1.674282487413789e-06,
+          "closest": [
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/004180",
+              "method": "dtw",
+              "predictedLabel": "2",
+              "templateId": "pendigits/pendigits-orig.tra/006099",
+              "score": 0.013534056702730984,
+              "margin": 1.674282487413789e-06
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000502",
+              "method": "dtw",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/005285",
+              "score": 0.015285127925603305,
+              "margin": 4.810427918016183e-06
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002387",
+              "method": "dtw",
+              "predictedLabel": "9",
+              "templateId": "pendigits/pendigits-orig.tra/009176",
+              "score": 0.023457778277357646,
+              "margin": 5.4950608962649194e-06
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/002913",
+              "method": "dtw",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/008606",
+              "score": 0.028303371668631228,
+              "margin": 1.263190660986957e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/000562",
+              "method": "dtw",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/007605",
+              "score": 0.012064407725709197,
+              "margin": 1.7329787997216045e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000290",
+              "method": "dtw",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/000481",
+              "score": 0.014034997597847708,
+              "margin": 2.0332067448588023e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/002685",
+              "method": "dtw",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/008401",
+              "score": 0.024421776447580392,
+              "margin": 2.3981466620172365e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000075",
+              "method": "dtw",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/008401",
+              "score": 0.022796518076621253,
+              "margin": 2.504620534499527e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/002379",
+              "method": "dtw",
+              "predictedLabel": "6",
+              "templateId": "pendigits/pendigits-orig.tra/005286",
+              "score": 0.07121405262517926,
+              "margin": 2.5402859949702483e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/002726",
+              "method": "dtw",
+              "predictedLabel": "9",
+              "templateId": "pendigits/pendigits-orig.tra/001095",
+              "score": 0.01197279788921557,
+              "margin": 2.6280656504399508e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/000835",
+              "method": "dtw",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/000366",
+              "score": 0.015379718683032857,
+              "margin": 2.6928691918833708e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002957",
+              "method": "dtw",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/000067",
+              "score": 0.016947448601964437,
+              "margin": 2.9342383757208212e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002807",
+              "method": "dtw",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/007049",
+              "score": 0.010069009577719543,
+              "margin": 6.0794903036101924e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/001882",
+              "method": "dtw",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/008401",
+              "score": 0.025284262704539855,
+              "margin": 6.73374259562258e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/000968",
+              "method": "dtw",
+              "predictedLabel": "3",
+              "templateId": "pendigits/pendigits-orig.tra/005883",
+              "score": 0.004484477702631859,
+              "margin": 7.078539787446197e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002754",
+              "method": "dtw",
+              "predictedLabel": "2",
+              "templateId": "pendigits/pendigits-orig.tra/001418",
+              "score": 0.013807927747207701,
+              "margin": 7.284708698553598e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/001169",
+              "method": "dtw",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/006688",
+              "score": 0.012270932038262045,
+              "margin": 7.445324176084955e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/000782",
+              "method": "dtw",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/002400",
+              "score": 0.006385225051301278,
+              "margin": 7.70953707300492e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/000290",
+              "method": "dtw",
+              "predictedLabel": "3",
+              "templateId": "pendigits/pendigits-orig.tra/005883",
+              "score": 0.006035781272913503,
+              "margin": 7.891740532029855e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/000075",
+              "method": "dtw",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/006852",
+              "score": 0.024077114094971167,
+              "margin": 9.471366748050811e-05
+            }
+          ],
+          "meaning": "best different-class score minus winner; native score units; no epsilon near-tie threshold"
+        },
+        "right": {
+          "exactDistinctClassTies": 0,
+          "smallestPositiveMargin": 1.674282487413789e-06,
+          "closest": [
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/004180",
+              "method": "dtw",
+              "predictedLabel": "2",
+              "templateId": "pendigits/pendigits-orig.tra/006099",
+              "score": 0.013534056702730984,
+              "margin": 1.674282487413789e-06
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000502",
+              "method": "dtw",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/005285",
+              "score": 0.015285127925603305,
+              "margin": 4.810427918016183e-06
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002387",
+              "method": "dtw",
+              "predictedLabel": "9",
+              "templateId": "pendigits/pendigits-orig.tra/009176",
+              "score": 0.023457778277357646,
+              "margin": 5.4950608962649194e-06
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/002913",
+              "method": "dtw",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/008606",
+              "score": 0.028303371668631228,
+              "margin": 1.263190660986957e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/000562",
+              "method": "dtw",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/007605",
+              "score": 0.012064407725709197,
+              "margin": 1.7329787997216045e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000290",
+              "method": "dtw",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/000481",
+              "score": 0.014034997597847708,
+              "margin": 2.0332067448588023e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/002685",
+              "method": "dtw",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/008401",
+              "score": 0.024421776447580392,
+              "margin": 2.3981466620172365e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000075",
+              "method": "dtw",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/008401",
+              "score": 0.022796518076621253,
+              "margin": 2.504620534499527e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/002379",
+              "method": "dtw",
+              "predictedLabel": "6",
+              "templateId": "pendigits/pendigits-orig.tra/005286",
+              "score": 0.07121405262517926,
+              "margin": 2.5402859949702483e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/002726",
+              "method": "dtw",
+              "predictedLabel": "9",
+              "templateId": "pendigits/pendigits-orig.tra/001095",
+              "score": 0.01197279788921557,
+              "margin": 2.6280656504399508e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/000835",
+              "method": "dtw",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/000366",
+              "score": 0.015379718683032857,
+              "margin": 2.6928691918833708e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002957",
+              "method": "dtw",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/000067",
+              "score": 0.016947448601964437,
+              "margin": 2.9342383757208212e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002807",
+              "method": "dtw",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/007049",
+              "score": 0.010069009577719543,
+              "margin": 6.0794903036101924e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/001882",
+              "method": "dtw",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/008401",
+              "score": 0.025284262704539855,
+              "margin": 6.73374259562258e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/000968",
+              "method": "dtw",
+              "predictedLabel": "3",
+              "templateId": "pendigits/pendigits-orig.tra/005883",
+              "score": 0.004484477702631859,
+              "margin": 7.078539787446197e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002754",
+              "method": "dtw",
+              "predictedLabel": "2",
+              "templateId": "pendigits/pendigits-orig.tra/001418",
+              "score": 0.013807927747207701,
+              "margin": 7.284708698553598e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/001169",
+              "method": "dtw",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/006688",
+              "score": 0.012270932038262045,
+              "margin": 7.445324176084955e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/000782",
+              "method": "dtw",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/002400",
+              "score": 0.006385225051301278,
+              "margin": 7.70953707300492e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/000290",
+              "method": "dtw",
+              "predictedLabel": "3",
+              "templateId": "pendigits/pendigits-orig.tra/005883",
+              "score": 0.006035781272913503,
+              "margin": 7.891740532029855e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/000075",
+              "method": "dtw",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/006852",
+              "score": 0.024077114094971167,
+              "margin": 9.471366748050811e-05
+            }
+          ],
+          "meaning": "best different-class score minus winner; native score units; no epsilon near-tie threshold"
+        }
+      },
+      "pendigits/protractor": {
+        "left": {
+          "exactDistinctClassTies": 0,
+          "smallestPositiveMargin": 9.937282121852409e-05,
+          "closest": [
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/003515",
+              "method": "protractor",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/003760",
+              "score": 0.49436585224627755,
+              "margin": 9.937282121852409e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003585",
+              "method": "protractor",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/007885",
+              "score": 0.22170031240415064,
+              "margin": 0.00012234900098043178
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003329",
+              "method": "protractor",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/007885",
+              "score": 0.19802626296538203,
+              "margin": 0.00012268331143183708
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000932",
+              "method": "protractor",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/002527",
+              "score": 0.33948381887355444,
+              "margin": 0.00015400587807262722
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002302",
+              "method": "protractor",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/000067",
+              "score": 0.4344703543499852,
+              "margin": 0.0001626593655663089
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003071",
+              "method": "protractor",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/007259",
+              "score": 0.3564898352452194,
+              "margin": 0.00023649700528804996
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000322",
+              "method": "protractor",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/008606",
+              "score": 0.4392837217742379,
+              "margin": 0.0002693044873383066
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/003487",
+              "method": "protractor",
+              "predictedLabel": "2",
+              "templateId": "pendigits/pendigits-orig.tra/008854",
+              "score": 0.5002707658606537,
+              "margin": 0.00026988345174217
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000491",
+              "method": "protractor",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/005261",
+              "score": 0.3069350552864038,
+              "margin": 0.000370132449374283
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/003579",
+              "method": "protractor",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/002400",
+              "score": 0.3570747711975658,
+              "margin": 0.0004085392442547686
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002835",
+              "method": "protractor",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/004141",
+              "score": 0.4462788100121181,
+              "margin": 0.0004712372385456409
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000559",
+              "method": "protractor",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/008606",
+              "score": 0.3651765680734707,
+              "margin": 0.0005010929410426135
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/003500",
+              "method": "protractor",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/004141",
+              "score": 0.44783203225870594,
+              "margin": 0.0005373397615155429
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/001155",
+              "method": "protractor",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/004141",
+              "score": 0.4499845467981603,
+              "margin": 0.0005380981341739366
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002301",
+              "method": "protractor",
+              "predictedLabel": "9",
+              "templateId": "pendigits/pendigits-orig.tra/009176",
+              "score": 0.4364530503047194,
+              "margin": 0.0005485879720016906
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002723",
+              "method": "protractor",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/000067",
+              "score": 0.42106591446363495,
+              "margin": 0.0005637988143487593
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000564",
+              "method": "protractor",
+              "predictedLabel": "2",
+              "templateId": "pendigits/pendigits-orig.tra/005611",
+              "score": 0.4439673221311292,
+              "margin": 0.0006457903038252777
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/004247",
+              "method": "protractor",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/008830",
+              "score": 0.4273120766817991,
+              "margin": 0.0007486880253501638
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002052",
+              "method": "protractor",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/000034",
+              "score": 0.4270581007492144,
+              "margin": 0.0008473453670395092
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/003787",
+              "method": "protractor",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/006852",
+              "score": 0.44073341841447267,
+              "margin": 0.0009081626379467411
+            }
+          ],
+          "meaning": "best different-class score minus winner; native score units; no epsilon near-tie threshold"
+        },
+        "right": {
+          "exactDistinctClassTies": 0,
+          "smallestPositiveMargin": 9.937282121852409e-05,
+          "closest": [
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/003515",
+              "method": "protractor",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/003760",
+              "score": 0.49436585224627755,
+              "margin": 9.937282121852409e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003585",
+              "method": "protractor",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/007885",
+              "score": 0.22170031240415064,
+              "margin": 0.00012234900098043178
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003329",
+              "method": "protractor",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/007885",
+              "score": 0.19802626296538203,
+              "margin": 0.00012268331143183708
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000932",
+              "method": "protractor",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/002527",
+              "score": 0.33948381887355444,
+              "margin": 0.00015400587807262722
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002302",
+              "method": "protractor",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/000067",
+              "score": 0.4344703543499852,
+              "margin": 0.0001626593655663089
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003071",
+              "method": "protractor",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/007259",
+              "score": 0.3564898352452194,
+              "margin": 0.00023649700528804996
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000322",
+              "method": "protractor",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/008606",
+              "score": 0.4392837217742379,
+              "margin": 0.0002693044873383066
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/003487",
+              "method": "protractor",
+              "predictedLabel": "2",
+              "templateId": "pendigits/pendigits-orig.tra/008854",
+              "score": 0.5002707658606537,
+              "margin": 0.00026988345174217
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000491",
+              "method": "protractor",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/005261",
+              "score": 0.3069350552864038,
+              "margin": 0.000370132449374283
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/003579",
+              "method": "protractor",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/002400",
+              "score": 0.3570747711975658,
+              "margin": 0.0004085392442547686
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002835",
+              "method": "protractor",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/004141",
+              "score": 0.4462788100121181,
+              "margin": 0.0004712372385456409
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000559",
+              "method": "protractor",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/008606",
+              "score": 0.3651765680734707,
+              "margin": 0.0005010929410426135
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/003500",
+              "method": "protractor",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/004141",
+              "score": 0.44783203225870594,
+              "margin": 0.0005373397615155429
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/001155",
+              "method": "protractor",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/004141",
+              "score": 0.4499845467981603,
+              "margin": 0.0005380981341739366
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002301",
+              "method": "protractor",
+              "predictedLabel": "9",
+              "templateId": "pendigits/pendigits-orig.tra/009176",
+              "score": 0.4364530503047194,
+              "margin": 0.0005485879720016906
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002723",
+              "method": "protractor",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/000067",
+              "score": 0.42106591446363495,
+              "margin": 0.0005637988143487593
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000564",
+              "method": "protractor",
+              "predictedLabel": "2",
+              "templateId": "pendigits/pendigits-orig.tra/005611",
+              "score": 0.4439673221311292,
+              "margin": 0.0006457903038252777
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/004247",
+              "method": "protractor",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/008830",
+              "score": 0.4273120766817991,
+              "margin": 0.0007486880253501638
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/002052",
+              "method": "protractor",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/000034",
+              "score": 0.4270581007492144,
+              "margin": 0.0008473453670395092
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/003787",
+              "method": "protractor",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/006852",
+              "score": 0.44073341841447267,
+              "margin": 0.0009081626379467411
+            }
+          ],
+          "meaning": "best different-class score minus winner; native score units; no epsilon near-tie threshold"
+        }
+      },
+      "pendigits/rms": {
+        "left": {
+          "exactDistinctClassTies": 0,
+          "smallestPositiveMargin": 6.373279746549332e-05,
+          "closest": [
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/002528",
+              "method": "rms",
+              "predictedLabel": "3",
+              "templateId": "pendigits/pendigits-orig.tra/008480",
+              "score": 0.1625222444475116,
+              "margin": 6.373279746549332e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003797",
+              "method": "rms",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/005198",
+              "score": 0.18387219215873446,
+              "margin": 6.752030142817556e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003921",
+              "method": "rms",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/008606",
+              "score": 0.22051538291653047,
+              "margin": 8.173377023129591e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003102",
+              "method": "rms",
+              "predictedLabel": "2",
+              "templateId": "pendigits/pendigits-orig.tra/009106",
+              "score": 0.1560011814023288,
+              "margin": 9.260831614818499e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/000146",
+              "method": "rms",
+              "predictedLabel": "6",
+              "templateId": "pendigits/pendigits-orig.tra/002767",
+              "score": 0.2337846711406216,
+              "margin": 0.00013239987824636978
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/003329",
+              "method": "rms",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/003760",
+              "score": 0.1281283735463958,
+              "margin": 0.00014054294171991777
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/002715",
+              "method": "rms",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/002074",
+              "score": 0.1439778369906458,
+              "margin": 0.00016589011478460036
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003001",
+              "method": "rms",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/008401",
+              "score": 0.22693497078948677,
+              "margin": 0.0001778953203182554
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/002549",
+              "method": "rms",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/002074",
+              "score": 0.1680618363741639,
+              "margin": 0.00019800812547768332
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003163",
+              "method": "rms",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/008606",
+              "score": 0.1518525159222308,
+              "margin": 0.00019941333089174007
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/000722",
+              "method": "rms",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/004622",
+              "score": 0.15904565637358264,
+              "margin": 0.00020355865406282425
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003790",
+              "method": "rms",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/005285",
+              "score": 0.13668238440737704,
+              "margin": 0.0002153571179011049
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003013",
+              "method": "rms",
+              "predictedLabel": "9",
+              "templateId": "pendigits/pendigits-orig.tra/003593",
+              "score": 0.2293008078022205,
+              "margin": 0.00024305944443672733
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000926",
+              "method": "rms",
+              "predictedLabel": "3",
+              "templateId": "pendigits/pendigits-orig.tra/001288",
+              "score": 0.16273257916208875,
+              "margin": 0.0002452735528556682
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000170",
+              "method": "rms",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/002371",
+              "score": 0.32579317895782384,
+              "margin": 0.0003255566522252229
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/002559",
+              "method": "rms",
+              "predictedLabel": "9",
+              "templateId": "pendigits/pendigits-orig.tra/003593",
+              "score": 0.2134863559394438,
+              "margin": 0.0003426497069822787
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/000506",
+              "method": "rms",
+              "predictedLabel": "2",
+              "templateId": "pendigits/pendigits-orig.tra/008925",
+              "score": 0.26935186988647364,
+              "margin": 0.000348398947348727
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/001190",
+              "method": "rms",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/003337",
+              "score": 0.24575611370077854,
+              "margin": 0.0004205754916524196
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/003787",
+              "method": "rms",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/004141",
+              "score": 0.1581851017371271,
+              "margin": 0.0004209316949209674
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/001439",
+              "method": "rms",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/008606",
+              "score": 0.22830650216267556,
+              "margin": 0.0004509000622403281
+            }
+          ],
+          "meaning": "best different-class score minus winner; native score units; no epsilon near-tie threshold"
+        },
+        "right": {
+          "exactDistinctClassTies": 0,
+          "smallestPositiveMargin": 6.373279746549332e-05,
+          "closest": [
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/002528",
+              "method": "rms",
+              "predictedLabel": "3",
+              "templateId": "pendigits/pendigits-orig.tra/008480",
+              "score": 0.1625222444475116,
+              "margin": 6.373279746549332e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003797",
+              "method": "rms",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/005198",
+              "score": 0.18387219215873446,
+              "margin": 6.752030142817556e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003921",
+              "method": "rms",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/008606",
+              "score": 0.22051538291653047,
+              "margin": 8.173377023129591e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003102",
+              "method": "rms",
+              "predictedLabel": "2",
+              "templateId": "pendigits/pendigits-orig.tra/009106",
+              "score": 0.1560011814023288,
+              "margin": 9.260831614818499e-05
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/000146",
+              "method": "rms",
+              "predictedLabel": "6",
+              "templateId": "pendigits/pendigits-orig.tra/002767",
+              "score": 0.2337846711406216,
+              "margin": 0.00013239987824636978
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/003329",
+              "method": "rms",
+              "predictedLabel": "7",
+              "templateId": "pendigits/pendigits-orig.tra/003760",
+              "score": 0.1281283735463958,
+              "margin": 0.00014054294171991777
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/002715",
+              "method": "rms",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/002074",
+              "score": 0.1439778369906458,
+              "margin": 0.00016589011478460036
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003001",
+              "method": "rms",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/008401",
+              "score": 0.22693497078948677,
+              "margin": 0.0001778953203182554
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 31415,
+              "sampleId": "pendigits/pendigits-orig.tes/002549",
+              "method": "rms",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/002074",
+              "score": 0.1680618363741639,
+              "margin": 0.00019800812547768332
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003163",
+              "method": "rms",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/008606",
+              "score": 0.1518525159222308,
+              "margin": 0.00019941333089174007
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/000722",
+              "method": "rms",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/004622",
+              "score": 0.15904565637358264,
+              "margin": 0.00020355865406282425
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003790",
+              "method": "rms",
+              "predictedLabel": "1",
+              "templateId": "pendigits/pendigits-orig.tra/005285",
+              "score": 0.13668238440737704,
+              "margin": 0.0002153571179011049
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/003013",
+              "method": "rms",
+              "predictedLabel": "9",
+              "templateId": "pendigits/pendigits-orig.tra/003593",
+              "score": 0.2293008078022205,
+              "margin": 0.00024305944443672733
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000926",
+              "method": "rms",
+              "predictedLabel": "3",
+              "templateId": "pendigits/pendigits-orig.tra/001288",
+              "score": 0.16273257916208875,
+              "margin": 0.0002452735528556682
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/000170",
+              "method": "rms",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/002371",
+              "score": 0.32579317895782384,
+              "margin": 0.0003255566522252229
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/002559",
+              "method": "rms",
+              "predictedLabel": "9",
+              "templateId": "pendigits/pendigits-orig.tra/003593",
+              "score": 0.2134863559394438,
+              "margin": 0.0003426497069822787
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/000506",
+              "method": "rms",
+              "predictedLabel": "2",
+              "templateId": "pendigits/pendigits-orig.tra/008925",
+              "score": 0.26935186988647364,
+              "margin": 0.000348398947348727
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/001190",
+              "method": "rms",
+              "predictedLabel": "5",
+              "templateId": "pendigits/pendigits-orig.tra/003337",
+              "score": 0.24575611370077854,
+              "margin": 0.0004205754916524196
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 2718,
+              "sampleId": "pendigits/pendigits-orig.tes/003787",
+              "method": "rms",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/004141",
+              "score": 0.1581851017371271,
+              "margin": 0.0004209316949209674
+            },
+            {
+              "dataset": "pendigits",
+              "seed": 1729,
+              "sampleId": "pendigits/pendigits-orig.tes/001439",
+              "method": "rms",
+              "predictedLabel": "4",
+              "templateId": "pendigits/pendigits-orig.tra/008606",
+              "score": 0.22830650216267556,
+              "margin": 0.0004509000622403281
+            }
+          ],
+          "meaning": "best different-class score minus winner; native score units; no epsilon near-tie threshold"
+        }
+      }
+    },
+    "comparison": "full keyed rows, exact strings/structure and binary64 numeric bits; signed zero distinguished; nonfinite scores rejected"
+  }
+}
