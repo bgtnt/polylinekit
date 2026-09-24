@@ -55,12 +55,20 @@ documentation before treating any row as interchangeable with another method.
 
 ## Winding versus Clipper2: operation and preparation contracts
 
-The new suite pins Clipper2 2.0.0 and records 181 method rows. Its deterministic
+The suite pins Clipper2 2.0.0 and records 238 method rows. Its deterministic
 generators are in `PolylineKit.Benchmarks/ClipperBenchmarks.cs`; generated inputs,
 hashes, assembly hashes, environment, values and nine batches per row accompany
 each run. It covers similar strokes, random walks, tangled rings, star regions,
 irregular blobs, degenerate integer grids and simple spiky stars. These are
 synthetic geometry controls, not recognition benchmarks.
+
+The general families now include 16-vertex inputs. `closed-absolute-winding`
+reports four additional Winding-only rows; Clipper fill area is not an equivalent
+operation and no speed ratio is assigned to them. The degenerate-grid controls
+give both methods exactly the same small integer input geometry (coordinates
+0 through 7 are exact in both binary64 and Int64). Intersection/output arithmetic
+can still differ. Ordinary double inputs are not silently snapped for Winding;
+the conversion-inclusive public wrapper rows show the cost for those callers.
 
 * **WindingArea** measures the entire call, including input preparation. Region
   calls compute all metrics even when the caller consumes only XOR or IoU.
@@ -98,6 +106,35 @@ The tilted strips deliberately retain a known winding precision limitation. Arch
 rational expectations and their source are in `fixtures/clipper-accuracy.json`;
 all reported implementation values are recomputed. These selected failures do
 not establish representative accuracy or general superiority over Clipper.
+
+## First use and retained workspace
+
+```powershell
+pwsh scripts/profile-winding.ps1
+```
+
+This companion uses the same workload generators and five representative cases:
+16/1024-vertex paired strokes, 1024-vertex regions, a 256-vertex degenerate grid,
+and a 4096-vertex simple star. Each case runs in three fresh processes, serially.
+Input generation, assembly loading and counter setup precede the first measured
+area call. That call includes JIT and initial workspace allocation; it does not
+measure process startup or input preparation by the caller. Nine later batches
+measure warm execution separately. Cold latency is particularly sensitive to
+runtime/OS state; the three samples are descriptive, not confidence intervals.
+
+The tool records the retained managed-heap delta after forced collections and an
+independent inventory of cached workspace/certificate/predicate arrays. Payload
+uses actual managed element sizes, including struct padding, and deduplicates
+shared arrays. It excludes array headers, object/delegate fields and native/JIT
+memory, so it is not a total-memory or peak-memory estimate. The heap delta may
+include runtime caches. Reflection accounting happens after first-call counters
+are read, outside every timed interval. Buffer capacities describe one workload
+in a fresh process; a long-lived thread can retain larger capacities after growth.
+
+Outputs are under `artifacts/benchmarks/winding-storage/`. The script verifies run,
+environment, DLL/input identities, retained payload totals and sample medians
+before writing `summary.json`. These are Winding lifecycle measurements, not a
+cold-start speed comparison with Clipper.
 
 ## Explicit-assembly comparison
 

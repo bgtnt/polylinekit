@@ -8,7 +8,7 @@ using Clipper2Lib;
 namespace PolylineKit.Experiments;
 
 /// <summary>Explicit operation and preparation contracts for comparisons with pinned Clipper2.</summary>
-internal static class ClipperBenchmarks
+internal static partial class ClipperBenchmarks
 {
     private const double Scale = 1e6;
     private static double sink;
@@ -126,7 +126,7 @@ internal static class ClipperBenchmarks
         var summary = new List<object>();
         var md = new StringBuilder("# Winding versus Clipper2\n\nMedian of three independent process medians, nine batches each. Time includes the declared operation; preparation differs by method. Repeated/preloaded rows are a separate amortized-input scenario. Coordinate grid size is not an area-error bound. All values are machine/workload specific.\n\n");
         md.AppendLine($"Source: `{runs[0].GetProperty("Revision").GetString()}`; {runs[0].GetProperty("Runtime").GetString()}; {runs[0].GetProperty("OS").GetString()}; {runs[0].GetProperty("CPU").GetString()}.\n");
-        md.AppendLine("| Family | n per path | Operation | Method | us (min–max) | B/op | Clipper / winding | Absolute deltas: primary / union / XOR / IoU |");
+        md.AppendLine("| Family | n per path | Operation | Method | us (min–max) | B/op | Method / winding | Absolute deltas: primary / union / XOR / IoU |");
         md.AppendLine("|---|---:|---|---|---:|---:|---:|---:|");
         foreach (string key in maps[0].Keys.Order(StringComparer.Ordinal))
         {
@@ -146,8 +146,10 @@ internal static class ClipperBenchmarks
             string windingKey = key[..key.LastIndexOf('|')] + "|WindingArea";
             double windingTime = maps.Select(m => m[windingKey].GetProperty("MedianNanoseconds").GetDouble() / 1000).Order().ElementAt(1);
             double[] deltas = new[] { "Area", "Union", "Xor", "IoU" }.Select(field => Math.Abs(row.GetProperty("Value").GetProperty(field).GetDouble() - maps[0][windingKey].GetProperty("Value").GetProperty(field).GetDouble())).ToArray();
-            summary.Add(new { Key = key, MedianUs = times[1], MinUs = times[0], MaxUs = times[2], Bytes = bytes, Ratio = times[1] / windingTime, AbsoluteMetricDeltas = deltas });
-            md.AppendLine(FormattableString.Invariant($"| {row.GetProperty("Family").GetString()} | {row.GetProperty("VerticesPerPath").GetInt32()} | {row.GetProperty("Operation").GetString()} | {row.GetProperty("Method").GetString()} | {times[1]:F2} ({times[0]:F2}–{times[2]:F2}) | {bytes:F0} | {times[1]/windingTime:F2} | {deltas[0]:G3}/{deltas[1]:G3}/{deltas[2]:G3}/{deltas[3]:G3} |"));
+            double? ratio = row.GetProperty("Method").GetString() == "WindingArea" ? null : times[1] / windingTime;
+            summary.Add(new { Key = key, MedianUs = times[1], MinUs = times[0], MaxUs = times[2], Bytes = bytes, Ratio = ratio, AbsoluteMetricDeltas = deltas });
+            string ratioText = ratio?.ToString("F2", System.Globalization.CultureInfo.InvariantCulture) ?? "—";
+            md.AppendLine(FormattableString.Invariant($"| {row.GetProperty("Family").GetString()} | {row.GetProperty("VerticesPerPath").GetInt32()} | {row.GetProperty("Operation").GetString()} | {row.GetProperty("Method").GetString()} | {times[1]:F2} ({times[0]:F2}–{times[2]:F2}) | {bytes:F0} | {ratioText} | {deltas[0]:G3}/{deltas[1]:G3}/{deltas[2]:G3}/{deltas[3]:G3} |"));
         }
         File.WriteAllText(Path.Combine(directory, "summary.md"), md.ToString());
         File.WriteAllText(Path.Combine(directory, "summary.json"), JsonSerializer.Serialize(summary, BenchmarkJson.Options) + "\n");
@@ -230,7 +232,7 @@ internal static class ClipperBenchmarks
 
     private static IEnumerable<Workload> Workloads()
     {
-        foreach (int n in new[] {64,256,1024})
+        foreach (int n in new[] {16,64,256,1024})
         {
             Point2[] a = Enumerable.Range(0,n).Select(i => { double t=(double)i/(n-1); return new Point2(3*t+.5*Math.Sin(9*t),Math.Sin(5*t)+t); }).ToArray();
             Point2[] b = Enumerable.Range(0,n).Select(i => { double t=(double)i/(n-1); return new Point2(3*t+.5*Math.Sin(9*t)+.05*Math.Sin(31*t),Math.Sin(5*t)+t+.08*Math.Cos(23*t)); }).ToArray();
@@ -240,6 +242,9 @@ internal static class ClipperBenchmarks
             yield return Bridged("random-walks",n,Walk(),Walk());
             Point2[] ring=Enumerable.Range(0,n).Select(i=>{double t=14*Math.PI*i/n,r=1+.35*Math.Sin(5.5*t);return new Point2(r*Math.Cos(t),r*Math.Sin(t));}).ToArray();
             yield return new("tangled-ring",n,"closed-nonzero",ring,[],Closed(ring,()=>new(WindingArea.ClosedPath(ring).NonZero),null));
+            yield return new("tangled-ring", n, "closed-absolute-winding", ring, [],
+                [new("WindingArea", "all preparation timed; no equivalent Clipper fill-area operation",
+                    () => new(WindingArea.ClosedPath(ring).AbsoluteWinding))]);
             Point2[] Star(double phase,double dx)=>Enumerable.Range(0,n).Select(i=>{double t=2*Math.PI*i/n,r=1+.3*Math.Sin(5*t+phase);return new Point2(r*Math.Cos(t)+dx,r*Math.Sin(t));}).ToArray();
             var noise=new Random(7*n);
             Point2[] Blob(double cx,double cy) {double phase=noise.NextDouble()*6;return Enumerable.Range(0,n).Select(i=>{double t=2*Math.PI*i/n,r=1+.08*Math.Sin(3*t+phase)+.02*(noise.NextDouble()-.5);return new Point2(cx+r*Math.Cos(t),cy+r*Math.Sin(t));}).ToArray();}
