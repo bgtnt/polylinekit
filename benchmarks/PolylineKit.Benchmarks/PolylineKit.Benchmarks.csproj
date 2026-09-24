@@ -7,6 +7,7 @@
   <ItemGroup>
     <ProjectReference Include="../../src/PolylineKit/PolylineKit.csproj" />
     <PackageReference Include="Clipper2" Version="2.0.0" />
+    <None Include="../fixtures/clipper-accuracy.json" Link="clipper-accuracy.json" CopyToOutputDirectory="PreserveNewest" />
     <Compile Include="../../tests/PolylineKit.Checks/ClipperOracle.cs" Link="Oracles/ClipperOracle.cs" />
     <Compile Include="../../tests/PolylineKit.Checks/Fixtures.cs" Link="Oracles/Fixtures.cs" />
     <Compile Include="../../tests/PolylineKit.Checks/GenLip.cs" Link="Oracles/GenLip.cs" />

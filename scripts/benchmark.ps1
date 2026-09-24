@@ -1,6 +1,6 @@
 param(
     [string]$OutputDirectory = 'artifacts/benchmarks',
-    [ValidateSet('Graphs', 'Transforms', 'Winding')][string]$Suite = 'Graphs'
+    [ValidateSet('Graphs', 'Transforms', 'Winding', 'WindingVsClipper2')][string]$Suite = 'Graphs'
 )
 $ErrorActionPreference = 'Stop'
 if (-not $PSBoundParameters.ContainsKey('OutputDirectory')) {
@@ -17,7 +17,7 @@ try {
     dotnet build PolylineKit.slnx -c Release --no-restore
     if ($LASTEXITCODE) { throw 'Build failed.' }
     $env:DOTNET_TieredCompilation = '0'
-    $command = switch ($Suite) { 'Transforms' { 'benchmark-transforms' } 'Winding' { 'benchmark-winding' } default { 'benchmark' } }
+    $command = switch ($Suite) { 'Transforms' { 'benchmark-transforms' } 'Winding' { 'benchmark-winding' } 'WindingVsClipper2' { 'benchmark-clipper' } default { 'benchmark' } }
     for ($run = 1; $run -le 3; $run++) {
         dotnet benchmarks/PolylineKit.Benchmarks/bin/Release/net10.0/PolylineKit.Benchmarks.dll $command $OutputDirectory $run $revision
         if ($LASTEXITCODE) { throw "Benchmark run $run failed." }
@@ -25,6 +25,10 @@ try {
     if ($Suite -eq 'Winding') {
         dotnet benchmarks/PolylineKit.Benchmarks/bin/Release/net10.0/PolylineKit.Benchmarks.dll summarize-winding $OutputDirectory
         if ($LASTEXITCODE) { throw 'Winding summary failed.' }
+    }
+    if ($Suite -eq 'WindingVsClipper2') {
+        dotnet benchmarks/PolylineKit.Benchmarks/bin/Release/net10.0/PolylineKit.Benchmarks.dll summarize-clipper $OutputDirectory
+        if ($LASTEXITCODE) { throw 'Clipper comparison summary failed.' }
     }
 } finally {
     $env:DOTNET_TieredCompilation = $oldTiered

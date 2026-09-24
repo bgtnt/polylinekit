@@ -9,6 +9,10 @@ return args.FirstOrDefault() switch
     "benchmark-transforms" when args.Length == 4 => Run(() => TransformBenchmarks.Run(args[1], int.Parse(args[2]), args[3])),
     "benchmark-winding" when args.Length == 4 => Run(() => WindingBenchmarks.Run(args[1], int.Parse(args[2]), args[3])),
     "summarize-winding" when args.Length == 2 => Run(() => WindingBenchmarks.Summarize(args[1])),
+    "benchmark-clipper" when args.Length == 4 => Run(() => ClipperBenchmarks.Run(args[1], int.Parse(args[2]), args[3])),
+    "summarize-clipper" when args.Length == 2 => Run(() => ClipperBenchmarks.Summarize(args[1])),
+    "smoke-clipper" when args.Length == 1 => Run(ClipperBenchmarks.Smoke),
+    "accuracy-clipper" when args.Length == 2 => Run(() => ClipperAccuracy.Run(args[1])),
     "smoke" when args.Length == 1 => Run(BenchmarkSmoke.Run),
     _ => Usage()
 };
@@ -16,6 +20,6 @@ return args.FirstOrDefault() switch
 static int Run(Action action) { action(); return 0; }
 static int Usage()
 {
-    Console.Error.WriteLine("Commands: benchmark|benchmark-transforms|benchmark-winding <directory> <run> <revision> | summarize-winding <directory> | smoke");
+    Console.Error.WriteLine("Commands: benchmark|benchmark-transforms|benchmark-winding|benchmark-clipper <directory> <run> <revision> | summarize-winding|summarize-clipper|accuracy-clipper <directory> | smoke|smoke-clipper");
     return 2;
 }

@@ -16,6 +16,7 @@ dotnet benchmarks/PolylineKit.Benchmarks/bin/Release/net10.0/PolylineKit.Benchma
 pwsh scripts/benchmark.ps1 -Suite Graphs
 pwsh scripts/benchmark.ps1 -Suite Transforms
 pwsh scripts/benchmark.ps1 -Suite Winding
+pwsh scripts/benchmark.ps1 -Suite WindingVsClipper2
 ```
 
 `smoke` invokes each graph and winding workload method and the transform operations
@@ -27,6 +28,7 @@ in [`tests/PolylineKit.Checks`](../tests/PolylineKit.Checks).
 | Graphs | Unsigned graph integral, LIP/GenLIP reconstructions, full and prepared Clipper calls; 16, 64, 256, 1024 vertices, three crossing densities | `artifacts/benchmarks/graphs/` |
 | Transforms | Comparison, normalization, similarity fitting and a combined pipeline; 16, 64, 256, 1024 vertices | `artifacts/benchmarks/transforms/` |
 | Winding | Winding engine and Clipper comparisons on synthetic paired strokes, dense graphs, random walks, filled regions and degenerate grids | `artifacts/benchmarks/winding/` |
+| WindingVsClipper2 | Closed/bridged NonZero area; filled-region full metrics, XOR-only and simple-polygon IoU | `artifacts/benchmarks/windingvsclipper2/` |
 
 The script requires a clean Git tree, records the measured revision, disables
 tiered compilation for the process, and runs three independent processes. Each
@@ -50,6 +52,51 @@ LIP, GenLIP and unsigned area use different mathematical definitions. Different
 scores do not establish accuracy or superiority. Clipper's fixed precision also
 has a different numeric contract from the winding engine. Consult the library
 documentation before treating any row as interchangeable with another method.
+
+## Winding versus Clipper2: operation and preparation contracts
+
+The new suite pins Clipper2 2.0.0 and records 181 method rows. Its deterministic
+generators are in `PolylineKit.Benchmarks/ClipperBenchmarks.cs`; generated inputs,
+hashes, assembly hashes, environment, values and nine batches per row accompany
+each run. It covers similar strokes, random walks, tangled rings, star regions,
+irregular blobs, degenerate integer grids and simple spiky stars. These are
+synthetic geometry controls, not recognition benchmarks.
+
+* **WindingArea** measures the entire call, including input preparation. Region
+  calls compute all metrics even when the caller consumes only XOR or IoU.
+* **Clipper64 static** converts to integer coordinates before timing, then builds
+  and executes a fresh engine. Scale is 1e6; Point64's rounding rule is used.
+* **Clipper64 reused** retains the engine and output containers, but times
+  Clear/Add/Execute. **Clipper64 preloaded** also moves Add outside timing. The
+  latter answers repeated queries on unchanged geometry and is not the same
+  preparation contract as WindingArea. Clipper's output vertices are still built.
+* **ClipperD precision6** starts with PathD inputs. Internal grid conversion is
+  timed. Simple own-polygon areas use preconverted integer inputs and are summed
+  inside the timed call, so that denominator and intersection share a grid.
+* **PolylineKit wrapper** includes conversion and uses the existing broader API.
+
+`overlap-metrics` returns intersection, union, XOR and IoU. Clipper uses two Boolean
+operations and obtains XOR from union minus intersection. `xor-only` executes
+only Clipper XOR. `simple-iou` executes one intersection and computes the union
+from both shoelace areas; it is valid only for these simple region fixtures.
+Own shoelace sums are timed. Do not compare different operation rows as equal work.
+The summary retains all four value deltas, not just the primary score; Clipper's
+grid step is not an area-error guarantee. No claim of a universal fastest method
+follows from any of these workloads.
+
+```powershell
+dotnet benchmarks/PolylineKit.Benchmarks/bin/Release/net10.0/PolylineKit.Benchmarks.dll smoke-clipper
+dotnet benchmarks/PolylineKit.Benchmarks/bin/Release/net10.0/PolylineKit.Benchmarks.dll accuracy-clipper artifacts/benchmarks/windingvsclipper2
+```
+
+The smoke verifies repeated execution and a known overlapping-square result for
+every method, plus four exact thin triangles; it records no timings. The separate
+accuracy command emits 28 quantities: five previously arbitrated integer-grid
+disagreements, four thin triangles and three long tilted-strip intersections.
+The latter deliberately retains a known winding precision limitation. Archived
+rational expectations and their source are in `fixtures/clipper-accuracy.json`;
+all reported implementation values are recomputed. These selected failures do
+not establish representative accuracy or general superiority over Clipper.
 
 ## Explicit-assembly comparison
 
