@@ -213,16 +213,6 @@ internal static class RobustOrientation
     private static void TwoProduct(double a, double b, out double x, out double y)
     {
         x = a * b;
-#if NET10_0_OR_GREATER
-        // The guarded expansion path keeps nonzero products well above underflow. A fused
-        // multiply-add then returns the exact residual of this rounded product in one step.
-        if (System.Runtime.Intrinsics.X86.Fma.IsSupported ||
-            System.Runtime.Intrinsics.Arm.AdvSimd.Arm64.IsSupported)
-        {
-            y = Math.FusedMultiplyAdd(a, b, -x);
-            return;
-        }
-#endif
         Split(a, out double ah, out double al);
         Split(b, out double bh, out double bl);
         double err1 = x - ah * bh, err2 = err1 - al * bh, err3 = err2 - ah * bl;
