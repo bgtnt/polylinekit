@@ -24,6 +24,7 @@ internal static class WindingAreaChecks
         CheckReviewedNearDegeneracy();
         CheckReviewRegressions();
         CheckPerformancePaths();
+        CheckSearchPipeline();
         CheckAllocations();
         CheckInvalidInputs();
         Console.WriteLine($"Clipper2 disagreements on degenerate grid inputs: {ClipperDisagreements.Count} of {checkedClipper} checked; winding matched the slab sweep in every case.");
@@ -585,6 +586,42 @@ internal static class WindingAreaChecks
             WindingArea.EndpointBridged(first, [new(2, 0), new(2, 0), new(2, 0)]));
         Reject<ArgumentException>("first path collapses at bridge", () =>
             WindingArea.EndpointBridged([new(2, 0), new(2, 0)], second));
+    }
+
+    private static void CheckSearchPipeline()
+    {
+        // Long primary-axis windows with sparse inclusive overlaps exercise vector masks and tails.
+        // Sizes straddle sort/growth thresholds; fragmented projections exercise the run-sort fallback.
+        AppContext.TryGetSwitch("PolylineKit.DisableSimd", out bool disabled);
+        foreach (int n in new[] { 63, 64, 65, 127, 128, 129, 255, 256, 257, 511, 512, 513 })
+        {
+            Point2[] bars = Enumerable.Range(0, n)
+                .Select(i => new Point2(i % 4 is 0 or 3 ? 0 : n * 2, i / 2)).ToArray();
+            ContourAreas expected = ContourSweep.Measure(bars);
+            // Signed area has heavy cancellation here; integer shoelace is exact for these fixtures.
+            long twiceSigned = 0;
+            for (int i = 0; i < n; i++)
+            {
+                Point2 a = bars[i], b = bars[(i + 1) % n];
+                twiceSigned += (long)a.X * (long)b.Y - (long)a.Y * (long)b.X;
+            }
+            foreach (bool swap in new[] { false, true })
+            foreach (bool reverse in new[] { false, true })
+            {
+                Point2[] path = bars.Select(p => swap ? new Point2(p.Y, p.X) : p).ToArray();
+                if (reverse) Array.Reverse(path);
+                WindingAreaResult actual = WindingArea.ClosedPath(path);
+                string name = $"bounds pipeline n={n}, swap={swap}, reverse={reverse}";
+                Areas(name, actual, expected.NonZero, expected.EvenOdd, expected.AbsoluteWinding,
+                    (swap == reverse ? 1 : -1) * (twiceSigned / 2.0));
+                try
+                {
+                    AppContext.SetSwitch("PolylineKit.DisableSimd", true);
+                    Identical(name + " scalar equality", actual, WindingArea.ClosedPath(path));
+                }
+                finally { AppContext.SetSwitch("PolylineKit.DisableSimd", disabled); }
+            }
+        }
     }
 
     private static void CheckAllocations()
