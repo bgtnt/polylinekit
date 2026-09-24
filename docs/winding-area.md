@@ -104,11 +104,20 @@ and candidate indices add up to 16 bytes per retained edge slot, plus a 65-int
 run buffer and array headers, beyond the bounds cache above. These changes retain
 the same worst-case complexity; they do not make dense intersections linear.
 
+The [integrated simple-path certificate](winding-integrated-sweep.md) can now
+short-circuit candidate enumeration for a single loop. After at least `8*n`
+bounding-box survivors without any crossing/overlap, and for at least 256 vertices,
+it makes one bounded attempt to prove simplicity. Success retains the same area
+accumulation; failure resumes the prepared pair pass. No input is copied twice.
+Certificate storage is lazy and retains an additional 28 bytes per vertex slot,
+plus object/array overhead. `FilledRegions` does not use it. The new measurements
+include both gains and common-case overhead; this is not a universal speedup.
+
 ## Evidence
 
 ### Checks
 
-`dotnet run --project experiments/PolylineKit.Experiments -c Release -- check` adds 28,267 winding checks and passes in all five implementation modes of `scripts/verify-implementations.ps1`, including the .NET Standard 2.0 build. They include:
+`dotnet run --project experiments/PolylineKit.Experiments -c Release -- check` includes 38,428 winding checks and passes in all five implementation modes of `scripts/verify-implementations.ps1`, including the .NET Standard 2.0 build. They include:
 
 - analytic walks and all contour fixtures, with `AbsoluteWinding` compared to the independent slab sweep in `ContourSweep`;
 - 3,000 symbolic orientations against the exact sign of an explicitly perturbed determinant (`e = 2^-16`, BigInteger), including more than 500 exact ties;
@@ -130,6 +139,11 @@ independent rejection of collapsed input paths.
 Another 240 checks cover bounds contacts, vector masks/tails, natural-sort and
 buffer-growth thresholds, reversed/axis-swapped alternating bars, and exact
 equality with the forced-scalar result.
+
+Prepared certification adds 10,161 checks, including exhaustive-pair agreement,
+rejected-attempt resumption, reading each input index only once, nested calls,
+extreme-scale certified inputs, allocation and workspace-reset regressions.
+The complete suite has 42,012 checks.
 
 ### Independent reviews
 

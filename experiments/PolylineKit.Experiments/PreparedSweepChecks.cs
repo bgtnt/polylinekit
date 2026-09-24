@@ -40,6 +40,16 @@ internal static class PreparedSweepChecks
             Point2[] simple = Comb(1024, true);
             var simpleRun = RunEngine(simple, false);
             True(simpleRun.Outcome == 2, "dense simple contour must use certificate");
+            foreach (int exponent in new[] { -500, -54, 150, 280 })
+            {
+                double scale = Math.ScaleB(1, exponent);
+                Point2[] scaled = simple.Select(p => new Point2(p.X * scale, p.Y * scale)).ToArray();
+                Compare(scaled, "scaled certified contour " + exponent);
+                True(RunEngine(scaled, false).Outcome == 2, "scaled contour exercises certification");
+            }
+            Point2[] translated = simple.Select(p => new Point2(p.X + Math.ScaleB(1, 52), p.Y + Math.ScaleB(1, 52))).ToArray();
+            Compare(translated, "large-offset certified contour");
+            True(RunEngine(translated, false).Outcome == 2, "large-offset contour exercises certification");
             True(RunEngine([new(0, 0), new(1, 1)], false).Outcome == 0, "collapsed bridged loop resets diagnostics");
             Point2[] crossing = (Point2[])simple.Clone();
             (crossing[^7], crossing[^5]) = (crossing[^5], crossing[^7]);

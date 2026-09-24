@@ -1,5 +1,9 @@
 # Certified-simple active sweep experiment
 
+Follow-up: [integration into the prepared engine](winding-integrated-sweep.md)
+reuses the validated input and candidate pass, with a new independently chosen
+fixture set. The measurements below remain the earlier standalone experiment.
+
 This is a separate .NET 10 experiment in
 [PolylineKit.ActiveSweep](../experiments/PolylineKit.ActiveSweep), not a replacement
 for the library's general winding engine. It tests whether avoiding candidate-pair
