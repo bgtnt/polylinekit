@@ -10,12 +10,16 @@ Experimental C# methods for polyline area comparison, bounds normalization, arc-
 | `PolylineComparison.EndpointBridgedArea(p, q)` | Fill area of the closed walk `p + reverse(q)`, joined by straight endpoint connectors. |
 | `PolylineComparison.FilledRegionDifference(p, q)` | Symmetric difference area of two independently filled closed contours. |
 | `PolylineComparison.FilledRegionOverlap(p, q)` | Filled union/XOR areas, Jaccard distance and intersection-over-union. |
+| `WindingArea.ClosedPath(p)` / `EndpointBridged(p, q)` | NonZero, EvenOdd, absolute-winding and signed areas of a self-intersecting walk, from its boundary; no clipping grid. |
+| `WindingArea.FilledRegions(p, q)` | Intersection, union and XOR areas of two filled paths in one boundary pass. |
 | `PolylineNormalization.ToUnitBounds(p)` | Center and fit a path inside a unit square; return transformed points and affine map. |
 | `PolylineNormalization.MatchBounds(p, q)` | Center and fit `p` inside `q`'s bounds, with uniform or independent axis scaling. |
 | `PolylineAlignment.FitSimilarity(p, q)` | Sample along arc length, then fit translation, rotation and optional uniform scale. |
 | `PolylineSampling.ResampleByArcLength(p)` | Equidistant samples along an open or closed path. |
 
 These area operations are different definitions, not interchangeable implementations of a universal distance. Read the [comparison and transformation contracts](docs/comparison-api.md), including fill rules, precision, closed-path phase and degenerate cases.
+
+`WindingArea` computes areas without Clipper2: crossing decisions use exact orientation predicates with Simulation of Simplicity, so shared vertices, touching and collinear overlap are handled consistently. It returns no contours. On the measured workloads it takes 37–54% of the time of the Clipper-based bridged area (on par for adversarial degenerate integer grids) and 16–26% for filled-region overlap, with no steady-state allocation. On every pair of the frozen recognition evaluation it changes no area ranking. See [boundary winding areas](docs/winding-area.md), including five degenerate inputs where Clipper2 2.0.0 returns wrong areas.
 
 ## Compare, normalize, align
 
@@ -46,7 +50,7 @@ Bounds-area ratio is a geometric ratio, **not a calibrated similarity percentage
 
 ## Build and verify
 
-The core targets **.NET Standard 2.0** for consumer compatibility and **.NET 10** for optional packed-double SIMD transformations; examples and experiments target .NET 10. The core has one runtime package dependency, **Clipper2 2.0.0**, for general polygon fill/Boolean operations. The graph integral, transforms, normalization, resampling and fitting are original implementations. There is no dependency on RtTools or MPR001.
+The core targets **.NET Standard 2.0** for consumer compatibility and **.NET 10** for optional packed-double SIMD transformations; examples and experiments target .NET 10. The core has one runtime package dependency, **Clipper2 2.0.0**, for general polygon fill/Boolean operations. The graph integral, winding-area engine and its exact predicates, transforms, normalization, resampling and fitting are original implementations. There is no dependency on RtTools or MPR001.
 
 Install the .NET 10 SDK and run:
 

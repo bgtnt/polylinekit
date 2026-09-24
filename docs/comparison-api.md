@@ -42,6 +42,10 @@ Two unit squares translated by (100,100) have XOR area 2, bounds ratio 2/10201
 and Jaccard distance 1. Translation by (.5,.5) gives XOR 1.5, bounds ratio 2/3,
 union 1.75 and Jaccard 6/7. These region scores have no open-stroke interpretation.
 
+## Boundary winding areas
+
+`WindingArea` computes the same NonZero/EvenOdd endpoint-bridged and filled-region quantities from boundaries, without the decimal clipping grid, plus the absolute-winding integral that no fill rule provides. It returns areas only. Its contract, exact predicates and evidence are in [winding-area.md](winding-area.md).
+
 ## Clipping precision
 
 General area methods default to six decimal places and accept `decimalPrecision` in `[-8,8]`. They shift the joint bounds center to the origin before clipping, and exchange axes when x extent is larger. Results and contour orientation are converted back afterwards. Signed output areas are summed to retain holes; taking the absolute area of an unresolved walk would be incorrect.
