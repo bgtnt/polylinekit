@@ -262,6 +262,16 @@ internal static class AreaChange
     {
         var runs = Enumerable.Range(1, 3).Select(i => JsonSerializer.Deserialize<BenchmarkRun>(
             File.ReadAllText(Path.Combine(directory, $"run-{i}.json")))!).ToArray();
+        foreach (var run in runs)
+        foreach (var measurement in run.Measurements)
+        {
+            Require(measurement.Samples.Length == 5 && measurement.Samples.All(sample =>
+                sample.Iterations > 0 && double.IsFinite(sample.Nanoseconds) && sample.Nanoseconds > 0 &&
+                double.IsFinite(sample.Bytes) && sample.Bytes >= 0), "Invalid measurement samples.");
+            Require(measurement.MedianNanoseconds == measurement.Samples.Select(sample => sample.Nanoseconds).Order().ElementAt(2) &&
+                measurement.MedianBytes == measurement.Samples.Select(sample => sample.Bytes).Order().ElementAt(2),
+                "Stored measurement medians differ from the raw samples.");
+        }
         var maps = runs.Select(r => r.Measurements.ToDictionary(m => (m.Key, m.Method, m.Scope))).ToArray();
         string Identity(BenchmarkRun r) => JsonSerializer.Serialize(new { r.Revision, r.Runtime, r.OS, r.Architecture,
             r.CPU, r.TieredCompilation, r.DataSha256, r.PairSha256, r.WindingSha256, r.ClipperSha256, r.HarnessSha256 });
