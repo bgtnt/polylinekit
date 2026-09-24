@@ -125,14 +125,14 @@ internal static class WindingEngine
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static void Append(Point2[] v, ref int count, int loopStart, Point2 p, string name)
     {
-        PathInput.Validate(p, name);
-        if (count == loopStart || !PathInput.Same(v[count - 1], p)) v[count++] = p;
+        WindingInput.Validate(p, name);
+        if (count == loopStart || !WindingInput.Same(v[count - 1], p)) v[count++] = p;
     }
 
     /// <summary>Removes closing points equal to the loop's first point.</summary>
     internal static void CloseLoop(Point2[] v, ref int count, int loopStart)
     {
-        while (count - loopStart > 1 && PathInput.Same(v[loopStart], v[count - 1])) count--;
+        while (count - loopStart > 1 && WindingInput.Same(v[loopStart], v[count - 1])) count--;
     }
 
     private const int NonZeroChain = 0, EvenOddChain = 1, AbsoluteChain = 2, SignedChain = 3;
@@ -171,7 +171,7 @@ internal static class WindingEngine
             {
                 bool last = x == offsets[e + 1];
                 Point2 p1 = last ? b : list[x].P;
-                if (!PathInput.Same(p0, p1))
+                if (!WindingInput.Same(p0, p1))
                 {
                     if (overlapping) ws.Take(new Piece { P0 = p0, P1 = p1, W0 = NonZeroStep(w), W1 = EvenOddStep(w), W2 = AbsoluteStep(w), W3 = 1 }, true);
                     else
@@ -229,7 +229,7 @@ internal static class WindingEngine
             ws.Origin[c] = ws.Used[c] ? new Point2(ws.MinX[c] + (ws.MaxX[c] - ws.MinX[c]) / 2, ws.MinY[c] + (ws.MaxY[c] - ws.MinY[c]) / 2) : default;
             ws.Group[c] = c;
             for (int g = 0; g < c; g++)
-                if (ws.Group[g] == g && PathInput.Same(ws.Origin[g], ws.Origin[c])) { ws.Group[c] = g; break; }
+                if (ws.Group[g] == g && WindingInput.Same(ws.Origin[g], ws.Origin[c])) { ws.Group[c] = g; break; }
         }
         WalkRegions(ws, split, n, firstA, ownA, bAtA, nonZero, true, true);
         WalkRegions(ws, split, n, firstB, ownB, aAtB, nonZero, false, true);
@@ -260,7 +260,7 @@ internal static class WindingEngine
                 bool last = x == offsets[e + 1];
                 Point2 p1 = last ? b : list[x].P;
                 int change = Fill(w + 1, nonZero) - Fill(w, nonZero);
-                if (change != 0 && !PathInput.Same(p0, p1))
+                if (change != 0 && !WindingInput.Same(p0, p1))
                 {
                     // Inside the other path a piece bounds the intersection and removes area from the other
                     // path's exclusive part; outside it, it bounds this path's exclusive part.
@@ -423,7 +423,7 @@ internal static class WindingEngine
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool Less(Point2 p, Point2 q) => p.X < q.X || (p.X == q.X && p.Y < q.Y);
 
-    private static bool SameSegment(Piece x, Piece y) => PathInput.Same(x.P0, y.P0) && PathInput.Same(x.P1, y.P1);
+    private static bool SameSegment(Piece x, Piece y) => WindingInput.Same(x.P0, y.P0) && WindingInput.Same(x.P1, y.P1);
 
     // Winding number of loop [from, to) at perturbed vertex p, by a rightward horizontal ray.
     private static int WindingAt(Point2[] v, int[] nx, int p, int from, int to, ref WindingStatistics statistics)

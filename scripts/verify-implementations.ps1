@@ -19,6 +19,7 @@ try {
     $modernFeatures = $null
     foreach ($mode in $modes) {
         Copy-Item -LiteralPath "src/PolylineKit/bin/Release/$($mode.Target)/PolylineKit.dll" -Destination $directory
+        Copy-Item -LiteralPath "src/PolylineKit.Winding/bin/Release/$($mode.Target)/PolylineKit.Winding.dll" -Destination $directory
         $env:POLYLINEKIT_FORCE_SCALAR = $mode.Scalar
         $env:DOTNET_EnableHWIntrinsic = $mode.Hardware
         $env:DOTNET_EnableAVX = $mode.Avx
@@ -39,6 +40,10 @@ try {
         $expectedFramework = if ($mode.Target -eq 'netstandard2.0') { '.NETStandard,Version=v2.0' } else { '.NETCoreApp,Version=v10.0' }
         if ($header.Groups['framework'].Value -ne $expectedFramework) {
             throw "Incorrect core assembly target: $($mode.Name)"
+        }
+        $windingHeaders = @($checkLines | Where-Object { $_ -is [string] -and $_.StartsWith('Winding target: ') })
+        if ($windingHeaders.Count -ne 1 -or $windingHeaders[0] -ne "Winding target: $expectedFramework") {
+            throw "Incorrect or missing winding assembly target: $($mode.Name)"
         }
         if ($header.Groups['scalar'].Value -ne $mode.Scalar -or
             [bool]::Parse($header.Groups['disabled'].Value) -ne ($mode.Scalar -eq '1')) {

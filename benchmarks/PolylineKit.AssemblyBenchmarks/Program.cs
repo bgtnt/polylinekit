@@ -14,7 +14,7 @@ internal static class Program
     {
         if (args.Length != 5)
         {
-            Console.Error.WriteLine("PolylineKit.AssemblyBenchmarks <absolute PolylineKit.dll> <inputs.json> <output.json|check> <run-number> <label>");
+            Console.Error.WriteLine("PolylineKit.AssemblyBenchmarks <absolute PolylineKit.Winding.dll> <inputs.json> <output.json|check|dump:path> <run-number> <label>");
             return 2;
         }
         AssemblyLoadContext.Default.LoadFromAssemblyPath(Path.GetFullPath(args[0]));
@@ -43,6 +43,8 @@ internal static class Runner
         var fixtures = development.Select(f => (Group: "development", Fixture: f))
             .Concat(FreshFixtures.Create().Select(f => (Group: "fresh", Fixture: f))).ToArray();
         if (args[2] == "check") return Check(fixtures);
+        if (args[2].StartsWith("dump:", StringComparison.Ordinal))
+            return Dump(args[1], fixtures, args[2][5..]);
         var measurements = new List<object>();
         foreach (var (group, fixture) in fixtures)
         {
@@ -69,6 +71,42 @@ internal static class Runner
         }, new JsonSerializerOptions { WriteIndented = true }));
         GC.KeepAlive(sink);
         return 0;
+    }
+
+    private static int Dump(string inputPath, (string Group, Fixture Fixture)[] fixtures, string outputPath)
+    {
+        var records = new List<object>();
+        foreach (var (group, fixture) in fixtures)
+            records.Add(new { Operation = "ClosedPath", Name = group + "/" + fixture.Name,
+                InputSha256 = fixture.Hash(), Values = NumericBits(WindingArea.ClosedPath(fixture.Path)) });
+        using var input = JsonDocument.Parse(File.ReadAllText(inputPath));
+        foreach (var item in input.RootElement.EnumerateArray())
+        {
+            Point2[] a = Read(item.GetProperty("First")), b = Read(item.GetProperty("Second"));
+            string name = item.GetProperty("Name").GetString()! + "/" + a.Length;
+            string hash = new Fixture(name, a.Concat(b).ToArray()).Hash();
+            records.Add(new { Operation = "EndpointBridged", Name = name, InputSha256 = hash,
+                Values = NumericBits(WindingArea.EndpointBridged(a, b)) });
+            foreach (var rule in new[] { PathFillRule.NonZero, PathFillRule.EvenOdd })
+                records.Add(new { Operation = "FilledRegions/" + rule, Name = name, FirstVertices = a.Length,
+                    InputSha256 = hash, Values = NumericBits(WindingArea.FilledRegions(a, b, rule)) });
+        }
+        string full = Path.GetFullPath(outputPath);
+        Directory.CreateDirectory(Path.GetDirectoryName(full)!);
+        File.WriteAllText(full, JsonSerializer.Serialize(records, new JsonSerializerOptions { WriteIndented = true }) + "\n");
+        Console.WriteLine($"Exact output dump: {records.Count} operation records -> {full}");
+        return 0;
+    }
+
+    private static SortedDictionary<string, object?> NumericBits(object value)
+    {
+        var result = new SortedDictionary<string, object?>(StringComparer.Ordinal);
+        foreach (var property in value.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance))
+        {
+            object? v = property.GetValue(value);
+            result.Add(property.Name, v is double number ? BitConverter.DoubleToInt64Bits(number).ToString("x16") : v);
+        }
+        return result;
     }
 
     private static void MeasureRegions(string inputPath, List<object> measurements)

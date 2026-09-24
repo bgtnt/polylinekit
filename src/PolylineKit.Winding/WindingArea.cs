@@ -128,8 +128,8 @@ public static class WindingArea
 
     /// <summary>Winding integrals of the closed walk first + reverse(second), joined by straight endpoint connectors.</summary>
     /// <remarks>
-    /// This is the walk filled by <see cref="PolylineComparison.EndpointBridgedArea"/>; its NonZero and EvenOdd values
-    /// agree with that method up to its clipping quantization. Each path needs at least two points after consecutive
+    /// The same walk can be filled with polygon clipping, subject to that implementation's numeric contract.
+    /// Each path needs at least two points after consecutive
     /// duplicate removal. Input order matters. A zero result does not imply equal strokes.
     /// </remarks>
     /// <exception cref="ArgumentNullException">A path is null.</exception>
@@ -153,7 +153,7 @@ public static class WindingArea
             {
                 Point2 point = second[i];
                 // Count this path independently: Append also removes a shared bridge endpoint.
-                if (i == secondLength - 1 || !PathInput.Same(previous, point)) secondCount++;
+                if (i == secondLength - 1 || !WindingInput.Same(previous, point)) secondCount++;
                 WindingEngine.Append(v, ref n, 0, point, nameof(second));
                 previous = point;
             }
@@ -167,8 +167,7 @@ public static class WindingArea
     /// <summary>Intersection, union and symmetric-difference areas of two independently filled closed paths.</summary>
     /// <remarks>
     /// Closure is implicit and a repeated closing point is optional. Each path needs at least three vertices after
-    /// consecutive duplicate removal. The fill rule is applied to each path separately, as in
-    /// <see cref="PolylineComparison.FilledRegionOverlap"/>, which computes the same quantities after quantization.
+    /// consecutive duplicate removal. The fill rule is applied to each path separately.
     /// </remarks>
     /// <exception cref="ArgumentNullException">A path is null.</exception>
     /// <exception cref="ArgumentException">A path is empty, has nonfinite or too large coordinates, or too few vertices.</exception>

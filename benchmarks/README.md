@@ -101,7 +101,7 @@ not establish representative accuracy or general superiority over Clipper.
 ## Explicit-assembly comparison
 
 `PolylineKit.AssemblyBenchmarks` is an optional developer tool for comparing two
-compatible builds of PolylineKit. It loads the requested DLL before entering the
+compatible builds of PolylineKit.Winding. It loads the requested DLL before entering the
 typed runner; the build-time reference is not copied into its output directory.
 A project dependency builds that reference using the selected Debug or Release
 configuration on a clean checkout. Supply an
@@ -116,11 +116,11 @@ are timed as actual two-input operations, not as a bridged path.
 
 ```powershell
 $runner = 'benchmarks/PolylineKit.AssemblyBenchmarks/bin/Release/net10.0/PolylineKit.AssemblyBenchmarks.dll'
-$currentDll = (Resolve-Path src/PolylineKit/bin/Release/net10.0/PolylineKit.dll).Path
+$currentDll = (Resolve-Path src/PolylineKit.Winding/bin/Release/net10.0/PolylineKit.Winding.dll).Path
 dotnet $runner $currentDll benchmarks/fixtures/winding.json check 0 current
 
 # Supply an independently built compatible baseline DLL, preserving that build's revision.
-$baselineDll = (Resolve-Path '<baseline-build>/PolylineKit.dll').Path
+$baselineDll = (Resolve-Path '<baseline-build>/PolylineKit.Winding.dll').Path
 $oldTiered = $env:DOTNET_TieredCompilation
 try {
     $env:DOTNET_TieredCompilation = '0'
@@ -156,6 +156,15 @@ The runner reads an internal workspace diagnostic to identify bypassed, rejected
 and accepted certification attempts. That makes it appropriate for compatible
 engine builds, not a general benchmark for arbitrary library versions. No
 profiling or recognition experiment tools are needed by either maintained runner.
+
+For a mechanical refactor, `dump:<absolute-or-relative-output.json>` in the output
+argument writes 120 deterministic operation records without timing: 78 closed
+walks and 14 pairs as bridges and both region fill rules. All public result
+properties are recorded; doubles use their exact binary64 bit patterns. Compare
+these dumps within the same target/runtime to test numerical identity. An older
+monolithic DLL needs a runner compiled against that older assembly identity;
+the current leaf-bound runner cannot load it as a substitute leaf. The extraction
+comparison used the P2-corrected pre-split DLL, not the inaccurate earlier build.
 
 ## Fixture provenance and existing evidence
 

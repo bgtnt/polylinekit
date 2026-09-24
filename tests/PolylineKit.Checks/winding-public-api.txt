@@ -1,0 +1,35 @@
+public enum PolylineKit.PathFillRule : System.Int32
+  public const PolylineKit.PathFillRule EvenOdd = 1
+  public const PolylineKit.PathFillRule NonZero = 0
+
+public readonly struct PolylineKit.Point2
+  public PolylineKit.Point2(System.Double x, System.Double y)
+  public System.Double X { get; }
+  public System.Double Y { get; }
+
+public static class PolylineKit.WindingArea
+  public static PolylineKit.WindingAreaResult ClosedPath(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> path)
+  public static PolylineKit.WindingAreaResult EndpointBridged(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> first, System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> second)
+  public static PolylineKit.WindingOverlapResult FilledRegions(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> first, System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> second, PolylineKit.PathFillRule fillRule = PolylineKit.PathFillRule.NonZero (0))
+
+public readonly struct PolylineKit.WindingAreaResult
+  public System.Double AbsoluteWinding { get; }
+  public System.Double EvenOdd { get; }
+  public System.Double NonZero { get; }
+  public System.Double Signed { get; }
+  public System.Int32 CrossingCount { get; }
+  public System.Int32 ExactPredicateCount { get; }
+  public System.Int32 SymbolicTieBreakCount { get; }
+
+public readonly struct PolylineKit.WindingOverlapResult
+  public PolylineKit.PathFillRule FillRule { get; }
+  public System.Double FirstArea { get; }
+  public System.Double IntersectionArea { get; }
+  public System.Double SecondArea { get; }
+  public System.Double SymmetricDifferenceArea { get; }
+  public System.Double UnionArea { get; }
+  public System.Int32 CrossingCount { get; }
+  public System.Int32 ExactPredicateCount { get; }
+  public System.Int32 SymbolicTieBreakCount { get; }
+  public System.Nullable<System.Double> IntersectionOverUnion { get; }
+  public System.Nullable<System.Double> JaccardDistance { get; }

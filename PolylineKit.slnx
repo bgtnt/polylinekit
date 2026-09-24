@@ -8,8 +8,12 @@
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/PolylineKit/PolylineKit.csproj" />
+    <Project Path="src/PolylineKit.Winding/PolylineKit.Winding.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/PolylineKit.Checks/PolylineKit.Checks.csproj" />
+    <Project Path="tests/Consumers/LeafOnly/LeafOnly.csproj" />
+    <Project Path="tests/Consumers/PortableOnly/PortableOnly.csproj" />
+    <Project Path="tests/Consumers/CompatibilityHost/CompatibilityHost.csproj" />
   </Folder>
 </Solution>

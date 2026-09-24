@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Compiled against the pre-extraction assembly, never the current project. -->
+    <Reference Include="PolylineKit">
+      <HintPath>$(LegacyAssembly)</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+  <Target Name="RequireLegacyAssembly" BeforeTargets="ResolveReferences">
+    <Error Condition="'$(LegacyAssembly)' == '' Or !Exists('$(LegacyAssembly)')"
+      Text="Pass an absolute LegacyAssembly path to the monolithic PolylineKit.dll, or use scripts/verify-consumers.ps1." />
+  </Target>
+</Project>

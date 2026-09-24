@@ -90,6 +90,10 @@ small product to `r` has at most five rounding steps including its product;
 the positive calculation of `T` has at most six. With
 `gamma(k) = ku/(1-ku)`, the correction's error is bounded by
 `gamma(5)/(1-u)^6 * T < 7u T`. The final addition contributes at most `c |v|`.
+In terms of rounded small products, their multiplication error contributes
+`c` times their absolute sum, while subsequent additions contribute at most
+`gamma(4)` times the absolute sum of all rounded terms. These together fit
+`gamma(5)`; the denominator accounts for downward rounding while computing `T`.
 
 The compensated filter accepts only if `|v| > 1e-250` and `T <= 0.5 |v|`.
 Consequently its error is at most `3.5u |v| + c |v|`, below the same `8u |v|`

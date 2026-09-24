@@ -56,10 +56,19 @@ do not make floating-point intersection coordinates or accumulated areas exact.
 ## Build and verify
 
 The library targets **.NET Standard 2.0** and **.NET 10**. Modern builds use optional
-packed-double SIMD for selected operations and have scalar fallbacks. The sole
-runtime package dependency is **Clipper2 2.0.0**, used for general polygon fill and
-Boolean operations. The graph integral, winding engine, transforms, normalization,
-resampling and alignment do not call Clipper2.
+packed-double SIMD for selected operations and have scalar fallbacks.
+[`PolylineKit.Winding`](src/PolylineKit.Winding/README.md) is an independent leaf
+assembly with no external runtime dependencies: reference it directly for winding
+areas and region overlap. The broader `PolylineKit` project references that leaf
+and **Clipper2 2.0.0** for general polygon fill and Boolean operations. It also
+provides the graph integral, transforms, normalization, resampling and alignment.
+Both projects use the `PolylineKit` namespace.
+
+The parent assembly forwards the five extracted public types. Existing compiled
+components can keep their old type references, but deployment must include the
+new leaf DLL and an updated dependency manifest. See the
+[consumer checks](tests/Consumers/README.md). No package publication, trimming or
+NativeAOT compatibility claim is part of this extraction.
 
 Install the .NET 10 SDK and run:
 
