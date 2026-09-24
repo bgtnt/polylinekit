@@ -25,6 +25,7 @@ internal static class WindingAreaChecks
         CheckReviewRegressions();
         CheckPerformancePaths();
         CheckSearchPipeline();
+        passed += PreparedSweepChecks.Run();
         CheckAllocations();
         CheckInvalidInputs();
         Console.WriteLine($"Clipper2 disagreements on degenerate grid inputs: {ClipperDisagreements.Count} of {checkedClipper} checked; winding matched the slab sweep in every case.");

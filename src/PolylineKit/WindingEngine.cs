@@ -84,6 +84,9 @@ internal static class WindingEngine
         internal readonly int[] Group = new int[MaxChains];
         internal readonly double[] EdgeTerms = new double[MaxChains];
         internal readonly Sum[] Sums = new Sum[MaxChains];
+        internal PreparedSimpleSweep? SimpleSweep;
+        // Internal experiment diagnostics: 0 bypassed, 1 rejected/budget exhausted, 2 certified.
+        internal int SimpleSweepOutcome;
 
         /// <summary>Takes this thread's cached workspace, or a new one while that is in use by an outer call.</summary>
         internal static Workspace Rent()
@@ -143,7 +146,11 @@ internal static class WindingEngine
     internal static WindingAreaResult SingleLoop(Workspace ws, int n)
     {
         var statistics = new WindingStatistics();
-        if (n < 3) return new WindingAreaResult(0, 0, 0, 0, statistics);
+        if (n < 3)
+        {
+            ws.SimpleSweepOutcome = 0;
+            return new WindingAreaResult(0, 0, 0, 0, statistics);
+        }
         Point2[] v = ws.Vertices;
         int[] nx = Links(ws, n, n);
         statistics.Crossings = FindCrossings(ws, n, n, ref statistics);
@@ -580,6 +587,13 @@ internal static class WindingEngine
     // collinearly, and orders them along each edge. Returns the number of proper crossings.
     private static int FindCrossings(Workspace ws, int n, int split, ref WindingStatistics statistics)
     {
+        ws.SimpleSweepOutcome = 0;
+        // Attempt only after the current broad phase has demonstrated substantial work.
+        // A crossing or overlap cancels eligibility; failed certification resumes this
+        // very pass, without recopying input, rebuilding bounds or retesting prior pairs.
+        bool canCertify = split == n && n >= 256 &&
+            !(AppContext.TryGetSwitch("PolylineKit.DisableSimpleSweep", out bool disableSweep) && disableSweep);
+        long examinedCandidates = 0;
         Point2[] v = ws.Vertices;
         int[] nx = ws.Next;
         if (ws.Keys.Length < n) { ws.Keys = new double[Grow(n)]; ws.Order = new int[ws.Keys.Length]; }
@@ -669,6 +683,24 @@ internal static class WindingEngine
                 ws.Found[count++] = new Crossing { Edge = i, P = point, Delta = sc, SameLoop = same };
                 ws.Found[count++] = new Crossing { Edge = j, P = point, Delta = -sc, SameLoop = same };
                 crossings++;
+            }
+            if (canCertify)
+            {
+                // Every overlap found in this row marks its first edge, even when no
+                // endpoint lies strictly inside it and MarkOverlap emits no split.
+                if (count != 0 || ws.Overlapping[i]) canCertify = false;
+                else if ((examinedCandidates += candidateCount) >= 8L * n)
+                {
+                    canCertify = false; // At most one attempt, including budget exhaustion.
+                    ws.SimpleSweepOutcome = 1;
+                    ws.SimpleSweep ??= new PreparedSimpleSweep();
+                    if (ws.SimpleSweep.TryCertify(v, n, ref statistics))
+                    {
+                        ws.SimpleSweepOutcome = 2;
+                        Array.Clear(ws.Start, 0, n + 1);
+                        return 0; // Keep the existing four-chain area accumulation unchanged.
+                    }
+                }
             }
         }
 
