@@ -37,6 +37,12 @@ internal static class WindingEngine
         internal bool SameLoop;
     }
 
+    // Bounds in sweep order, so rejected pairs need neither vertex nor link lookups.
+    internal struct SweepBounds
+    {
+        internal double Max, MinOther, MaxOther;
+    }
+
     // One oriented segment with its integer coefficient in each chain.
     internal struct Piece
     {
@@ -57,6 +63,7 @@ internal static class WindingEngine
         internal int[] Next = new int[256];
         internal double[] Keys = new double[256];
         internal int[] Order = new int[256];
+        internal SweepBounds[] Bounds = new SweepBounds[256];
         internal int[] Start = new int[257];
         internal bool[] Overlapping = new bool[256];
         internal Crossing[] Found = new Crossing[256];
@@ -147,6 +154,7 @@ internal static class WindingEngine
             Point2 a = v[e], b = v[nx[e]], p0 = a;
             bool overlapping = ws.Overlapping[e], xDominant = Math.Abs(b.X - a.X) >= Math.Abs(b.Y - a.Y);
             double term = overlapping ? 0 : Cross(a, b, origin);
+            bool wholeEdge = offsets[e] == offsets[e + 1];
             for (int x = offsets[e]; x <= offsets[e + 1]; x++)
             {
                 bool last = x == offsets[e + 1];
@@ -156,7 +164,7 @@ internal static class WindingEngine
                     if (overlapping) ws.Take(new Piece { P0 = p0, P1 = p1, W0 = NonZeroStep(w), W1 = EvenOddStep(w), W2 = AbsoluteStep(w), W3 = 1 }, true);
                     else
                     {
-                        double cross = term * Fraction(a, b, p0, p1, xDominant);
+                        double cross = wholeEdge ? term : term * Fraction(a, b, p0, p1, xDominant);
                         int step0 = NonZeroStep(w);
                         if (step0 != 0) nonZero.Add(cross * step0);
                         evenOdd.Add(cross * EvenOddStep(w)); absolute.Add(cross * AbsoluteStep(w)); signed.Add(cross);
@@ -233,6 +241,7 @@ internal static class WindingEngine
         {
             Point2 a = v[e], b = v[nx[e]], p0 = a;
             bool overlapping = ws.Overlapping[e], xDominant = Math.Abs(b.X - a.X) >= Math.Abs(b.Y - a.Y);
+            bool wholeEdge = offsets[e] == offsets[e + 1];
             int known = 0; // origin groups whose edge term is in ws.EdgeTerms
             for (int x = offsets[e]; x <= offsets[e + 1]; x++)
             {
@@ -263,7 +272,7 @@ internal static class WindingEngine
                     }
                     else
                     {
-                        double fraction = Fraction(a, b, p0, p1, xDominant);
+                        double fraction = wholeEdge ? 1 : Fraction(a, b, p0, p1, xDominant);
                         ws.Sums[own].Add(EdgeTerm(ws, own, a, b, ref known) * fraction * change);
                         if (inside)
                         {
@@ -482,20 +491,44 @@ internal static class WindingEngine
         if (ws.Overlapping.Length < n) ws.Overlapping = new bool[Grow(n)];
         Array.Clear(ws.Overlapping, 0, n);
         double[] k = ws.Keys; int[] o = ws.Order;
-        for (int e = 0; e < n; e++) { k[e] = Math.Min(v[e].X, v[nx[e]].X); o[e] = e; }
+        // A fixed X sweep visits quadratically many point intervals along tall, thin paths.
+        // Use the wider input extent as a cheap heuristic; the worst case is still quadratic.
+        double minX = v[0].X, maxX = minX, minY = v[0].Y, maxY = minY;
+        for (int e = 1; e < n; e++)
+        {
+            Point2 p = v[e];
+            if (p.X < minX) minX = p.X; else if (p.X > maxX) maxX = p.X;
+            if (p.Y < minY) minY = p.Y; else if (p.Y > maxY) maxY = p.Y;
+        }
+        bool sweepY = maxY - minY > maxX - minX;
+        for (int e = 0; e < n; e++)
+        {
+            k[e] = sweepY ? Math.Min(v[e].Y, v[nx[e]].Y) : Math.Min(v[e].X, v[nx[e]].X);
+            o[e] = e;
+        }
         Array.Sort(k, o, 0, n);
+        if (ws.Bounds.Length < n) ws.Bounds = new SweepBounds[Grow(n)];
+        SweepBounds[] bounds = ws.Bounds;
+        for (int e = 0; e < n; e++)
+        {
+            int edge = o[e];
+            Point2 a = v[edge], b = v[nx[edge]];
+            bounds[e] = sweepY
+                ? new SweepBounds { Max = Math.Max(a.Y, b.Y), MinOther = Math.Min(a.X, b.X), MaxOther = Math.Max(a.X, b.X) }
+                : new SweepBounds { Max = Math.Max(a.X, b.X), MinOther = Math.Min(a.Y, b.Y), MaxOther = Math.Max(a.Y, b.Y) };
+        }
 
         int count = 0, crossings = 0;
         for (int a = 0; a < n; a++)
         {
             int i = o[a], i1 = nx[i];
             Point2 pa = v[i], pb = v[i1];
-            double maxX = Math.Max(pa.X, pb.X), minY = Math.Min(pa.Y, pb.Y), maxY = Math.Max(pa.Y, pb.Y);
-            for (int b = a + 1; b < n && k[b] <= maxX; b++)
+            double max = bounds[a].Max, minOther = bounds[a].MinOther, maxOther = bounds[a].MaxOther;
+            for (int b = a + 1; b < n && k[b] <= max; b++)
             {
+                if (bounds[b].MaxOther < minOther || bounds[b].MinOther > maxOther) continue;
                 int j = o[b], j1 = nx[j];
                 Point2 pc = v[j], pd = v[j1];
-                if (Math.Max(pc.Y, pd.Y) < minY || Math.Min(pc.Y, pd.Y) > maxY) continue;
                 if (j1 == i || i1 == j)
                 {
                     // Adjacent edges share a vertex and cannot properly cross, but may retrace each other.

@@ -48,7 +48,7 @@ The origin `o` may be any point, as long as one closed chain uses one origin; it
 
 Each term is evaluated as `cross(d, b - a)` with `d = (a - o) + (b - o)`, twice the offset of the midpoint `m` from `o`, and the sums are divided by 4. Products are |m − o| · |b − a| rather than |a − o| · |b − o|, so a short segment far from the origin is not lost to cancellation. `d` includes the rounding errors of both differences, so a long segment passing close to `o` keeps its small offset. Nothing is halved, so a tiny coordinate does not underflow, and a segment traversed backwards gives exactly the negated term. A shared boundary therefore cancels exactly, and a small region or a small difference keeps its area next to large or distant geometry. Earlier versions lacked these properties and failed on such inputs; see [Independent reviews](#independent-reviews).
 
-Winding numbers start at each path's leftmost vertex, where only its two incident edges are nearby and their orientation determines the winding on either side. They are then propagated across crossings: crossing an edge changes the winding by `sign(cross(dir crossed, dir moving))`. For two paths the other path's winding at that vertex comes from a ray cast over its edges. Candidate edge pairs come from a sweep over x-sorted edge intervals.
+Winding numbers start at each path's leftmost vertex, where only its two incident edges are nearby and their orientation determines the winding on either side. They are then propagated across crossings: crossing an edge changes the winding by `sign(cross(dir crossed, dir moving))`. For two paths the other path's winding at that vertex comes from a ray cast over its edges. Candidate edge pairs come from a sweep along the wider input bounds axis. This inexpensive heuristic avoids the fixed-X sweep's poor behavior on densely subdivided vertical paths, but does not minimize candidates for every input. Bounds are cached in sweep order so rejected pairs need no vertex lookups.
 
 ### Robustness
 
@@ -75,7 +75,11 @@ A crossing point is rounded relative to the coordinates of the edges that form i
 
 ### Cost
 
-For `n` edges, `m` candidate pairs from the x-sorted sweep, `k` events (two per crossing, plus the splits of overlapping edges) and `s` sub-edges of collinearly overlapping edges, the work is `O(n log n + m + k log k + s)`. The `k log k` term orders the events along each edge with keyed sorts, and holds when many events share a rounded parameter; a zigzag of 256 to 16,384 vertices across a strip 2¹⁰¹ long, where every crossing parameter rounds to 1/2, takes a constant 330–370 ns per vertex on this workstation. Netting by hashing is linear in `s` in expectation, not in the worst case. `m`, `k` and `s` are `O(n^2)` in the worst case, for example when most long edges overlap in x.
+For `n` edges, `m` candidate pairs from the chosen-axis sweep, `k` events (two per crossing, plus the splits of overlapping edges) and `s` sub-edges of collinearly overlapping edges, the work is `O(n log n + m + k log k + s)`. The `k log k` term orders the events along each edge with keyed sorts, and holds when many events share a rounded parameter; the earlier `becc37d` measurement of a zigzag of 256 to 16,384 vertices across a strip 2¹⁰¹ long took 330–370 ns per vertex on this workstation. Netting by hashing is linear in `s` in expectation, not in the worst case. `m`, `k` and `s` remain `O(n^2)` in the worst case, for example when most long edges overlap along both axes.
+
+Exact-zero predicates recognize duplicate vertices and shared horizontal/vertical coordinates before expansion arithmetic. Existing product components are reused, and zero difference tails need no products. On .NET 10, hardware scalar FMA computes the exact product residual when available; the portable and unsupported-hardware paths retain Dekker's product. This is scalar FMA, not batching several edges with SIMD. Predicate error bounds and symbolic rules are unchanged.
+
+Whole edges bypass division by their own extent, and `EndpointBridged` validates and removes consecutive duplicate points while copying each input once. These changes do not alter the fill definitions. The bounds cache adds three doubles (24 bytes) per retained edge slot, plus its array header, to the per-thread workspace; it trades retained memory for fewer repeated loads and comparisons.
 
 Each call uses its own working storage. A per-thread workspace is reused by consecutive calls, and a call made while another call is active on the same thread, for example from a custom list's indexer, gets a separate one. Warm calls whose predicates are decided by the filter or by expansion arithmetic allocate no managed memory. Allocation does happen:
 
@@ -89,7 +93,7 @@ The per-thread workspace keeps its largest size. Earlier benchmark tables showed
 
 ### Checks
 
-`dotnet run --project experiments/PolylineKit.Experiments -c Release -- check` adds 27,933 winding checks and passes in all five implementation modes of `scripts/verify-implementations.ps1`, including the .NET Standard 2.0 build. They include:
+`dotnet run --project experiments/PolylineKit.Experiments -c Release -- check` adds 28,027 winding checks and passes in all five implementation modes of `scripts/verify-implementations.ps1`, including the .NET Standard 2.0 build. They include:
 
 - analytic walks and all contour fixtures, with `AbsoluteWinding` compared to the independent slab sweep in `ContourSweep`;
 - 3,000 symbolic orientations against the exact sign of an explicitly perturbed determinant (`e = 2^-16`, BigInteger), including more than 500 exact ties;

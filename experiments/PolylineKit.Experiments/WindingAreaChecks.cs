@@ -23,6 +23,7 @@ internal static class WindingAreaChecks
         CheckFilledRegions();
         CheckReviewedNearDegeneracy();
         CheckReviewRegressions();
+        CheckPerformancePaths();
         CheckAllocations();
         CheckInvalidInputs();
         Console.WriteLine($"Clipper2 disagreements on degenerate grid inputs: {ClipperDisagreements.Count} of {checkedClipper} checked; winding matched the slab sweep in every case.");
@@ -552,6 +553,39 @@ internal static class WindingAreaChecks
         True(name, expected.FirstArea == actual.FirstArea && expected.SecondArea == actual.SecondArea &&
             expected.IntersectionArea == actual.IntersectionArea && expected.UnionArea == actual.UnionArea &&
             expected.SymmetricDifferenceArea == actual.SymmetricDifferenceArea);
+
+    private static void CheckPerformancePaths()
+    {
+        // Exact areas for heavily subdivided thin paths in either orientation. This exercises
+        // both sweep axes, including many coincident projections on the short axis.
+        foreach (int sidePoints in new[] { 16, 128, 512 })
+        {
+            double height = sidePoints - 1;
+            Point2[] vertical = Enumerable.Range(0, sidePoints).Select(i => new Point2(-1, i))
+                .Concat(Enumerable.Range(0, sidePoints).Reverse().Select(i => new Point2(1, i))).ToArray();
+            foreach (bool swap in new[] { false, true })
+            {
+                Point2[] path = swap ? vertical.Select(p => new Point2(p.Y, p.X)).ToArray() : vertical;
+                Areas($"thin subdivided path {sidePoints}, swap={swap}", WindingArea.ClosedPath(path),
+                    2 * height, 2 * height, 2 * height, (swap ? 2 : -2) * height);
+                Point2[] shifted = path.Select(p => swap ? new Point2(p.X, p.Y + .5) : new Point2(p.X + .5, p.Y)).ToArray();
+                foreach (PathFillRule rule in new[] { PathFillRule.NonZero, PathFillRule.EvenOdd })
+                    Overlap($"thin subdivided overlap {sidePoints}, swap={swap}, {rule}",
+                        WindingArea.FilledRegions(path, shifted, rule), 2 * height, 2 * height,
+                        1.5 * height, 2.5 * height, height);
+            }
+        }
+
+        // Each path needs two distinct consecutive points independently of bridge deduplication.
+        Point2[] first = [new(0, 0), new(0, 0), new(2, 0), new(2, 0)];
+        Point2[] second = [new(0, 1), new(0, 1), new(2, 0), new(2, 0)];
+        Areas("duplicate runs with shared bridge endpoint", WindingArea.EndpointBridged(first, second), 1, 1, 1, 1);
+        Areas("two valid paths collapse to a segment", WindingArea.EndpointBridged(first, first), 0, 0, 0, 0);
+        Reject<ArgumentException>("second path collapses at bridge", () =>
+            WindingArea.EndpointBridged(first, [new(2, 0), new(2, 0), new(2, 0)]));
+        Reject<ArgumentException>("first path collapses at bridge", () =>
+            WindingArea.EndpointBridged([new(2, 0), new(2, 0)], second));
+    }
 
     private static void CheckAllocations()
     {

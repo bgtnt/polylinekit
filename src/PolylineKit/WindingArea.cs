@@ -91,7 +91,7 @@ public readonly struct WindingOverlapResult
 /// center, which matters for one closed path whose parts lie far apart relative to their size. A crossing point
 /// is rounded relative to the coordinates of the edges that form it, which matters for a small region cut out
 /// by very long edges.
-/// Time is O(n log n + m + k log k + s) for n edges, m candidate pairs from an x-sorted sweep, k crossing and
+/// Time is O(n log n + m + k log k + s) for n edges, m candidate pairs from an axis-sorted sweep, k crossing and
 /// overlap-split events, and s segments on collinearly overlapping edges, which are netted by hashing (expected
 /// linear time, not a worst-case bound); m, k and s are O(n^2) in the worst case. Each call uses its own working storage: a per-thread workspace is
 /// reused by consecutive calls, and a call made while another is active on the same thread (for example from
@@ -136,15 +136,28 @@ public static class WindingArea
     /// <exception cref="ArgumentException">A path is empty, has nonfinite or too large coordinates, or too few vertices.</exception>
     public static WindingAreaResult EndpointBridged(IReadOnlyList<Point2> first, IReadOnlyList<Point2> second)
     {
-        int firstCount = CleanCount(first, nameof(first)), secondCount = CleanCount(second, nameof(second));
-        if (firstCount < 2 || secondCount < 2) throw new ArgumentException("Each path requires at least 2 vertices after duplicate removal.");
+        if (first is null) throw new ArgumentNullException(nameof(first));
+        if (second is null) throw new ArgumentNullException(nameof(second));
+        int firstLength = first.Count, secondLength = second.Count;
+        if (firstLength == 0) throw new ArgumentException("The path must not be empty.", nameof(first));
+        if (secondLength == 0) throw new ArgumentException("The path must not be empty.", nameof(second));
         var workspace = WindingEngine.Workspace.Rent();
         try
         {
-            Point2[] v = workspace.VertexBuffer(first.Count + second.Count);
+            Point2[] v = workspace.VertexBuffer(firstLength + secondLength);
             int n = 0;
-            for (int i = 0; i < first.Count; i++) WindingEngine.Append(v, ref n, 0, first[i], nameof(first));
-            for (int i = second.Count - 1; i >= 0; i--) WindingEngine.Append(v, ref n, 0, second[i], nameof(second));
+            for (int i = 0; i < firstLength; i++) WindingEngine.Append(v, ref n, 0, first[i], nameof(first));
+            int firstCount = n, secondCount = 0;
+            Point2 previous = default;
+            for (int i = secondLength - 1; i >= 0; i--)
+            {
+                Point2 point = second[i];
+                // Count this path independently: Append also removes a shared bridge endpoint.
+                if (i == secondLength - 1 || !PathInput.Same(previous, point)) secondCount++;
+                WindingEngine.Append(v, ref n, 0, point, nameof(second));
+                previous = point;
+            }
+            if (firstCount < 2 || secondCount < 2) throw new ArgumentException("Each path requires at least 2 vertices after duplicate removal.");
             WindingEngine.CloseLoop(v, ref n, 0);
             return WindingEngine.SingleLoop(workspace, n);
         }
@@ -184,16 +197,4 @@ public static class WindingArea
         finally { WindingEngine.Workspace.Return(workspace); }
     }
 
-    private static int CleanCount(IReadOnlyList<Point2> path, string name)
-    {
-        if (path is null) throw new ArgumentNullException(name);
-        if (path.Count == 0) throw new ArgumentException("The path must not be empty.", name);
-        int count = 0;
-        for (int i = 0; i < path.Count; i++)
-        {
-            PathInput.Validate(path[i], name);
-            if (i == 0 || !PathInput.Same(path[i - 1], path[i])) count++;
-        }
-        return count;
-    }
 }

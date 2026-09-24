@@ -85,6 +85,12 @@ internal static class RobustOrientation
     private static bool TryExpansion(Point2 a, Point2 b, Point2 c, out double value)
     {
         value = 0;
+        // Repeated vertices and axis-aligned triples have an exactly zero determinant, even
+        // at subnormal magnitudes. Resolve still applies the same symbolic tie-break.
+        if ((a.X == b.X && (a.Y == b.Y || a.X == c.X)) ||
+            (a.Y == b.Y && a.Y == c.Y) ||
+            (a.X == c.X && a.Y == c.Y) ||
+            (b.X == c.X && b.Y == c.Y)) return true;
         TwoDiff(b.X, a.X, out double bxh, out double bxl);
         TwoDiff(c.Y, a.Y, out double cyh, out double cyl);
         TwoDiff(b.Y, a.Y, out double byh, out double byl);
@@ -102,6 +108,13 @@ internal static class RobustOrientation
                 TwoDiff(left, right, out double difference, out double differenceError);
                 if (differenceError == 0) { value = difference; return true; }
             }
+            // These four components already represent the exact determinant. Reusing them
+            // avoids recomputing both products and six products involving zero tails.
+            double[] exactTerms = terms ??= new double[16];
+            exactTerms[0] = left; exactTerms[1] = leftError;
+            exactTerms[2] = -right; exactTerms[3] = -rightError;
+            value = Sum(exactTerms, 4);
+            return true;
         }
         double[] t = terms ??= new double[16];
         int n = 0;
@@ -140,12 +153,16 @@ internal static class RobustOrientation
 
     private static void Product(double ah, double al, double bh, double bl, double sign, double[] t, ref int n)
     {
+        int start = n;
         TwoProduct(ah, bh, out t[n], out t[n + 1]);
-        TwoProduct(ah, bl, out t[n + 2], out t[n + 3]);
-        TwoProduct(al, bh, out t[n + 4], out t[n + 5]);
-        TwoProduct(al, bl, out t[n + 6], out t[n + 7]);
-        if (sign < 0) for (int i = n; i < n + 8; i++) t[i] = -t[i];
-        n += 8;
+        n += 2;
+        if (bl != 0) { TwoProduct(ah, bl, out t[n], out t[n + 1]); n += 2; }
+        if (al != 0)
+        {
+            TwoProduct(al, bh, out t[n], out t[n + 1]); n += 2;
+            if (bl != 0) { TwoProduct(al, bl, out t[n], out t[n + 1]); n += 2; }
+        }
+        if (sign < 0) for (int i = start; i < n; i++) t[i] = -t[i];
     }
 
     // Grow-Expansion with zero elimination. The largest nonzero component of the resulting nonoverlapping
@@ -192,9 +209,20 @@ internal static class RobustOrientation
         hi = c - big; lo = a - hi;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static void TwoProduct(double a, double b, out double x, out double y)
     {
         x = a * b;
+#if NET10_0_OR_GREATER
+        // The guarded expansion path keeps nonzero products well above underflow. A fused
+        // multiply-add then returns the exact residual of this rounded product in one step.
+        if (System.Runtime.Intrinsics.X86.Fma.IsSupported ||
+            System.Runtime.Intrinsics.Arm.AdvSimd.Arm64.IsSupported)
+        {
+            y = Math.FusedMultiplyAdd(a, b, -x);
+            return;
+        }
+#endif
         Split(a, out double ah, out double al);
         Split(b, out double bh, out double bl);
         double err1 = x - ah * bh, err2 = err1 - al * bh, err3 = err2 - ah * bl;
