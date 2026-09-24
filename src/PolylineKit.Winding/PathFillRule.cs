@@ -8,4 +8,3 @@ public enum PathFillRule
     /// <summary>Count points with odd winding once.</summary>
     EvenOdd
 }
-
