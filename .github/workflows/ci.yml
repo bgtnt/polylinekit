@@ -18,6 +18,8 @@ jobs:
       - run: ./scripts/verify-implementations.ps1
         shell: pwsh
       - run: dotnet run --project examples/Basic -c Release --no-build
+      - name: Area-change example contracts and frozen contour hashes (no timing)
+        run: dotnet run --project examples/AreaChange -c Release --no-build -- check
       - name: Standalone and precompiled consumer compatibility
         run: ./scripts/verify-consumers.ps1
         shell: pwsh

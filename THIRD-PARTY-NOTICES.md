@@ -8,6 +8,16 @@ The test/benchmark LIP and GenLIP references are independent formula implementat
 
 Winding predicates use floating-point filtering and expansion arithmetic following Shewchuk's robust-orientation approach; exact degeneracies use Simulation of Simplicity (Edelsbrunner and Mücke, 1990). The implementation and supported numerical contract are described in [winding-area.md](docs/winding-area.md).
 
+## Area-change example data
+
+The four complete single-ring contours in `examples/AreaChange/data` come from
+[Natural Earth v5.1.2, 1:50m country boundaries](https://github.com/nvkelso/natural-earth-vector/blob/v5.1.2/geojson/ne_50m_admin_0_countries.geojson).
+Natural Earth distributes these data in the [public domain](https://www.naturalearthdata.com/about/terms-of-use/).
+The example records source and per-file SHA256 values, the original longitude/latitude
+coordinates and the transformation to a local map plane. Simplified outlines and
+overlays are derived from those data; they are not geodesic area measurements.
+The pinned Clipper2 simplifier is used only in the example/tooling layer.
+
 ## Archived recognition research
 
 Recognition code and derived evaluation artifacts are preserved in the [versioned research archive](research/README.md), outside the maintained library and benchmark surface. Its implementations of Yang Li's Protractor (CHI 2010) follow the [official pseudocode](https://depts.washington.edu/acelab/proj/dollar/protractor.pdf); its dynamic-time-warping recurrence is explicitly declared. They are fresh implementations, not copied recognizer source.

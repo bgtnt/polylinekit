@@ -1,5 +1,13 @@
 using PolylineKit;
 
+// A filled-area consumer: removing a triangular notch changes one square unit.
+Point2[] originalContour = [new(0, 0), new(2, 0), new(2, 2), new(1, 1), new(0, 2)];
+Point2[] processedContour = [new(0, 0), new(2, 0), new(2, 2), new(0, 2)];
+var contourChange = WindingArea.FilledRegions(originalContour, processedContour);
+Console.WriteLine($"Winding contour change: {contourChange.SymmetricDifferenceArea}; Jaccard={contourChange.JaccardDistance}");
+if (contourChange.SymmetricDifferenceArea != 1 || contourChange.JaccardDistance != .25)
+    throw new Exception("Unexpected contour-change area.");
+
 Point2[] baseline = [new(0, 0), new(2, 0)];
 Point2[] triangle = [new(0, 0), new(1, 1), new(2, 0)];
 double area = PolylineArea.BetweenGraphs(baseline, triangle);

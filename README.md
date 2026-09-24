@@ -4,6 +4,25 @@ Small C# tools for area-based polyline comparison, normalization, resampling and
 alignment. Each operation has an explicit geometric meaning. The API is experimental;
 use a project reference while it is under review. No NuGet release is available yet.
 
+## Measure filled-area change
+
+```csharp
+using PolylineKit;
+
+Point2[] original = [new(0, 0), new(2, 0), new(2, 2), new(1, 1), new(0, 2)];
+Point2[] processed = [new(0, 0), new(2, 0), new(2, 2), new(0, 2)];
+var change = WindingArea.FilledRegions(original, processed);
+double changedArea = change.SymmetricDifferenceArea; // 1 square unit
+double? changedFraction = change.JaccardDistance;    // 0.25 of the filled union
+```
+
+This directly measures filled-region change, for example after contour
+simplification. It does not bound the largest boundary displacement. Reference
+only `PolylineKit.Winding` when these area values are sufficient; the broader
+library also supplies normalization, alignment and Clipper-generated contours.
+The [area-change example](examples/AreaChange/README.md) uses licensed real contours,
+records simplification settings, and produces measurements and overlays.
+
 ## Compare, normalize, align
 
 ```csharp
