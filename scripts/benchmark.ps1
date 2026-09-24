@@ -1,8 +1,11 @@
 param(
-    [string]$OutputDirectory = 'results/benchmarks',
+    [string]$OutputDirectory = 'artifacts/benchmarks',
     [ValidateSet('Graphs', 'Transforms', 'Winding')][string]$Suite = 'Graphs'
 )
 $ErrorActionPreference = 'Stop'
+if (-not $PSBoundParameters.ContainsKey('OutputDirectory')) {
+    $OutputDirectory = Join-Path $OutputDirectory $Suite.ToLowerInvariant()
+}
 Push-Location (Split-Path $PSScriptRoot -Parent)
 $oldTiered = $env:DOTNET_TieredCompilation
 try {
@@ -16,11 +19,11 @@ try {
     $env:DOTNET_TieredCompilation = '0'
     $command = switch ($Suite) { 'Transforms' { 'benchmark-transforms' } 'Winding' { 'benchmark-winding' } default { 'benchmark' } }
     for ($run = 1; $run -le 3; $run++) {
-        dotnet experiments/PolylineKit.Experiments/bin/Release/net10.0/PolylineKit.Experiments.dll $command $OutputDirectory $run $revision
+        dotnet benchmarks/PolylineKit.Benchmarks/bin/Release/net10.0/PolylineKit.Benchmarks.dll $command $OutputDirectory $run $revision
         if ($LASTEXITCODE) { throw "Benchmark run $run failed." }
     }
     if ($Suite -eq 'Winding') {
-        dotnet experiments/PolylineKit.Experiments/bin/Release/net10.0/PolylineKit.Experiments.dll summarize-winding $OutputDirectory
+        dotnet benchmarks/PolylineKit.Benchmarks/bin/Release/net10.0/PolylineKit.Benchmarks.dll summarize-winding $OutputDirectory
         if ($LASTEXITCODE) { throw 'Winding summary failed.' }
     }
 } finally {

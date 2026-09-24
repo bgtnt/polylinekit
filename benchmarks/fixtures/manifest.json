@@ -1,0 +1,11 @@
+{
+  "file": "winding.json",
+  "bytes": 876853,
+  "sha256": "ef253bbdc499a4533beed1a6b638b3a76760c4f00e97b8454cf03b984e6a4f84",
+  "sourceRepository": "https://github.com/bgtnt/polylinekit",
+  "archiveTag": "archive/research-2026-09-24",
+  "sourceCommit": "00f96248cc404e2d662d9e51c457d811701fa889",
+  "sourcePath": "results/winding/benchmarks/inputs.json",
+  "gitBlob": "72f77aff31f1a9eb3288c07b113d429ee38af164",
+  "description": "The original Git blob, copied byte for byte. Synthetic paired winding workloads; no recognition dataset."
+}

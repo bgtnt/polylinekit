@@ -1,4 +1,4 @@
-param([string]$Directory = 'results/benchmarks')
+param([string]$Directory = 'artifacts/benchmarks/graphs')
 $ErrorActionPreference = 'Stop'
 $culture = [Globalization.CultureInfo]::InvariantCulture
 $runs = @(1..3 | ForEach-Object { Get-Content -LiteralPath (Join-Path $Directory "run-$_.json") -Raw | ConvertFrom-Json })

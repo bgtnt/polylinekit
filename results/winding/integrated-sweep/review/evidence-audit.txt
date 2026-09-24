@@ -1,4 +1,0 @@
-PASS: 81 rows independently recomputed; 486 equal values/input identities; 2430 zero-allocation samples.
-PASS: runtime source tree unchanged since measured commit 5614828.
-Review DLL SHA256: 96c7e5780a3d435661d7c74eeee367b21d810ed4657a8981afd2ff65776166a5
-Review build uses d141806 source revision metadata; byte hash differs from measured 5614828 DLL.
