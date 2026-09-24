@@ -29,7 +29,8 @@ internal struct WindingStatistics
 /// any other edge contributes its share of its edge's term, measured between its points along the edge's
 /// dominant axis. Chains are summed around the loop's bounds center for one loop, and around the center of each
 /// chain's own segments for two. A long shared boundary then cancels exactly instead of leaving rounding of its
-/// large terms, and a small region keeps its area regardless of what else the input contains.
+/// large terms. Local origins reduce cancellation from unrelated input geometry; the numerical limits
+/// of rounded crossings, sub-edge fractions and area accumulation still apply.
 /// </remarks>
 internal static class WindingEngine
 {
@@ -176,7 +177,12 @@ internal static class WindingEngine
                     if (overlapping) ws.Take(new Piece { P0 = p0, P1 = p1, W0 = NonZeroStep(w), W1 = EvenOddStep(w), W2 = AbsoluteStep(w), W3 = 1 }, true);
                     else
                     {
-                        double cross = wholeEdge ? term : term * Fraction(a, b, p0, p1, xDominant);
+                        double cross = term;
+                        if (!wholeEdge)
+                        {
+                            double fraction = Fraction(a, b, p0, p1, xDominant, out bool scaled);
+                            cross = FractionProduct(term, fraction, scaled);
+                        }
                         int step0 = NonZeroStep(w);
                         if (step0 != 0) nonZero.Add(cross * step0);
                         evenOdd.Add(cross * EvenOddStep(w)); absolute.Add(cross * AbsoluteStep(w)); signed.Add(cross);
@@ -284,14 +290,15 @@ internal static class WindingEngine
                     }
                     else
                     {
-                        double fraction = wholeEdge ? 1 : Fraction(a, b, p0, p1, xDominant);
-                        ws.Sums[own].Add(EdgeTerm(ws, own, a, b, ref known) * fraction * change);
+                        bool scaled = false;
+                        double fraction = wholeEdge ? 1 : Fraction(a, b, p0, p1, xDominant, out scaled);
+                        ws.Sums[own].Add(FractionProduct(EdgeTerm(ws, own, a, b, ref known), fraction, scaled) * change);
                         if (inside)
                         {
-                            ws.Sums[Both].Add(EdgeTerm(ws, Both, a, b, ref known) * fraction * change);
-                            ws.Sums[otherOnly].Add(EdgeTerm(ws, otherOnly, a, b, ref known) * fraction * -change);
+                            ws.Sums[Both].Add(FractionProduct(EdgeTerm(ws, Both, a, b, ref known), fraction, scaled) * change);
+                            ws.Sums[otherOnly].Add(FractionProduct(EdgeTerm(ws, otherOnly, a, b, ref known), fraction, scaled) * -change);
                         }
-                        else ws.Sums[only].Add(EdgeTerm(ws, only, a, b, ref known) * fraction * change);
+                        else ws.Sums[only].Add(FractionProduct(EdgeTerm(ws, only, a, b, ref known), fraction, scaled) * change);
                     }
                 }
                 if (last) break;
@@ -417,8 +424,28 @@ internal static class WindingEngine
     // term is the edge's term times this share, exactly as for the segment of the edge's own line between the
     // positions of p and q. A whole edge has share 1.
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static double Fraction(Point2 a, Point2 b, Point2 p, Point2 q, bool xDominant) =>
-        xDominant ? (q.X - p.X) / (b.X - a.X) : (q.Y - p.Y) / (b.Y - a.Y);
+    private static double Fraction(Point2 a, Point2 b, Point2 p, Point2 q, bool xDominant, out bool scaled)
+    {
+        double numerator = xDominant ? q.X - p.X : q.Y - p.Y;
+        double denominator = xDominant ? b.X - a.X : b.Y - a.Y;
+        double fraction = numerator / denominator;
+        scaled = Math.Abs(fraction) < 2.2250738585072014e-308 && numerator != 0; // Below 2^-1022.
+        // Keep a subnormal share at full precision until it has been multiplied by the edge term.
+        // With spans <=2e100 this scaled division stays normal, even for numerator=double.Epsilon.
+        return scaled ? (numerator * FractionScaleUp) / denominator : fraction;
+    }
+
+    private const double FractionScaleUp = 1.3407807929942597e154; // 2^512
+    private const double FractionScaleDown = 7.458340731200207e-155; // 2^-512
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static double FractionProduct(double term, double fraction, bool scaled)
+    {
+        double product = term * fraction;
+        // An exceptional scaled fraction is <=2^-510. Hence this product cannot overflow,
+        // and if the final contribution is representable its intermediate product is normal.
+        return scaled ? product * FractionScaleDown : product;
+    }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool Less(Point2 p, Point2 q) => p.X < q.X || (p.X == q.X && p.Y < q.Y);

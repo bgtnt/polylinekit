@@ -142,6 +142,50 @@ The fallback orders endpoints canonically and negates on reversal, preserving
 the antisymmetry of the contribution. It does not apply symbolic perturbation
 to an area value.
 
+## Sub-edge ratio underflow
+
+A non-overlapping sub-edge contributes its fraction of the complete edge's
+term. Computing that fraction first can lose a representable contribution:
+`(1e-250 / 2e100) * 2e100` is zero in binary64, although the complete product
+should be approximately `1e-250`. Compensating the edge term does not repair
+this separate loss. For example, the intersection of
+`[-1e100,1e100] x [-0.5,0.5]` and `[0,1e-250] x [-1,1]` previously lost both
+horizontal contributions and returned half the expected area.
+
+The single-loop and two-loop accumulators now share the same arithmetic rule.
+Normal fractions retain the original division followed by multiplication.
+When the computed fraction is subnormal or zero, with a nonzero numerator,
+the engine instead calculates
+
+```
+scaledShare = (numerator * 2^512) / denominator
+contribution = (edgeTerm * scaledShare) * 2^-512
+```
+
+The scaled share is prepared once per sub-edge and reused by its region
+chains. The powers of two are exact. A zero numerator keeps its exact zero
+fraction, and the signed numerator/denominator retain the edge direction.
+This path allocates no memory.
+
+This fixed scaling is safe under the public coordinate cap, not a general
+replacement for arbitrary `x*y/z` arithmetic:
+
+* Coordinate spans are below `2^334`. Scaling a numerator by `2^512` therefore
+  cannot overflow, and even `double.Epsilon` becomes a normal number.
+* A nonzero scaled share is at least approximately `2^-896`, safely normal.
+  Its upper bound in this exceptional regime is `2^-510`.
+* An edge term is below approximately `2^671`. Its product with the scaled
+  share cannot overflow. If a final contribution can round to a nonzero
+  binary64 value, its intermediate product is at least approximately
+  `2^-563`, also normal.
+
+Thus intermediate underflow no longer discards or coarsely rounds a tiny
+fraction before a large term can bring its contribution into range. The
+division and multiplication still round normally; a subnormal final
+contribution also rounds when the scale is restored. This is not a claim of
+correct rounding for every complete area, nor a change to the edge-term
+accuracy bound or the crossing-coordinate limitations.
+
 ## Scope of the correction
 
 This fixes cancellation **within an edge contribution**, including contributions
