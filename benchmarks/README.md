@@ -206,6 +206,13 @@ comparison used the P2-corrected pre-split DLL, not the inaccurate earlier build
 
 ## Fixture provenance and existing evidence
 
+The current [review evidence manifest](winding-review-evidence.json) identifies
+the sub-edge correction, 238-row external comparison, first-use/storage profile,
+and [real-contour consumer](../examples/AreaChange/RESULTS.md). The earlier
+[extraction evidence](winding-evidence.json) remains a historical measurement,
+with its original revisions and archive checksum. Neither manifest is a new
+measurement merely because documentation changes afterward.
+
 The fixed fixture is the exact Git blob `72f77aff31f1a9eb3288c07b113d429ee38af164`
 from commit `00f96248cc404e2d662d9e51c457d811701fa889`, preserved at public tag
 [`archive/research-2026-09-24`](https://github.com/bgtnt/polylinekit/tree/archive/research-2026-09-24).

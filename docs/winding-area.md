@@ -56,6 +56,7 @@ Known regression examples make these limits concrete:
 | Input | Observed limit |
 | --- | --- |
 | Triangles `(0,0)`, `(L,L)`, `(2L,double.BitIncrement(2L))`, for `L=1e4,1e8,1e12,1e16` | Edge-product cancellation is corrected: areas now equal the exact binary64-input areas. The previous engine lost up to **32.9%** on these cases. Reversal, cyclic shifts, tiny scaling and containment have independent dyadic-oracle regressions. |
+| Intersection of `[-1e100,1e100] x [-0.5,0.5]` and `[0,w] x [-1,1]`, `w=1e-250` or `1e-300` | Sub-edge fraction underflow is corrected: intersection now equals the supplied width exactly, instead of half of it. Exceptional fractions use power-of-two scaling; ordinary fractions keep the existing fast path. This does not bound all extreme-scale area errors. |
 | Crossing strips bounded by `y=x/1000 ± 1` and `x=-y/1000 ± 1`, half-length `1e16` | Intersection relative error reaches **1e-3** across the checked orientations/rules; approximately `1.3e-8` at half-length `1e12` and `6e-12` at `1e8`. Own, union and XOR areas in these fixtures remain exact to rounding. |
 | Two unit squares `1e8` apart, connected as one walk by a retraced bridge | The corrected engine returns exactly 2 on this control (previous relative error was about `1e-8`). This does not establish an error bound for arbitrary distant components sharing one origin. |
 
@@ -75,8 +76,14 @@ Each call leases its own workspace. Consecutive calls on one thread reuse storag
 
 The bounds cache retains 24 payload bytes per edge slot. Merge buffers and candidate indices add up to 16 bytes per slot and a 65-int run buffer. The optional certificate is allocated lazily and adds 28 payload bytes per vertex slot. These are additions to the engine's other vertex, event and chain storage, not a total memory bound; object and array headers are extra.
 
+The [measured first-use/storage profile](performance.md#first-use-and-retained-workspace)
+reports the complete cached array inventory separately from warm allocations.
+For example, the 256-vertex-per-path degenerate grid retains 7,013,261 payload
+bytes on one thread, despite allocating zero bytes during subsequent measured
+calls. Capacity depends on crossings and overlaps as well as vertex count.
+
 ## Checks and measured scope
 
-Run the maintained correctness executable and five-mode verification script described in the repository README. The recorded Windows run passed **174,043 assertions for the portable target** and **173,955 for each of four modern modes** (normal, forced scalar, no AVX, no hardware intrinsics). Both parent and leaf targets are checked; the count difference comes from the resolved framework dependency closure. Tests include **6,087 new exact dyadic area checks**, analytic areas, exact signs, independent slab/rational oracles, 125,628 enumerated small-grid cycles, metamorphic changes, extreme coordinates, nested calls, workspace reuse, certificate budget exhaustion and warm allocations. Test sources and helper oracles live in [tests/PolylineKit.Checks](../tests/PolylineKit.Checks).
+Run the maintained correctness executable and five-mode verification script described in the repository README. The recorded Windows run passed **177,627 assertions for the portable target** and **177,539 for each of four modern modes** (normal, forced scalar, no AVX, no hardware intrinsics). Both parent and leaf targets are checked; the count difference comes from the resolved framework dependency closure. Tests include **6,087 exact dyadic area-value checks** and **3,584 sub-edge ratio checks**, analytic areas, exact signs, independent slab/rational oracles, 125,628 enumerated small-grid cycles, metamorphic changes, extreme coordinates, nested calls, workspace reuse, certificate budget exhaustion and warm allocations. Test sources and helper oracles live in [tests/PolylineKit.Checks](../tests/PolylineKit.Checks).
 
 The independent fixture checker retains 424 assertions per target. The assembly extraction preserved all public result properties bit for bit on 120 recorded operations per target, compared with the corrected pre-split engine. Standalone and precompiled consumer checks cover the extracted API and forwarders. The [performance summary](performance.md) includes improvements and regressions. Commands for current reruns are in [benchmarks/README.md](../benchmarks/README.md); historical reports and raw evidence remain in the [versioned research archive](../research/README.md). A possible multiple-ring API is only a [design note](winding-multiple-rings.md).

@@ -1,0 +1,2471 @@
+{
+  "Description": "Sub-edge underflow correction, current external comparison, first-use/storage profile and real-contour consumer. Compact summaries; raw evidence is in the local checksum archive.",
+  "Repository": "https://github.com/bgtnt/polylinekit",
+  "NumericalFix": "cd23a11f0f68d70956b2f6cc6cff8f63f3effcb3",
+  "Checks": {
+    "NewFractionChecks": 3584,
+    "BaselineFailures": 192,
+    "PortableAssertions": 177627,
+    "ModernAssertionsPerMode": 177539,
+    "ModernModes": [
+      "normal",
+      "forced scalar",
+      "no AVX",
+      "no intrinsics"
+    ],
+    "FixedAssertionsPerTarget": 424,
+    "FrozenOperationsPerTarget": 120,
+    "FrozenOutputSha256": "d704082ddff74170a3875b08b40b82dc8737fcdf467085b960c3c195d40f7ef9"
+  },
+  "CorrectionCost": {
+    "Identity": {
+      "BaselineSource": "e4444cc",
+      "CandidateSource": "cd23a11f0f68d70956b2f6cc6cff8f63f3effcb3",
+      "BaselineWindingSHA256": "78AE1A5F229F492CC0716A3EEDEF740749657588AA5876E805B56AE66B591CC8",
+      "CandidateWindingSHA256": "028FDD5E3251ECD6E6EBB2ED09A92C54EB18D8D25066AA189065D7F3FC2C7A84",
+      "HarnessSHA256": "59F8DB5E3D15260B73B19391B21D263352489949182FA9A36CE22BA1ABCD2F5F",
+      "OnlyLeafReplaced": true
+    },
+    "ProcessOrder": [
+      "baseline",
+      "corrected",
+      "corrected",
+      "baseline",
+      "baseline",
+      "corrected"
+    ],
+    "Rows": [
+      {
+        "Family": "degenerate-grid",
+        "Vertices": 64,
+        "BaselineUs": 408.6640625,
+        "CorrectedUs": 403.046875,
+        "TimeChangePercent": -1.374524460417903,
+        "WarmBytes": 0
+      },
+      {
+        "Family": "degenerate-grid",
+        "Vertices": 256,
+        "BaselineUs": 6912.65,
+        "CorrectedUs": 6881.925,
+        "TimeChangePercent": -0.44447498426796184,
+        "WarmBytes": 0
+      },
+      {
+        "Family": "dense-graph",
+        "Vertices": 64,
+        "BaselineUs": 14.25615234375,
+        "CorrectedUs": 13.777880859375,
+        "TimeChangePercent": -3.3548426871622072,
+        "WarmBytes": 0
+      },
+      {
+        "Family": "dense-graph",
+        "Vertices": 256,
+        "BaselineUs": 49.70234375,
+        "CorrectedUs": 48.9869140625,
+        "TimeChangePercent": -1.439428472626103,
+        "WarmBytes": 0
+      },
+      {
+        "Family": "dense-graph",
+        "Vertices": 1024,
+        "BaselineUs": 193.5046875,
+        "CorrectedUs": 189.72421875,
+        "TimeChangePercent": -1.9536832925558856,
+        "WarmBytes": 0
+      },
+      {
+        "Family": "filled-regions",
+        "Vertices": 64,
+        "BaselineUs": 16.792041015625,
+        "CorrectedUs": 17.620947265625,
+        "TimeChangePercent": 4.936304343401154,
+        "WarmBytes": 0
+      },
+      {
+        "Family": "filled-regions",
+        "Vertices": 256,
+        "BaselineUs": 70.9396484375,
+        "CorrectedUs": 69.7634765625,
+        "TimeChangePercent": -1.6579894331394063,
+        "WarmBytes": 0
+      },
+      {
+        "Family": "filled-regions",
+        "Vertices": 1024,
+        "BaselineUs": 277.60625,
+        "CorrectedUs": 274.17421875,
+        "TimeChangePercent": -1.2362946619537407,
+        "WarmBytes": 0
+      },
+      {
+        "Family": "random-walks",
+        "Vertices": 64,
+        "BaselineUs": 19.99658203125,
+        "CorrectedUs": 20.0568359375,
+        "TimeChangePercent": 0.3013210265426336,
+        "WarmBytes": 0
+      },
+      {
+        "Family": "random-walks",
+        "Vertices": 256,
+        "BaselineUs": 153.147265625,
+        "CorrectedUs": 152.976953125,
+        "TimeChangePercent": -0.11120831919847474,
+        "WarmBytes": 0
+      },
+      {
+        "Family": "random-walks",
+        "Vertices": 1024,
+        "BaselineUs": 760.7875,
+        "CorrectedUs": 747.909375,
+        "TimeChangePercent": -1.6927361451128053,
+        "WarmBytes": 0
+      },
+      {
+        "Family": "similar-strokes",
+        "Vertices": 64,
+        "BaselineUs": 12.435107421875,
+        "CorrectedUs": 11.45322265625,
+        "TimeChangePercent": -7.8960698312725,
+        "WarmBytes": 0
+      },
+      {
+        "Family": "similar-strokes",
+        "Vertices": 256,
+        "BaselineUs": 39.70185546875,
+        "CorrectedUs": 40.8314453125,
+        "TimeChangePercent": 2.845181491930826,
+        "WarmBytes": 0
+      },
+      {
+        "Family": "similar-strokes",
+        "Vertices": 1024,
+        "BaselineUs": 160.4609375,
+        "CorrectedUs": 160.1859375,
+        "TimeChangePercent": -0.17138127464823016,
+        "WarmBytes": 0
+      }
+    ]
+  },
+  "ExternalComparison": {
+    "Metadata": {
+      "Revision": "2410a6b9e5b74778f1720687e502f834cd26fb68",
+      "Run": 1,
+      "Utc": "2026-09-24T20:28:18.8993946+00:00",
+      "Runtime": ".NET 10.0.12",
+      "OS": "Microsoft Windows 10.0.26200",
+      "Architecture": "X64",
+      "CPU": "Intel64 Family 6 Model 158 Stepping 12, GenuineIntel",
+      "LogicalProcessors": 16,
+      "TieredCompilation": "0",
+      "LibrarySha256": "7895ebcaf51551b4bffeda34d88fda1277a9a936b93accb3b9b61793ffcc61f2",
+      "WindingSha256": "a55410a34f6a420b31d443ced5007925b2e5caf2143f2214e84ac5f9eccf7f39",
+      "HarnessSha256": "aeb0b066695e477d4a4b727e45c04b15b0982a629738fc9ac20c9921f2c93ff7",
+      "ClipperVersion": "2.0.0.0",
+      "ClipperSha256": "e9bf01e01f494ef6072cd46c792ed4f3004288a92b1e98c1f44931e558b8a5d0",
+      "CoordinateScale": 1000000
+    },
+    "Processes": 3,
+    "BatchesPerProcess": 9,
+    "MethodRowsPerProcess": 238,
+    "WindingScenarios": 44,
+    "ZeroAllocationSamples": 1188,
+    "FamilyRanges": [
+      {
+        "Family": "blobs",
+        "Operation": "overlap-metrics",
+        "VerticesPerPath": [
+          16,
+          64,
+          256,
+          1024
+        ],
+        "Methods": {
+          "Clipper64 static": {
+            "RatioRange": [
+              1.920218616272371,
+              3.184647196381645
+            ],
+            "WarmBytesRange": [
+              12184,
+              643416
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              4.057860181205797e-07,
+              1.2238326307922875e-07,
+              4.0329241135506066e-07,
+              1.1338843475261484e-07
+            ]
+          },
+          "Clipper64 reused": {
+            "RatioRange": [
+              1.6841303884162382,
+              2.890819217610075
+            ],
+            "WarmBytesRange": [
+              2216,
+              64408
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              4.057860181205797e-07,
+              1.2238326307922875e-07,
+              4.0329241135506066e-07,
+              1.1338843475261484e-07
+            ]
+          },
+          "Clipper64 preloaded": {
+            "RatioRange": [
+              1.6503187430386048,
+              2.7537772881941365
+            ],
+            "WarmBytesRange": [
+              2128,
+              64320
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              4.057860181205797e-07,
+              1.2238326307922875e-07,
+              4.0329241135506066e-07,
+              1.1338843475261484e-07
+            ]
+          },
+          "ClipperD precision6": {
+            "RatioRange": [
+              2.0161682384075763,
+              3.159535289697117
+            ],
+            "WarmBytesRange": [
+              14600,
+              742728
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              4.057860185646689e-07,
+              1.2238326307922875e-07,
+              4.032924126873283e-07,
+              1.1338843508568175e-07
+            ]
+          },
+          "PolylineKit wrapper": {
+            "RatioRange": [
+              2.6076583473768205,
+              3.2107579781647777
+            ],
+            "WarmBytesRange": [
+              19416,
+              998768
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              4.2901851893262233e-07,
+              8.267782631854459e-07,
+              1.1391304022279058e-06,
+              2.542876704758612e-07
+            ]
+          }
+        }
+      },
+      {
+        "Family": "blobs",
+        "Operation": "simple-iou",
+        "VerticesPerPath": [
+          16,
+          64,
+          256,
+          1024
+        ],
+        "Methods": {
+          "Clipper64 static": {
+            "RatioRange": [
+              0.9581500072925275,
+              1.5695527647229741
+            ],
+            "WarmBytesRange": [
+              5792,
+              303864
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              1.5455642443651385e-07,
+              0,
+              0,
+              0
+            ]
+          },
+          "Clipper64 reused": {
+            "RatioRange": [
+              0.8752544800321946,
+              1.510162760987174
+            ],
+            "WarmBytesRange": [
+              1120,
+              30392
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              1.5455642443651385e-07,
+              0,
+              0,
+              0
+            ]
+          },
+          "Clipper64 preloaded": {
+            "RatioRange": [
+              0.7906345714424619,
+              1.3878913942837643
+            ],
+            "WarmBytesRange": [
+              1032,
+              30304
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              1.5455642443651385e-07,
+              0,
+              0,
+              0
+            ]
+          },
+          "ClipperD precision6": {
+            "RatioRange": [
+              1.0189765168193545,
+              1.576217248329267
+            ],
+            "WarmBytesRange": [
+              6968,
+              352384
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              1.5455642465855846e-07,
+              0,
+              0,
+              0
+            ]
+          },
+          "PolylineKit wrapper": {
+            "RatioRange": [
+              2.549017939617871,
+              3.2247337665632023
+            ],
+            "WarmBytesRange": [
+              19416,
+              998768
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              2.542876704758612e-07,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      {
+        "Family": "blobs",
+        "Operation": "xor-only",
+        "VerticesPerPath": [
+          16,
+          64,
+          256,
+          1024
+        ],
+        "Methods": {
+          "Clipper64 static": {
+            "RatioRange": [
+              1.2307644296035076,
+              1.8309880919490713
+            ],
+            "WarmBytesRange": [
+              8792,
+              483032
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              4.0329241102199376e-07,
+              0,
+              0,
+              0
+            ]
+          },
+          "Clipper64 reused": {
+            "RatioRange": [
+              1.0936522605562364,
+              1.7156303119132021
+            ],
+            "WarmBytesRange": [
+              1592,
+              55104
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              4.0329241102199376e-07,
+              0,
+              0,
+              0
+            ]
+          },
+          "Clipper64 preloaded": {
+            "RatioRange": [
+              1.017922511585813,
+              1.5687815202783386
+            ],
+            "WarmBytesRange": [
+              1504,
+              55016
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              4.0329241102199376e-07,
+              0,
+              0,
+              0
+            ]
+          },
+          "ClipperD precision6": {
+            "RatioRange": [
+              1.242910418649648,
+              1.8989384368283284
+            ],
+            "WarmBytesRange": [
+              10352,
+              549488
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              4.0329241102199376e-07,
+              0,
+              0,
+              0
+            ]
+          },
+          "PolylineKit wrapper": {
+            "RatioRange": [
+              1.48048746235586,
+              1.8422639813067483
+            ],
+            "WarmBytesRange": [
+              11840,
+              613568
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              1.1391304022279058e-06,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      {
+        "Family": "degenerate-grid",
+        "Operation": "bridged-nonzero",
+        "VerticesPerPath": [
+          64,
+          256
+        ],
+        "Methods": {
+          "Clipper64 static": {
+            "RatioRange": [
+              0.7386188390042003,
+              0.7651090175790368
+            ],
+            "WarmBytesRange": [
+              222696,
+              1938208
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              2.916229462357478e-06,
+              0,
+              0,
+              0
+            ]
+          },
+          "Clipper64 reused": {
+            "RatioRange": [
+              0.7282967896187198,
+              0.7617818576993426
+            ],
+            "WarmBytesRange": [
+              46024,
+              352328
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              2.916229462357478e-06,
+              0,
+              0,
+              0
+            ]
+          },
+          "Clipper64 preloaded": {
+            "RatioRange": [
+              0.727422774240383,
+              0.7515038226943298
+            ],
+            "WarmBytesRange": [
+              45936,
+              352240
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              2.916229462357478e-06,
+              0,
+              0,
+              0
+            ]
+          },
+          "ClipperD precision6": {
+            "RatioRange": [
+              0.7472470321399292,
+              0.771392164815906
+            ],
+            "WarmBytesRange": [
+              243256,
+              2017952
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              2.9162294765683328e-06,
+              0,
+              0,
+              0
+            ]
+          },
+          "PolylineKit wrapper": {
+            "RatioRange": [
+              0.7457445924813009,
+              0.7911944102183411
+            ],
+            "WarmBytesRange": [
+              249208,
+              2036144
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              2.640235905460031e-06,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      {
+        "Family": "random-walks",
+        "Operation": "bridged-nonzero",
+        "VerticesPerPath": [
+          16,
+          64,
+          256,
+          1024
+        ],
+        "Methods": {
+          "Clipper64 static": {
+            "RatioRange": [
+              1.9110091766524733,
+              2.80652137747463
+            ],
+            "WarmBytesRange": [
+              13880,
+              831784
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              3.7695512560276256e-06,
+              0,
+              0,
+              0
+            ]
+          },
+          "Clipper64 reused": {
+            "RatioRange": [
+              1.8642478515781864,
+              2.750133089336217
+            ],
+            "WarmBytesRange": [
+              3320,
+              190288
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              3.7695512560276256e-06,
+              0,
+              0,
+              0
+            ]
+          },
+          "Clipper64 preloaded": {
+            "RatioRange": [
+              1.7102039996787406,
+              2.658268175012477
+            ],
+            "WarmBytesRange": [
+              3232,
+              190200
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              3.7695512560276256e-06,
+              0,
+              0,
+              0
+            ]
+          },
+          "ClipperD precision6": {
+            "RatioRange": [
+              1.968273324948402,
+              2.934586591249376
+            ],
+            "WarmBytesRange": [
+              16200,
+              953576
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              3.7695518244618142e-06,
+              0,
+              0,
+              0
+            ]
+          },
+          "PolylineKit wrapper": {
+            "RatioRange": [
+              2.055095631586869,
+              2.9121028115122276
+            ],
+            "WarmBytesRange": [
+              17544,
+              1019432
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              1.4173015358664998e-05,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      {
+        "Family": "similar-strokes",
+        "Operation": "bridged-nonzero",
+        "VerticesPerPath": [
+          16,
+          64,
+          256,
+          1024
+        ],
+        "Methods": {
+          "Clipper64 static": {
+            "RatioRange": [
+              1.8029801082879702,
+              2.075480879521171
+            ],
+            "WarmBytesRange": [
+              12496,
+              332424
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              5.6000765008557e-07,
+              0,
+              0,
+              0
+            ]
+          },
+          "Clipper64 reused": {
+            "RatioRange": [
+              1.6823371447267228,
+              1.9064587663624166
+            ],
+            "WarmBytesRange": [
+              3064,
+              34760
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              5.6000765008557e-07,
+              0,
+              0,
+              0
+            ]
+          },
+          "Clipper64 preloaded": {
+            "RatioRange": [
+              1.512023078083118,
+              1.8411133742553056
+            ],
+            "WarmBytesRange": [
+              2976,
+              34672
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              5.6000765008557e-07,
+              0,
+              0,
+              0
+            ]
+          },
+          "ClipperD precision6": {
+            "RatioRange": [
+              1.9634582127666806,
+              2.14520580322695
+            ],
+            "WarmBytesRange": [
+              14640,
+              398568
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              5.600076503353701e-07,
+              0,
+              0,
+              0
+            ]
+          },
+          "PolylineKit wrapper": {
+            "RatioRange": [
+              2.10845262527247,
+              2.3603728858332578
+            ],
+            "WarmBytesRange": [
+              16240,
+              464936
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              1.0102665062849958e-07,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      {
+        "Family": "simple-spiky-star",
+        "Operation": "closed-nonzero",
+        "VerticesPerPath": [
+          1024,
+          4096
+        ],
+        "Methods": {
+          "Clipper64 static": {
+            "RatioRange": [
+              4.9119858928478815,
+              33.35803259898529
+            ],
+            "WarmBytesRange": [
+              365544,
+              1460264
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              6.768532001544258e-08,
+              0,
+              0,
+              0
+            ]
+          },
+          "Clipper64 reused": {
+            "RatioRange": [
+              4.6179918054042846,
+              25.492743607463723
+            ],
+            "WarmBytesRange": [
+              106736,
+              427120
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              6.768532001544258e-08,
+              0,
+              0,
+              0
+            ]
+          },
+          "Clipper64 preloaded": {
+            "RatioRange": [
+              4.465250765001816,
+              25.450986341238675
+            ],
+            "WarmBytesRange": [
+              106648,
+              427032
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              6.768532001544258e-08,
+              0,
+              0,
+              0
+            ]
+          },
+          "ClipperD precision6": {
+            "RatioRange": [
+              4.862299673253462,
+              33.246425180215866
+            ],
+            "WarmBytesRange": [
+              398664,
+              1591688
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              6.768531962686453e-08,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      {
+        "Family": "star-regions",
+        "Operation": "overlap-metrics",
+        "VerticesPerPath": [
+          16,
+          64,
+          256,
+          1024
+        ],
+        "Methods": {
+          "Clipper64 static": {
+            "RatioRange": [
+              1.742825390599464,
+              2.2270782980903117
+            ],
+            "WarmBytesRange": [
+              16752,
+              517952
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              2.596238890539837e-07,
+              7.462057252105581e-07,
+              8.822638559724538e-07,
+              1.726139352564715e-07
+            ]
+          },
+          "Clipper64 reused": {
+            "RatioRange": [
+              1.5932365254909318,
+              1.9265033604267432
+            ],
+            "WarmBytesRange": [
+              4248,
+              36552
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              2.596238890539837e-07,
+              7.462057252105581e-07,
+              8.822638559724538e-07,
+              1.726139352564715e-07
+            ]
+          },
+          "Clipper64 preloaded": {
+            "RatioRange": [
+              1.4816545443693137,
+              1.8174212294186742
+            ],
+            "WarmBytesRange": [
+              4160,
+              36464
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              2.596238890539837e-07,
+              7.462057252105581e-07,
+              8.822638559724538e-07,
+              1.726139352564715e-07
+            ]
+          },
+          "ClipperD precision6": {
+            "RatioRange": [
+              1.843601047093633,
+              2.294492937309664
+            ],
+            "WarmBytesRange": [
+              19360,
+              617328
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              2.5962388727762686e-07,
+              7.462057252105581e-07,
+              8.822638559724538e-07,
+              1.726139352564715e-07
+            ]
+          },
+          "PolylineKit wrapper": {
+            "RatioRange": [
+              2.5309955449452475,
+              3.0957744566242424
+            ],
+            "WarmBytesRange": [
+              26440,
+              816920
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              2.987141307642105e-07,
+              8.437332255084584e-07,
+              1.1424473560506243e-06,
+              2.3507875390738064e-07
+            ]
+          }
+        }
+      },
+      {
+        "Family": "star-regions",
+        "Operation": "simple-iou",
+        "VerticesPerPath": [
+          16,
+          64,
+          256,
+          1024
+        ],
+        "Methods": {
+          "Clipper64 static": {
+            "RatioRange": [
+              0.893645423895123,
+              1.034879101671125
+            ],
+            "WarmBytesRange": [
+              8296,
+              259072
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              1.653414092306349e-07,
+              0,
+              0,
+              0
+            ]
+          },
+          "Clipper64 reused": {
+            "RatioRange": [
+              0.816512337273272,
+              0.9604803564124521
+            ],
+            "WarmBytesRange": [
+              2152,
+              18336
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              1.653414092306349e-07,
+              0,
+              0,
+              0
+            ]
+          },
+          "Clipper64 preloaded": {
+            "RatioRange": [
+              0.7419821341031646,
+              0.9104113515247285
+            ],
+            "WarmBytesRange": [
+              2064,
+              18248
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              1.653414092306349e-07,
+              0,
+              0,
+              0
+            ]
+          },
+          "ClipperD precision6": {
+            "RatioRange": [
+              0.9255894484029414,
+              1.2323968279333626
+            ],
+            "WarmBytesRange": [
+              9584,
+              308744
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              1.653414092306349e-07,
+              0,
+              0,
+              0
+            ]
+          },
+          "PolylineKit wrapper": {
+            "RatioRange": [
+              2.5312423341757424,
+              3.0432763373416964
+            ],
+            "WarmBytesRange": [
+              26440,
+              816920
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              2.3507875390738064e-07,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      {
+        "Family": "star-regions",
+        "Operation": "xor-only",
+        "VerticesPerPath": [
+          16,
+          64,
+          256,
+          1024
+        ],
+        "Methods": {
+          "Clipper64 static": {
+            "RatioRange": [
+              1.0803829495200314,
+              1.3511486634958216
+            ],
+            "WarmBytesRange": [
+              12520,
+              375928
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              8.822638557504092e-07,
+              0,
+              0,
+              0
+            ]
+          },
+          "Clipper64 reused": {
+            "RatioRange": [
+              0.9586552343743325,
+              1.15987250461332
+            ],
+            "WarmBytesRange": [
+              3136,
+              35416
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              8.822638557504092e-07,
+              0,
+              0,
+              0
+            ]
+          },
+          "Clipper64 preloaded": {
+            "RatioRange": [
+              0.8920633655020802,
+              1.0872448890619824
+            ],
+            "WarmBytesRange": [
+              3048,
+              35328
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              8.822638557504092e-07,
+              0,
+              0,
+              0
+            ]
+          },
+          "ClipperD precision6": {
+            "RatioRange": [
+              1.1489242641900246,
+              1.4130014105772026
+            ],
+            "WarmBytesRange": [
+              14656,
+              442576
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              8.822638557504092e-07,
+              0,
+              0,
+              0
+            ]
+          },
+          "PolylineKit wrapper": {
+            "RatioRange": [
+              1.4529300707066968,
+              1.760371995435117
+            ],
+            "WarmBytesRange": [
+              16696,
+              508880
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              1.1424473560506243e-06,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      },
+      {
+        "Family": "tangled-ring",
+        "Operation": "closed-nonzero",
+        "VerticesPerPath": [
+          16,
+          64,
+          256,
+          1024
+        ],
+        "Methods": {
+          "Clipper64 static": {
+            "RatioRange": [
+              0.7921768835637943,
+              1.4583344939088776
+            ],
+            "WarmBytesRange": [
+              15056,
+              251808
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              2.380091183695754e-06,
+              0,
+              0,
+              0
+            ]
+          },
+          "Clipper64 reused": {
+            "RatioRange": [
+              0.8014518418045037,
+              1.419708851688574
+            ],
+            "WarmBytesRange": [
+              3840,
+              76040
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              2.380091183695754e-06,
+              0,
+              0,
+              0
+            ]
+          },
+          "Clipper64 preloaded": {
+            "RatioRange": [
+              0.771676106987512,
+              1.36759689961739
+            ],
+            "WarmBytesRange": [
+              3752,
+              75952
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              2.380091183695754e-06,
+              0,
+              0,
+              0
+            ]
+          },
+          "ClipperD precision6": {
+            "RatioRange": [
+              0.815241827110257,
+              1.4472689336294278
+            ],
+            "WarmBytesRange": [
+              16176,
+              285344
+            ],
+            "MaximumAbsoluteMetricDeltas": [
+              2.380091189913003e-06,
+              0,
+              0,
+              0
+            ]
+          }
+        }
+      }
+    ],
+    "AbsoluteWinding": [
+      {
+        "Vertices": 16,
+        "MedianUs": 9.39453125,
+        "MinUs": 9.1833984375,
+        "MaxUs": 9.6194580078125,
+        "Bytes": 0
+      },
+      {
+        "Vertices": 64,
+        "MedianUs": 22.6314453125,
+        "MinUs": 21.332421875,
+        "MaxUs": 23.647265625,
+        "Bytes": 0
+      },
+      {
+        "Vertices": 256,
+        "MedianUs": 140.591015625,
+        "MinUs": 138.66171875,
+        "MaxUs": 145.76875,
+        "Bytes": 0
+      },
+      {
+        "Vertices": 1024,
+        "MedianUs": 743.046875,
+        "MinUs": 732.684375,
+        "MaxUs": 755.415625,
+        "Bytes": 0
+      }
+    ]
+  },
+  "Storage": {
+    "Metadata": {
+      "Revision": "a50dade89d17cc89212f7338c13bec724749c83d",
+      "Runtime": ".NET 10.0.12",
+      "OS": "Microsoft Windows 10.0.26200",
+      "Architecture": "X64",
+      "CPU": "Intel64 Family 6 Model 158 Stepping 12, GenuineIntel",
+      "TieredCompilation": "0",
+      "WindingSha256": "710f2a49ebd5c4fbf9c6f3ed428734e0614c150d16753eb82d98fc45d67433f2",
+      "HarnessSha256": "b71f8eeb1286883ec82cc15c19cc6d9335a0101919121484164b35de9b0d1825"
+    },
+    "ProcessesPerCase": 3,
+    "Rows": [
+      {
+        "Case": "similar-strokes/16/bridged-nonzero",
+        "Revision": "a50dade89d17cc89212f7338c13bec724749c83d",
+        "FirstCallMedianMicroseconds": 27810.3,
+        "FirstCallRangeMicroseconds": [
+          27506.9,
+          27942.7
+        ],
+        "FirstCallMedianAllocatedBytes": 42240,
+        "RetainedManagedHeapDeltaRange": [
+          42096,
+          42096
+        ],
+        "RetainedArrayPayloadBytes": 41105,
+        "WarmMedianMicroseconds": 3.462841796875,
+        "WarmMedianBytes": 0
+      },
+      {
+        "Case": "similar-strokes/1024/bridged-nonzero",
+        "Revision": "a50dade89d17cc89212f7338c13bec724749c83d",
+        "FirstCallMedianMicroseconds": 26534.1,
+        "FirstCallRangeMicroseconds": [
+          26523.9,
+          27135.2
+        ],
+        "FirstCallMedianAllocatedBytes": 279080,
+        "RetainedManagedHeapDeltaRange": [
+          261568,
+          261568
+        ],
+        "RetainedArrayPayloadBytes": 261009,
+        "WarmMedianMicroseconds": 158.890625,
+        "WarmMedianBytes": 0
+      },
+      {
+        "Case": "star-regions/1024/overlap-metrics",
+        "Revision": "a50dade89d17cc89212f7338c13bec724749c83d",
+        "FirstCallMedianMicroseconds": 29362.8,
+        "FirstCallRangeMicroseconds": [
+          29162,
+          30971.7
+        ],
+        "FirstCallMedianAllocatedBytes": 278704,
+        "RetainedManagedHeapDeltaRange": [
+          261192,
+          261192
+        ],
+        "RetainedArrayPayloadBytes": 260745,
+        "WarmMedianMicroseconds": 275.2703125,
+        "WarmMedianBytes": 0
+      },
+      {
+        "Case": "degenerate-grid/256/bridged-nonzero",
+        "Revision": "a50dade89d17cc89212f7338c13bec724749c83d",
+        "FirstCallMedianMicroseconds": 39560.8,
+        "FirstCallRangeMicroseconds": [
+          39394.8,
+          40310.2
+        ],
+        "FirstCallMedianAllocatedBytes": 10046416,
+        "RetainedManagedHeapDeltaRange": [
+          7014392,
+          7014392
+        ],
+        "RetainedArrayPayloadBytes": 7013261,
+        "WarmMedianMicroseconds": 6845.25,
+        "WarmMedianBytes": 0
+      },
+      {
+        "Case": "simple-spiky-star/4096/closed-nonzero",
+        "Revision": "a50dade89d17cc89212f7338c13bec724749c83d",
+        "FirstCallMedianMicroseconds": 36871,
+        "FirstCallRangeMicroseconds": [
+          36643.6,
+          37362.2
+        ],
+        "FirstCallMedianAllocatedBytes": 556536,
+        "RetainedManagedHeapDeltaRange": [
+          538928,
+          538928
+        ],
+        "RetainedArrayPayloadBytes": 538249,
+        "WarmMedianMicroseconds": 2166.475,
+        "WarmMedianBytes": 0
+      }
+    ]
+  },
+  "AreaChange": {
+    "Metadata": {
+      "Run": 1,
+      "Revision": "a50dade89d17cc89212f7338c13bec724749c83d",
+      "Utc": "2026-09-24T20:32:23.3736161+00:00",
+      "Runtime": ".NET 10.0.12",
+      "OS": "Microsoft Windows 10.0.26200",
+      "Architecture": "X64",
+      "CPU": "Intel64 Family 6 Model 158 Stepping 12, GenuineIntel",
+      "TieredCompilation": "0",
+      "DataSha256": "b2f0a57e59ca5728be16ebd464fb67bf821961dde033d26cb3be143e9a2832e5",
+      "PairSha256": "c31c4614eec2f404cf28c057a4ffe63688c04ca86a74435a42e96933b638c89f",
+      "WindingSha256": "710f2a49ebd5c4fbf9c6f3ed428734e0614c150d16753eb82d98fc45d67433f2",
+      "ClipperSha256": "e9bf01e01f494ef6072cd46c792ed4f3004288a92b1e98c1f44931e558b8a5d0",
+      "HarnessSha256": "2c2be750c0a0c33cec3dc8611c0ce203b0df26ef69aa5984b41816413d6af18e"
+    },
+    "Processes": 3,
+    "BatchesPerProcess": 5,
+    "MethodRowsPerProcess": 48,
+    "Provenance": {
+      "Source": "https://github.com/nvkelso/natural-earth-vector/blob/v5.1.2/geojson/ne_50m_admin_0_countries.geojson",
+      "Download": "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/v5.1.2/geojson/ne_50m_admin_0_countries.geojson",
+      "SourceSha256": "3e458fc036ad0a66411f2c1e6cac49c5d7bfb81cb1123bc513b22511a2b7fdeb",
+      "SourceVersion": "Natural Earth v5.1.2, 1:50m Admin 0 Countries",
+      "License": "Public domain",
+      "LicenseUrl": "https://www.naturalearthdata.com/about/terms-of-use/",
+      "Selection": "Complete Polygon features with exactly one ring; no island or hole removed.",
+      "Transform": "Local equirectangular x=(longitude-minLongitude)*cos(centerLatitude), y=latitude-minLatitude; uniform scale to longest bound 1000. These are map-plane coordinates, not geodesic areas.",
+      "Contours": [
+        {
+          "File": "bgr.json",
+          "Sha256": "f5fe7223ebc45fa4dca43f660b46550c56fe3cf3e8e0c8815f035fcb43c74c48",
+          "Vertices": 178
+        },
+        {
+          "File": "che.json",
+          "Sha256": "cc721380013ef6af7df20baa7900043b1ea2c7ae6a5d998492c11263c69803c7",
+          "Vertices": 186
+        },
+        {
+          "File": "lso.json",
+          "Sha256": "e8c38ab0209e42b9ef4ac623297f3456564e8f5dd0c4599b625bdbe90242f389",
+          "Vertices": 76
+        },
+        {
+          "File": "npl.json",
+          "Sha256": "6b4a37582f866b68304b0a1978e41d2f8f264ccc0e6e9a9ac027334de39169a6",
+          "Vertices": 201
+        }
+      ]
+    },
+    "Rows": [
+      {
+        "Key": "BGR-1",
+        "Name": "Bulgaria",
+        "Tolerance": 1,
+        "OriginalVertices": 178,
+        "SimplifiedVertices": 153,
+        "RemovedVertices": 25,
+        "Winding": {
+          "Xor": 205.1774400081228,
+          "Union": 433067.54347566917,
+          "Jaccard": 0.0004737769964505553
+        },
+        "Clipper8": {
+          "Xor": 205.17744028539786,
+          "Union": 433067.5434759091,
+          "Jaccard": 0.00047377699709055105
+        },
+        "Clipper7": {
+          "Xor": 205.17743461182965,
+          "Union": 433067.54346768203,
+          "Jaccard": 0.00047377698399866616
+        },
+        "XorDelta": 2.7727506335395447e-07,
+        "UnionDelta": 2.3993197828531265e-07,
+        "Measurements": {
+          "isolated-area": {
+            "winding": {
+              "MedianUs": 75.899609375,
+              "RangeUs": [
+                74.278125,
+                79.846484375
+              ],
+              "WarmBytes": 0
+            },
+            "clipper64-p8": {
+              "MedianUs": 118.390625,
+              "RangeUs": [
+                117.170703125,
+                120.434375
+              ],
+              "WarmBytes": 126696
+            },
+            "ClipperOverWinding": 1.559831809081692
+          },
+          "complete-consumer": {
+            "winding": {
+              "MedianUs": 80.830859375,
+              "RangeUs": [
+                79.243359375,
+                82.78125
+              ],
+              "WarmBytes": 10024
+            },
+            "clipper64-p8": {
+              "MedianUs": 121.8078125,
+              "RangeUs": [
+                120.809375,
+                122.8109375
+              ],
+              "WarmBytes": 136720
+            },
+            "ClipperOverWinding": 1.5069468943153865
+          }
+        }
+      },
+      {
+        "Key": "BGR-4",
+        "Name": "Bulgaria",
+        "Tolerance": 4,
+        "OriginalVertices": 178,
+        "SimplifiedVertices": 88,
+        "RemovedVertices": 90,
+        "Winding": {
+          "Xor": 2610.745625074476,
+          "Union": 434185.395319164,
+          "Jaccard": 0.0060129743036505204
+        },
+        "Clipper8": {
+          "Xor": 2610.7456256484666,
+          "Union": 434185.3953198106,
+          "Jaccard": 0.0060129743049635595
+        },
+        "Clipper7": {
+          "Xor": 2610.74562883733,
+          "Union": 434185.395316734,
+          "Jaccard": 0.006012974312350642
+        },
+        "XorDelta": 5.739907464885619e-07,
+        "UnionDelta": 6.466289050877094e-07,
+        "Measurements": {
+          "isolated-area": {
+            "winding": {
+              "MedianUs": 82.59140625,
+              "RangeUs": [
+                79.084765625,
+                83.389453125
+              ],
+              "WarmBytes": 0
+            },
+            "clipper64-p8": {
+              "MedianUs": 119.8546875,
+              "RangeUs": [
+                115.63671875,
+                121.155078125
+              ],
+              "WarmBytes": 103744
+            },
+            "ClipperOverWinding": 1.4511762535826782
+          },
+          "complete-consumer": {
+            "winding": {
+              "MedianUs": 87.580078125,
+              "RangeUs": [
+                87.4515625,
+                89.919921875
+              ],
+              "WarmBytes": 8984
+            },
+            "clipper64-p8": {
+              "MedianUs": 122.01875,
+              "RangeUs": [
+                120.78671875,
+                128.55859375
+              ],
+              "WarmBytes": 112728
+            },
+            "ClipperOverWinding": 1.3932249503802323
+          }
+        }
+      },
+      {
+        "Key": "BGR-12",
+        "Name": "Bulgaria",
+        "Tolerance": 12,
+        "OriginalVertices": 178,
+        "SimplifiedVertices": 41,
+        "RemovedVertices": 137,
+        "Winding": {
+          "Xor": 9922.260706711084,
+          "Union": 437414.8975312677,
+          "Jaccard": 0.02268386550780843
+        },
+        "Clipper8": {
+          "Xor": 9922.26070608967,
+          "Union": 437414.8975313711,
+          "Jaccard": 0.02268386550638242
+        },
+        "Clipper7": {
+          "Xor": 9922.260699719967,
+          "Union": 437414.89752049826,
+          "Jaccard": 0.02268386549238412
+        },
+        "XorDelta": 6.214140739757568e-07,
+        "UnionDelta": 1.0337680578231812e-07,
+        "Measurements": {
+          "isolated-area": {
+            "winding": {
+              "MedianUs": 54.7953125,
+              "RangeUs": [
+                54.2119140625,
+                55.0712890625
+              ],
+              "WarmBytes": 0
+            },
+            "clipper64-p8": {
+              "MedianUs": 101.584375,
+              "RangeUs": [
+                100.1625,
+                102.25546875
+              ],
+              "WarmBytes": 83024
+            },
+            "ClipperOverWinding": 1.8538880492742877
+          },
+          "complete-consumer": {
+            "winding": {
+              "MedianUs": 63.6921875,
+              "RangeUs": [
+                63.271484375,
+                64.050390625
+              ],
+              "WarmBytes": 8232
+            },
+            "clipper64-p8": {
+              "MedianUs": 107.8859375,
+              "RangeUs": [
+                107.43203125,
+                108.88359375
+              ],
+              "WarmBytes": 91256
+            },
+            "ClipperOverWinding": 1.6938645340136889
+          }
+        }
+      },
+      {
+        "Key": "CHE-1",
+        "Name": "Switzerland",
+        "Tolerance": 1,
+        "OriginalVertices": 186,
+        "SimplifiedVertices": 166,
+        "RemovedVertices": 20,
+        "Winding": {
+          "Xor": 188.66691769303162,
+          "Union": 353760.75103643676,
+          "Jaccard": 0.0005333178345542331
+        },
+        "Clipper8": {
+          "Xor": 188.66691805432546,
+          "Union": 353760.7510362885,
+          "Jaccard": 0.0005333178355757509
+        },
+        "Clipper7": {
+          "Xor": 188.66691979178432,
+          "Union": 353760.75102761795,
+          "Jaccard": 0.0005333178405002176
+        },
+        "XorDelta": 3.612938428432244e-07,
+        "UnionDelta": 1.4825491234660149e-07,
+        "Measurements": {
+          "isolated-area": {
+            "winding": {
+              "MedianUs": 89.187890625,
+              "RangeUs": [
+                87.727734375,
+                91.725390625
+              ],
+              "WarmBytes": 0
+            },
+            "clipper64-p8": {
+              "MedianUs": 135.3921875,
+              "RangeUs": [
+                134.30859375,
+                140.10625
+              ],
+              "WarmBytes": 131944
+            },
+            "ClipperOverWinding": 1.5180557197980038
+          },
+          "complete-consumer": {
+            "winding": {
+              "MedianUs": 94.419921875,
+              "RangeUs": [
+                93.36328125,
+                95.096484375
+              ],
+              "WarmBytes": 10560
+            },
+            "clipper64-p8": {
+              "MedianUs": 138.8015625,
+              "RangeUs": [
+                137.0125,
+                140.66171875
+              ],
+              "WarmBytes": 142504
+            },
+            "ClipperOverWinding": 1.4700453012845704
+          }
+        }
+      },
+      {
+        "Key": "CHE-4",
+        "Name": "Switzerland",
+        "Tolerance": 4,
+        "OriginalVertices": 186,
+        "SimplifiedVertices": 99,
+        "RemovedVertices": 87,
+        "Winding": {
+          "Xor": 2892.752047108198,
+          "Union": 354890.07587992004,
+          "Jaccard": 0.00815112127307551
+        },
+        "Clipper8": {
+          "Xor": 2892.7520472356086,
+          "Union": 354890.075879679,
+          "Jaccard": 0.00815112127344006
+        },
+        "Clipper7": {
+          "Xor": 2892.752048674149,
+          "Union": 354890.075864546,
+          "Jaccard": 0.008151121277841117
+        },
+        "XorDelta": 1.2741065802401863e-07,
+        "UnionDelta": 2.4103792384266853e-07,
+        "Measurements": {
+          "isolated-area": {
+            "winding": {
+              "MedianUs": 90.930078125,
+              "RangeUs": [
+                90.41328125,
+                92.7265625
+              ],
+              "WarmBytes": 0
+            },
+            "clipper64-p8": {
+              "MedianUs": 136.82734375,
+              "RangeUs": [
+                135.3375,
+                145.778125
+              ],
+              "WarmBytes": 107248
+            },
+            "ClipperOverWinding": 1.5047533948217426
+          },
+          "complete-consumer": {
+            "winding": {
+              "MedianUs": 100.15625,
+              "RangeUs": [
+                99.27421875,
+                100.259375
+              ],
+              "WarmBytes": 9488
+            },
+            "clipper64-p8": {
+              "MedianUs": 142.58828125,
+              "RangeUs": [
+                140.103125,
+                143.71171875
+              ],
+              "WarmBytes": 116736
+            },
+            "ClipperOverWinding": 1.4236583463338532
+          }
+        }
+      },
+      {
+        "Key": "CHE-12",
+        "Name": "Switzerland",
+        "Tolerance": 12,
+        "OriginalVertices": 186,
+        "SimplifiedVertices": 55,
+        "RemovedVertices": 131,
+        "Winding": {
+          "Xor": 10332.385615012026,
+          "Union": 358756.1142819275,
+          "Jaccard": 0.02880058402821352
+        },
+        "Clipper8": {
+          "Xor": 10332.385614670213,
+          "Union": 358756.11428083596,
+          "Jaccard": 0.028800584027348378
+        },
+        "Clipper7": {
+          "Xor": 10332.385605109224,
+          "Union": 358756.11425622815,
+          "Jaccard": 0.028800584002673484
+        },
+        "XorDelta": 3.418135747779161e-07,
+        "UnionDelta": 1.0915682651102543e-06,
+        "Measurements": {
+          "isolated-area": {
+            "winding": {
+              "MedianUs": 70.98203125,
+              "RangeUs": [
+                69.398828125,
+                71.86953125
+              ],
+              "WarmBytes": 0
+            },
+            "clipper64-p8": {
+              "MedianUs": 122.50625,
+              "RangeUs": [
+                122.1640625,
+                132.75390625
+              ],
+              "WarmBytes": 88456
+            },
+            "ClipperOverWinding": 1.7258769274794454
+          },
+          "complete-consumer": {
+            "winding": {
+              "MedianUs": 78.56796875,
+              "RangeUs": [
+                78.49765625,
+                81.301953125
+              ],
+              "WarmBytes": 8784
+            },
+            "clipper64-p8": {
+              "MedianUs": 134.18984375,
+              "RangeUs": [
+                133.95859375,
+                136.15
+              ],
+              "WarmBytes": 97240
+            },
+            "ClipperOverWinding": 1.7079459464834388
+          }
+        }
+      },
+      {
+        "Key": "LSO-1",
+        "Name": "Lesotho",
+        "Tolerance": 1,
+        "OriginalVertices": 76,
+        "SimplifiedVertices": 64,
+        "RemovedVertices": 12,
+        "Winding": {
+          "Xor": 55.025812987774884,
+          "Union": 571830.9240369034,
+          "Jaccard": 9.622741736196094e-05
+        },
+        "Clipper8": {
+          "Xor": 55.02581250543649,
+          "Union": 571830.924038007,
+          "Jaccard": 9.622741651827695e-05
+        },
+        "Clipper7": {
+          "Xor": 55.0258150905524,
+          "Union": 571830.9240451048,
+          "Jaccard": 9.622742103785223e-05
+        },
+        "XorDelta": 4.823383932262004e-07,
+        "UnionDelta": 1.103617250919342e-06,
+        "Measurements": {
+          "isolated-area": {
+            "winding": {
+              "MedianUs": 27.76611328125,
+              "RangeUs": [
+                27.59677734375,
+                28.57412109375
+              ],
+              "WarmBytes": 0
+            },
+            "clipper64-p8": {
+              "MedianUs": 29.51484375,
+              "RangeUs": [
+                29.33583984375,
+                29.92646484375
+              ],
+              "WarmBytes": 46776
+            },
+            "ClipperOverWinding": 1.0629807438670535
+          },
+          "complete-consumer": {
+            "winding": {
+              "MedianUs": 29.83671875,
+              "RangeUs": [
+                29.50224609375,
+                35.9736328125
+              ],
+              "WarmBytes": 4416
+            },
+            "clipper64-p8": {
+              "MedianUs": 31.7357421875,
+              "RangeUs": [
+                29.42509765625,
+                31.874609375
+              ],
+              "WarmBytes": 51192
+            },
+            "ClipperOverWinding": 1.0636471943651646
+          }
+        }
+      },
+      {
+        "Key": "LSO-4",
+        "Name": "Lesotho",
+        "Tolerance": 4,
+        "OriginalVertices": 76,
+        "SimplifiedVertices": 42,
+        "RemovedVertices": 34,
+        "Winding": {
+          "Xor": 1864.3626749774048,
+          "Union": 572416.2323238419,
+          "Jaccard": 0.0032570052519451443
+        },
+        "Clipper8": {
+          "Xor": 1864.362673886389,
+          "Union": 572416.2323246369,
+          "Jaccard": 0.0032570052500346374
+        },
+        "Clipper7": {
+          "Xor": 1864.3626730940694,
+          "Union": 572416.2323394876,
+          "Jaccard": 0.0032570052485659706
+        },
+        "XorDelta": 1.0910157470789272e-06,
+        "UnionDelta": 7.950002327561378e-07,
+        "Measurements": {
+          "isolated-area": {
+            "winding": {
+              "MedianUs": 28.91123046875,
+              "RangeUs": [
+                28.0150390625,
+                31.2208984375
+              ],
+              "WarmBytes": 0
+            },
+            "clipper64-p8": {
+              "MedianUs": 31.9203125,
+              "RangeUs": [
+                30.0732421875,
+                35.4673828125
+              ],
+              "WarmBytes": 40200
+            },
+            "ClipperOverWinding": 1.104080040263333
+          },
+          "complete-consumer": {
+            "winding": {
+              "MedianUs": 31.1693359375,
+              "RangeUs": [
+                30.945703125,
+                31.630078125
+              ],
+              "WarmBytes": 4064
+            },
+            "clipper64-p8": {
+              "MedianUs": 33.26796875,
+              "RangeUs": [
+                32.30390625,
+                33.509765625
+              ],
+              "WarmBytes": 44264
+            },
+            "ClipperOverWinding": 1.0673300456804125
+          }
+        }
+      },
+      {
+        "Key": "LSO-12",
+        "Name": "Lesotho",
+        "Tolerance": 12,
+        "OriginalVertices": 76,
+        "SimplifiedVertices": 21,
+        "RemovedVertices": 55,
+        "Winding": {
+          "Xor": 9596.347080179446,
+          "Union": 575902.6675288968,
+          "Jaccard": 0.016663140529207456
+        },
+        "Clipper8": {
+          "Xor": 9596.347079952215,
+          "Union": 575902.6675282706,
+          "Jaccard": 0.016663140528831007
+        },
+        "Clipper7": {
+          "Xor": 9596.347064078353,
+          "Union": 575902.6675230585,
+          "Jaccard": 0.01666314050141837
+        },
+        "XorDelta": 2.2723179426975548e-07,
+        "UnionDelta": 6.261980161070824e-07,
+        "Measurements": {
+          "isolated-area": {
+            "winding": {
+              "MedianUs": 21.23720703125,
+              "RangeUs": [
+                20.7107421875,
+                21.281640625
+              ],
+              "WarmBytes": 0
+            },
+            "clipper64-p8": {
+              "MedianUs": 28.183984375,
+              "RangeUs": [
+                26.9994140625,
+                28.371484375
+              ],
+              "WarmBytes": 30304
+            },
+            "ClipperOverWinding": 1.3271040929971627
+          },
+          "complete-consumer": {
+            "winding": {
+              "MedianUs": 23.50810546875,
+              "RangeUs": [
+                22.650390625,
+                23.9189453125
+              ],
+              "WarmBytes": 3728
+            },
+            "clipper64-p8": {
+              "MedianUs": 29.900390625,
+              "RangeUs": [
+                28.8302734375,
+                30.3083984375
+              ],
+              "WarmBytes": 34032
+            },
+            "ClipperOverWinding": 1.271918345982727
+          }
+        }
+      },
+      {
+        "Key": "NPL-1",
+        "Name": "Nepal",
+        "Tolerance": 1,
+        "OriginalVertices": 201,
+        "SimplifiedVertices": 148,
+        "RemovedVertices": 53,
+        "Winding": {
+          "Xor": 334.8802091771413,
+          "Union": 233710.23986410868,
+          "Jaccard": 0.0014328863355403602
+        },
+        "Clipper8": {
+          "Xor": 334.8802087228552,
+          "Union": 233710.2398639671,
+          "Jaccard": 0.0014328863335974276
+        },
+        "Clipper7": {
+          "Xor": 334.8802129749639,
+          "Union": 233710.23986630669,
+          "Jaccard": 0.0014328863517770176
+        },
+        "XorDelta": 4.542861233858275e-07,
+        "UnionDelta": 1.4159013517200947e-07,
+        "Measurements": {
+          "isolated-area": {
+            "winding": {
+              "MedianUs": 78.780078125,
+              "RangeUs": [
+                78.298046875,
+                81.20625
+              ],
+              "WarmBytes": 0
+            },
+            "clipper64-p8": {
+              "MedianUs": 139.3890625,
+              "RangeUs": [
+                133.290625,
+                141.86953125
+              ],
+              "WarmBytes": 130248
+            },
+            "ClipperOverWinding": 1.7693440501395794
+          },
+          "complete-consumer": {
+            "winding": {
+              "MedianUs": 86.776171875,
+              "RangeUs": [
+                86.12578125,
+                87.3734375
+              ],
+              "WarmBytes": 10888
+            },
+            "clipper64-p8": {
+              "MedianUs": 142.1890625,
+              "RangeUs": [
+                139.63671875,
+                144.45234375
+              ],
+              "WarmBytes": 141136
+            },
+            "ClipperOverWinding": 1.6385726568443417
+          }
+        }
+      },
+      {
+        "Key": "NPL-4",
+        "Name": "Nepal",
+        "Tolerance": 4,
+        "OriginalVertices": 201,
+        "SimplifiedVertices": 80,
+        "RemovedVertices": 121,
+        "Winding": {
+          "Xor": 2187.2409783443973,
+          "Union": 234499.90438561657,
+          "Jaccard": 0.00932725744206553
+        },
+        "Clipper8": {
+          "Xor": 2187.240977860681,
+          "Union": 234499.9043855991,
+          "Jaccard": 0.009327257440003468
+        },
+        "Clipper7": {
+          "Xor": 2187.2409778261795,
+          "Union": 234499.90438335456,
+          "Jaccard": 0.009327257439945617
+        },
+        "XorDelta": 4.837161213799845e-07,
+        "UnionDelta": 1.7462298274040222e-08,
+        "Measurements": {
+          "isolated-area": {
+            "winding": {
+              "MedianUs": 71.276171875,
+              "RangeUs": [
+                71.11953125,
+                73.3640625
+              ],
+              "WarmBytes": 0
+            },
+            "clipper64-p8": {
+              "MedianUs": 134.928125,
+              "RangeUs": [
+                128.76015625,
+                139.24921875
+              ],
+              "WarmBytes": 107488
+            },
+            "ClipperOverWinding": 1.8930327127644997
+          },
+          "complete-consumer": {
+            "winding": {
+              "MedianUs": 80.866796875,
+              "RangeUs": [
+                78.95078125,
+                81.030078125
+              ],
+              "WarmBytes": 9800
+            },
+            "clipper64-p8": {
+              "MedianUs": 139.3984375,
+              "RangeUs": [
+                136.5375,
+                139.7109375
+              ],
+              "WarmBytes": 117288
+            },
+            "ClipperOverWinding": 1.7238031291813793
+          }
+        }
+      },
+      {
+        "Key": "NPL-12",
+        "Name": "Nepal",
+        "Tolerance": 12,
+        "OriginalVertices": 201,
+        "SimplifiedVertices": 39,
+        "RemovedVertices": 162,
+        "Winding": {
+          "Xor": 7945.321280880011,
+          "Union": 238642.33805143807,
+          "Jaccard": 0.03329384612032857
+        },
+        "Clipper8": {
+          "Xor": 7945.321279842543,
+          "Union": 238642.33805086746,
+          "Jaccard": 0.0332938461160608
+        },
+        "Clipper7": {
+          "Xor": 7945.321272928132,
+          "Union": 238642.33805069322,
+          "Jaccard": 0.03329384608711117
+        },
+        "XorDelta": 1.0374678822699934e-06,
+        "UnionDelta": 5.70609699934721e-07,
+        "Measurements": {
+          "isolated-area": {
+            "winding": {
+              "MedianUs": 56.388671875,
+              "RangeUs": [
+                55.421484375,
+                58.5744140625
+              ],
+              "WarmBytes": 0
+            },
+            "clipper64-p8": {
+              "MedianUs": 109.127734375,
+              "RangeUs": [
+                106.919140625,
+                110.673046875
+              ],
+              "WarmBytes": 85784
+            },
+            "ClipperOverWinding": 1.9352776142149561
+          },
+          "complete-consumer": {
+            "winding": {
+              "MedianUs": 64.875390625,
+              "RangeUs": [
+                64.8390625,
+                67.24765625
+              ],
+              "WarmBytes": 9144
+            },
+            "clipper64-p8": {
+              "MedianUs": 115.375,
+              "RangeUs": [
+                111.676953125,
+                117.262109375
+              ],
+              "WarmBytes": 94928
+            },
+            "ClipperOverWinding": 1.77840933038698
+          }
+        }
+      }
+    ]
+  },
+  "AccuracyControls": {
+    "FixtureSource": "00f96248cc404e2d662d9e51c457d811701fa889:results/winding/clipper-disagreements.json",
+    "FixtureSha256": "38ab59c20cd8983b8471e841cad30f7e64e75aa96b4f40ba30a628fbb8be1d7d",
+    "WindingSha256": "710f2a49ebd5c4fbf9c6f3ed428734e0614c150d16753eb82d98fc45d67433f2",
+    "ClipperVersion": "2.0.0.0",
+    "Rows": [
+      {
+        "Name": "grid walk n=16 #68 NonZero",
+        "Quantity": "area",
+        "Exact": "15/4",
+        "Expected": 3.75,
+        "Winding": 3.75,
+        "Clipper": 3.8333333466666666,
+        "Precision": 8,
+        "WindingError": 0,
+        "ClipperError": 0.08333334666666659
+      },
+      {
+        "Name": "grid regions #81 NonZero",
+        "Quantity": "first",
+        "Exact": "953/312",
+        "Expected": 3.0544871794871793,
+        "Winding": 3.0544871794871793,
+        "Clipper": 3.0544871799999997,
+        "Precision": 8,
+        "WindingError": 0,
+        "ClipperError": 5.12820452769347e-10
+      },
+      {
+        "Name": "grid regions #81 NonZero",
+        "Quantity": "second",
+        "Exact": "15469/2640",
+        "Expected": 5.859469696969697,
+        "Winding": 5.859469696969697,
+        "Clipper": 5.859469693438312,
+        "Precision": 8,
+        "WindingError": 0,
+        "ClipperError": -3.531384962229822e-09
+      },
+      {
+        "Name": "grid regions #81 NonZero",
+        "Quantity": "intersection",
+        "Exact": "10653/3640",
+        "Expected": 2.9266483516483515,
+        "Winding": 2.9266483516483515,
+        "Clipper": 2.9266483447499994,
+        "Precision": 8,
+        "WindingError": 0,
+        "ClipperError": -6.8983521117615965e-09
+      },
+      {
+        "Name": "grid regions #81 NonZero",
+        "Quantity": "union",
+        "Exact": "1438391/240240",
+        "Expected": 5.987308524808525,
+        "Winding": 5.987308524808524,
+        "Clipper": 5.987308521847402,
+        "Precision": 8,
+        "WindingError": -8.881784197001252e-16,
+        "ClipperError": -2.961122902433999e-09
+      },
+      {
+        "Name": "grid regions #81 NonZero",
+        "Quantity": "symmetric difference",
+        "Exact": "56561/18480",
+        "Expected": 3.0606601731601732,
+        "Winding": 3.0606601731601732,
+        "Clipper": 2.506038324052712,
+        "Precision": 8,
+        "WindingError": 0,
+        "ClipperError": -0.5546218491074613
+      },
+      {
+        "Name": "grid regions #137 NonZero",
+        "Quantity": "first",
+        "Exact": "203/60",
+        "Expected": 3.3833333333333333,
+        "Winding": 3.3833333333333333,
+        "Clipper": 3.38333333825,
+        "Precision": 8,
+        "WindingError": 0,
+        "ClipperError": 4.916666629384281e-09
+      },
+      {
+        "Name": "grid regions #137 NonZero",
+        "Quantity": "second",
+        "Exact": "27571/6160",
+        "Expected": 4.475811688311689,
+        "Winding": 4.475811688311688,
+        "Clipper": 4.4758116885,
+        "Precision": 8,
+        "WindingError": -8.881784197001252e-16,
+        "ClipperError": 1.8831158854482055e-10
+      },
+      {
+        "Name": "grid regions #137 NonZero",
+        "Quantity": "intersection",
+        "Exact": "227/112",
+        "Expected": 2.0267857142857144,
+        "Winding": 2.0267857142857144,
+        "Clipper": 2.0267857182261904,
+        "Precision": 8,
+        "WindingError": 0,
+        "ClipperError": 3.940475945540811e-09
+      },
+      {
+        "Name": "grid regions #137 NonZero",
+        "Quantity": "union",
+        "Exact": "53891/9240",
+        "Expected": 5.832359307359307,
+        "Winding": 5.832359307359307,
+        "Clipper": 5.865692649244589,
+        "Precision": 8,
+        "WindingError": 0,
+        "ClipperError": 0.0333333418852817
+      },
+      {
+        "Name": "grid regions #137 NonZero",
+        "Quantity": "symmetric difference",
+        "Exact": "70327/18480",
+        "Expected": 3.805573593073593,
+        "Winding": 3.8055735930735928,
+        "Clipper": 3.805573605018399,
+        "Precision": 8,
+        "WindingError": -4.440892098500626e-16,
+        "ClipperError": 1.1944805589081398e-08
+      },
+      {
+        "Name": "grid regions #137 EvenOdd",
+        "Quantity": "first",
+        "Exact": "13/4",
+        "Expected": 3.25,
+        "Winding": 3.25,
+        "Clipper": 3.25000000475,
+        "Precision": 8,
+        "WindingError": 0,
+        "ClipperError": 4.749999948927552e-09
+      },
+      {
+        "Name": "grid regions #137 EvenOdd",
+        "Quantity": "second",
+        "Exact": "39439/9240",
+        "Expected": 4.268290043290043,
+        "Winding": 4.268290043290043,
+        "Clipper": 4.26829004087879,
+        "Precision": 8,
+        "WindingError": 0,
+        "ClipperError": -2.411253419154491e-09
+      },
+      {
+        "Name": "grid regions #137 EvenOdd",
+        "Quantity": "intersection",
+        "Exact": "449/240",
+        "Expected": 1.8708333333333333,
+        "Winding": 1.8708333333333336,
+        "Clipper": 1.8708333309761906,
+        "Precision": 8,
+        "WindingError": 2.220446049250313e-16,
+        "ClipperError": -2.3571427032464953e-09
+      },
+      {
+        "Name": "grid regions #137 EvenOdd",
+        "Quantity": "union",
+        "Exact": "20873/3696",
+        "Expected": 5.64745670995671,
+        "Winding": 5.64745670995671,
+        "Clipper": 5.6807900496233765,
+        "Precision": 8,
+        "WindingError": 0,
+        "ClipperError": 0.033333339666666184
+      },
+      {
+        "Name": "grid regions #137 EvenOdd",
+        "Quantity": "symmetric difference",
+        "Exact": "1454/385",
+        "Expected": 3.7766233766233768,
+        "Winding": 3.7766233766233768,
+        "Clipper": 3.7766233866471866,
+        "Precision": 8,
+        "WindingError": 0,
+        "ClipperError": 1.0023809782211401e-08
+      },
+      {
+        "Name": "grid regions #146 NonZero",
+        "Quantity": "first",
+        "Exact": "1229/280",
+        "Expected": 4.389285714285714,
+        "Winding": 4.389285714285714,
+        "Clipper": 4.389285712441017,
+        "Precision": 8,
+        "WindingError": 0,
+        "ClipperError": -1.844696839725657e-09
+      },
+      {
+        "Name": "grid regions #146 NonZero",
+        "Quantity": "second",
+        "Exact": "661307/120120",
+        "Expected": 5.50538628038628,
+        "Winding": 5.50538628038628,
+        "Clipper": 5.505386279794872,
+        "Precision": 8,
+        "WindingError": 0,
+        "ClipperError": -5.914078116120436e-10
+      },
+      {
+        "Name": "grid regions #146 NonZero",
+        "Quantity": "intersection",
+        "Exact": "14623/5720",
+        "Expected": 2.5564685314685316,
+        "Winding": 2.5564685314685316,
+        "Clipper": 2.556468533137862,
+        "Precision": 8,
+        "WindingError": 0,
+        "ClipperError": 1.6693304516479657e-09
+      },
+      {
+        "Name": "grid regions #146 NonZero",
+        "Quantity": "union",
+        "Exact": "13561/1848",
+        "Expected": 7.338203463203463,
+        "Winding": 7.338203463203463,
+        "Clipper": 7.338203464731061,
+        "Precision": 8,
+        "WindingError": 0,
+        "ClipperError": 1.5275976039674788e-09
+      },
+      {
+        "Name": "grid regions #146 NonZero",
+        "Quantity": "symmetric difference",
+        "Exact": "287191/60060",
+        "Expected": 4.781734931734932,
+        "Winding": 4.781734931734931,
+        "Clipper": 4.745021649054737,
+        "Precision": 8,
+        "WindingError": -8.881784197001252e-16,
+        "ClipperError": -0.03671328268019547
+      },
+      {
+        "Name": "thin triangle L=10000",
+        "Quantity": "area",
+        "Exact": "L*(next(2L)-2L)/2",
+        "Expected": 1.8189894035458565e-08,
+        "Winding": 1.8189894035458565e-08,
+        "Clipper": 0,
+        "Precision": 8,
+        "WindingError": 0,
+        "ClipperError": -1.8189894035458565e-08
+      },
+      {
+        "Name": "thin triangle L=100000000",
+        "Quantity": "area",
+        "Exact": "L*(next(2L)-2L)/2",
+        "Expected": 1.4901161193847656,
+        "Winding": 1.4901161193847656,
+        "Clipper": 4,
+        "Precision": 8,
+        "WindingError": 0,
+        "ClipperError": 2.5098838806152344
+      },
+      {
+        "Name": "thin triangle L=1000000000000",
+        "Quantity": "area",
+        "Exact": "L*(next(2L)-2L)/2",
+        "Expected": 122070312.5,
+        "Winding": 122070312.5,
+        "Clipper": 268435456,
+        "Precision": 5,
+        "WindingError": 0,
+        "ClipperError": 146365143.5
+      },
+      {
+        "Name": "thin triangle L=10000000000000000",
+        "Quantity": "area",
+        "Exact": "L*(next(2L)-2L)/2",
+        "Expected": 20000000000000000,
+        "Winding": 20000000000000000,
+        "Clipper": 36028797018963970,
+        "Precision": 1,
+        "WindingError": 0,
+        "ClipperError": 16028797018963968
+      },
+      {
+        "Name": "tilted strips L=100000000",
+        "Quantity": "intersection",
+        "Exact": "4000000/1000001",
+        "Expected": 3.999996000004,
+        "Winding": 3.9999960000277497,
+        "Clipper": 3.99999597998402,
+        "Precision": 8,
+        "WindingError": 2.374989094278135e-11,
+        "ClipperError": -2.0019979896090945e-08
+      },
+      {
+        "Name": "tilted strips L=1000000000000",
+        "Quantity": "intersection",
+        "Exact": "4000000/1000001",
+        "Expected": 3.999996000004,
+        "Winding": 3.9999959468841553,
+        "Clipper": 3.9997435842559996,
+        "Precision": 6,
+        "WindingError": -5.311984452305296e-08,
+        "ClipperError": -0.00025241574800016764
+      },
+      {
+        "Name": "tilted strips L=10000000000000000",
+        "Quantity": "intersection",
+        "Exact": "4000000/1000001",
+        "Expected": 3.999996000004,
+        "Winding": 4.00390625,
+        "Clipper": 7.660799999999999,
+        "Precision": 2,
+        "WindingError": 0.0039102499960002035,
+        "ClipperError": 3.6608039999959994
+      },
+      {
+        "Name": "unit squares 1e8 apart with retraced bridge",
+        "Quantity": "area",
+        "Exact": "1+1",
+        "Expected": 2,
+        "Winding": 2,
+        "Clipper": 2,
+        "Precision": 8,
+        "WindingError": 0,
+        "ClipperError": 0
+      }
+    ]
+  },
+  "Date": "2026-09-24",
+  "Validation": {
+    "Build": "Locked solution restore and Release build succeeded with zero warnings/errors.",
+    "Smoke": "Basic, AreaChange analytic/12 real pairs, 238 Clipper method calls and 29 accuracy quantities passed.",
+    "NegativeEvidenceCheck": "Corrupted AreaChange stored median was rejected before existing accuracy evidence was overwritten.",
+    "VisualCheck": "Three retained SVG overlays were rendered and inspected.",
+    "RuntimeSourceIdentity": "src/PolylineKit.Winding has no source changes between cd23a11, 2410a6b and a50dade; assembly revision attributes differ.",
+    "CI": "Configured for Windows/Linux; this local follow-up was executed on Windows only."
+  },
+  "Commands": [
+    "dotnet restore PolylineKit.slnx --locked-mode",
+    "dotnet build PolylineKit.slnx -c Release --no-restore",
+    "pwsh scripts/verify-implementations.ps1",
+    "pwsh scripts/benchmark.ps1 -Suite WindingVsClipper2",
+    "pwsh scripts/profile-winding.ps1",
+    "dotnet run --project examples/AreaChange -c Release -- check",
+    "Set DOTNET_TieredCompilation=0; run AreaChange benchmark <output> <1..3> <revision> in three fresh processes, then summarize <output>."
+  ],
+  "RawArchive": {
+    "Path": "artifacts/winding-review-evidence-2026-09-24.zip",
+    "Bytes": 2265514,
+    "Sha256": "c2543df9e3e1d6e37061bb43713fa1d3f5c225c3b7bf655db81e600f36faf36d",
+    "Entries": 127,
+    "PublicUrl": null,
+    "Scope": "Local review archive; not uploaded. Entry manifest and pre-archive summary are embedded. Original raw files remain under ignored artifacts/."
+  }
+}

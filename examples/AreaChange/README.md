@@ -5,6 +5,9 @@ It uses `WindingArea.FilledRegions(original, simplified)` to obtain XOR area and
 `JaccardDistance = XOR / union`. A smaller Jaccard change means less filled area changed;
 it is not a similarity probability or a bound on the largest local displacement.
 
+The [measured results](RESULTS.md) retain all twelve pairs, numerical disagreements,
+three-process timing ranges and allocations for both implementations.
+
 ```csharp
 var change = WindingArea.FilledRegions(original, simplified);
 Console.WriteLine($"Changed area: {change.SymmetricDifferenceArea}");

@@ -10,7 +10,39 @@ Benchmarks separate input generation from the timed call; validation/copying, so
 
 The optimizations were measured in separate stages. Do not multiply their speedups or attribute a comparison against an earlier stage to SIMD alone.
 
-## Current numerical correction: measured cost
+## Sub-edge ratio correction: measured cost
+
+The later review found a distinct intermediate-underflow error: a tiny fraction
+could become zero before multiplication by a large edge term. The exceptional
+ratio is now scaled; ordinary fractions retain their original evaluation.
+See the [derivation](winding-numerics.md#sub-edge-ratio-underflow) and
+[review disposition](winding-review.md).
+
+Same harness; only leaf DLL replaced. Baseline `e4444cc`, corrected `cd23a11`. Three fresh processes each, nine batches.
+
+| Workload | n per path | Before, us | Corrected, us | Time change |
+|---|---:|---:|---:|---:|
+| degenerate-grid | 64 | 408.66 | 403.05 | -1.4% |
+| degenerate-grid | 256 | 6912.65 | 6881.93 | -0.4% |
+| dense-graph | 64 | 14.26 | 13.78 | -3.4% |
+| dense-graph | 256 | 49.70 | 48.99 | -1.4% |
+| dense-graph | 1024 | 193.50 | 189.72 | -2.0% |
+| filled-regions | 64 | 16.79 | 17.62 | +4.9% |
+| filled-regions | 256 | 70.94 | 69.76 | -1.7% |
+| filled-regions | 1024 | 277.61 | 274.17 | -1.2% |
+| random-walks | 64 | 20.00 | 20.06 | +0.3% |
+| random-walks | 256 | 153.15 | 152.98 | -0.1% |
+| random-walks | 1024 | 760.79 | 747.91 | -1.7% |
+| similar-strokes | 64 | 12.44 | 11.45 | -7.9% |
+| similar-strokes | 256 | 39.70 | 40.83 | +2.8% |
+| similar-strokes | 1024 | 160.46 | 160.19 | -0.2% |
+
+All warm winding allocation samples are zero. Changes range from -7.9% to
++4.9%, mostly within 3%. These descriptive differences show no large consistent
+cost in the measured set; they do not establish a speed improvement or prove
+zero overhead. This is separate from the earlier area-term correction below.
+
+## Earlier edge-term correction: measured cost
 
 The area-term correction fixes product cancellation in thin triangles; it is not
 a general performance optimization. It uses a derived value-error filter,
@@ -101,37 +133,61 @@ Affine array application also has a separate SIMD path. Its earlier controlled e
 
 ## Current comparison with Clipper2
 
-The extracted engine at `8a94077` was measured in **three independent processes**,
-181 method rows per process, using `WindingVsClipper2`. This is the corrected
-runtime. The [preparation contracts](../benchmarks/README.md#winding-versus-clipper2-operation-and-preparation-contracts)
+The current engine at `2410a6b` was measured in **three independent processes**,
+238 method rows per process, using `WindingVsClipper2`. It includes the sub-edge
+ratio correction. The [preparation contracts](../benchmarks/README.md#winding-versus-clipper2-operation-and-preparation-contracts)
 distinguish conversion, Clear/Add and repeated Execute. The table reports the
-range of **Clipper time / winding time** across the tested sizes, so above 1
+range of **Clipper time / winding time** across the listed sizes, so above 1
 favors winding. Preloaded inputs are an amortized repeated-query scenario;
 WindingArea still prepares its input inside each call. These columns do not
-measure equal preparation work.
+measure equal preparation work. `n` is vertices per input path, not total.
 
-| Family / requested result | Vertices per path | Clipper64 static | Clipper64 reused | Clipper64 preloaded | ClipperD p6 |
-|---|---:|---:|---:|---:|---:|
-| Similar strokes / bridged NonZero | 64–1024 | 1.85–1.90 | 1.71–1.73 | 1.60–1.69 | 1.90–2.02 |
-| Random walks / bridged NonZero | 64–1024 | 1.91–2.82 | 1.88–2.76 | 1.81–2.66 | 2.00–2.89 |
-| Degenerate grid / bridged NonZero | 64–256 | 0.74–0.77 | 0.73–0.77 | 0.73–0.76 | 0.76–0.78 |
-| Tangled ring / NonZero | 64–1024 | 0.81–1.47 | 0.81–1.45 | 0.79–1.40 | 0.83–1.49 |
-| Simple spiky star / NonZero | 1024–4096 | 4.78–33.79 | 4.47–25.47 | 4.34–25.51 | 4.83–33.89 |
-| Star regions / full overlap metrics | 64–1024 | 1.71–2.15 | 1.52–1.86 | 1.45–1.80 | 1.85–2.20 |
-| Star regions / XOR only | 64–1024 | 1.07–1.22 | 0.95–1.13 | 0.90–1.05 | 1.14–1.26 |
-| Star regions / simple IoU | 64–1024 | 0.90–0.98 | 0.82–0.89 | 0.73–0.83 | 0.92–1.06 |
-| Blobs / full overlap metrics | 64–1024 | 1.93–3.16 | 1.66–2.85 | 1.61–2.69 | 2.01–3.17 |
-| Blobs / XOR only | 64–1024 | 1.19–1.81 | 1.06–1.71 | 1.01–1.55 | 1.25–1.89 |
-| Blobs / simple IoU | 64–1024 | 0.99–1.53 | 0.91–1.49 | 0.84–1.37 | 1.01–1.60 |
+| Family / operation | n per path | Clipper64 static | Reused | Preloaded | ClipperD p6 | Wrapper |
+|---|---|---:|---:|---:|---:|---:|
+| blobs / overlap-metrics | 16,64,256,1024 | 1.92–3.18 | 1.68–2.89 | 1.65–2.75 | 2.02–3.16 | 2.61–3.21 |
+| blobs / simple-iou | 16,64,256,1024 | 0.96–1.57 | 0.88–1.51 | 0.79–1.39 | 1.02–1.58 | 2.55–3.22 |
+| blobs / xor-only | 16,64,256,1024 | 1.23–1.83 | 1.09–1.72 | 1.02–1.57 | 1.24–1.90 | 1.48–1.84 |
+| degenerate-grid / bridged-nonzero | 64,256 | 0.74–0.77 | 0.73–0.76 | 0.73–0.75 | 0.75–0.77 | 0.75–0.79 |
+| random-walks / bridged-nonzero | 16,64,256,1024 | 1.91–2.81 | 1.86–2.75 | 1.71–2.66 | 1.97–2.93 | 2.06–2.91 |
+| similar-strokes / bridged-nonzero | 16,64,256,1024 | 1.80–2.08 | 1.68–1.91 | 1.51–1.84 | 1.96–2.15 | 2.11–2.36 |
+| simple-spiky-star / closed-nonzero | 1024,4096 | 4.91–33.36 | 4.62–25.49 | 4.47–25.45 | 4.86–33.25 | — |
+| star-regions / overlap-metrics | 16,64,256,1024 | 1.74–2.23 | 1.59–1.93 | 1.48–1.82 | 1.84–2.29 | 2.53–3.10 |
+| star-regions / simple-iou | 16,64,256,1024 | 0.89–1.03 | 0.82–0.96 | 0.74–0.91 | 0.93–1.23 | 2.53–3.04 |
+| star-regions / xor-only | 16,64,256,1024 | 1.08–1.35 | 0.96–1.16 | 0.89–1.09 | 1.15–1.41 | 1.45–1.76 |
+| tangled-ring / closed-nonzero | 16,64,256,1024 | 0.79–1.46 | 0.80–1.42 | 0.77–1.37 | 0.82–1.45 | — |
 
-All **837 winding allocation samples** (31 scenarios × 3 processes × 9 batches)
-are 0 B/op for these warm calls. Clipper constructs contours and therefore solves
-a broader output problem, even though this consumer only uses their area.
-WindingArea computes all region metrics even when only XOR or IoU is consumed;
-Clipper can execute a single Boolean operation in those narrower scenarios.
-The large simple-star gains rely on the existing simplicity certificate, not
-on the numerical fix. Clipper wins the grid controls and all preloaded star-IoU
-rows. No universal fastest method follows from the favorable cases.
+All **1,188 winding allocation samples** (44 scenarios × 3 processes × 9 batches)
+are 0 B/op for these warm calls. Clipper constructs contours and therefore
+solves a broader output problem. WindingArea computes all region metrics even
+when only XOR or IoU is consumed; direct Clipper can execute a single Boolean
+operation in those narrower scenarios. The public wrapper's IoU still computes
+its complete overlap result. The large simple-star gains rely on the existing
+simplicity certificate, not the numerical repair. Clipper wins the grid
+controls and all preloaded star-IoU rows; the tangled-ring result varies with
+size. No universal fastest method follows from the favorable cases.
+
+AbsoluteWinding is reported separately because fill area is not its equivalent.
+These tangled-ring calls compute all four single-path integrals and consume
+AbsoluteWinding; they are not an optimized absolute-only kernel.
+
+| n | Winding us (range) | B/op |
+|---:|---:|---:|
+| 16 | 9.39 (9.18–9.62) | 0 |
+| 64 | 22.63 (21.33–23.65) | 0 |
+| 256 | 140.59 (138.66–145.77) | 0 |
+| 1024 | 743.05 (732.68–755.42) | 0 |
+
+Integer-grid controls give both methods the same exactly representable input
+geometry; generated crossing coordinates can still differ. Other prepared
+Clipper rows use a decimal grid of `10^-6`, while winding uses the supplied
+binary64 points. The largest primary-value absolute disagreement in this
+matrix is about `3.77e-6` for direct Clipper64/ClipperD, and `1.42e-5` for the
+wrapper, both on the 1024-vertex random walks. The wrapper additionally
+recenters coordinates and may exchange axes before quantization. These
+observed differences are not accuracy bounds;
+the manifest preserves per-family, per-metric maxima, and raw records retain
+each result. The area-change consumer below separately includes double-to-grid
+conversion for direct Clipper64 callers.
 
 The reproducible `accuracy-clipper` controls give zero winding error on all four
 thin triangles and on the distant-square bridge. Across the five selected
@@ -144,12 +200,65 @@ Their corresponding ClipperD precision settings are recorded individually;
 neither a grid step nor an exact topology predicate bounds final relative area
 error. See [numeric limits](winding-area.md#numerical-limits).
 
-The [compact evidence manifest](../benchmarks/winding-evidence.json) records
-source revisions, DLL hashes, the three-process summaries and the raw archive
-checksum. Raw samples and inputs remain under ignored `artifacts/` for review;
-the archive has not been published. Reproduce with the commands in
-[benchmarks/README.md](../benchmarks/README.md). Historical `becc37d` results
-remain in the [research archive](https://github.com/bgtnt/polylinekit/blob/00f96248cc404e2d662d9e51c457d811701fa889/results/winding/benchmarks/summary.md).
+The [current compact evidence manifest](../benchmarks/winding-review-evidence.json)
+records source revisions, DLL hashes, three-process summaries and the local raw
+archive checksum. The [earlier extraction manifest](../benchmarks/winding-evidence.json)
+retains the `8a94077` measurements. Raw archives remain local under ignored
+`artifacts/`; they have not been published. Commands and fixed inputs are in
+[benchmarks/README.md](../benchmarks/README.md).
+
+## First use and retained workspace
+
+At `a50dade`, five cases each ran in three new processes, serially. No winding
+runtime code changed since the external comparison. First-call timing includes
+JIT and workspace creation, but excludes input generation, assembly loading
+and counter setup. It is not process-start latency or a cold-start comparison
+with Clipper. Warm timing comes from nine subsequent batches per process.
+
+| Case | First call ms (range) | First allocated B | Retained array payload B | Warm us | Warm B/op |
+|---|---:|---:|---:|---:|---:|
+| similar-strokes/16/bridged-nonzero | 27.81 (27.51–27.94) | 42240 | 41105 | 3.46 | 0 |
+| similar-strokes/1024/bridged-nonzero | 26.53 (26.52–27.14) | 279080 | 261009 | 158.89 | 0 |
+| star-regions/1024/overlap-metrics | 29.36 (29.16–30.97) | 278704 | 260745 | 275.27 | 0 |
+| degenerate-grid/256/bridged-nonzero | 39.56 (39.39–40.31) | 10046416 | 7013261 | 6845.25 | 0 |
+| simple-spiky-star/4096/closed-nonzero | 36.87 (36.64–37.36) | 556536 | 538249 | 2166.47 | 0 |
+
+Retained payload inventories the cached workspace, certificate and predicate
+arrays using managed element sizes, without array headers, object/delegate
+fields or native/JIT memory. Forced-collection managed-heap deltas are retained
+separately in the manifest; they may include runtime caches. Neither number is
+peak or total memory. The grid's roughly 7 MB retained payload is material even
+though its repeated calls allocate zero bytes. A long-lived thread keeps the
+largest workspace capacity it has needed. See the
+[profiling contract](../benchmarks/README.md#first-use-and-retained-workspace).
+
+## Real-contour area-change consumer
+
+[AreaChange](../examples/AreaChange/README.md) compares four public-domain
+Natural Earth contours with three simplifications each. It uses a pinned
+existing simplifier and measures changed filled area directly. Both scorers
+receive identical pairs and request XOR plus union/Jaccard. Direct Clipper64
+includes input conversion and quantization to `10^-8`, two Boolean operations,
+and output area summation without converting output vertices to doubles.
+
+Three independent processes at `a50dade` use five batches each. Across the
+twelve pairs, Clipper time / winding time is **1.06–1.94 for isolated area**
+and **1.06–1.78 for the complete geometry consumer**. The smallest differences
+are modest and some process ranges overlap; these are descriptive ratios.
+Isolated winding allocates zero bytes; the full winding consumer allocates
+3,728–10,888 B/op for simplification and conversions. The corresponding
+Clipper consumers allocate 34,032–142,504 B/op. Data loading and report writing
+are outside both complete geometry operations.
+
+For example, Bulgaria at tolerance 4 removes 90/178 vertices and changes
+0.6013% of the union. The complete winding consumer takes 87.58 us versus
+122.02 us for clipping on this machine. Analytic controls and all twelve real
+pairs pass their declared checks; maximum p8 XOR/union disagreement is about
+`1.10e-6` squared normalized map units. The coordinates describe local map
+planes, not geodesic land area. All pairs, time ranges, allocation figures,
+provenance and three overlays are in the [example results](../examples/AreaChange/RESULTS.md).
+This demonstrates a useful bounded area operation, without establishing
+customer demand, maximum-deviation guarantees or recognition quality.
 
 ## Native-code experiments
 
