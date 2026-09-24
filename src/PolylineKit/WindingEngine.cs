@@ -469,19 +469,36 @@ internal static class WindingEngine
         return best;
     }
 
-    // Twice cross(a - o, b - o), twice the signed area of triangle (o, a, b), as cross(d, b - a) with
+    // Twice cross(a - o, b - o), four times the signed area of triangle (o, a, b), as cross(d, b - a) with
     // d = (a - o) + (b - o) twice the offset of the midpoint from o. The products are |m - o| |b - a| instead of
     // |a - o| |b - o|, so a short segment far from the origin does not lose its contribution to cancellation.
     // d includes the rounding errors of a - o and b - o, so a long segment passing close to o keeps its small
     // offset, and nothing is halved, so tiny coordinates do not underflow. Swapping a and b negates the result
-    // exactly. Sums of these terms are divided by 4.
+    // exactly. The filter below bounds the value error, not just its sign. Uncertain terms are evaluated
+    // from an exact determinant expansion (or exact dyadic integers for extreme exponents). See
+    // docs/winding-numerics.md for the bound and the limits of the complete area calculation.
+    // Sums of these terms are divided by 4.
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static double Cross(Point2 a, Point2 b, Point2 o)
     {
         double ax = a.X - o.X, bx = b.X - o.X, ay = a.Y - o.Y, by = b.Y - o.Y;
-        double dx = (ax + bx) + (Tail(a.X, o.X, ax) + Tail(b.X, o.X, bx));
-        double dy = (ay + by) + (Tail(a.Y, o.Y, ay) + Tail(b.Y, o.Y, by));
-        return dx * (b.Y - a.Y) - dy * (b.X - a.X);
+        double hx = ax + bx, tx = Tail(a.X, o.X, ax) + Tail(b.X, o.X, bx);
+        double hy = ay + by, ty = Tail(a.Y, o.Y, ay) + Tail(b.Y, o.Y, by);
+        double dx = hx + tx, dy = hy + ty, ex = b.X - a.X, ey = b.Y - a.Y;
+        double left = dx * ey, right = dy * ex, value = left - right;
+        double products = Math.Abs(left) + Math.Abs(right);
+        // For u=2^-53, this is u*(1+32u), rounded upwards. It covers rounding in the
+        // positive bound itself as well as the higher-order products of local errors.
+        const double boundFactor = 1.1102230246251606e-16;
+        const double valueTolerance = 8.881784197001252e-16; // 8u, relative to the returned term
+        double error = boundFactor *
+            ((Math.Abs(hx) + Math.Abs(tx) + Math.Abs(dx)) * Math.Abs(ey) +
+             (Math.Abs(hy) + Math.Abs(ty) + Math.Abs(dy)) * Math.Abs(ex) +
+             2 * products + Math.Abs(value));
+        // The normal-magnitude guard makes underflow errors negligible even compared with
+        // the conservative inflation of the bound. Tiny products take the exact route.
+        if (products > 1e-250 && error <= valueTolerance * Math.Abs(value)) return value;
+        return RobustOrientation.TwiceDeterminant(o, a, b);
     }
 
     // The rounding error of difference = x - y (Knuth's TwoDiff): x - y equals difference + Tail exactly.

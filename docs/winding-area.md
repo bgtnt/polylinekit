@@ -55,13 +55,17 @@ Known regression examples make these limits concrete:
 
 | Input | Observed limit |
 | --- | --- |
-| Triangle `(0,0)`, `(1e12,1e12)`, `(2e12,double.BitIncrement(2e12))` | Exact area of the binary64 input is `122070312.5`; the engine returns `134217728`, about **9.95% high**. Compensation cannot recover bits lost within a product. |
+| Triangles `(0,0)`, `(L,L)`, `(2L,double.BitIncrement(2L))`, for `L=1e4,1e8,1e12,1e16` | Edge-product cancellation is corrected: areas now equal the exact binary64-input areas. The previous engine lost up to **32.9%** on these cases. Reversal, cyclic shifts, tiny scaling and containment have independent dyadic-oracle regressions. |
 | Unit-wide crossing strips, tilted by `1/1000`, half-length `1e16` | Intersection relative error reaches **1e-3** across the checked orientations/rules; approximately `1.3e-8` at half-length `1e12` and `6e-12` at `1e8`. Own, union and XOR areas in these fixtures remain exact to rounding. |
 | Two unit squares `1e8` apart, connected as one walk by a retraced bridge | Relative error is approximately `1e-8`; a single chain's distant parts share one accumulation origin. |
 
 These are measured examples, not general error bounds. A tiny region formed by very long edges loses accuracy because crossing positions round relative to the edges' coordinates, not the tiny region. Translate/scale upstream while precision is available, and separate distant components where the intended semantics permit it. Neither normalization nor exact predicates guarantee a well-conditioned area for every shape.
 
 Clipper-based methods apply an additional decimal grid and can differ. Agreement with a quantized result is therefore not a universal correctness oracle. The [frozen exact-rational arbitration](https://github.com/bgtnt/polylinekit/blob/00f96248cc404e2d662d9e51c457d811701fa889/results/winding/clipper-disagreements.json) preserves specific disagreements with pinned Clipper2 2.0.0; it is not a claim about every subsequent upstream version.
+
+The [edge-term derivation](winding-numerics.md) describes the value-error filter,
+exact fallback and remaining accumulation error. Exact topology alone does not
+establish that numerical contract.
 
 ## Cost and storage
 

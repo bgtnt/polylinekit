@@ -80,6 +80,25 @@ internal static class RobustOrientation
     internal static int ExactSign(Point2 a, Point2 b, Point2 c) =>
         TryExpansion(a, b, c, out double value) ? Math.Sign(value) : IntegerSign(a, b, c);
 
+    /// <summary>Accurate value of twice (b-a) x (c-a), including subnormal results.</summary>
+    internal static double TwiceDeterminant(Point2 a, Point2 b, Point2 c)
+    {
+        // Canonical operand order makes negation bitwise consistent even if two equivalent
+        // expansion orders would choose different faithful roundings of a midpoint tie.
+        bool reverse = b.X > c.X || (b.X == c.X && b.Y > c.Y);
+        if (reverse) (b, c) = (c, b);
+        double value;
+        if (TryExpansion(a, b, c, out double determinant)) value = 2 * determinant;
+        else
+        {
+            BigInteger[] coordinates = Scaled(a, b, c, c, out int exponent);
+            // Round the DOUBLED exact determinant. Rounding det first can discard half an
+            // epsilon that becomes representable after doubling (e.g. a side-2^-537 square).
+            value = RoundDyadic(Determinant(coordinates, 0, 2, 4), 2 * exponent + 1);
+        }
+        return reverse ? -value : value;
+    }
+
     // Evaluates (b - a) x (c - a) as an exact nonoverlapping expansion and returns its faithfully rounded
     // value, whose sign is exact. Returns false when a component could underflow in a product.
     private static bool TryExpansion(Point2 a, Point2 b, Point2 c, out double value)
@@ -264,12 +283,15 @@ internal static class RobustOrientation
         (s[b] - s[a]) * (s[c + 1] - s[a + 1]) - (s[b + 1] - s[a + 1]) * (s[c] - s[a]);
 
     // Coordinates of four points as integers sharing one power-of-two scale.
-    private static BigInteger[] Scaled(Point2 p0, Point2 p1, Point2 p2, Point2 p3)
+    private static BigInteger[] Scaled(Point2 p0, Point2 p1, Point2 p2, Point2 p3) =>
+        Scaled(p0, p1, p2, p3, out _);
+
+    private static BigInteger[] Scaled(Point2 p0, Point2 p1, Point2 p2, Point2 p3, out int minimum)
     {
         double[] values = [p0.X, p0.Y, p1.X, p1.Y, p2.X, p2.Y, p3.X, p3.Y];
         var mantissa = new long[8];
         var exponent = new int[8];
-        int minimum = int.MaxValue;
+        minimum = int.MaxValue;
         for (int i = 0; i < 8; i++)
         {
             long bits = BitConverter.DoubleToInt64Bits(values[i]);
@@ -284,5 +306,30 @@ internal static class RobustOrientation
         for (int i = 0; i < 8; i++)
             scaled[i] = mantissa[i] == 0 ? BigInteger.Zero : new BigInteger(mantissa[i]) << (exponent[i] - minimum);
         return scaled;
+    }
+
+    // Correctly rounded value of integer * 2^exponent, with one nearest/even rounding at
+    // the final binary64 precision (or the fixed 2^-1074 subnormal quantum). The coordinate
+    // cap guarantees a finite answer. No intermediate conversion may underflow first.
+    private static double RoundDyadic(BigInteger integer, int exponent)
+    {
+        if (integer.IsZero) return 0;
+        int sign = integer.Sign;
+        BigInteger magnitude = BigInteger.Abs(integer);
+        int shift = Math.Max(0, Math.Max(BitLength(magnitude) - 53, -1074 - exponent));
+        if (shift != 0)
+        {
+            BigInteger rounded = magnitude >> shift;
+            BigInteger remainder = magnitude - (rounded << shift);
+            BigInteger halfway = BigInteger.One << (shift - 1);
+            if (remainder > halfway || (remainder == halfway && !rounded.IsEven)) rounded++;
+            magnitude = rounded;
+        }
+        int scale = exponent + shift;
+        double unit = scale < -1022
+            ? BitConverter.Int64BitsToDouble(1L << (scale + 1074))
+            : BitConverter.Int64BitsToDouble((long)(scale + 1023) << 52);
+        double value = (double)magnitude * unit;
+        return sign < 0 ? -value : value;
     }
 }
