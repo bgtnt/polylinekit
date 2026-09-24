@@ -8,9 +8,9 @@ C = 2\,\operatorname{orient2d}(o,a,b)
   = ((a-o)+(b-o))\mathbin\times(b-a).
 \]
 
-The accumulated contributions are divided by four. The midpoint expression
-avoids subtracting two large endpoint products for a short edge far from the
-origin. It does **not** by itself prevent cancellation inside its two products.
+The accumulated contributions are divided by four. The original midpoint
+expression avoids subtracting two large endpoint products for a short edge far
+from the origin. It does **not** by itself prevent cancellation inside its two products.
 In particular, the three skinny-triangle examples from the numerical review
 lost 32.9%, 9.95% and 9.93% before this correction. Compensated accumulation
 cannot recover an error already introduced inside a contribution.
@@ -23,74 +23,95 @@ small scales. Translated variants use the exact area of the translated,
 rounded coordinates; translation may already have erased the thinness before
 the library receives the input.
 
-## Fast value filter
+## Adaptive compensated determinant
 
-This filter certifies a bound on the **value**, independently of the orientation
-predicate's sign filter. Let `u = 2^-53` and `c = u/(1-u)`. For a normal result
-`z` of one rounded operation, its local error is at most `c |z|`.
+The implementation now evaluates the equivalent `2 * orient2d(o,a,b)` directly.
+It first tries a cheap value filter, then compensates the two products and the
+four coordinate differences. Full expansion summation is needed only when the
+remaining correction is poorly conditioned. This avoids paying for a full
+expansion on every ordinary short edge whose endpoint products nearly cancel.
+The existing orientation-sign predicates are unchanged.
 
-`TwoDiff` represents each offset exactly as a head and a tail. In one coordinate,
-the engine forms
-
-```
-h = fl(head(a-o) + head(b-o))
-t = fl(tail(a-o) + tail(b-o))
-d = fl(h + t)
-H = |h| + |t| + |d|
-```
-
-The error between `d` and the exact midpoint sum is at most `c H`: this includes
-the addition of the heads, the addition of the tails and the final addition.
-For `e = fl(b-a)`, the difference error is at most `c |e|`. Define
+Let `u = 2^-53` and `c = u/(1-u)`. For a normal result `z` of one rounded
+operation, its local error is at most `c |z|`. Write the rounded offsets from
+the origin as `x1,y1,x2,y2`, and form
 
 ```
-L = fl(dx * ey)
-R = fl(dy * ex)
+L = fl(x1 * y2)
+R = fl(y1 * x2)
 q = fl(L - R)
+S = fl(|L| + |R|)
 ```
 
-Propagating both operand errors through each product, and including product and
-final-subtraction rounding, gives
+The exact determinant is `D`. Each product has two rounded differences as
+operands. Including these errors, the product rounding and the final
+subtraction gives
 
 \[
-|C-q| \le c\left[(1+c)(H_x|e_y|+H_y|e_x|)
-                  +(2+c)(|L|+|R|)+|q|\right].
+|D-q| \le c\left[(3+3c+c^2)(|L|+|R|)+|q|\right].
 \]
 
-The implementation uses the conservative computable bound
+Since `|q| <= (1+u)(|L|+|R|)`, and allowing for the rounding in `S`, this is
+less than `(4+32u)u S` for binary64. The quick filter accepts only when
+`S > 1e-250` and `S <= 1.75 |q|`. Thus its error is less than `8u |q|`.
+The factor `1.75`, rather than `2`, leaves margin for the higher-order errors
+and the rounded threshold multiplication. This is a value-accuracy test,
+independent of the sign predicate's filter.
+
+When that test fails, `TwoDiff` recovers the exact tail of each coordinate
+difference and of `L-R`. The two product tails are obtained with scalar FMA on
+supported modern .NET targets; the portable implementation uses Dekker's split
+product. Their arithmetic has the same exact residual. In the compensated
+branch the products have the same sign and comparable normal magnitudes
+(each exceeds approximately `0.21 S`), so their product residuals do not
+underflow. More explicitly, each operand has at most 53 significand bits:
+the product and its split partial products share a binary quantum greater
+than approximately `0.21e-250 * 2^-106`, well above `2^-1022`. This remains
+true when one operand is subnormal; its significand simply has fewer bits.
+The splitter multiplication cannot overflow under the coordinate cap, and
+any subnormal additions or subtractions in splitting are exact. There is no
+additional rounding to single precision.
+
+The exact determinant is now the head `q`, its difference tail, the two signed
+product tails, and six products containing coordinate-difference tails:
 
 \[
-E = \operatorname{fl}\left(B\operatorname{fl}
-  (H_x|e_y|+H_y|e_x|+2(|L|+|R|)+|q|)\right),
+\begin{aligned}
+D=q+q_t+L_t-R_t
+ &+x_1 y_{2t}+x_{1t}y_2+x_{1t}y_{2t}\\
+ &-y_1 x_{2t}-y_{1t}x_2-y_{1t}x_{2t}.
+\end{aligned}
 \]
 
-where `B = 1.1102230246251606e-16`, at least `u(1+32u)`. The positive expression
-has at most six rounded operations along a dependency chain, plus the final
-multiplication by `B`. Their possible downward rounding and the factors
-`c(1+c)/u` together require less than `11u` of inflation; `32u` leaves a
-conservative margin. Multiplication by two is exact in this range. The public
-coordinate cap keeps every operation far from overflow.
+These small terms are summed in fixed groups into a correction `r`, then
+`v = fl(q+r)` is formed. Let `T` be the computed sum of the absolute values of
+the three exact residuals and the six rounded small products. A path from any
+small product to `r` has at most five rounding steps including its product;
+the positive calculation of `T` has at most six. With
+`gamma(k) = ku/(1-ku)`, the correction's error is bounded by
+`gamma(5)/(1-u)^6 * T < 7u T`. The final addition contributes at most `c |v|`.
 
-The filter accepts `q` only if:
+The compensated filter accepts only if `|v| > 1e-250` and `T <= 0.5 |v|`.
+Consequently its error is at most `3.5u |v| + c |v|`, below the same `8u |v|`
+contract with a substantial margin. If the coordinate tails, both product
+tails and the subtraction tail are all zero, the result is exact and accepted
+directly, including an exact zero. No expansion array is needed in these cases.
 
-* `|L| + |R| > 1e-250`; and
-* `E <= 8u |q|`.
+The magnitude guards also cover gradual underflow. Sums and differences of
+binary64 values are integer multiples of `2^-1074`; an exact subnormal sum or
+difference is representable. Thus no lost subnormal difference is subsequently
+multiplied by a large coordinate. Underflow in a small product or the bound
+contributes only a few subnormal quanta, without a subsequent large multiplier.
+At the accepted magnitude, this is far smaller than the unused relative-error
+margin. Tiny or uncertain values take the exact route. The public coordinate
+cap keeps all operations far from overflow.
 
-The first guard also covers gradual underflow. Sums and differences of
-binary64 values are integer multiples of `2^-1074`; when their exact result is
-subnormal it is representable and the operation is exact. In particular, there
-is no underflow error in a midpoint or edge difference that could later be
-amplified by multiplication by a large coordinate. Underflow can instead occur
-in the two final products or the evaluation of their positive error bound.
-Each such local error is at most half a subnormal quantum and has no subsequent
-large multiplier. The unused inflation margin at the normal-magnitude
-threshold exceeds `1e-281`, much greater than their combined underflow error.
-Tiny contributions instead take the exact route. The tolerance `8u` is a chosen
-per-contribution accuracy contract; the error bound and its inflation are
-derived from the operations above. The accepted result is **not claimed to be
-faithfully or correctly rounded**. Its absolute error is bounded by `E`, and
-its relative error against the exact contribution is at most
-`8u/(1-8u)` (about `8.9e-16`).
+The `8u` tolerance is a chosen per-contribution accuracy contract, and the
+acceptance tests follow from the derived bounds above. Accepted filtered terms
+are **not claimed to be faithfully or correctly rounded**. Their relative
+error against the exact determinant is at most `8u/(1-8u)`, about `8.9e-16`.
+Doubling is exact in the accepted magnitude range. Canonical endpoint ordering
+and final negation guarantee reversal antisymmetry in every arithmetic path.
 
 ## Exact fallback and subnormal values
 

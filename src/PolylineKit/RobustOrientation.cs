@@ -1,5 +1,8 @@
 using System.Numerics;
 using System.Runtime.CompilerServices;
+#if NET10_0_OR_GREATER
+using System.Runtime.Intrinsics.X86;
+#endif
 
 namespace PolylineKit;
 
@@ -81,6 +84,7 @@ internal static class RobustOrientation
         TryExpansion(a, b, c, out double value) ? Math.Sign(value) : IntegerSign(a, b, c);
 
     /// <summary>Accurate value of twice (b-a) x (c-a), including subnormal results.</summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static double TwiceDeterminant(Point2 a, Point2 b, Point2 c)
     {
         // Canonical operand order makes negation bitwise consistent even if two equivalent
@@ -88,7 +92,7 @@ internal static class RobustOrientation
         bool reverse = b.X > c.X || (b.X == c.X && b.Y > c.Y);
         if (reverse) (b, c) = (c, b);
         double value;
-        if (TryExpansion(a, b, c, out double determinant)) value = 2 * determinant;
+        if (TryFilteredValue(a, b, c, out double determinant) || TryExpansion(a, b, c, out determinant)) value = 2 * determinant;
         else
         {
             BigInteger[] coordinates = Scaled(a, b, c, c, out int exponent);
@@ -97,6 +101,58 @@ internal static class RobustOrientation
             value = RoundDyadic(Determinant(coordinates, 0, 2, 4), 2 * exponent + 1);
         }
         return reverse ? -value : value;
+    }
+
+    // A value filter, not an orientation-sign filter. The quick result has error at most
+    // approximately 4u times the product magnitudes. A failed quick filter compensates
+    // products and coordinate differences; only uncertainty in the small correction remains.
+    // Both accepted paths have error <8u|value|. See docs/winding-numerics.md for the bounds.
+    private static bool TryFilteredValue(Point2 a, Point2 b, Point2 c, out double value)
+    {
+        double bx = b.X - a.X, by = b.Y - a.Y, cx = c.X - a.X, cy = c.Y - a.Y;
+        double left = bx * cy, right = by * cx;
+        value = left - right;
+        double products = Math.Abs(left) + Math.Abs(right);
+        if (!(products > 1e-250)) return false;
+        if (products <= 1.75 * Math.Abs(value)) return true;
+
+        double bxt = DifferenceTail(b.X, a.X, bx), byt = DifferenceTail(b.Y, a.Y, by);
+        double cxt = DifferenceTail(c.X, a.X, cx), cyt = DifferenceTail(c.Y, a.Y, cy);
+        double lt = ProductTail(bx, cy, left), rt = ProductTail(by, cx, right);
+        double dt = DifferenceTail(left, right, value);
+        double correction = (lt - rt) + dt;
+        double correctionSize = Math.Abs(lt) + Math.Abs(rt) + Math.Abs(dt);
+        if (bxt != 0 || byt != 0 || cxt != 0 || cyt != 0)
+        {
+            double l0 = bx * cyt, l1 = bxt * cy, l2 = bxt * cyt;
+            double r0 = by * cxt, r1 = byt * cx, r2 = byt * cxt;
+            correction += ((l0 + l1) + l2) - ((r0 + r1) + r2);
+            correctionSize += Math.Abs(l0) + Math.Abs(l1) + Math.Abs(l2) + Math.Abs(r0) + Math.Abs(r1) + Math.Abs(r2);
+        }
+        else if (lt == 0 && rt == 0 && dt == 0) return true; // Exact arithmetic, including exact cancellation.
+
+        value += correction;
+        // Correction arithmetic costs at most 7u*correctionSize; final addition at most
+        // (u/(1-u))*|value|. This power-of-two test leaves more than 3u of safety margin.
+        return Math.Abs(value) > 1e-250 && correctionSize <= .5 * Math.Abs(value);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static double DifferenceTail(double a, double b, double difference)
+    {
+        double bv = a - difference, av = difference + bv;
+        return (a - av) + (bv - b);
+    }
+
+    // Used only by the area-value filter. Predicate expansion arithmetic remains unchanged.
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static double ProductTail(double a, double b, double product)
+    {
+#if NET10_0_OR_GREATER
+        if (Fma.IsSupported) return Math.FusedMultiplyAdd(a, b, -product);
+#endif
+        TwoProduct(a, b, out _, out double tail);
+        return tail;
     }
 
     // Evaluates (b - a) x (c - a) as an exact nonoverlapping expansion and returns its faithfully rounded
