@@ -95,6 +95,10 @@ numerical agreement and application costs are published with reproduction comman
 dotnet run --project examples/StrokeTemplates -c Release -- --demo artifacts/consumer/demo.html --contours
 ```
 
+To try a new stroke, use the optional [local drawing page](examples/StrokeTemplates/README.md#draw-your-own-stroke-locally).
+It captures one stroke, exports query JSON and calls the existing C# consumer for
+comparison. This is an inspection interface, not an extension of the frozen evaluation.
+
 The original graph experiment found a reproducible stability advantage over LIP's intersection-dependent area weights in a near-touch case. It does **not** establish scientific novelty, universal trajectory similarity, or an improvement to Clipper's polygon engine. The original [mathematical contract](docs/design.md), [baseline reconstruction limits](docs/baselines.md) and [inputs and measurements](results/geometry/geometry.json) remain available.
 
 Original code is MIT-licensed. The author's unpublished RtTools.Geometry was inspected for ideas only. Neither it nor MPR001 is included, linked, or used as a test oracle or benchmark. No third-party algorithm source was copied. Clipper2 is a released dependency under its own [license](THIRD-PARTY-NOTICES.md).
