@@ -32,6 +32,14 @@ filtering from exact geometry and tests a packed hierarchy. It reports further
 large-input gains, small-input regressions, scalar ablations and architectural
 alternatives for removing repeated work.
 
+The [integrated simple-path sweep](docs/winding-integrated-sweep.md) avoids
+enumerating the remaining candidate pairs when a bounded sweep proves a closed
+walk has no self-intersections. On measured inputs it gives 10.7x on a new
+2048-vertex contour and 20x on a constructed diagonal comb, while some smooth
+contours and smaller stars become slower. The [integration review](docs/winding-integrated-sweep-review.md)
+records independent integer-grid checks, budget-exhaustion recovery and the
+remaining numerical and performance limits.
+
 ## Compare, normalize, align
 
 ```csharp
