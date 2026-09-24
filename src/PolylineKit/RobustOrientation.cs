@@ -44,20 +44,26 @@ internal static class RobustOrientation
     }
 
     /// <summary>
-    /// Parameter along a->b of its crossing with the line c->d, from determinants accurate to about one ulp.
-    /// Returns false when a and b both lie exactly on that line.
+    /// Parameters along a->b of its crossing with the line c->d, measured from a (t) and from b (u = 1 - t),
+    /// each from determinants accurate to about one ulp. Returns false when a and b both lie on that line.
     /// </summary>
-    /// <remarks>Only called for segments whose endpoints were decided to lie on opposite sides of the line.</remarks>
-    internal static bool CrossingParameter(Point2 c, Point2 d, Point2 a, Point2 b, out double t)
+    /// <remarks>
+    /// Only called for segments whose endpoints were decided to lie on opposite sides of the line. Both ends
+    /// are kept because 1 - t cannot represent a crossing close to b on a long edge. <paramref name="vertex"/>
+    /// is -1 when a lies exactly on the line, +1 when b does and 0 otherwise; a rounded t of 0 or 1 does not
+    /// mean the crossing is at a vertex.
+    /// </remarks>
+    internal static bool CrossingParameter(Point2 c, Point2 d, Point2 a, Point2 b, out double t, out double u, out int vertex)
     {
         if (TryExpansion(c, d, a, out double ea) && TryExpansion(c, d, b, out double eb))
         {
-            t = 0;
+            t = 0; u = 1; vertex = 0;
             if (ea == 0 && eb == 0) return false;
-            t = ea / (ea - eb);
+            t = ea / (ea - eb); u = eb / (eb - ea);
+            vertex = ea == 0 ? -1 : eb == 0 ? 1 : 0;
             return true;
         }
-        return IntegerParameter(c, d, a, b, out t);
+        return IntegerParameter(c, d, a, b, out t, out u, out vertex);
     }
 
     /// <summary>Exact, then symbolic, sign for a triple whose floating-point sign is not certified.</summary>
@@ -202,13 +208,15 @@ internal static class RobustOrientation
         return Determinant(s, 0, 2, 4).Sign;
     }
 
-    private static bool IntegerParameter(Point2 c, Point2 d, Point2 a, Point2 b, out double t)
+    private static bool IntegerParameter(Point2 c, Point2 d, Point2 a, Point2 b, out double t, out double u, out int vertex)
     {
         BigInteger[] s = Scaled(c, d, a, b);
         BigInteger da = Determinant(s, 0, 2, 4), db = Determinant(s, 0, 2, 6);
-        t = 0;
+        t = 0; u = 1; vertex = 0;
         if (da.IsZero && db.IsZero) return false;
-        t = Ratio(BigInteger.Abs(da), BigInteger.Abs(da - db));
+        vertex = da.IsZero ? -1 : db.IsZero ? 1 : 0;
+        BigInteger span = BigInteger.Abs(da - db);
+        t = Ratio(BigInteger.Abs(da), span); u = Ratio(BigInteger.Abs(db), span);
         return true;
     }
 

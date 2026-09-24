@@ -126,8 +126,9 @@ internal static class WindingAreaChecks
         double tinyScale = Math.Pow(2, -450);
         foreach (int m in new[] { 70, 100, 300, 500 })
         {
-            bool crosses = RobustOrientation.CrossingParameter(new(-tinyScale, 0), new(tinyScale, 0), new(0, -tinyScale * Math.Pow(2, -m)), new(0, tinyScale), out double t);
+            bool crosses = RobustOrientation.CrossingParameter(new(-tinyScale, 0), new(tinyScale, 0), new(0, -tinyScale * Math.Pow(2, -m)), new(0, tinyScale), out double t, out double u, out _);
             True($"integer-path crossing parameter 2^-{m} is relative", crosses && NearlyRelative(Math.Pow(2, -m), t, 1e-15));
+            True($"integer-path crossing parameter 2^-{m} from the other end", NearlyRelative(1 - Math.Pow(2, -m), u, 1e-15));
         }
     }
 
@@ -331,6 +332,70 @@ internal static class WindingAreaChecks
             Near($"retraced bridge {distance:G} nonzero", 2, result.NonZero, tolerance);
             Near($"retraced bridge {distance:G} absolute", 2, result.AbsoluteWinding, tolerance);
             Near($"retraced bridge {distance:G} signed", 2, result.Signed, tolerance);
+        }
+
+        // Follow-up review of 3f365f2: a small symmetric difference between large regions must survive.
+        // Inclusion-exclusion from rounded totals returned zero for all of these.
+        double cutSize = Math.Pow(2, -27);
+        Point2[] unitSquare = Square(0, 0);
+        Point2[] cornerCut = [new(cutSize, 0), new(1, 0), new(1, 1), new(0, 1), new(0, cutSize)];
+        Point2[] withHole = [.. unitSquare, new(0, 0), new(.25, .25), new(.25, .25 + cutSize), new(.25 + cutSize, .25 + cutSize), new(.25 + cutSize, .25), new(.25, .25)];
+        foreach (PathFillRule rule in rules)
+        foreach (var (label, first, second, expected) in new[]
+        {
+            ("corner cut", unitSquare, cornerCut, cutSize * cutSize / 2), ("hole", unitSquare, withHole, cutSize * cutSize)
+        })
+        foreach (var (variant, a, b) in new[]
+        {
+            ("normal", first, second), ("swap", second, first),
+            ("reverse first", first.Reverse().ToArray(), second), ("reverse second", first, second.Reverse().ToArray())
+        })
+        {
+            var result = WindingArea.FilledRegions(a, b, rule);
+            string name = $"{label} of side 2^-27 {variant} {rule}";
+            True(name + " symmetric difference", NearlyRelative(expected, result.SymmetricDifferenceArea, 1e-9));
+            True(name + " Jaccard distance", result.JaccardDistance is double jd && NearlyRelative(expected, jd, 1e-9));
+            Near(name + " union", 1, result.UnionArea, 1e-15);
+        }
+        foreach (double length in new[] { 1e4, 1e6, 1e8 })
+        {
+            // A unit clockwise hole joined to the outer boundary by a retraced bridge, integer coordinates.
+            Point2[] large = Square(0, 0, length);
+            Point2[] holed = [.. large, new(0, 0), new(2, 2), new(2, 3), new(3, 3), new(3, 2), new(2, 2)];
+            foreach (PathFillRule rule in rules)
+            foreach (var (variant, a, b) in new[] { ("normal", large, holed), ("swap", holed, large), ("reverse", large.Reverse().ToArray(), holed.Reverse().ToArray()) })
+            {
+                var result = WindingArea.FilledRegions(a, b, rule);
+                string name = $"unit hole in square {length:G} {variant} {rule}";
+                True(name + " symmetric difference", NearlyRelative(1, result.SymmetricDifferenceArea, 1e-12));
+                True(name + " union", NearlyRelative(length * length, result.UnionArea, 1e-15));
+                True(name + " intersection", NearlyRelative(length * length - 1, result.IntersectionArea, 1e-15));
+            }
+        }
+
+        // Crossings next to the far end of a long edge: 1 - t cannot represent them, so both ends are kept.
+        // The expected areas use the actual rounded coordinates of the shifted squares.
+        foreach (double length in new[] { 1e4, 1e6, 1e8, 1e12 })
+        foreach (double shift in new[] { 1e-8, 3e-7 })
+        {
+            Point2[] square = Square(0, 0, length), moved = Square(shift, 0, length), lifted = Square(0, shift, length);
+            double expected = length * shift + (length + shift - length) * length;
+            foreach (var (variant, a, b) in new[] { ("x", square, moved), ("x swapped", moved, square), ("y", square, lifted), ("x reversed", square.Reverse().ToArray(), moved) })
+            {
+                var result = WindingArea.FilledRegions(a, b);
+                True($"square {length:G} shifted {shift:G} in {variant}: symmetric difference", NearlyRelative(expected, result.SymmetricDifferenceArea, 1e-9));
+            }
+        }
+
+        // Perpendicular unit-wide strips of half-length 1e6 to 1e16: the crossings sit mid-edge, closer than the
+        // parameter resolution of the longest edges, and are ordered and placed by their points.
+        foreach (double length in new[] { 1e6, 1e8, 1e10, 1e12, 1e14, 1e16 })
+        {
+            Point2[] horizontal = [new(-length, -.5), new(length, -.5), new(length, .5), new(-length, .5)];
+            Point2[] vertical = [new(-.5, -length), new(.5, -length), new(.5, length), new(-.5, length)];
+            var strips = WindingArea.FilledRegions(horizontal, vertical);
+            True($"crossed strips {length:G} intersection", NearlyRelative(1, strips.IntersectionArea, 1e-12));
+            True($"crossed strips {length:G} symmetric difference", NearlyRelative(4 * length - 2, strips.SymmetricDifferenceArea, 1e-15));
         }
 
         // Tiny coordinates: a squared edge length underflowed and a guessed midpoint halved the area.

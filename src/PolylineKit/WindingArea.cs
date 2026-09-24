@@ -80,11 +80,15 @@ public readonly struct WindingOverlapResult
 /// (shared vertices, vertices on edges, collinear overlap) are resolved by Simulation of Simplicity as one
 /// consistent infinitesimal perturbation of the input. Area is continuous in the vertices, so the result is the
 /// exact area of the given binary64 input up to rounding in crossing positions, products and summation.
-/// Shoelace terms are taken relative to a path's own bounds center (for an intersection, the center of the
-/// overlapping bounds) in the form cross(a - o, b - a); their rounding grows with the distance of edges from
-/// that center, which matters for one closed path whose parts are far apart relative to their size.
-/// Time is O(n log n + m + k log k) for n edges, m candidate pairs from an x-sorted sweep and k crossings;
-/// m and k are O(n^2) in the worst case. Each call uses its own working storage: a per-thread workspace is
+/// Every value is the shoelace sum of a boundary chain formed exactly before any area term is evaluated:
+/// crossing points are shared by both edges (and are the vertex itself where a crossing lies on one), collinearly
+/// overlapping edges are split at each other's endpoints, and identical segments are netted by their integer
+/// coefficients. The remaining segments are summed around the center of their own bounds, so shared boundaries
+/// cancel exactly and a small region or a small difference keeps its area next to large or distant geometry.
+/// Rounding still grows with the distance of the remaining segments from that center, which matters for one
+/// closed path whose remaining parts lie far apart relative to their size.
+/// Time is O(n log n + m + k log k + s log s) for n edges, m candidate pairs from an x-sorted sweep, k crossings
+/// and s segments on collinearly overlapping edges; m, k and s are O(n^2) in the worst case. Each call uses its own working storage: a per-thread workspace is
 /// reused by consecutive calls, and a call made while another is active on the same thread (for example from
 /// a list indexer) gets a separate one. Warm calls whose predicates are decided by the filter or by expansion
 /// arithmetic allocate no managed memory; first use, buffer growth, nested calls and the integer path do, and

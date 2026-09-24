@@ -45,8 +45,9 @@ internal static class WindingBenchmarks
                     long bytes = GC.GetAllocatedBytesForCurrentThread(), start = Stopwatch.GetTimestamp();
                     for (int k = 0; k < iterations; k++) sink = method.Invoke();
                     long elapsed = Stopwatch.GetTimestamp() - start;
-                    samples[sample] = new(iterations, elapsed * 1e9 / Stopwatch.Frequency / iterations,
-                        (double)(GC.GetAllocatedBytesForCurrentThread() - bytes) / iterations);
+                    // Read the counter before constructing the record, which would otherwise count its own 40 bytes.
+                    long allocated = GC.GetAllocatedBytesForCurrentThread() - bytes;
+                    samples[sample] = new(iterations, elapsed * 1e9 / Stopwatch.Frequency / iterations, (double)allocated / iterations);
                 }
                 results.Add(new(workload.Name, workload.Vertices, method.Name, hash, value,
                     samples.Select(x => x.NanosecondsPerOperation).Order().ElementAt(4),
