@@ -3,3 +3,6 @@
 # Preserve raw evidence bytes: recorded SHA-256 includes original line endings.
 results/optimization/** -text -whitespace
 results/recognition/** -text -whitespace
+# Patch context prefixes and measured evidence line endings are intentional.
+results/winding/search/** -text -whitespace
+results/winding/fix-cost/** -text -whitespace

@@ -89,11 +89,19 @@ Each call uses its own working storage. A per-thread workspace is reused by cons
 
 The per-thread workspace keeps its largest size. Earlier benchmark tables showed 1–10 bytes per operation in some rows and attributed them to buffer growth. The second review traced them to the benchmark's own 40-byte sample record, allocated inside each measured batch. The counter is now read before the record is created, and every row measures 0.
 
+The subsequent [sorting/SIMD follow-up](winding-search.md) stores those bounds in
+three coordinate arrays, merges a bounded number of natural runs, and compacts
+bounds survivors before exact geometry. The .NET 10 path uses packed comparisons
+for sufficiently long candidate windows, with a scalar fallback. Merge buffers
+and candidate indices add up to 16 bytes per retained edge slot, plus a 65-int
+run buffer and array headers, beyond the bounds cache above. These changes retain
+the same worst-case complexity; they do not make dense intersections linear.
+
 ## Evidence
 
 ### Checks
 
-`dotnet run --project experiments/PolylineKit.Experiments -c Release -- check` adds 28,027 winding checks and passes in all five implementation modes of `scripts/verify-implementations.ps1`, including the .NET Standard 2.0 build. They include:
+`dotnet run --project experiments/PolylineKit.Experiments -c Release -- check` adds 28,267 winding checks and passes in all five implementation modes of `scripts/verify-implementations.ps1`, including the .NET Standard 2.0 build. They include:
 
 - analytic walks and all contour fixtures, with `AbsoluteWinding` compared to the independent slab sweep in `ContourSweep`;
 - 3,000 symbolic orientations against the exact sign of an explicitly perturbed determinant (`e = 2^-16`, BigInteger), including more than 500 exact ties;
@@ -111,6 +119,10 @@ The per-thread workspace keeps its largest size. Earlier benchmark tables showed
 The performance follow-up adds 94 checks for tall subdivided paths in both
 orientations, both fill rules, duplicate runs, shared bridging endpoints and
 independent rejection of collapsed input paths.
+
+Another 240 checks cover bounds contacts, vector masks/tails, natural-sort and
+buffer-growth thresholds, reversed/axis-swapped alternating bars, and exact
+equality with the forced-scalar result.
 
 ### Independent reviews
 

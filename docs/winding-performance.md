@@ -1,5 +1,9 @@
 # Winding performance assessment
 
+This report records the first optimization round. The subsequent
+[sorting/SIMD assessment](winding-search.md) includes a change to the candidate
+data flow and a broader architectural review.
+
 The C# engine had avoidable work. Reducing that work improves complete API calls
 by 1.23–1.39× on the similar-stroke fixtures and 1.33–1.48× on random walks,
 relative to `9fff4d2`. Improvements on filled regions and dense degenerate input

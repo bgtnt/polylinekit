@@ -1,0 +1,407 @@
+{
+  "Kernel": "C:\\Users\\mapso\\source\\repos\\junk\\MPR001\\artifacts\\winding-search\\compact\\src\\PolylineKit\\bin\\Release\\net10.0\\PolylineKit.dll",
+  "Runtime": ".NET 10.0.12",
+  "Cpu": "Intel64 Family 6 Model 158 Stepping 12, GenuineIntel",
+  "TieredCompilation": "0",
+  "Vector256": true,
+  "ForcedScalar": false,
+  "Utc": "2026-09-24T15:52:00.2437308+00:00",
+  "Measurements": [
+    {
+      "Name": "filled-regions",
+      "N": 130,
+      "Iterations": 64,
+      "Value": 2158.875,
+      "MedianUs": 496.509375,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        497.0421875,
+        494.6890625,
+        493.1421875,
+        496.509375,
+        515.8578125
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "filled-regions",
+      "N": 514,
+      "Iterations": 4,
+      "Value": 33214.875,
+      "MedianUs": 9687.65,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        8587.75,
+        8960.975,
+        9687.65,
+        9699.375,
+        9845.55
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "vertical-bands",
+      "N": 256,
+      "Iterations": 2048,
+      "Value": 254,
+      "MedianUs": 17.842333984375,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        17.842333984375,
+        15.952490234375,
+        19.372998046875,
+        19.30927734375,
+        15.973876953125
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "horizontal-bands",
+      "N": 256,
+      "Iterations": 2048,
+      "Value": 254,
+      "MedianUs": 15.685791015625,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        15.681787109375,
+        15.685791015625,
+        15.707275390625,
+        15.75634765625,
+        15.660302734375
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "vertical-bands",
+      "N": 1024,
+      "Iterations": 512,
+      "Value": 1022,
+      "MedianUs": 62.141015625,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        63.7373046875,
+        61.8203125,
+        63.4439453125,
+        62.141015625,
+        62.0927734375
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "horizontal-bands",
+      "N": 1024,
+      "Iterations": 512,
+      "Value": 1022,
+      "MedianUs": 61.7146484375,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        61.8904296875,
+        61.7740234375,
+        61.5744140625,
+        61.7146484375,
+        61.408984375
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "vertical-bands",
+      "N": 4096,
+      "Iterations": 128,
+      "Value": 4094,
+      "MedianUs": 247.4359375,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        247.06875,
+        247.25859375,
+        247.4359375,
+        248.14921875,
+        247.66875
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "horizontal-bands",
+      "N": 4096,
+      "Iterations": 128,
+      "Value": 4094,
+      "MedianUs": 245.2953125,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        245.4625,
+        247.9125,
+        245.2875,
+        244.825,
+        245.2953125
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "ring",
+      "N": 256,
+      "Iterations": 2048,
+      "Value": 31412.77250932773,
+      "MedianUs": 13.603857421875,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        13.572705078125,
+        13.633740234375,
+        13.603857421875,
+        13.650439453125,
+        13.5875
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "stacked-bars",
+      "N": 256,
+      "Iterations": 256,
+      "Value": 32768,
+      "MedianUs": 84.386328125,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        84.13671875,
+        84.387109375,
+        84.99375,
+        84.276953125,
+        84.386328125
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "ring",
+      "N": 1024,
+      "Iterations": 512,
+      "Value": 31415.729403670914,
+      "MedianUs": 53.40078125,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        53.2119140625,
+        53.4287109375,
+        53.40078125,
+        53.3634765625,
+        53.454296875
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "stacked-bars",
+      "N": 1024,
+      "Iterations": 32,
+      "Value": 524288,
+      "MedianUs": 815.496875,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        815.496875,
+        816.553125,
+        813.684375,
+        816.596875,
+        812.8375
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "ring",
+      "N": 4096,
+      "Iterations": 128,
+      "Value": 31415.914215112,
+      "MedianUs": 213.12578125,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        212.8421875,
+        212.85546875,
+        213.12578125,
+        214.49140625,
+        213.446875
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "stacked-bars",
+      "N": 4096,
+      "Iterations": 8,
+      "Value": 8388608,
+      "MedianUs": 4706.4375,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        4697.825,
+        4708,
+        4706.4375,
+        4696.5,
+        5139.5875
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "diagonal-bars",
+      "N": 64,
+      "Iterations": 1024,
+      "Value": 2048,
+      "MedianUs": 21.5833984375,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        21.62314453125,
+        21.5833984375,
+        21.55791015625,
+        21.64462890625,
+        21.46591796875
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "radial-star",
+      "N": 64,
+      "Iterations": 4096,
+      "Value": 313.65484905459124,
+      "MedianUs": 6.8150634765625,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        6.8150634765625,
+        6.821435546875,
+        6.7679931640625,
+        6.838330078125,
+        6.7969482421875
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "diagonal-bars",
+      "N": 256,
+      "Iterations": 128,
+      "Value": 32768,
+      "MedianUs": 210.69140625,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        209.81171875,
+        209.33671875,
+        210.69140625,
+        211.6828125,
+        219.72578125
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "radial-star",
+      "N": 256,
+      "Iterations": 256,
+      "Value": 314.12772509327715,
+      "MedianUs": 83.94609375,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        83.98984375,
+        84.200390625,
+        83.94609375,
+        83.487109375,
+        83.67890625
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ]
+}

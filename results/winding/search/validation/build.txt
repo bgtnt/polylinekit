@@ -1,0 +1,12 @@
+  PolylineKit -> C:\Users\mapso\source\repos\junk\MPR001\artifacts\winding-performance\checkout\src\PolylineKit\bin\Release\netstandard2.0\PolylineKit.dll
+  PolylineKit -> C:\Users\mapso\source\repos\junk\MPR001\artifacts\winding-performance\checkout\src\PolylineKit\bin\Release\net10.0\PolylineKit.dll
+  PolylineKit.Experiments -> C:\Users\mapso\source\repos\junk\MPR001\artifacts\winding-performance\checkout\experiments\PolylineKit.Experiments\bin\Release\net10.0\PolylineKit.Experiments.dll
+  PolylineKit.Recognition -> C:\Users\mapso\source\repos\junk\MPR001\artifacts\winding-performance\checkout\experiments\PolylineKit.Recognition\bin\Release\net10.0\PolylineKit.Recognition.dll
+  Basic -> C:\Users\mapso\source\repos\junk\MPR001\artifacts\winding-performance\checkout\examples\Basic\bin\Release\net10.0\Basic.dll
+  StrokeTemplates -> C:\Users\mapso\source\repos\junk\MPR001\artifacts\winding-performance\checkout\examples\StrokeTemplates\bin\Release\net10.0\StrokeTemplates.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:01.32

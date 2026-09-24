@@ -11,6 +11,7 @@ internal static class Program
     public static int Main(string[] args)
     {
         if (args.Length != 3) { Console.Error.WriteLine("WindingPerf <absolute PolylineKit.dll path> <results.json> <fixture inputs.json>"); return 2; }
+        AppContext.SetSwitch("PolylineKit.DisableSimd", Environment.GetEnvironmentVariable("POLYLINEKIT_FORCE_SCALAR") == "1");
         AssemblyLoadContext.Default.LoadFromAssemblyPath(Path.GetFullPath(args[0]));
         return Runner.Run(args);
     }
@@ -33,6 +34,22 @@ internal static class Runner
             cases.Add(("horizontal-bands", n, a.Select(p => new Point2(p.Y, p.X)).ToArray(), []));
         }
         var rows = new List<object>();
+        foreach (int n in new[] { 256, 1024, 4096 })
+        {
+            var ring = Enumerable.Range(0, n).Select(i => { double t = i * (2 * Math.PI / n); return new Point2(100 * Math.Cos(t), 100 * Math.Sin(t)); }).ToArray();
+            cases.Add(("ring", n, ring, []));
+            // Long alternating horizontal bars, separated along Y; X remains the wider bounds axis.
+            var bars = Enumerable.Range(0, n).Select(i => new Point2((i % 4 == 0 || i % 4 == 3) ? 0 : n * 2, i / 2)).ToArray();
+            cases.Add(("stacked-bars", n, bars, []));
+        }
+        foreach (int n in new[] { 64, 256 })
+        {
+            // Overlapping AABBs of parallel diagonal bars: an index cannot eliminate these false positives.
+            var diagonal = Enumerable.Range(0, n).Select(i => { double x = (i % 4 == 0 || i % 4 == 3) ? 0 : n * 2; return new Point2(x, x + i / 2); }).ToArray();
+            cases.Add(("diagonal-bars", n, diagonal, []));
+            var star = Enumerable.Range(0, n).Select(i => { double t = i * (2 * Math.PI / n), r = (i & 1) == 0 ? 100 : 1; return new Point2(r * Math.Cos(t), r * Math.Sin(t)); }).ToArray();
+            cases.Add(("radial-star", n, star, []));
+        }
         foreach (var item in cases)
         {
             // This strongly typed delegate binds once. Reflection is used only to load the chosen assembly.
@@ -64,7 +81,7 @@ internal static class Runner
         }
         string path = Path.GetFullPath(args[1]);
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
-        File.WriteAllText(path, JsonSerializer.Serialize(new { Kernel = Path.GetFullPath(args[0]), Runtime = RuntimeInformation.FrameworkDescription, Cpu = Environment.GetEnvironmentVariable("PROCESSOR_IDENTIFIER"), TieredCompilation = Environment.GetEnvironmentVariable("DOTNET_TieredCompilation"), Utc = DateTimeOffset.UtcNow, Measurements = rows }, new JsonSerializerOptions { WriteIndented = true }));
+        File.WriteAllText(path, JsonSerializer.Serialize(new { Kernel = Path.GetFullPath(args[0]), Runtime = RuntimeInformation.FrameworkDescription, Cpu = Environment.GetEnvironmentVariable("PROCESSOR_IDENTIFIER"), TieredCompilation = Environment.GetEnvironmentVariable("DOTNET_TieredCompilation"), Vector256 = System.Runtime.Intrinsics.Vector256.IsHardwareAccelerated, ForcedScalar = AppContext.TryGetSwitch("PolylineKit.DisableSimd", out bool disabled) && disabled, Utc = DateTimeOffset.UtcNow, Measurements = rows }, new JsonSerializerOptions { WriteIndented = true }));
         GC.KeepAlive(sink);
         return 0;
     }

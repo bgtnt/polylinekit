@@ -27,6 +27,11 @@ an orientation stress case and a C++ microkernel comparison. Ordinary similar
 strokes improve by 1.23–1.39× and random walks by 1.33–1.48× on the measured
 machine; the evidence does not justify a whole-engine native port.
 
+The [sorting/SIMD follow-up](docs/winding-search.md) then separates bounds
+filtering from exact geometry and tests a packed hierarchy. It reports further
+large-input gains, small-input regressions, scalar ablations and architectural
+alternatives for removing repeated work.
+
 ## Compare, normalize, align
 
 ```csharp
@@ -56,7 +61,7 @@ Bounds-area ratio is a geometric ratio, **not a calibrated similarity percentage
 
 ## Build and verify
 
-The core targets **.NET Standard 2.0** for consumer compatibility and **.NET 10** for optional packed-double SIMD transformations; examples and experiments target .NET 10. The core has one runtime package dependency, **Clipper2 2.0.0**, for general polygon fill/Boolean operations. The graph integral, winding-area engine and its exact predicates, transforms, normalization, resampling and fitting are original implementations. There is no dependency on RtTools or MPR001.
+The core targets **.NET Standard 2.0** for consumer compatibility and **.NET 10** for optional packed-double SIMD transformations and winding bounds filtering; examples and experiments target .NET 10. The core has one runtime package dependency, **Clipper2 2.0.0**, for general polygon fill/Boolean operations. The graph integral, winding-area engine and its exact predicates, transforms, normalization, resampling and fitting are original implementations. There is no dependency on RtTools or MPR001.
 
 Install the .NET 10 SDK and run:
 
