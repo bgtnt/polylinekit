@@ -6,3 +6,4 @@ results/recognition/** -text -whitespace
 # Patch context prefixes and measured evidence line endings are intentional.
 results/winding/search/** -text -whitespace
 results/winding/fix-cost/** -text -whitespace
+results/winding/active-sweep/** -text -whitespace

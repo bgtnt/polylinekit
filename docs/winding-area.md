@@ -71,6 +71,13 @@ A position that still cannot be computed raises an exception rather than being g
 
 Area is continuous in the vertices, so the result is the exact area of the given input up to rounding in crossing positions, cross products and compensated summation. That rounding grows with the distance of a chain's remaining segments from its origin; netted shared boundaries do not contribute. In one closed path whose parts lie far apart relative to their size, such as two unit squares 10⁸ apart joined by a retraced bridge, the relative error is about 10⁻⁸.
 
+Exact topology does not bound the relative error of a cross product. The
+[active-sweep audit](winding-active-sweep.md#numerical-limit-inherited-from-the-engine)
+also reproduces a simple triangle with no crossings: `(0,0)`, `(1e12,1e12)`,
+`(2e12, double.BitIncrement(2e12))`. Its exact binary64-input area is
+`122070312.5`, while the current engine returns `134217728` (about 9.95% high).
+Compensated summation cannot recover bits already lost within individual products.
+
 A crossing point is rounded relative to the coordinates of the edges that form it, not relative to the region it bounds. Where long edges cross far from their endpoints next to a small region, that region loses relative accuracy. Take unit-wide strips of half-length `l`, tilted by 1/1000 and crossing at the coordinate origin. The exact intersection of the binary64 input is 4000000/1000001, and the relative error of the result, over both fill rules and four orientations, is at most 1.0·10⁻³ at `l = 10¹⁶`, 1.3·10⁻⁸ at `10¹²` and 6·10⁻¹² at `10⁸`. The strips' own, union and symmetric-difference areas remain exact to rounding. Values are not clamped, and a zero-area configuration can return a value of rounding size with either sign. Exactness of the decisions assumes IEEE binary64 evaluation without extended precision, as on .NET Core and later.
 
 ### Cost

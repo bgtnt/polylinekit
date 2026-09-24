@@ -8,7 +8,9 @@ can be done together without changing predicate or compensated-sum arithmetic.
 
 The combined implementation helps larger inputs but is **not uniformly faster**.
 The packed hierarchy prototype is retained as evidence, not used by the library.
-A full active-edge rewrite has not been implemented or validated.
+A full active-edge rewrite has not been implemented or validated. A later
+[certified-simple active sweep](winding-active-sweep.md) tests a narrower
+architecture without changing the library's general engine.
 
 The later [cost-of-fixes investigation](winding-fix-cost.md) traces the slowdown
 to exact-chain organization and tests two own-area specializations. Both remain
