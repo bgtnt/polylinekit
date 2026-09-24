@@ -1,6 +1,6 @@
 {
   "description": "WindingArea.EndpointBridged against PolylineComparison.EndpointBridgedArea on every frozen query/template pair. Descriptive; no frozen result changes.",
-  "revision": "2bf4182dce165e6cd15668d7b7bf72447fd49b84",
+  "revision": "a0b32953f0178e94b9df4910bcca65157589bfb2",
   "protocol": "polylinekit-recognition-v1",
   "inputHashes": {
     "dollar": "906a456eb997b424f92b0e4056a66ef255353479be75307c05f84b5100f4bdca",
@@ -13,19 +13,19 @@
       "rankings": 14400,
       "pairsWithExactPredicates": 38915,
       "pairsWithSymbolicTieBreaks": 38080,
-      "maxAbsoluteDifferenceToClipper8": 6.543088402921615E-05,
-      "maxAbsoluteDifferenceToClipper6": 4.874371140672906E-05,
-      "maxAbsoluteDifferenceToClipper8ExcludingArbitrated": 1.6010823888912284E-08,
+      "maxAbsoluteDifferenceToClipper8": 6.543088402927166E-05,
+      "maxAbsoluteDifferenceToClipper6": 4.874371140667355E-05,
+      "maxAbsoluteDifferenceToClipper8ExcludingArbitrated": 1.6010823833401133E-08,
       "disagreementsBeyond1e6": 4,
       "disagreements": [
         {
           "query": "dollar/xml_logs/s03/fast/triangle07.xml",
           "template": "dollar/xml_logs/s04/medium/caret02.xml",
-          "windingNonZero": 0.36332570820265275,
+          "windingNonZero": 0.3633257082026527,
           "clipper2Precision8": 0.36339113908668197,
           "clipper2Precision6": 0.3633255257105001,
           "slabIntegral": 0.3633257082026528,
-          "windingMinusSlab": -5.551115123125783E-17,
+          "windingMinusSlab": -1.1102230246251565E-16,
           "clipper8MinusSlab": 6.543088402916064E-05,
           "exact": 4,
           "symbolic": 0
@@ -45,11 +45,11 @@
         {
           "query": "dollar/xml_logs/s09/medium/star04.xml",
           "template": "dollar/xml_logs/s06/medium/delete_mark01.xml",
-          "windingNonZero": 0.34939117342047515,
+          "windingNonZero": 0.3493911734204751,
           "clipper2Precision8": 0.34942425845416847,
           "clipper2Precision6": 0.3493907660785,
           "slabIntegral": 0.34939117342047504,
-          "windingMinusSlab": 1.1102230246251565E-16,
+          "windingMinusSlab": 5.551115123125783E-17,
           "clipper8MinusSlab": 3.308503369342519E-05,
           "exact": 0,
           "symbolic": 0
@@ -57,11 +57,11 @@
         {
           "query": "dollar/xml_logs/s09/medium/star04.xml",
           "template": "dollar/xml_logs/s06/medium/delete_mark03.xml",
-          "windingNonZero": 0.36378133343558355,
+          "windingNonZero": 0.3637813334355836,
           "clipper2Precision8": 0.3638095934677472,
           "clipper2Precision6": 0.3637813282,
           "slabIntegral": 0.36378133343558344,
-          "windingMinusSlab": 1.1102230246251565E-16,
+          "windingMinusSlab": 1.6653345369377348E-16,
           "clipper8MinusSlab": 2.826003216377382E-05,
           "exact": 0,
           "symbolic": 0
@@ -71,10 +71,10 @@
       "rankingsWhoseAreaWinnerChangesWithAbsoluteWinding": 218,
       "pairsWhereAbsoluteWindingExceedsNonZero": 444470,
       "absoluteOverNonZeroExcessQuantiles": {
-        "p50": 0.01609283365592651,
+        "p50": 0.016092833655926286,
         "p90": 0.32975009372123276,
-        "p99": 0.5826345430899014,
-        "max": 0.919343393839501
+        "p99": 0.5826345430899011,
+        "max": 0.9193433938395008
       }
     },
     {
@@ -83,9 +83,9 @@
       "rankings": 8232,
       "pairsWithExactPredicates": 31144,
       "pairsWithSymbolicTieBreaks": 28263,
-      "maxAbsoluteDifferenceToClipper8": 1.25126050631863E-08,
+      "maxAbsoluteDifferenceToClipper8": 1.2512605035430724E-08,
       "maxAbsoluteDifferenceToClipper6": 1.089046540087013E-06,
-      "maxAbsoluteDifferenceToClipper8ExcludingArbitrated": 1.25126050631863E-08,
+      "maxAbsoluteDifferenceToClipper8ExcludingArbitrated": 1.2512605035430724E-08,
       "disagreementsBeyond1e6": 0,
       "disagreements": [],
       "rankingsWhoseAreaWinnerChangesWithWindingNonZero": 0,

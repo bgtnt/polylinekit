@@ -2,38 +2,38 @@
 
 Median of three process medians (nine batch samples each), microseconds per operation, with the process-median range. Bytes are per-thread managed allocations per operation. Vertices are per path. Values describe this machine and these deterministic fixtures only.
 
-Measured source: `2bf4182dce165e6cd15668d7b7bf72447fd49b84`; runtime .NET 10.0.12; Microsoft Windows 10.0.26200; Intel64 Family 6 Model 158 Stepping 12, GenuineIntel.
+Measured source: `a0b32953f0178e94b9df4910bcca65157589bfb2`; runtime .NET 10.0.12; Microsoft Windows 10.0.26200; Intel64 Family 6 Model 158 Stepping 12, GenuineIntel.
 
 | Workload | Vertices | Method | Median µs (range) | Bytes/op | Clipper time / winding time |
 |:---|---:|:---|---:|---:|---:|
-| degenerate-grid | 64 | ClipperEndpointBridged | 330.56 (327.88–344.20) | 249,209 | 1.01 |
-| degenerate-grid | 64 | WindingEndpointBridged | 327.54 (324.80–330.01) | 1 |  |
-| degenerate-grid | 256 | ClipperEndpointBridged | 5588.80 (5240.27–5666.70) | 2,036,154 | 0.97 |
-| degenerate-grid | 256 | WindingEndpointBridged | 5791.12 (5640.43–5889.65) | 10 |  |
-| dense-graph | 64 | ClipperEndpointBridged | 29.15 (29.08–30.67) | 66,536 | 2.73 |
-| dense-graph | 64 | GraphIntegral | 3.47 (3.45–3.74) | 0 |  |
-| dense-graph | 64 | WindingEndpointBridged | 10.66 (10.63–11.79) | 0 |  |
-| dense-graph | 256 | ClipperEndpointBridged | 118.23 (112.25–119.29) | 260,168 | 2.68 |
-| dense-graph | 256 | GraphIntegral | 13.74 (13.71–14.34) | 0 |  |
-| dense-graph | 256 | WindingEndpointBridged | 44.20 (43.92–51.41) | 0 |  |
-| dense-graph | 1024 | ClipperEndpointBridged | 495.70 (485.05–507.47) | 1,034,409 | 2.31 |
-| dense-graph | 1024 | GraphIntegral | 54.92 (54.87–56.05) | 0 |  |
-| dense-graph | 1024 | WindingEndpointBridged | 214.23 (213.05–214.24) | 0 |  |
-| filled-regions | 64 | ClipperFilledRegionOverlap | 53.46 (51.16–53.91) | 63,992 | 6.13 |
-| filled-regions | 64 | WindingFilledRegions | 8.72 (8.67–8.72) | 0 |  |
-| filled-regions | 256 | ClipperFilledRegionOverlap | 190.72 (188.02–200.11) | 214,616 | 4.91 |
-| filled-regions | 256 | WindingFilledRegions | 38.83 (37.52–39.00) | 0 |  |
-| filled-regions | 1024 | ClipperFilledRegionOverlap | 726.37 (716.58–738.42) | 816,921 | 3.78 |
-| filled-regions | 1024 | WindingFilledRegions | 192.18 (187.91–197.89) | 0 |  |
-| random-walks | 64 | ClipperEndpointBridged | 55.79 (55.67–58.94) | 69,984 | 2.52 |
-| random-walks | 64 | WindingEndpointBridged | 22.10 (21.95–22.15) | 0 |  |
-| random-walks | 256 | ClipperEndpointBridged | 322.50 (319.49–324.44) | 239,553 | 1.86 |
-| random-walks | 256 | WindingEndpointBridged | 173.05 (172.76–174.69) | 0 |  |
-| random-walks | 1024 | ClipperEndpointBridged | 2287.31 (2220.66–2459.56) | 1,019,434 | 2.15 |
-| random-walks | 1024 | WindingEndpointBridged | 1065.37 (1056.75–1066.40) | 1 |  |
-| similar-strokes | 64 | ClipperEndpointBridged | 25.71 (25.71–26.73) | 38,960 | 2.28 |
-| similar-strokes | 64 | WindingEndpointBridged | 11.25 (11.24–11.47) | 0 |  |
-| similar-strokes | 256 | ClipperEndpointBridged | 97.20 (96.89–105.91) | 130,920 | 2.50 |
-| similar-strokes | 256 | WindingEndpointBridged | 38.81 (37.71–40.15) | 0 |  |
-| similar-strokes | 1024 | ClipperEndpointBridged | 370.07 (361.41–370.75) | 464,937 | 2.08 |
-| similar-strokes | 1024 | WindingEndpointBridged | 178.03 (176.96–178.14) | 0 |  |
+| degenerate-grid | 64 | ClipperEndpointBridged | 330.43 (323.92–331.52) | 249,209 | 1.04 |
+| degenerate-grid | 64 | WindingEndpointBridged | 316.34 (315.94–318.72) | 1 |  |
+| degenerate-grid | 256 | ClipperEndpointBridged | 5579.52 (5179.70–5629.60) | 2,036,154 | 1.00 |
+| degenerate-grid | 256 | WindingEndpointBridged | 5591.48 (5559.55–5611.00) | 10 |  |
+| dense-graph | 64 | ClipperEndpointBridged | 29.36 (28.96–29.80) | 66,536 | 2.87 |
+| dense-graph | 64 | GraphIntegral | 3.54 (3.48–3.77) | 0 |  |
+| dense-graph | 64 | WindingEndpointBridged | 10.24 (10.11–10.31) | 0 |  |
+| dense-graph | 256 | ClipperEndpointBridged | 116.38 (115.78–118.00) | 260,168 | 2.72 |
+| dense-graph | 256 | GraphIntegral | 14.04 (13.86–14.54) | 0 |  |
+| dense-graph | 256 | WindingEndpointBridged | 42.84 (42.61–43.46) | 0 |  |
+| dense-graph | 1024 | ClipperEndpointBridged | 480.53 (479.84–481.78) | 1,034,409 | 2.31 |
+| dense-graph | 1024 | GraphIntegral | 56.03 (55.51–58.86) | 0 |  |
+| dense-graph | 1024 | WindingEndpointBridged | 207.87 (207.66–211.00) | 0 |  |
+| filled-regions | 64 | ClipperFilledRegionOverlap | 51.29 (50.87–52.00) | 63,992 | 6.27 |
+| filled-regions | 64 | WindingFilledRegions | 8.18 (8.08–8.23) | 0 |  |
+| filled-regions | 256 | ClipperFilledRegionOverlap | 188.27 (187.56–189.43) | 214,616 | 5.05 |
+| filled-regions | 256 | WindingFilledRegions | 37.25 (35.43–37.34) | 0 |  |
+| filled-regions | 1024 | ClipperFilledRegionOverlap | 726.48 (711.56–738.92) | 816,921 | 4.07 |
+| filled-regions | 1024 | WindingFilledRegions | 178.69 (178.38–181.51) | 0 |  |
+| random-walks | 64 | ClipperEndpointBridged | 55.24 (54.79–56.58) | 69,984 | 2.56 |
+| random-walks | 64 | WindingEndpointBridged | 21.54 (21.18–21.90) | 0 |  |
+| random-walks | 256 | ClipperEndpointBridged | 320.86 (316.10–337.58) | 239,553 | 1.91 |
+| random-walks | 256 | WindingEndpointBridged | 167.77 (167.36–169.11) | 0 |  |
+| random-walks | 1024 | ClipperEndpointBridged | 2235.88 (2194.48–2258.74) | 1,019,434 | 2.13 |
+| random-walks | 1024 | WindingEndpointBridged | 1048.43 (1046.01–1050.48) | 1 |  |
+| similar-strokes | 64 | ClipperEndpointBridged | 26.44 (25.37–26.83) | 38,960 | 2.27 |
+| similar-strokes | 64 | WindingEndpointBridged | 11.63 (11.41–11.67) | 0 |  |
+| similar-strokes | 256 | ClipperEndpointBridged | 98.27 (97.83–99.15) | 130,920 | 2.54 |
+| similar-strokes | 256 | WindingEndpointBridged | 38.72 (38.33–38.81) | 0 |  |
+| similar-strokes | 1024 | ClipperEndpointBridged | 361.63 (354.63–363.15) | 464,937 | 2.05 |
+| similar-strokes | 1024 | WindingEndpointBridged | 176.23 (174.74–178.20) | 0 |  |

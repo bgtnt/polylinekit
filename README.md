@@ -19,7 +19,7 @@ Experimental C# methods for polyline area comparison, bounds normalization, arc-
 
 These area operations are different definitions, not interchangeable implementations of a universal distance. Read the [comparison and transformation contracts](docs/comparison-api.md), including fill rules, precision, closed-path phase and degenerate cases.
 
-`WindingArea` computes areas without Clipper2: crossing decisions use exact orientation predicates with Simulation of Simplicity, so shared vertices, touching and collinear overlap are handled consistently. It returns no contours. On the measured workloads it takes 37–54% of the time of the Clipper-based bridged area (on par for adversarial degenerate integer grids) and 16–26% for filled-region overlap, with no steady-state allocation. On every pair of the frozen recognition evaluation it changes no area ranking. See [boundary winding areas](docs/winding-area.md), including five degenerate inputs where Clipper2 2.0.0 returns wrong areas.
+`WindingArea` computes areas without Clipper2: crossing decisions use exact orientation predicates with Simulation of Simplicity, so shared vertices, touching and collinear overlap are handled consistently. It returns no contours. On the measured workloads it takes 35–52% of the time of the Clipper-based bridged area (on par for adversarial degenerate integer grids) and 16–25% for filled-region overlap, with no allocation on warm calls. On every pair of the frozen recognition evaluation it changes no area ranking. See [boundary winding areas](docs/winding-area.md), including five degenerate inputs where Clipper2 2.0.0 returns wrong areas.
 
 ## Compare, normalize, align
 
