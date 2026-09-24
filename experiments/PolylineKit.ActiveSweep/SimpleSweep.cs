@@ -62,6 +62,9 @@ internal static class SimpleSweep
         private uint[] priority = [];
         private int root, count, active;
         private bool rejected;
+        private readonly Comparison<int> eventComparison;
+
+        internal Workspace() => eventComparison = Compare;
 
         internal bool Run(IReadOnlyList<Point2> path, out double area)
         {
@@ -94,7 +97,9 @@ internal static class SimpleSweep
                 left[i] = right[i] = parent[i] = -1;
                 priority[i] = Mix((uint)i);
             }
-            Array.Sort(events, 0, count, this);
+            // The IComparer Array.Sort path constructs a Comparison delegate per call.
+            // Pass one workspace-owned delegate directly to the span overload.
+            events.AsSpan(0, count).Sort(eventComparison);
             for (int i = 1; i < count; i++)
                 if (Same(Vertices[events[i - 1]], Vertices[events[i]])) return false;
 

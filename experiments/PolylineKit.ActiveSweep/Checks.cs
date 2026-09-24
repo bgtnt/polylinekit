@@ -93,6 +93,12 @@ internal static class Checks
         Equal(Math.ScaleB(1, -775), Program.Hybrid(fixtures[12].Path), "subnormal coordinate analytic area");
         KnownNumericalLimit(1e12);
         KnownNumericalLimit(1e16);
+        foreach (var fixture in new[] { new Fixture("ring", Fixtures.Radial(256, false)),
+            new Fixture("star", Fixtures.Radial(256, true)), new Fixture("comb", Fixtures.Comb(256, true)),
+            new Fixture("bars", Fixtures.Bars(256, true)) })
+            Equal(Program.Hybrid(fixture.Path), Program.Guarded(fixture.Path), "guarded " + fixture.Name);
+        Require(!SweepPolicy.ShouldTry(Fixtures.Radial(256, false)), "ring policy bypass");
+        Require(SweepPolicy.ShouldTry(Fixtures.Radial(256, true)), "star policy selects sweep");
         Console.WriteLine($"Active sweep: {checks} checks; {accepted} certified paths; {rejected} fallback paths; {rational} exact rational area cases.");
         return 0;
     }

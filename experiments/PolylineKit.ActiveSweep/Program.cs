@@ -25,23 +25,21 @@ internal static class Program
             double expected = WindingArea.ClosedPath(fixture.Path).NonZero;
             if (accepted && Math.Abs(direct - expected) > Math.Max(Math.Abs(expected), 1) * 1e-11)
                 throw new InvalidOperationException($"Benchmark mismatch: {fixture.Name} {fixture.Path.Length}: {direct:R} != {expected:R}");
-            Sample baseline, hybrid;
-            if ((run & 1) == 0)
+            var methods = new Func<double>[] { () => WindingArea.ClosedPath(fixture.Path).NonZero,
+                () => Hybrid(fixture.Path), () => Guarded(fixture.Path) };
+            var measured = new Sample[3];
+            for (int i = 0; i < 3; i++)
             {
-                hybrid = Measure(() => Hybrid(fixture.Path));
-                baseline = Measure(() => WindingArea.ClosedPath(fixture.Path).NonZero);
+                int method = (i + run - 1) % 3;
+                measured[method] = Measure(methods[method]);
             }
-            else
-            {
-                baseline = Measure(() => WindingArea.ClosedPath(fixture.Path).NonZero);
-                hybrid = Measure(() => Hybrid(fixture.Path));
-            }
+            Sample baseline = measured[0], hybrid = measured[1], guarded = measured[2];
             rows.Add(new { fixture.Name, Vertices = fixture.Path.Length, InputSha256 = fixture.Hash(),
                 Accepted = accepted, Value = expected,
                 Statistics = new { statistics.Vertices, statistics.Comparisons, statistics.NeighborChecks,
                     statistics.ExactPredicates, statistics.PeakActive, statistics.SignedArea },
-                Baseline = baseline, Hybrid = hybrid });
-            Console.WriteLine($"{fixture.Name}/{fixture.Path.Length} accepted={accepted} {baseline.MedianUs:F3} -> {hybrid.MedianUs:F3} us");
+                Selected = SweepPolicy.ShouldTry(fixture.Path), Baseline = baseline, Hybrid = hybrid, Guarded = guarded });
+            Console.WriteLine($"{fixture.Name}/{fixture.Path.Length} accepted={accepted} {baseline.MedianUs:F3} -> {hybrid.MedianUs:F3} / guarded {guarded.MedianUs:F3} us");
         }
         string output = Path.GetFullPath(args[2]);
         Directory.CreateDirectory(Path.GetDirectoryName(output)!);
@@ -59,6 +57,9 @@ internal static class Program
 
     internal static double Hybrid(IReadOnlyList<Point2> path) =>
         SimpleSweep.TryArea(path, out double area, out _) ? area : WindingArea.ClosedPath(path).NonZero;
+
+    internal static double Guarded(IReadOnlyList<Point2> path) =>
+        SweepPolicy.ShouldTry(path) ? Hybrid(path) : WindingArea.ClosedPath(path).NonZero;
 
     private static Sample Measure(Func<double> invoke)
     {
