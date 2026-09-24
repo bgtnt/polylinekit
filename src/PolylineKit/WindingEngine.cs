@@ -61,6 +61,10 @@ internal static class WindingEngine
         internal int[] Next = new int[256];
         internal double[] Keys = new double[256];
         internal int[] Order = new int[256];
+        internal double[] MergeKeys = Array.Empty<double>();
+        internal int[] MergeOrder = Array.Empty<int>();
+        internal readonly int[] Runs = new int[65];
+        internal int[] Candidates = new int[256];
         // Structure-of-arrays bounds permit contiguous SIMD loads; payload stays 24 bytes per edge slot.
         internal double[] SweepMax = new double[256];
         internal double[] SweepMinOther = new double[256];
@@ -481,6 +485,97 @@ internal static class WindingEngine
         return (x - xv) + (yv - y);
     }
 
+    // Monotone pieces are common in paths. Merge a bounded number of natural runs;
+    // use the framework sort for highly fragmented input rather than paying for many merge passes.
+    private static void SortEdges(Workspace ws, int n)
+    {
+        double[] keys = ws.Keys;
+        int[] order = ws.Order, runs = ws.Runs;
+        if (n < 256) { Array.Sort(keys, order, 0, n); return; }
+        int count = 0, start = 0;
+        while (start < n)
+        {
+            if (count == runs.Length - 1) { Array.Sort(keys, order, 0, n); return; }
+            runs[count++] = start;
+            int end = start + 1;
+            if (end < n && keys[end] < keys[start])
+            {
+                while (end < n && keys[end] < keys[end - 1]) end++;
+                Array.Reverse(keys, start, end - start);
+                Array.Reverse(order, start, end - start);
+            }
+            else while (end < n && keys[end] >= keys[end - 1]) end++;
+            start = end;
+        }
+        if (count < 2) return;
+        runs[count] = n;
+        if (ws.MergeKeys.Length < n) { ws.MergeKeys = new double[Grow(n)]; ws.MergeOrder = new int[ws.MergeKeys.Length]; }
+        double[] outputKeys = ws.MergeKeys;
+        int[] outputOrder = ws.MergeOrder;
+        while (count > 1)
+        {
+            int outputCount = 0;
+            for (int run = 0; run < count; run += 2)
+            {
+                int lo = runs[run], mid = runs[run + 1], hi = run + 1 < count ? runs[run + 2] : mid;
+                runs[outputCount++] = lo;
+                if (mid == hi || keys[mid - 1] <= keys[mid])
+                {
+                    Array.Copy(keys, lo, outputKeys, lo, hi - lo);
+                    Array.Copy(order, lo, outputOrder, lo, hi - lo);
+                    continue;
+                }
+                int left = lo, right = mid, dest = lo;
+                while (left < mid && right < hi)
+                {
+                    int source = keys[left] <= keys[right] ? left++ : right++;
+                    outputKeys[dest] = keys[source]; outputOrder[dest++] = order[source];
+                }
+                if (left < mid) { Array.Copy(keys, left, outputKeys, dest, mid - left); Array.Copy(order, left, outputOrder, dest, mid - left); }
+                else if (right < hi) { Array.Copy(keys, right, outputKeys, dest, hi - right); Array.Copy(order, right, outputOrder, dest, hi - right); }
+            }
+            count = outputCount; runs[count] = n;
+            double[] oldKeys = keys; keys = outputKeys; outputKeys = oldKeys;
+            int[] oldOrder = order; order = outputOrder; outputOrder = oldOrder;
+        }
+        // Keep the sorted arrays as primary storage; the other buffers are scratch for the next call.
+        ws.Keys = keys; ws.Order = order; ws.MergeKeys = outputKeys; ws.MergeOrder = outputOrder;
+    }
+
+    // Compact the broad-phase survivors before running predicates. Geometry sees the same pair order.
+    private static int Candidates(Workspace ws, int from, int n, double max, double minOther, double maxOther
+#if NET10_0_OR_GREATER
+        , bool vectorize
+#endif
+    )
+    {
+        double[] keys = ws.Keys, lower = ws.SweepMinOther, upper = ws.SweepMaxOther;
+        int[] output = ws.Candidates;
+        int count = 0, b = from;
+#if NET10_0_OR_GREATER
+        if (vectorize && from <= n - 16 && keys[from + 15] <= max)
+        {
+            Vector256<double> minimum = Vector256.Create(minOther), maximum = Vector256.Create(maxOther);
+            while (b <= n - 4 && keys[b + 3] <= max)
+            {
+                Vector256<double> lo = Vector256.LoadUnsafe(ref lower[0], (nuint)b);
+                Vector256<double> hi = Vector256.LoadUnsafe(ref upper[0], (nuint)b);
+                uint mask = Vector256.ExtractMostSignificantBits(Vector256.BitwiseAnd(
+                    Vector256.LessThanOrEqual(lo, maximum), Vector256.GreaterThanOrEqual(hi, minimum)));
+                while (mask != 0)
+                {
+                    output[count++] = b + BitOperations.TrailingZeroCount(mask);
+                    mask &= mask - 1;
+                }
+                b += 4;
+            }
+        }
+#endif
+        for (; b < n && keys[b] <= max; b++)
+            if (upper[b] >= minOther && lower[b] <= maxOther) output[count++] = b;
+        return count;
+    }
+
     // Records every symbolic proper crossing between nonadjacent edges, and every split where edges overlap
     // collinearly, and orders them along each edge. Returns the number of proper crossings.
     private static int FindCrossings(Workspace ws, int n, int split, ref WindingStatistics statistics)
@@ -507,7 +602,8 @@ internal static class WindingEngine
             k[e] = sweepY ? Math.Min(v[e].Y, v[nx[e]].Y) : Math.Min(v[e].X, v[nx[e]].X);
             o[e] = e;
         }
-        Array.Sort(k, o, 0, n);
+        SortEdges(ws, n);
+        k = ws.Keys; o = ws.Order;
         if (ws.SweepMax.Length < n)
         {
             int capacity = Grow(n);
@@ -529,50 +625,22 @@ internal static class WindingEngine
         bool vectorize = n >= 64 && Vector256.IsHardwareAccelerated &&
             !(AppContext.TryGetSwitch("PolylineKit.DisableSimd", out bool disabled) && disabled);
 #endif
+        if (ws.Candidates.Length < n) ws.Candidates = new int[Grow(n)];
+        int[] candidates = ws.Candidates;
         int count = 0, crossings = 0;
         for (int a = 0; a < n; a++)
         {
             int i = o[a], i1 = nx[i];
             Point2 pa = v[i], pb = v[i1];
             double max = sweepMax[a], minOther = sweepMinOther[a], maxOther = sweepMaxOther[a];
-            int position = a + 1;
+            int candidateCount = Candidates(ws, a + 1, n, max, minOther, maxOther
 #if NET10_0_OR_GREATER
-            int batchStart = 0;
-            uint remaining = 0;
-            Vector256<double> minVector = Vector256.Create(minOther), maxVector = Vector256.Create(maxOther);
+                , vectorize
 #endif
-            for (;;)
+            );
+            for (int candidate = 0; candidate < candidateCount; candidate++)
             {
-                int b;
-#if NET10_0_OR_GREATER
-                if (remaining == 0)
-                {
-                    // Both arrays have at least n elements. LoadUnsafe only visits a complete group
-                    // inside [0, n); inclusive sweep-window comparisons preserve endpoint contacts.
-                    while (vectorize && position <= n - Vector256<double>.Count && k[position + 3] <= max)
-                    {
-                        Vector256<double> lower = Vector256.LoadUnsafe(ref sweepMinOther[0], (nuint)position);
-                        Vector256<double> upper = Vector256.LoadUnsafe(ref sweepMaxOther[0], (nuint)position);
-                        remaining = Vector256.ExtractMostSignificantBits(Vector256.BitwiseAnd(
-                            Vector256.LessThanOrEqual(lower, maxVector), Vector256.GreaterThanOrEqual(upper, minVector)));
-                        batchStart = position;
-                        position += Vector256<double>.Count;
-                        if (remaining != 0) break;
-                    }
-                }
-                if (remaining != 0)
-                {
-                    b = batchStart + BitOperations.TrailingZeroCount(remaining);
-                    remaining &= remaining - 1;
-                }
-                else
-#endif
-                {
-                    while (position < n && k[position] <= max &&
-                        (sweepMaxOther[position] < minOther || sweepMinOther[position] > maxOther)) position++;
-                    if (position >= n || k[position] > max) break;
-                    b = position++;
-                }
+                int b = candidates[candidate];
                 int j = o[b], j1 = nx[j];
                 Point2 pc = v[j], pd = v[j1];
                 if (j1 == i || i1 == j)
