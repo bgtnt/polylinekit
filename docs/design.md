@@ -1,8 +1,8 @@
 # Mathematical contract and design
 
-This document preserves the graph-integral foundation of the original experiment. General fill-based comparisons, normalization and sampled alignment are specified separately in [comparison-api.md](comparison-api.md). They do not extend the graph integral's mathematical guarantees to arbitrary strokes.
+This document specifies the graph integral. General fill-based comparisons, normalization and sampled alignment are specified separately in [comparison-api.md](comparison-api.md). They do not extend the graph integral's mathematical guarantees to arbitrary strokes.
 
-## Candidate operation
+## Graph operation
 
 For two piecewise linear graphs `p(x)` and `q(x)` on the **same** interval `[a,b]`, define
 
@@ -20,7 +20,7 @@ For a concrete numerical limit, let `m = 9007199254740992` (`2^53`), `p = [(-m,1
 
 ## Implementation and independent checks
 
-Merge the two sorted sequences of x breakpoints. The difference is linear on every resulting interval. If its endpoint values `u,v` have the same sign, its absolute integral is `h(|u|+|v|)/2`. Otherwise split at the zero, with `t=|u|/(|u|+|v|)`, and add `h(|u|t+|v|(1-t))/2`. Compensated summation accumulates these nonnegative contributions. Complexity is `O(n+m)` time, `O(1)` auxiliary storage, including input validation. No dense resampling or polygon engine is necessary for this restricted domain.
+Merge the two sorted sequences of x breakpoints. The difference is linear on every resulting interval. If its endpoint values `u,v` have the same sign, its absolute integral is `h(|u|+|v|)/2`. Otherwise split at the zero, with `t=|u|/(|u|+|v|)`, and add `h(|u|t+|v|(1-t))/2`. Compensated summation accumulates these nonnegative contributions. Complexity is `O(n+m)` time, `O(1)` auxiliary storage, including input validation. No dense resampling or polygon engine is necessary for this restricted domain. The graph integration kernel remains scalar in both targets.
 
 Three separate constructions check this implementation:
 
@@ -43,7 +43,7 @@ This follows directly from the triangle inequality for absolute values. It conce
 
 ## Complex walks are a separate question
 
-`ContourSweep` is an experimental fixture oracle: split x at vertices and intersections, order edge crossings within each slab, and integrate winding levels. It is deliberately small and slow, uses ordinary doubles, and is not shipped. Its three outputs are
+`ContourSweep` is a test-only fixture oracle: split x at vertices and intersections, order edge crossings within each slab, and integrate winding levels. It is deliberately small and slow, uses ordinary doubles, and is not shipped. Its three outputs are
 
 ```text
 NonZero:          integral 1[w != 0] dA
@@ -51,30 +51,16 @@ EvenOdd:          integral (|w| mod 2) dA
 AbsoluteWinding:  integral |w| dA
 ```
 
-The last counts **net winding multiplicity**, not total travel without cancellation. Traversing a square forward and then backward gives zero for all three, despite tracing a nonempty boundary. Counting all bounded arrangement faces once would give a different answer in that case. Two same-direction turns around a square of area 4 give 4, 0 and 8 respectively. No one of these is silently substituted for general stroke correspondence. `results/geometry/contours.json` records concrete inputs, holes, retraced bridges and overlapping loops.
+The last counts **net winding multiplicity**, not total travel without cancellation. Traversing a square forward and then backward gives zero for all three, despite tracing a nonempty boundary. Counting all bounded arrangement faces once would give a different answer in that case. Two same-direction turns around a square of area 4 give 4, 0 and 8 respectively. No one of these is silently substituted for general stroke correspondence. The [archived contour fixtures](https://github.com/bgtnt/polylinekit/blob/00f96248cc404e2d662d9e51c457d811701fa889/results/geometry/contours.json) record concrete inputs, holes, retraced bridges and overlapping loops. The corresponding maintained fixtures are in [tests/PolylineKit.Checks](../tests/PolylineKit.Checks).
 
 For the supported graph pair, winding magnitude is at most one almost everywhere, so the three integrals agree. Only in this equivalent setting does Clipper serve as an area oracle for the public method. Complex contours compare Clipper NonZero/EvenOdd only with the matching named integrals.
 
 ## Dependency and source decisions
 
-The core targets `netstandard2.0`. The original graph-only implementation had no external runtime dependency; the current general fill-based API references Clipper2 **2.0.0**, locked with a NuGet content hash. The SDK's NETStandard.Library reference assets are build inputs. No source from Clipper, RtTools, MPR001 or a third-party LIP implementation is embedded. Packaging/publication is not part of the current scope.
+The core targets `netstandard2.0` and `net10.0`. The original graph-only implementation had no external runtime dependency; the current general fill-based API references Clipper2 **2.0.0**, locked with a NuGet content hash. The SDK's NETStandard.Library reference assets are build inputs. No source from Clipper, RtTools, MPR001 or a third-party LIP implementation is embedded. Packaging/publication is not part of the current scope.
 
 Clipper's `PathsD` operations quantize internally. The oracle explicitly uses decimal precision 8 and limits fixture coordinate magnitudes to `1e6`. Very small faces can disappear; tolerances account for this, and analytic checks retain authority below that scale. `Abs(Area(unresolvedCombinedPath))` is never used as an unsigned-area oracle.
 
 The author's unpublished `RtTools.Geometry`, including its .NET 10 version, was inspected **for ideas only**. Its intersection ordering, graph traversal and per-region accumulation motivated making region diagnostics independently inspectable. No private source, binaries or original fixtures are included. The old MPR001 application did not participate in correctness or speed measurements.
 
-### Decisions from the legacy inspection
-
-The inspected artifacts were the old application's path comparison/merge methods and the locally linked RtTools polygon area, polyline and segment-intersection methods. They illustrate an earlier experiment; they are neither the specification nor a correctness oracle for this implementation.
-
-| Observation from private-source inspection | Decision for the fresh implementation |
-| --- | --- |
-| Bounds fitting independently scaled x and y; its score combined squared doubled-area, a transformation penalty and template-bounds normalization. | Expose uniform and explicitly named Stretch normalization, keep transform parameters separate, and report raw area and a named joint-rectangle ratio. The new score deliberately does not reproduce the OCR score. |
-| The merge chose a traversal direction by comparing the template's first point with the two input endpoints. No cyclic closed-stroke correspondence contract was present. | Preserve caller order in area comparison; connectors, optional reversal and sampled closed-phase search are explicit policies. No hidden sorting or endpoint matching. |
-| Rotation search minimized the input's own bounds area over a coarse angle range. Trapezoid preparation used section-dependent scaling. | Name the current bounds operation and sampled least-squares similarity objective. Do not label either as optimal area registration or general affine/projective fitting. |
-| Polygon processing enumerated nonadjacent edge pairs, built an intersection graph and summed absolute areas, with recursive/fallback handling of complex pieces. This was more than a linear shoelace pass. | First isolate the graph-domain integral, where lobe counting and an independent geometric oracle agree and a linear merge is sufficient. Broader fill-based methods have separately named semantics. |
-| The segment overlap branch required strict interval overlap on both axes, missing axis-aligned overlaps; it could return a sentinel point for a diagonal overlap. Complex fallback behavior did not establish consistent traversal multiplicity. | Do not transplant the intersection graph or claim that NonZero/EvenOdd reproduces legacy counted regions. Use Clipper for explicitly defined general fills, with independent analytic fixtures and precision limits. |
-
-These are a decision trail from source inspection, not a public certification of the private library. No legacy source or probe fixtures were transferred to PolylineKit.
-
-Clipper's active-edge processing illustrates why a general robust arrangement engine is substantial. We reuse its released binary for the named general fill/Boolean operations. The small graph sweep exploits the stronger graph contract. The broader API explicitly specifies fill and correspondence policies instead of silently loosening the graph integral's input contract.
+The [archived baseline definitions](https://github.com/bgtnt/polylinekit/blob/00f96248cc404e2d662d9e51c457d811701fa889/docs/baselines.md) document LIP/GenLIP provenance and reconstruction limits. The graph integral is elementary area integration; no scientific novelty or universal similarity claim is made. Historical measurements and inspection notes remain available through the [research archive](../research/README.md).

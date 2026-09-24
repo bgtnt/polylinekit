@@ -6,7 +6,7 @@ $savedAvx = $env:DOTNET_EnableAVX
 try {
     $directory = Join-Path (Get-Location) ('artifacts/implementation-checks-' + [Guid]::NewGuid().ToString('N'))
     New-Item -ItemType Directory -Path $directory | Out-Null
-    Get-ChildItem -LiteralPath 'experiments/PolylineKit.Experiments/bin/Release/net10.0' -File | ForEach-Object {
+    Get-ChildItem -LiteralPath 'tests/PolylineKit.Checks/bin/Release/net10.0' -File | ForEach-Object {
         Copy-Item -LiteralPath $_.FullName -Destination $directory
     }
     $modes = @(

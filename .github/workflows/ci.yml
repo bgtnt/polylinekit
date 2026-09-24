@@ -16,11 +16,19 @@ jobs:
       - run: ./scripts/verify-implementations.ps1
         shell: pwsh
       - run: dotnet run --project examples/Basic -c Release --no-build
-      - run: ./scripts/verify-recognition.ps1
+      - name: Benchmark workload smoke checks (no timing)
+        run: dotnet benchmarks/PolylineKit.Benchmarks/bin/Release/net10.0/PolylineKit.Benchmarks.dll smoke
+      - name: Frozen assembly fixtures on both library targets
+        run: |
+          $fixture = 'benchmarks/fixtures/winding.json'
+          $manifest = Get-Content benchmarks/fixtures/manifest.json -Raw | ConvertFrom-Json
+          if ((Get-FileHash $fixture -Algorithm SHA256).Hash.ToLowerInvariant() -ne $manifest.sha256) {
+            throw 'Frozen fixture checksum differs.'
+          }
+          $runner = 'benchmarks/PolylineKit.AssemblyBenchmarks/bin/Release/net10.0/PolylineKit.AssemblyBenchmarks.dll'
+          foreach ($target in @('net10.0', 'netstandard2.0')) {
+            $dll = (Resolve-Path "src/PolylineKit/bin/Release/$target/PolylineKit.dll").Path
+            dotnet $runner $dll $fixture check 0 $target
+            if ($LASTEXITCODE) { throw "Assembly fixture checks failed: $target" }
+          }
         shell: pwsh
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - run: python scripts/datasets/import_datasets.py check
-      - run: python -m unittest discover -s scripts/recognition -p 'test_*.py'
-      - run: python -m unittest discover -s examples/StrokeTemplates -p 'test_*.py'

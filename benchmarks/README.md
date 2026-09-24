@@ -1,0 +1,133 @@
+# Benchmarks
+
+These optional .NET 10 tools measure complete operations, including their ordinary
+preparation and allocations. They are separate from the library and correctness
+checks. Generated output belongs under the ignored `artifacts/` directory.
+
+## Maintained suites
+
+From the repository root:
+
+```powershell
+dotnet restore PolylineKit.slnx --locked-mode
+dotnet build PolylineKit.slnx -c Release --no-restore
+dotnet benchmarks/PolylineKit.Benchmarks/bin/Release/net10.0/PolylineKit.Benchmarks.dll smoke
+
+pwsh scripts/benchmark.ps1 -Suite Graphs
+pwsh scripts/benchmark.ps1 -Suite Transforms
+pwsh scripts/benchmark.ps1 -Suite Winding
+```
+
+`smoke` invokes each graph and winding workload method and the transform operations
+once, verifies finite outputs, and collects no timings. Correctness tests remain
+in [`tests/PolylineKit.Checks`](../tests/PolylineKit.Checks).
+
+| Suite | Operations | Default output |
+| --- | --- | --- |
+| Graphs | Unsigned graph integral, LIP/GenLIP reconstructions, full and prepared Clipper calls; 16, 64, 256, 1024 vertices, three crossing densities | `artifacts/benchmarks/graphs/` |
+| Transforms | Comparison, normalization, similarity fitting and a combined pipeline; 16, 64, 256, 1024 vertices | `artifacts/benchmarks/transforms/` |
+| Winding | Winding engine and Clipper comparisons on synthetic paired strokes, dense graphs, random walks, filled regions and degenerate grids | `artifacts/benchmarks/winding/` |
+
+The script requires a clean Git tree, records the measured revision, disables
+tiered compilation for the process, and runs three independent processes. Each
+method has a warmup, iteration calibration and nine batch samples; the winding
+summary reports the median of the three process medians and their range. Timing
+and per-thread managed allocation counters are unchanged from the archived
+runners. `-OutputDirectory <path>` overrides the full output directory.
+
+For one explicitly labelled process, the command-only runner accepts:
+
+```powershell
+dotnet benchmarks/PolylineKit.Benchmarks/bin/Release/net10.0/PolylineKit.Benchmarks.dll benchmark-winding artifacts/benchmarks/winding 1 <commit-sha>
+dotnet benchmarks/PolylineKit.Benchmarks/bin/Release/net10.0/PolylineKit.Benchmarks.dll summarize-winding artifacts/benchmarks/winding
+```
+
+The corresponding commands for the other suites are `benchmark` and
+`benchmark-transforms`. The script should normally be preferred because it
+records the actual revision and restores the prior environment settings.
+
+LIP, GenLIP and unsigned area use different mathematical definitions. Different
+scores do not establish accuracy or superiority. Clipper's fixed precision also
+has a different numeric contract from the winding engine. Consult the library
+documentation before treating any row as interchangeable with another method.
+
+## Explicit-assembly comparison
+
+`PolylineKit.AssemblyBenchmarks` is an optional developer tool for comparing two
+compatible builds of PolylineKit. It loads the requested DLL before entering the
+typed runner; the build-time reference is not copied into its output directory.
+A project dependency builds that reference using the selected Debug or Release
+configuration on a clean checkout. Supply an
+absolute DLL path when invoking it.
+
+The runner uses one fixed input file, [`fixtures/winding.json`](fixtures/winding.json),
+plus deterministic generators in `Shared/`. These produce 78 single closed walks
+and three independent filled-region pairs for timing. `check` compares the
+enabled and disabled simple-path optimization for the 78 walks, with exact-rational
+and analytic checks for selected inputs: 424 assertions. The three region pairs
+are timed as actual two-input operations, not as a bridged path.
+
+```powershell
+$runner = 'benchmarks/PolylineKit.AssemblyBenchmarks/bin/Release/net10.0/PolylineKit.AssemblyBenchmarks.dll'
+$currentDll = (Resolve-Path src/PolylineKit/bin/Release/net10.0/PolylineKit.dll).Path
+dotnet $runner $currentDll benchmarks/fixtures/winding.json check 0 current
+
+# Supply an independently built compatible baseline DLL, preserving that build's revision.
+$baselineDll = (Resolve-Path '<baseline-build>/PolylineKit.dll').Path
+$oldTiered = $env:DOTNET_TieredCompilation
+try {
+    $env:DOTNET_TieredCompilation = '0'
+    for ($run = 1; $run -le 3; $run++) {
+        $order = if ($run -eq 2) { @('integrated', 'baseline') } else { @('baseline', 'integrated') }
+        foreach ($label in $order) {
+            $dll = if ($label -eq 'baseline') { $baselineDll } else { $currentDll }
+            dotnet $runner $dll benchmarks/fixtures/winding.json "artifacts/assembly-benchmarks/$label-$run.json" $run $label
+            if ($LASTEXITCODE) { throw "Assembly benchmark failed: $label / $run" }
+        }
+    }
+} finally {
+    $env:DOTNET_TieredCompilation = $oldTiered
+}
+python benchmarks/summarize-assembly.py artifacts/assembly-benchmarks
+```
+
+Each assembly run records the DLL SHA-256, input hashes, numerical results, runtime,
+OS, CPU, allocation samples and five timing batches. Run these processes serially
+on an otherwise quiet machine. The standard-library Python summarizer validates
+all six files, matching recorded environments, numerical equality, input identity
+(including the boundary between two region inputs) and per-process medians before
+writing `summary.md` and `summary.json`. Its default directory is
+`artifacts/assembly-benchmarks`. It deliberately rejects comparisons whose
+numerical outputs differ; such a change needs a separate correctness assessment.
+`baseline` and `integrated` are fixed file labels for the reference and candidate,
+not a claim that every later comparison evaluates the historical sweep integration.
+Do not use Python's `-O` option: the summarizer rejects it to keep validation enabled.
+Matching metadata cannot detect other workload interference; control the machine
+and build options when attributing a difference to code.
+
+The runner reads an internal workspace diagnostic to identify bypassed, rejected
+and accepted certification attempts. That makes it appropriate for compatible
+engine builds, not a general benchmark for arbitrary library versions. No
+profiling or recognition experiment tools are needed by either maintained runner.
+
+## Fixture provenance and existing evidence
+
+The fixed fixture is the exact Git blob `72f77aff31f1a9eb3288c07b113d429ee38af164`
+from commit `00f96248cc404e2d662d9e51c457d811701fa889`, preserved at public tag
+[`archive/research-2026-09-24`](https://github.com/bgtnt/polylinekit/tree/archive/research-2026-09-24).
+It contains synthetic geometry, not downloaded recognition data. Its 876,853
+bytes have SHA-256
+`ef253bbdc499a4533beed1a6b638b3a76760c4f00e97b8454cf03b984e6a4f84`.
+The machine-readable provenance is in [`fixtures/manifest.json`](fixtures/manifest.json).
+Generators remain deterministic; do not retune an optimization against a set
+already used as held-out evaluation evidence.
+
+The latest pre-layout [integrated sweep report](https://github.com/bgtnt/polylinekit/blob/archive/research-2026-09-24/docs/winding-integrated-sweep.md)
+records complete reproduction details and raw-data links. On that recorded machine,
+the new 2048-vertex canyon fixture improved by 10.73x and the large diagonal comb
+by 19.97x; the 256-vertex radial star became about 27% slower. All sampled warm
+allocations were zero. Those measurements compare a specific baseline and integrated
+engine, not this directory relocation, all C# implementations, or all geometries.
+The [full archived measurements](https://github.com/bgtnt/polylinekit/tree/archive/research-2026-09-24/results/winding/integrated-sweep)
+preserve unfavorable cases and process variation. No new performance claim is
+made merely because the runners now live under `benchmarks/`.

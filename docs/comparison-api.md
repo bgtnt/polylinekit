@@ -74,7 +74,7 @@ validation and output snapshot contract; no FMA or reduction reordering is used.
 To force scalar application for diagnosis, set
 `AppContext.SetSwitch("PolylineKit.DisableSimd", true)`. Set it to `false` to allow
 hardware dispatch again. The switch is process-wide. See the
-[measured scope and limits](optimization-evaluation.md).
+[measured scope and limits](performance.md).
 
 `PolylineSampling.ResampleByArcLength(path, sampleCount = 64, closed = false)` places equidistant samples along cumulative segment length. Open sampling includes both endpoints; closed sampling includes the closing edge and omits the repeated final sample. Adjacent duplicates are ignored. Count limits are 2..1,000,000 (open) and 3..1,000,000 (closed). Zero-length paths are rejected. Length arithmetic is rescaled against unnecessary underflow/overflow.
 

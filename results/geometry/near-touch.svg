@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 225" role="img" aria-label="Near touch: two main lobes and a small opposite lobe (epsilon enlarged)">
-<rect width="620" height="225" fill="#fafaf7"/>
-<polygon points="30.000,170.000 170.000,170.000 310.000,170.000 450.000,170.000 590.000,170.000 590.000,170.000 450.000,45.000 310.000,175.000 170.000,45.000 30.000,170.000" fill="#dce9f3" fill-rule="evenodd"/>
-<polyline points="30.000,170.000 170.000,170.000 310.000,170.000 450.000,170.000 590.000,170.000" fill="none" stroke="#2463a6" stroke-width="3"/>
-<polyline points="30.000,170.000 170.000,45.000 310.000,175.000 450.000,45.000 590.000,170.000" fill="none" stroke="#b74721" stroke-width="3"/>
-<text x="20" y="211" font-family="sans-serif" font-size="12">Near touch: two main lobes and a small opposite lobe (epsilon enlarged)</text>
-</svg>

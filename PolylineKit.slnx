@@ -1,13 +1,15 @@
 <Solution>
+  <Folder Name="/benchmarks/">
+    <Project Path="benchmarks/PolylineKit.Benchmarks/PolylineKit.Benchmarks.csproj" />
+    <Project Path="benchmarks/PolylineKit.AssemblyBenchmarks/PolylineKit.AssemblyBenchmarks.csproj" />
+  </Folder>
   <Folder Name="/examples/">
     <Project Path="examples/Basic/Basic.csproj" />
-    <Project Path="examples/StrokeTemplates/StrokeTemplates.csproj" />
-  </Folder>
-  <Folder Name="/experiments/">
-    <Project Path="experiments/PolylineKit.Experiments/PolylineKit.Experiments.csproj" />
-    <Project Path="experiments/PolylineKit.Recognition/PolylineKit.Recognition.csproj" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/PolylineKit/PolylineKit.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/PolylineKit.Checks/PolylineKit.Checks.csproj" />
   </Folder>
 </Solution>
