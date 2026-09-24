@@ -6,9 +6,12 @@ if (Environment.GetEnvironmentVariable("POLYLINEKIT_FORCE_SCALAR") == "1")
 return args.FirstOrDefault() switch
 {
     "check" => RunChecks(),
+    "winding-evidence" => WindingEvidenceCommand(args),
     "evidence" => WriteEvidence(args),
     "benchmark" => RunBenchmark(args),
     "benchmark-transforms" => RunTransformBenchmark(args),
+    "benchmark-winding" => RunWindingBenchmark(args),
+    "summarize-winding" => SummarizeWinding(args),
     "benchmark-optimization" => RunOptimization(args),
     "probe-optimization" => ProbeOptimization(args),
     "profile-optimization" => ProfileOptimization(args),
@@ -21,9 +24,10 @@ static int RunChecks()
         .GetCustomAttributes(typeof(System.Runtime.Versioning.TargetFrameworkAttribute), false).Single();
     AppContext.TryGetSwitch("PolylineKit.DisableSimd", out bool simdDisabled);
     Console.WriteLine($"Core target: {target.FrameworkName}; Vector128={System.Runtime.Intrinsics.Vector128.IsHardwareAccelerated}; Vector256={System.Runtime.Intrinsics.Vector256.IsHardwareAccelerated}; force-scalar={Environment.GetEnvironmentVariable("POLYLINEKIT_FORCE_SCALAR")}; simd-disabled={simdDisabled}; process-arch={System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture}");
-    int total = Checks.Run() + AlignmentChecks.Run() + ComparisonChecks.Run() + NumericReviewChecks.Run() + GenLipReviewChecks.Run() + OptimizationChecks.Run();
+    int total = Checks.Run() + AlignmentChecks.Run() + ComparisonChecks.Run() + NumericReviewChecks.Run() + GenLipReviewChecks.Run() + OptimizationChecks.Run() + WindingAreaChecks.Run();
     Console.WriteLine($"PASS: {total} total checks."); return 0;
 }
+static int WindingEvidenceCommand(string[] args) { WindingEvidence.Write(args.ElementAtOrDefault(1) ?? "results/winding"); return 0; }
 static int WriteEvidence(string[] args) { Evidence.Write(args.ElementAtOrDefault(1) ?? "results/geometry"); return 0; }
 static int RunBenchmark(string[] args)
 {
@@ -35,6 +39,12 @@ static int RunTransformBenchmark(string[] args)
     if (args.Length != 4) return Usage();
     TransformBenchmarks.Run(args[1], int.Parse(args[2]), args[3]); return 0;
 }
+static int RunWindingBenchmark(string[] args)
+{
+    if (args.Length != 4) return Usage();
+    WindingBenchmarks.Run(args[1], int.Parse(args[2]), args[3]); return 0;
+}
+static int SummarizeWinding(string[] args) { WindingBenchmarks.Summarize(args.ElementAtOrDefault(1) ?? "results/winding/benchmarks"); return 0; }
 static int RunOptimization(string[] args)
 {
     if (args.Length != 6) return Usage();
@@ -50,4 +60,4 @@ static int ProfileOptimization(string[] args)
     if (args.Length != 4) return Usage();
     OptimizationBenchmarks.Profile(args[1], int.Parse(args[2]), int.Parse(args[3])); return 0;
 }
-static int Usage() { Console.Error.WriteLine("Commands: check | evidence [directory] | benchmark|benchmark-transforms <directory> <run> <revision> | benchmark-optimization <directory> <run> <variant> <coreRevision> <harnessRevision> | probe-optimization <directory> <variant> <coreRevision> <harnessRevision> | profile-optimization <case> <vertices> <milliseconds>"); return 2; }
+static int Usage() { Console.Error.WriteLine("Commands: check | evidence [directory] | winding-evidence [directory] | benchmark|benchmark-transforms|benchmark-winding <directory> <run> <revision> | summarize-winding [directory] | benchmark-optimization <directory> <run> <variant> <coreRevision> <harnessRevision> | probe-optimization <directory> <variant> <coreRevision> <harnessRevision> | profile-optimization <case> <vertices> <milliseconds>"); return 2; }
