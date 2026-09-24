@@ -81,16 +81,19 @@ public readonly struct WindingOverlapResult
 /// consistent infinitesimal perturbation of the input. Area is continuous in the vertices, so the result is the
 /// exact area of the given binary64 input up to rounding in crossing positions, products and summation.
 /// Every value is the shoelace sum of a boundary chain formed exactly before any area term is evaluated:
-/// crossing points are shared by both edges (and are the vertex itself where a crossing lies on one), collinearly
-/// overlapping edges are split at each other's endpoints, and identical segments are netted by their integer
-/// coefficients. One path is summed around the center of its bounds, and each chain of two filled paths around
-/// the center of its own remaining segments, so shared boundaries cancel exactly and a small region or a small
-/// difference keeps its area next to large or distant geometry. Rounding still grows with the distance of the
-/// remaining segments from their center, which matters for one closed path whose parts lie far apart relative
-/// to their size.
-/// Time is O(n log n + m + k log k + s) for n edges, m candidate pairs from an x-sorted sweep, k crossings and
-/// s segments on collinearly overlapping edges, which are netted by hashing (expected linear time); m, k and s
-/// are O(n^2) in the worst case. Each call uses its own working storage: a per-thread workspace is
+/// crossing points are shared by both edges (and are the vertex itself where a crossing lies on one) and order
+/// the events along each edge, collinearly overlapping edges are split at each other's endpoints, and identical
+/// segments are netted by their integer coefficients. A sub-edge of any other edge contributes its share of its
+/// edge's term, so a rounded crossing point does not distort the long edges around it. One path is summed
+/// around the center of its bounds, and each chain of two filled paths around the center of its own remaining
+/// segments, so shared boundaries cancel exactly and a small region or a small difference keeps its area next
+/// to large or distant geometry. Rounding still grows with the distance of the remaining segments from their
+/// center, which matters for one closed path whose parts lie far apart relative to their size. A crossing point
+/// is rounded relative to the coordinates of the edges that form it, which matters for a small region cut out
+/// by very long edges.
+/// Time is O(n log n + m + k log k + s) for n edges, m candidate pairs from an x-sorted sweep, k crossing and
+/// overlap-split events, and s segments on collinearly overlapping edges, which are netted by hashing (expected
+/// linear time, not a worst-case bound); m, k and s are O(n^2) in the worst case. Each call uses its own working storage: a per-thread workspace is
 /// reused by consecutive calls, and a call made while another is active on the same thread (for example from
 /// a list indexer) gets a separate one. Warm calls whose predicates are decided by the filter or by expansion
 /// arithmetic allocate no managed memory; first use, buffer growth, nested calls and the integer path do, and

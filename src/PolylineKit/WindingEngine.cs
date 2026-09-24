@@ -21,17 +21,16 @@ internal struct WindingStatistics
 ///
 /// Each chain is formed exactly before any area term is evaluated. Edges that overlap collinearly are split at
 /// each other's endpoints, so a shared boundary piece is the same segment in every loop that contains it, and
-/// identical segments of a chain are netted by their integer coefficients. Only the remaining net segments are
-/// summed: around the loop's bounds center for one loop, and around the center of each chain's own segments for
-/// two. A long shared boundary then cancels exactly instead of leaving rounding of its large terms, and a small
-/// region keeps its area regardless of what else the input contains.
+/// identical segments of a chain are netted by their integer coefficients and summed as segments. A sub-edge of
+/// any other edge contributes its share of its edge's term, measured between its points along the edge's
+/// dominant axis. Chains are summed around the loop's bounds center for one loop, and around the center of each
+/// chain's own segments for two. A long shared boundary then cancels exactly instead of leaving rounding of its
+/// large terms, and a small region keeps its area regardless of what else the input contains.
 /// </remarks>
 internal static class WindingEngine
 {
     internal struct Crossing
     {
-        internal double T; // parameter measured from the edge start
-        internal double U; // the same position measured from the edge end, 1 - T without cancellation
         internal Point2 P; // the crossing point, shared by both incidences; exactly the vertex when it lies on one
         internal int Edge;
         internal int Delta; // winding change of the other edge's loop; zero for a split at a collinear overlap
@@ -71,6 +70,7 @@ internal static class WindingEngine
         internal readonly bool[] Used = new bool[MaxChains];
         internal readonly Point2[] Origin = new Point2[MaxChains];
         internal readonly int[] Group = new int[MaxChains];
+        internal readonly double[] EdgeTerms = new double[MaxChains];
         internal readonly Sum[] Sums = new Sum[MaxChains];
 
         /// <summary>Takes this thread's cached workspace, or a new one while that is in use by an outer call.</summary>
@@ -125,7 +125,8 @@ internal static class WindingEngine
     /// <summary>Single loop ws.Vertices[0..n): NonZero, EvenOdd, absolute and signed winding integrals.</summary>
     /// <remarks>
     /// All four chains consist of the loop's own sub-edges, so one origin (the loop's bounds center) serves them
-    /// and each sub-edge needs one area term. Sub-edges of collinearly overlapping edges are netted first.
+    /// and each edge needs one area term, shared by its sub-edges in proportion to their extent. Sub-edges of
+    /// collinearly overlapping edges are netted first and summed as segments.
     /// </remarks>
     internal static WindingAreaResult SingleLoop(Workspace ws, int n)
     {
@@ -143,8 +144,9 @@ internal static class WindingEngine
         Sum nonZero = default, evenOdd = default, absolute = default, signed = default;
         for (int step = 0, e = first; step < n; step++, e = nx[e])
         {
-            Point2 b = v[nx[e]], p0 = v[e];
-            bool overlapping = ws.Overlapping[e];
+            Point2 a = v[e], b = v[nx[e]], p0 = a;
+            bool overlapping = ws.Overlapping[e], xDominant = Math.Abs(b.X - a.X) >= Math.Abs(b.Y - a.Y);
+            double term = overlapping ? 0 : Cross(a, b, origin);
             for (int x = offsets[e]; x <= offsets[e + 1]; x++)
             {
                 bool last = x == offsets[e + 1];
@@ -154,7 +156,7 @@ internal static class WindingEngine
                     if (overlapping) ws.Take(new Piece { P0 = p0, P1 = p1, W0 = NonZeroStep(w), W1 = EvenOddStep(w), W2 = AbsoluteStep(w), W3 = 1 }, true);
                     else
                     {
-                        double cross = Cross(p0, p1, origin);
+                        double cross = term * Fraction(a, b, p0, p1, xDominant);
                         int step0 = NonZeroStep(w);
                         if (step0 != 0) nonZero.Add(cross * step0);
                         evenOdd.Add(cross * EvenOddStep(w)); absolute.Add(cross * AbsoluteStep(w)); signed.Add(cross);
@@ -171,7 +173,7 @@ internal static class WindingEngine
             double cross = Cross(piece.P0, piece.P1, origin);
             nonZero.Add(cross * piece.W0); evenOdd.Add(cross * piece.W1); absolute.Add(cross * piece.W2); signed.Add(cross * piece.W3);
         }
-        return new WindingAreaResult(nonZero.Value / 2, evenOdd.Value / 2, absolute.Value / 2, signed.Value / 2, statistics);
+        return new WindingAreaResult(nonZero.Value / 4, evenOdd.Value / 4, absolute.Value / 4, signed.Value / 4, statistics);
     }
 
     private const int OwnA = 0, OwnB = 1, AOnly = 2, BOnly = 3, Both = 4;
@@ -218,6 +220,8 @@ internal static class WindingEngine
 
     // One walk around loop A ([0, split)) or B ([split, n)) from its initial winding state. Without sum it records
     // chain bounds of ordinary sub-edges and collects those of overlapping edges; with sum it adds their terms.
+    // An ordinary sub-edge contributes its share of its edge's term, so a crossing point off the edge's line
+    // (rounded) does not distort the area of the long edges around it.
     private static void WalkRegions(Workspace ws, int split, int n, int first, int w, int other, bool nonZero, bool isA, bool sum)
     {
         Point2[] v = ws.Vertices;
@@ -227,8 +231,9 @@ internal static class WindingEngine
         int own = isA ? OwnA : OwnB, only = isA ? AOnly : BOnly, otherOnly = isA ? BOnly : AOnly;
         for (int step = 0, e = first; step < edges; step++, e = nx[e])
         {
-            Point2 p0 = v[e], b = v[nx[e]];
-            bool overlapping = ws.Overlapping[e];
+            Point2 a = v[e], b = v[nx[e]], p0 = a;
+            bool overlapping = ws.Overlapping[e], xDominant = Math.Abs(b.X - a.X) >= Math.Abs(b.Y - a.Y);
+            int known = 0; // origin groups whose edge term is in ws.EdgeTerms
             for (int x = offsets[e]; x <= offsets[e + 1]; x++)
             {
                 bool last = x == offsets[e + 1];
@@ -258,21 +263,14 @@ internal static class WindingEngine
                     }
                     else
                     {
-                        double crossOwn = Cross(p0, p1, ws.Origin[own]);
-                        ws.Sums[own].Add(crossOwn * change);
+                        double fraction = Fraction(a, b, p0, p1, xDominant);
+                        ws.Sums[own].Add(EdgeTerm(ws, own, a, b, ref known) * fraction * change);
                         if (inside)
                         {
-                            double crossBoth = ws.Group[Both] == ws.Group[own] ? crossOwn : Cross(p0, p1, ws.Origin[Both]);
-                            ws.Sums[Both].Add(crossBoth * change);
-                            double crossOther = ws.Group[otherOnly] == ws.Group[own] ? crossOwn
-                                : ws.Group[otherOnly] == ws.Group[Both] ? crossBoth : Cross(p0, p1, ws.Origin[otherOnly]);
-                            ws.Sums[otherOnly].Add(crossOther * -change);
+                            ws.Sums[Both].Add(EdgeTerm(ws, Both, a, b, ref known) * fraction * change);
+                            ws.Sums[otherOnly].Add(EdgeTerm(ws, otherOnly, a, b, ref known) * fraction * -change);
                         }
-                        else
-                        {
-                            double crossOnly = ws.Group[only] == ws.Group[own] ? crossOwn : Cross(p0, p1, ws.Origin[only]);
-                            ws.Sums[only].Add(crossOnly * change);
-                        }
+                        else ws.Sums[only].Add(EdgeTerm(ws, only, a, b, ref known) * fraction * change);
                     }
                 }
                 if (last) break;
@@ -383,7 +381,23 @@ internal static class WindingEngine
         }
     }
 
-    private static double Area(Workspace ws, int chain) => ws.Sums[chain].Value / 2;
+    private static double Area(Workspace ws, int chain) => ws.Sums[chain].Value / 4;
+
+    // Edge term of a->b around the origin of the chain's group, computed once per edge and group.
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static double EdgeTerm(Workspace ws, int chain, Point2 a, Point2 b, ref int known)
+    {
+        int group = ws.Group[chain];
+        if ((known & (1 << group)) == 0) { ws.EdgeTerms[group] = Cross(a, b, ws.Origin[group]); known |= 1 << group; }
+        return ws.EdgeTerms[group];
+    }
+
+    // Share of edge a->b between its points p and q, which are ordered along its dominant axis: the sub-edge's
+    // term is the edge's term times this share, exactly as for the segment of the edge's own line between the
+    // positions of p and q. A whole edge has share 1.
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static double Fraction(Point2 a, Point2 b, Point2 p, Point2 q, bool xDominant) =>
+        xDominant ? (q.X - p.X) / (b.X - a.X) : (q.Y - p.Y) / (b.Y - a.Y);
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static bool Less(Point2 p, Point2 q) => p.X < q.X || (p.X == q.X && p.Y < q.Y);
@@ -434,12 +448,28 @@ internal static class WindingEngine
         return best;
     }
 
-    // cross(a - o, b - o) rewritten as cross(m - o, b - a) with m the segment midpoint: the products are
-    // |m - o| |b - a| instead of |a - o| |b - o|, so a short segment far from the origin does not lose its
-    // contribution to cancellation, and the same segment traversed backwards gives exactly the negated term.
+    // Twice cross(a - o, b - o), twice the signed area of triangle (o, a, b), as cross(d, b - a) with
+    // d = (a - o) + (b - o) twice the offset of the midpoint from o. The products are |m - o| |b - a| instead of
+    // |a - o| |b - o|, so a short segment far from the origin does not lose its contribution to cancellation.
+    // d includes the rounding errors of a - o and b - o, so a long segment passing close to o keeps its small
+    // offset, and nothing is halved, so tiny coordinates do not underflow. Swapping a and b negates the result
+    // exactly. Sums of these terms are divided by 4.
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static double Cross(Point2 a, Point2 b, Point2 o) =>
-        ((a.X + b.X) * .5 - o.X) * (b.Y - a.Y) - ((a.Y + b.Y) * .5 - o.Y) * (b.X - a.X);
+    private static double Cross(Point2 a, Point2 b, Point2 o)
+    {
+        double ax = a.X - o.X, bx = b.X - o.X, ay = a.Y - o.Y, by = b.Y - o.Y;
+        double dx = (ax + bx) + (Tail(a.X, o.X, ax) + Tail(b.X, o.X, bx));
+        double dy = (ay + by) + (Tail(a.Y, o.Y, ay) + Tail(b.Y, o.Y, by));
+        return dx * (b.Y - a.Y) - dy * (b.X - a.X);
+    }
+
+    // The rounding error of difference = x - y (Knuth's TwoDiff): x - y equals difference + Tail exactly.
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static double Tail(double x, double y, double difference)
+    {
+        double yv = x - difference, xv = difference + yv;
+        return (x - xv) + (yv - y);
+    }
 
     // Records every symbolic proper crossing between nonadjacent edges, and every split where edges overlap
     // collinearly, and orders them along each edge. Returns the number of proper crossings.
@@ -485,12 +515,12 @@ internal static class WindingEngine
                 int sa = RobustOrientation.TryFilter(pc, pd, pa, out double oa, out double ea) ? Sign(oa) : RobustOrientation.Resolve(v, j, j1, i, ref statistics);
                 int sb = RobustOrientation.TryFilter(pc, pd, pb, out double ob, out double eb) ? Sign(ob) : RobustOrientation.Resolve(v, j, j1, i1, ref statistics);
                 if (sa == sb) continue;
-                Parameters(v, i, i1, j, j1, oa, ob, ea + eb, oc, od, ec + ed, out double ti, out double ui, out double tj, out double uj, out Point2 point);
+                Point2 point = Point(v, i, i1, j, j1, oa, ob, ea + eb, oc, od, ec + ed);
                 if (count + 2 > ws.Found.Length) Array.Resize(ref ws.Found, ws.Found.Length * 2);
                 bool same = (i < split) == (j < split);
                 // Moving along i across j changes winding by sign(cross(dir j, dir i)) = sc.
-                ws.Found[count++] = new Crossing { Edge = i, T = ti, U = ui, P = point, Delta = sc, SameLoop = same };
-                ws.Found[count++] = new Crossing { Edge = j, T = tj, U = uj, P = point, Delta = -sc, SameLoop = same };
+                ws.Found[count++] = new Crossing { Edge = i, P = point, Delta = sc, SameLoop = same };
+                ws.Found[count++] = new Crossing { Edge = j, P = point, Delta = -sc, SameLoop = same };
                 crossings++;
             }
         }
@@ -506,23 +536,36 @@ internal static class WindingEngine
         double[] keys = ws.CrossingKeys;
         int[] items = ws.CrossingOrder;
         for (int e = 0; e < n; e++) o[e] = s[e];
-        for (int c = 0; c < count; c++) { int at = o[found[c].Edge]++; keys[at] = found[c].T; items[at] = c; }
-        // Long runs are presorted by T with a keyed primitive sort (a comparer would allocate a delegate), so each
-        // crossing is copied once. Equal T may still differ in U or point, and short runs are not presorted:
-        // an insertion pass with the full comparison finishes every edge.
-        for (int e = 0; e < n; e++)
-            if (s[e + 1] - s[e] > 16) Array.Sort(keys, items, s[e], s[e + 1] - s[e]);
-        for (int x = 0; x < count; x++) sorted[x] = found[items[x]];
+        for (int c = 0; c < count; c++) items[o[found[c].Edge]++] = c;
+        // Events along an edge are ordered by their shared points, the same points the boundary pieces connect,
+        // so no piece runs backwards along its edge. Parameters are not used: on a long edge two nearby crossings
+        // can have parameters in one order and accurately computed points in the other. Keyed primitive sorts
+        // (a comparer would allocate a delegate) give O(r log r) per edge, and each record is copied once.
         for (int e = 0; e < n; e++)
         {
-            Point2 direction = new(v[nx[e]].X - v[e].X, v[nx[e]].Y - v[e].Y);
-            for (int x = s[e] + 1, lo = s[e]; x < s[e + 1]; x++)
+            int lo = s[e], hi = s[e + 1];
+            if (hi - lo < 2) continue;
+            Point2 a = v[e], b = v[nx[e]];
+            bool xDominant = Math.Abs(b.X - a.X) >= Math.Abs(b.Y - a.Y);
+            double major = (xDominant ? b.X > a.X : b.Y > a.Y) ? 1 : -1, minor = (xDominant ? b.Y < a.Y : b.X < a.X) ? -1 : 1;
+            for (int x = lo; x < hi; x++) { Point2 q = found[items[x]].P; keys[x] = major * (xDominant ? q.X : q.Y); }
+            Array.Sort(keys, items, lo, hi - lo);
+            // Equal dominant coordinates: rounded points of nearly coincident crossings, ordered by the other
+            // coordinate, or one shared point, whose events may come in any order because the piece between
+            // them is empty.
+            for (int x = lo; x < hi - 1;)
             {
-                Crossing key = sorted[x]; int y = x - 1;
-                while (y >= lo && After(sorted[y], key, direction)) { sorted[y + 1] = sorted[y]; y--; }
-                sorted[y + 1] = key;
+                int y = x + 1;
+                while (y < hi && keys[y] == keys[x]) y++;
+                if (y - x > 1)
+                {
+                    for (int z = x; z < y; z++) { Point2 q = found[items[z]].P; keys[z] = minor * (xDominant ? q.Y : q.X); }
+                    Array.Sort(keys, items, x, y - x);
+                }
+                x = y;
             }
         }
+        for (int x = 0; x < count; x++) sorted[x] = found[items[x]];
         return crossings;
     }
 
@@ -568,46 +611,33 @@ internal static class WindingEngine
         double lo = xDominant ? Math.Min(a.X, b.X) : Math.Min(a.Y, b.Y), hi = xDominant ? Math.Max(a.X, b.X) : Math.Max(a.Y, b.Y);
         double q = xDominant ? p.X : p.Y;
         if (!(q > lo && q < hi)) return;
-        Position(p, false, false, a, b, out double t, out double u);
         if (count == ws.Found.Length) Array.Resize(ref ws.Found, ws.Found.Length * 2);
-        ws.Found[count++] = new Crossing { Edge = edge, T = Clamp(t), U = Clamp(u), P = p, Delta = 0, SameLoop = true };
+        ws.Found[count++] = new Crossing { Edge = edge, P = p, Delta = 0, SameLoop = true };
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static int Sign(double value) => value > 0 ? 1 : -1;
-
-    // Order along an edge: by distance from the start, then by distance from the end (larger U comes first).
-    // Crossings whose parameters both round to the same values on a very long edge are ordered by their points
-    // along the edge's dominant axis; points on vertices and axis-parallel crossings are exact.
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static bool After(Crossing x, Crossing y, Point2 direction)
-    {
-        if (x.T != y.T) return x.T > y.T;
-        if (x.U != y.U) return x.U < y.U;
-        return Math.Abs(direction.X) >= Math.Abs(direction.Y)
-            ? (direction.X > 0 ? x.P.X > y.P.X : x.P.X < y.P.X)
-            : (direction.Y > 0 ? x.P.Y > y.P.Y : x.P.Y < y.P.Y);
-    }
 
     // Point at a position known from both ends, evaluated from the nearer end.
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static Point2 At(Point2 a, Point2 b, double t, double u) =>
         t <= .5 ? new Point2(a.X + t * (b.X - a.X), a.Y + t * (b.Y - a.Y)) : new Point2(b.X - u * (b.X - a.X), b.Y - u * (b.Y - a.Y));
 
-    // Crossing position along i (a->b) and j (c->d). Which edges cross was decided exactly; positions only
-    // need to be accurate, because swapping two crossings closer than the position error changes winding on
-    // that short piece alone. Ill-conditioned floating-point ratios are therefore recomputed from accurate
+    // The point where i (a->b) and j (c->d) cross, from positions along both edges. Which edges cross was decided
+    // exactly; the point only needs to be accurate, because swapping two crossings closer than its error changes
+    // winding on that short piece alone. Ill-conditioned floating-point ratios are therefore recomputed from accurate
     // determinants. For exactly collinear edges the symbolic perturbation is dominated by the lowest-index
     // endpoint P, whose normal offset vanishes only at the other endpoint of the edge containing P: in the
     // limit the perturbed edges cross exactly there, which keeps several overlapping edges consistent.
-    private static void Parameters(Point2[] v, int i, int i1, int j, int j1, double oa, double ob, double errorI,
-        double oc, double od, double errorJ, out double ti, out double ui, out double tj, out double uj, out Point2 point)
+    private static Point2 Point(Point2[] v, int i, int i1, int j, int j1, double oa, double ob, double errorI,
+        double oc, double od, double errorJ)
     {
         Point2 a = v[i], b = v[i1], c = v[j], d = v[j1];
         bool accurateI = oa != 0 && ob != 0 && (oa > 0) != (ob > 0) && errorI <= Accuracy * (Math.Abs(oa) + Math.Abs(ob));
         bool accurateJ = oc != 0 && od != 0 && (oc > 0) != (od > 0) && errorJ <= Accuracy * (Math.Abs(oc) + Math.Abs(od));
         bool collinear = false;
         int endI = 0, endJ = 0; // -1 or +1 when the crossing is exactly at the start or end vertex of that edge
+        double ti, ui, tj, uj;
         if (accurateI) { ti = oa / (oa - ob); ui = ob / (ob - oa); }
         else if (!RobustOrientation.CrossingParameter(c, d, a, b, out ti, out ui, out endI)) collinear = true;
         if (accurateJ) { tj = oc / (oc - od); uj = od / (od - oc); }
@@ -628,7 +658,7 @@ internal static class WindingEngine
         // One point for both incidences. A crossing at a vertex (exact zero determinant, or the collinear limit)
         // is that vertex exactly, so boundary pieces shared by both paths have identical endpoints. A parameter
         // that merely rounds to 0 or 1 on a long edge is not such a crossing.
-        point = vertex >= 0 ? v[vertex]
+        return vertex >= 0 ? v[vertex]
             : endI < 0 ? a : endI > 0 ? b : endJ < 0 ? c : endJ > 0 ? d
             : Meet(a, b, ti, ui, c, d, tj, uj);
     }

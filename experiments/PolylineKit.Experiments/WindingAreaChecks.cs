@@ -398,6 +398,58 @@ internal static class WindingAreaChecks
             True($"crossed strips {length:G} symmetric difference", NearlyRelative(4 * length - 2, strips.SymmetricDifferenceArea, 1e-15));
         }
 
+        // Follow-up review of 474db55: a midpoint formed in world coordinates rounded d + 1/2 to d, and halving a
+        // subnormal coordinate underflowed. Both triangles have exactly representable areas.
+        double big = Math.ScaleB(1, 52), smallest = double.Epsilon, tall = Math.ScaleB(1, 300);
+        foreach (var (label, triangle, area) in new[]
+        {
+            ("triangle at 2^52", new Point2[] { new(big, big), new(big + 1, big), new(big, big + 1) }, .5),
+            ("subnormal triangle", new Point2[] { new(0, 0), new(smallest, 0), new(0, tall) }, Math.ScaleB(1, -775))
+        })
+        {
+            var closed = WindingArea.ClosedPath(triangle);
+            True(label + " closed path", closed.NonZero == area && closed.EvenOdd == area && closed.AbsoluteWinding == area && closed.Signed == area);
+            var self = WindingArea.FilledRegions(triangle, triangle);
+            True(label + " filled with itself", self.FirstArea == area && self.SecondArea == area && self.IntersectionArea == area
+                && self.UnionArea == area && self.SymmetricDifferenceArea == 0 && self.IntersectionOverUnion == 1);
+        }
+
+        // Unit-wide strips of half-length l tilted by m / l cross near the origin. Parameters of the crossings on
+        // the long edges were ordered opposite to their shared points, which reversed part of the intersection
+        // boundary (negative area at l = 1e16). The exact intersection of the binary64 input is 4000000/1000001
+        // (rational clipping). Points are rounded relative to the coordinates of the edges that form them, about
+        // m times the strip width, so the bound scales with m; exactly scaling by 2^-54 changes nothing.
+        foreach (double l in new[] { 1e8, 1e12, 1e16 })
+        foreach (double scale in new[] { 1, Math.ScaleB(1, -54) })
+        {
+            double m = l / 1000;
+            Point2[] a = [new(-l * scale, (-m - 1) * scale), new(l * scale, (m - 1) * scale), new(l * scale, (m + 1) * scale), new(-l * scale, (-m + 1) * scale)];
+            Point2[] b = [new((m - 1) * scale, -l * scale), new((m + 1) * scale, -l * scale), new((-m + 1) * scale, l * scale), new((-m - 1) * scale, l * scale)];
+            double exact = 4000000.0 / 1000001 * scale * scale, bound = 8 * m * Math.ScaleB(1, -53);
+            foreach (PathFillRule rule in rules)
+            foreach (var (variant, first, second) in new[]
+            {
+                ("normal", a, b), ("swap", b, a), ("reverse both", a.Reverse().ToArray(), b.Reverse().ToArray()), ("reverse first", a.Reverse().ToArray(), b)
+            })
+            {
+                var result = WindingArea.FilledRegions(first, second, rule);
+                string name = $"tilted strips {l:G} scaled {scale:G3} {variant} {rule}";
+                True(name + " intersection", result.IntersectionArea > 0 && NearlyRelative(exact, result.IntersectionArea, bound));
+                True(name + " symmetric difference", NearlyRelative(8 * l * scale * scale - 2 * exact, result.SymmetricDifferenceArea, 1e-15));
+            }
+        }
+
+        // A zigzag across a strip 2^101 long: every crossing on the strip's long edges has t = u = 1/2 in binary64,
+        // so only the points order them. Each zigzag segment covers 1/2 of the strip.
+        foreach (int count in new[] { 32, 256 })
+        {
+            double half = Math.ScaleB(1, 100);
+            Point2[] strip = [new(-half, 0), new(half, 0), new(half, 1), new(-half, 1)];
+            Point2[] zigzag = [.. Enumerable.Range(1, count).Select(k => new Point2(k, k % 2 == 1 ? -1 : 2)), new(count, -3), new(1, -3)];
+            var result = WindingArea.FilledRegions(strip, zigzag);
+            True($"zigzag of {count} across a 2^101 strip", NearlyRelative((count - 1) / 2.0, result.IntersectionArea, 1e-14));
+        }
+
         // Tiny coordinates: a squared edge length underflowed and a guessed midpoint halved the area.
         double tiny = Math.Pow(2, -600);
         var flat = WindingArea.ClosedPath([new(0, 0), new(3 * tiny, 0), new(-2 * tiny, 0), new(0, -1), new(3 * tiny, 0)]);
