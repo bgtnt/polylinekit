@@ -116,6 +116,26 @@ class CaptureHandler(BaseHTTPRequestHandler):
             self.json_reply(404, {"error": "Not found."})
 
     def do_POST(self):
+        if self.headers.get("Transfer-Encoding") and "Content-Length" not in self.headers:
+            self.json_reply(415, {"error": "Send JSON with a Content-Length; chunked input is unsupported."})
+            return
+        try:
+            length = int(self.headers.get("Content-Length", "0"))
+        except ValueError:
+            length = 0
+        if not 0 < length <= MAX_BODY:
+            self.json_reply(413, {"error": "Request is empty or exceeds 1 MiB."})
+            return
+        # Consume the bounded body before replying, including on rejection. Closing
+        # with unread incoming data can reset TCP and discard the response on Windows.
+        try:
+            raw = self.rfile.read(length)
+        except TimeoutError:
+            self.json_reply(408, {"error": "Timed out while receiving the request."})
+            return
+        if len(raw) != length:
+            self.json_reply(400, {"error": "Incomplete JSON request."})
+            return
         if not self.valid_host():
             return
         if self.path != "/compare":
@@ -128,16 +148,6 @@ class CaptureHandler(BaseHTTPRequestHandler):
             self.json_reply(415, {"error": "Send JSON with a Content-Length."})
             return
         try:
-            length = int(self.headers.get("Content-Length", "0"))
-        except ValueError:
-            length = 0
-        if not 0 < length <= MAX_BODY:
-            self.json_reply(413, {"error": "Request is empty or exceeds 1 MiB."})
-            return
-        try:
-            raw = self.rfile.read(length)
-            if len(raw) != length:
-                raise ValueError("Incomplete JSON request.")
             body = json.loads(raw)
             if not isinstance(body, dict) or body.get("method") not in self.server.settings.methods:
                 raise ValueError("Select one of the available scorers.")

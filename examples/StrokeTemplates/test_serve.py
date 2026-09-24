@@ -95,7 +95,9 @@ class HttpChecks(unittest.TestCase):
             self.assertEqual(413, self.request(body="", headers={"Content-Length": str(MAX_BODY + 1)})[0])
             self.assertEqual(400, self.request(body="{broken")[0])
             self.assertEqual(415, self.request(headers={"Content-Type": "text/plain"})[0])
-            self.assertEqual(415, self.request(headers={"Transfer-Encoding": "chunked"})[0])
+            # Negotiate unsupported framing using headers only; do not send an
+            # unframed body while pretending it is a chunked HTTP stream.
+            self.assertEqual(415, self.request(body="", headers={"Transfer-Encoding": "chunked"})[0])
             run.assert_not_called()
 
     def test_rejects_unknown_method_and_multi_stroke_before_writing(self):
@@ -104,6 +106,24 @@ class HttpChecks(unittest.TestCase):
             value = query()
             value["strokes"].append(value["strokes"][0])
             self.assertEqual(400, self.request(body=json.dumps({"query": value, "method": "rms"}))[0])
+            run.assert_not_called()
+            self.assertFalse(self.server.settings.output.exists())
+
+    def test_large_rejected_bodies_deliver_complete_errors_without_running_consumer(self):
+        # Previously reproducible as WinError 10053: early rejection closed the
+        # socket with the client's body still in flight, losing the JSON response.
+        cases = (("/compare", {"Content-Type": "text/plain"}, 415),
+                 ("/compare", {"Origin": "https://example.com"}, 403),
+                 ("/compare", {"Host": "example.com"}, 403),
+                 ("/unknown", {}, 404),
+                 ("/compare", {"Transfer-Encoding": "chunked", "Content-Length": str(MAX_BODY)}, 415))
+        with patch("serve.subprocess.run") as run:
+            for path, headers, expected in cases:
+                with self.subTest(path=path, headers=headers):
+                    code, raw, response_headers = self.request(path=path, body="x" * MAX_BODY, headers=headers)
+                    self.assertEqual(expected, code)
+                    self.assertEqual(len(raw), int(response_headers["Content-Length"]))
+                    self.assertTrue(json.loads(raw)["error"])
             run.assert_not_called()
             self.assertFalse(self.server.settings.output.exists())
 
