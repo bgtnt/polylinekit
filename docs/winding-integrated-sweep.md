@@ -15,6 +15,11 @@ inputs. It is not uniformly faster: ordinary smooth inputs still pay several
 percent, a 256-vertex star is 27% slower, and late certificate rejection has a cost.
 These tradeoffs remain visible rather than being tuned away on the new data.
 
+The subsequent [independent integration review](winding-integrated-sweep-review.md)
+found no blocking defect and added independent integer-grid and natural
+budget-exhaustion regressions. Its validation is recorded separately from the
+original evidence; the runtime source and benchmark inputs remain unchanged.
+
 Repository: [bgtnt/polylinekit](https://github.com/bgtnt/polylinekit), local branch
 `codex/winding-performance`. Measured integrated source:
 `561482873463a57b141e2b8b18a83d07b6ff2a35`. Baseline runtime source is `9ecf6a7`,

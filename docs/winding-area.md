@@ -117,7 +117,7 @@ include both gains and common-case overhead; this is not a universal speedup.
 
 ### Checks
 
-`dotnet run --project experiments/PolylineKit.Experiments -c Release -- check` includes 38,428 winding checks and passes in all five implementation modes of `scripts/verify-implementations.ps1`, including the .NET Standard 2.0 build. They include:
+`dotnet run --project experiments/PolylineKit.Experiments -c Release -- check` includes 164,062 winding checks and passes in all five implementation modes of `scripts/verify-implementations.ps1`, including the .NET Standard 2.0 build. They include:
 
 - analytic walks and all contour fixtures, with `AbsoluteWinding` compared to the independent slab sweep in `ContourSweep`;
 - 3,000 symbolic orientations against the exact sign of an explicitly perturbed determinant (`e = 2^-16`, BigInteger), including more than 500 exact ties;
@@ -140,10 +140,12 @@ Another 240 checks cover bounds contacts, vector masks/tails, natural-sort and
 buffer-growth thresholds, reversed/axis-swapped alternating bars, and exact
 equality with the forced-scalar result.
 
-Prepared certification adds 10,161 checks, including exhaustive-pair agreement,
+Prepared certification adds 135,795 checks, including exhaustive-pair agreement,
 rejected-attempt resumption, reading each input index only once, nested calls,
 extreme-scale certified inputs, allocation and workspace-reset regressions.
-The complete suite has 42,012 checks.
+The [integration review](winding-integrated-sweep-review.md) adds an independent
+integer oracle for all 125,628 cycles on a 3x3 grid and a naturally exhausted
+traversal-budget/reuse regression. The complete suite has 167,646 checks.
 
 ### Independent reviews
 

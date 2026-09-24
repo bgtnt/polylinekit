@@ -22,8 +22,10 @@ internal static class PreparedSweepChecks
                 if (input.Length < 3) continue;
                 var statistics = new WindingStatistics();
                 bool actual = certificate.TryCertify(input, input.Length, ref statistics);
-                True(actual == IsSimple(input), "prepared certificate disagrees with exhaustive pairs");
+                True(actual == IsSimple(input, input.Length), "prepared certificate disagrees with exhaustive pairs");
             }
+            CheckSmallGrid(certificate);
+            CheckBudgetExhaustion(certificate);
             foreach (int n in new[] { 64, 256, 1024 })
             {
                 foreach (bool diagonal in new[] { false, true })
@@ -128,20 +130,105 @@ internal static class PreparedSweepChecks
         return points.ToArray();
     }
 
-    private static bool IsSimple(Point2[] path)
+    private static void CheckSmallGrid(PreparedSimpleSweep certificate)
     {
-        int n = path.Length;
+        Point2[] grid = Enumerable.Range(0, 9).Select(i => new Point2(i / 3 - 1, i % 3 - 1)).ToArray();
+        var path = new Point2[9];
+        int checkedPaths = 0, simplePaths = 0;
+        // Every cycle with 3..9 distinct grid vertices, modulo cyclic shifts.
+        // Keep both directions: index-based priorities and incident-edge order differ.
+        for (int first = 0; first < 7; first++)
+        {
+            path[0] = grid[first];
+            Visit(first, 1, 1 << first);
+        }
+        True(checkedPaths == 125_628, "exhaustive grid enumeration is incomplete");
+        True(simplePaths > 0 && simplePaths < checkedPaths, "grid oracle must cover both outcomes");
+        Console.WriteLine($"Prepared sweep independent integer grid: {checkedPaths} cycles, {simplePaths} simple.");
+
+        void Visit(int first, int length, int used)
+        {
+            if (length >= 3)
+            {
+                bool expected = IsSimple(path, length);
+                var statistics = new WindingStatistics();
+                bool actual = certificate.TryCertify(path, length, ref statistics);
+                if (actual != expected)
+                    throw new InvalidOperationException("prepared certificate disagrees with independent integer grid: " +
+                        string.Join(";", path.Take(length).Select(p => $"({p.X},{p.Y})")));
+                passed++;
+                checkedPaths++;
+                if (expected) simplePaths++;
+            }
+            for (int next = first + 1; next < grid.Length; next++)
+            {
+                if ((used & (1 << next)) != 0) continue;
+                path[length] = grid[next];
+                Visit(first, length + 1, used | (1 << next));
+            }
+        }
+    }
+
+    private static void CheckBudgetExhaustion(PreparedSimpleSweep certificate)
+    {
+        const int bands = 1024;
+        var rank = new int[bands];
+        int at = 0;
+        // Order horizontal edge pairs by their deterministic treap priorities.
+        // Left-side events build a deep status tree before right-side crossings
+        // are encountered. This exhausts the real budget without a test override.
+        foreach (int band in Enumerable.Range(0, bands).OrderByDescending(i =>
+            Math.Max(Priority((uint)(4 * i)), Priority((uint)(4 * i + 2))))) rank[band] = at++;
+        var path = new Point2[4 * bands];
+        for (int band = 0; band < bands; band++)
+        {
+            int y = 2 * rank[band], edge = 4 * band;
+            path[edge] = new(10, y); path[edge + 1] = new(0, y);
+            path[edge + 2] = new(0, y + 1); path[edge + 3] = new(10, y + 1);
+        }
+        var statistics = new WindingStatistics();
+        True(!certificate.TryCertify(path, path.Length, ref statistics), "adversarial status must reject");
+        const System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
+        // Distinguish budget rejection from a geometric rejection, without adding
+        // any runtime diagnostic or public switch solely for the test.
+        long remaining = (long)typeof(PreparedSimpleSweep).GetField("remainingWork", flags)!.GetValue(certificate)!;
+        True(remaining < 0, "adversarial status must exhaust the traversal budget");
+        Point2[] borrowed = (Point2[])typeof(PreparedSimpleSweep).GetField("vertices", flags)!.GetValue(certificate)!;
+        True(borrowed.Length == 0, "budget rejection must release the borrowed input");
+        True(certificate.TryCertify([new(0, 0), new(2, 0), new(0, 2)], 3, ref statistics),
+            "certificate must recover after partial-tree budget rejection");
+
+        static uint Priority(uint value)
+        {
+            unchecked
+            {
+                value += 0x9e3779b9;
+                value = (value ^ (value >> 16)) * 0x21f0aaad;
+                value = (value ^ (value >> 15)) * 0x735a2d97;
+                return value ^ (value >> 15);
+            }
+        }
+    }
+
+    // This oracle only receives the small integer grid inputs above. Products fit
+    // in Int64; no production filter, exact predicate or symbolic tie-break is used.
+    private static int GridOrientation(Point2 a, Point2 b, Point2 c) => Math.Sign(
+        ((long)b.X - (long)a.X) * ((long)c.Y - (long)a.Y) -
+        ((long)b.Y - (long)a.Y) * ((long)c.X - (long)a.X));
+
+    private static bool IsSimple(Point2[] path, int n)
+    {
         for (int i = 0; i < n; i++)
         {
             Point2 a = path[i], b = path[(i + 1) % n], c = path[(i + 2) % n];
-            if (RobustOrientation.ExactSign(a, b, c) == 0 && (On(a, b, c) || On(b, c, a))) return false;
+            if (GridOrientation(a, b, c) == 0 && (On(a, b, c) || On(b, c, a))) return false;
             for (int j = i + 1; j < n; j++)
             {
                 if (Same(a, path[j])) return false;
                 if (j == i + 1 || (i == 0 && j == n - 1)) continue;
                 Point2 d = path[j], e = path[(j + 1) % n];
-                int p = RobustOrientation.ExactSign(a, b, d), q = RobustOrientation.ExactSign(a, b, e),
-                    r = RobustOrientation.ExactSign(d, e, a), s = RobustOrientation.ExactSign(d, e, b);
+                int p = GridOrientation(a, b, d), q = GridOrientation(a, b, e),
+                    r = GridOrientation(d, e, a), s = GridOrientation(d, e, b);
                 if ((p == 0 && On(a, b, d)) || (q == 0 && On(a, b, e)) ||
                     (r == 0 && On(d, e, a)) || (s == 0 && On(d, e, b)) || (p * q < 0 && r * s < 0)) return false;
             }
