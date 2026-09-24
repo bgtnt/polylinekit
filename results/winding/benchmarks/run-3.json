@@ -1,7 +1,7 @@
 {
-  "Revision": "a0b32953f0178e94b9df4910bcca65157589bfb2",
+  "Revision": "1094dcaa486e146fd5341e01dd11bf0ef76f1deb",
   "Run": 3,
-  "Utc": "2026-09-24T12:28:45.3572889+00:00",
+  "Utc": "2026-09-24T13:37:10.3012088+00:00",
   "Runtime": ".NET 10.0.12",
   "OS": "Microsoft Windows 10.0.26200",
   "Architecture": "X64",
@@ -15,53 +15,53 @@
       "Method": "ClipperEndpointBridged",
       "InputSha256": "43B51995F15AA0742BFD08090572B1A8066D8DFA4C3E81746E077719474CC0A3",
       "Value": 0.14912006935400018,
-      "MedianNanoseconds": 25372.36328125,
-      "MedianBytes": 38960.0390625,
+      "MedianNanoseconds": 25417.1875,
+      "MedianBytes": 38960,
       "Samples": [
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 27325.87890625,
-          "BytesPerOperation": 38960.0390625
+          "NanosecondsPerOperation": 26809.9609375,
+          "BytesPerOperation": 38960
         },
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 25950.48828125,
-          "BytesPerOperation": 38960.0390625
+          "NanosecondsPerOperation": 25390.625,
+          "BytesPerOperation": 38960
         },
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 25360.44921875,
-          "BytesPerOperation": 38960.0390625
+          "NanosecondsPerOperation": 24881.25,
+          "BytesPerOperation": 38960
         },
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 26142.578125,
-          "BytesPerOperation": 38960.0390625
+          "NanosecondsPerOperation": 25417.1875,
+          "BytesPerOperation": 38960
         },
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 25337.3046875,
-          "BytesPerOperation": 38960.0390625
+          "NanosecondsPerOperation": 25420.60546875,
+          "BytesPerOperation": 38960
         },
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 25372.36328125,
-          "BytesPerOperation": 38960.0390625
+          "NanosecondsPerOperation": 25394.7265625,
+          "BytesPerOperation": 38960
         },
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 25021.19140625,
-          "BytesPerOperation": 38960.0390625
+          "NanosecondsPerOperation": 25684.375,
+          "BytesPerOperation": 38960
         },
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 25064.74609375,
-          "BytesPerOperation": 38960.0390625
+          "NanosecondsPerOperation": 25999.90234375,
+          "BytesPerOperation": 38960
         },
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 25883.59375,
-          "BytesPerOperation": 38960.0390625
+          "NanosecondsPerOperation": 25348.73046875,
+          "BytesPerOperation": 38960
         }
       ]
     },
@@ -70,54 +70,54 @@
       "Vertices": 64,
       "Method": "WindingEndpointBridged",
       "InputSha256": "43B51995F15AA0742BFD08090572B1A8066D8DFA4C3E81746E077719474CC0A3",
-      "Value": 0.14912008547189548,
-      "MedianNanoseconds": 11412.3046875,
-      "MedianBytes": 0.01953125,
+      "Value": 0.1491200854718955,
+      "MedianNanoseconds": 13324.560546875,
+      "MedianBytes": 0,
       "Samples": [
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 11516.6015625,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 13324.560546875,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 10868.06640625,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 15886.9140625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 11412.3046875,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 13652.392578125,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 10912.6953125,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 13630.56640625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 11837.40234375,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 13159.033203125,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 11028.662109375,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 13362.109375,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 11752.099609375,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 13064.111328125,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 11249.560546875,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 13324.462890625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 11521.97265625,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 12981.689453125,
+          "BytesPerOperation": 0
         }
       ]
     },
@@ -126,54 +126,54 @@
       "Vertices": 64,
       "Method": "WindingEndpointBridged",
       "InputSha256": "AD5B8BF4C941E78FB43AC2A092F402BFAE37DF16830835E0C25E72F94EDD891C",
-      "Value": 6.299999966024401,
-      "MedianNanoseconds": 10240.966796875,
-      "MedianBytes": 0.01953125,
+      "Value": 6.299999966024399,
+      "MedianNanoseconds": 13501.220703125,
+      "MedianBytes": 0,
       "Samples": [
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 10218.26171875,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 13199.70703125,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 10377.490234375,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 13487.255859375,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 10240.966796875,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 13691.748046875,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 10101.513671875,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 13268.359375,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 10003.90625,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 13542.3828125,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 10339.55078125,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 13696.533203125,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 10145.751953125,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 13846.630859375,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 10596.826171875,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 13415.13671875,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 10277.34375,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 13501.220703125,
+          "BytesPerOperation": 0
         }
       ]
     },
@@ -183,53 +183,53 @@
       "Method": "GraphIntegral",
       "InputSha256": "AD5B8BF4C941E78FB43AC2A092F402BFAE37DF16830835E0C25E72F94EDD891C",
       "Value": 6.299999966024399,
-      "MedianNanoseconds": 3483.0078125,
-      "MedianBytes": 0.0048828125,
+      "MedianNanoseconds": 3458.87451171875,
+      "MedianBytes": 0,
       "Samples": [
         {
           "Iterations": 8192,
-          "NanosecondsPerOperation": 3525.146484375,
-          "BytesPerOperation": 0.0048828125
+          "NanosecondsPerOperation": 3484.33837890625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 8192,
-          "NanosecondsPerOperation": 3494.83642578125,
-          "BytesPerOperation": 0.0048828125
+          "NanosecondsPerOperation": 3438.36669921875,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 8192,
-          "NanosecondsPerOperation": 3446.27685546875,
-          "BytesPerOperation": 0.0048828125
+          "NanosecondsPerOperation": 3446.6796875,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 8192,
-          "NanosecondsPerOperation": 3490.478515625,
-          "BytesPerOperation": 0.0048828125
+          "NanosecondsPerOperation": 3481.591796875,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 8192,
-          "NanosecondsPerOperation": 3449.0966796875,
-          "BytesPerOperation": 0.0048828125
+          "NanosecondsPerOperation": 3451.66015625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 8192,
-          "NanosecondsPerOperation": 3447.35107421875,
-          "BytesPerOperation": 0.0048828125
+          "NanosecondsPerOperation": 3466.83349609375,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 8192,
-          "NanosecondsPerOperation": 3592.27294921875,
-          "BytesPerOperation": 0.0048828125
+          "NanosecondsPerOperation": 3458.87451171875,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 8192,
-          "NanosecondsPerOperation": 3483.0078125,
-          "BytesPerOperation": 0.0048828125
+          "NanosecondsPerOperation": 3470.47119140625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 8192,
-          "NanosecondsPerOperation": 3462.04833984375,
-          "BytesPerOperation": 0.0048828125
+          "NanosecondsPerOperation": 3445.8984375,
+          "BytesPerOperation": 0
         }
       ]
     },
@@ -239,53 +239,53 @@
       "Method": "ClipperEndpointBridged",
       "InputSha256": "AD5B8BF4C941E78FB43AC2A092F402BFAE37DF16830835E0C25E72F94EDD891C",
       "Value": 6.300000505220002,
-      "MedianNanoseconds": 29802.1484375,
-      "MedianBytes": 66536.0390625,
+      "MedianNanoseconds": 28573.6328125,
+      "MedianBytes": 66536,
       "Samples": [
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 33909.1796875,
-          "BytesPerOperation": 66536.0390625
+          "NanosecondsPerOperation": 31748.4375,
+          "BytesPerOperation": 66536
         },
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 29802.1484375,
-          "BytesPerOperation": 66536.0390625
+          "NanosecondsPerOperation": 29023.53515625,
+          "BytesPerOperation": 66536
         },
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 30325.9765625,
-          "BytesPerOperation": 66536.0390625
+          "NanosecondsPerOperation": 28681.34765625,
+          "BytesPerOperation": 66536
         },
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 28766.2109375,
-          "BytesPerOperation": 66536.0390625
+          "NanosecondsPerOperation": 28404.00390625,
+          "BytesPerOperation": 66536
         },
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 30607.6171875,
-          "BytesPerOperation": 66536.0390625
+          "NanosecondsPerOperation": 28780.078125,
+          "BytesPerOperation": 66536
         },
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 30693.1640625,
-          "BytesPerOperation": 66536.0390625
+          "NanosecondsPerOperation": 28394.04296875,
+          "BytesPerOperation": 66536
         },
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 29288.4765625,
-          "BytesPerOperation": 66536.0390625
+          "NanosecondsPerOperation": 28444.3359375,
+          "BytesPerOperation": 66536
         },
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 29100.78125,
-          "BytesPerOperation": 66536.0390625
+          "NanosecondsPerOperation": 28471.19140625,
+          "BytesPerOperation": 66536
         },
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 28730.37109375,
-          "BytesPerOperation": 66536.0390625
+          "NanosecondsPerOperation": 28573.6328125,
+          "BytesPerOperation": 66536
         }
       ]
     },
@@ -295,53 +295,53 @@
       "Method": "ClipperEndpointBridged",
       "InputSha256": "01BCEE32C4DBDA8F1C7AFA17F273068E6712E4F86275D16B1B0468C1D92D56A5",
       "Value": 18.289305266607492,
-      "MedianNanoseconds": 54790.625,
-      "MedianBytes": 69984.078125,
+      "MedianNanoseconds": 54662.109375,
+      "MedianBytes": 69984,
       "Samples": [
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 54014.84375,
-          "BytesPerOperation": 69984.078125
+          "NanosecondsPerOperation": 53942.96875,
+          "BytesPerOperation": 69984
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 54790.625,
-          "BytesPerOperation": 69984.078125
+          "NanosecondsPerOperation": 54662.109375,
+          "BytesPerOperation": 69984
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 55205.2734375,
-          "BytesPerOperation": 69984.078125
+          "NanosecondsPerOperation": 55362.3046875,
+          "BytesPerOperation": 69984
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 56258.7890625,
-          "BytesPerOperation": 69984.078125
+          "NanosecondsPerOperation": 54614.0625,
+          "BytesPerOperation": 69984
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 55283.984375,
-          "BytesPerOperation": 69984.078125
+          "NanosecondsPerOperation": 54465.8203125,
+          "BytesPerOperation": 69984
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 55668.9453125,
-          "BytesPerOperation": 69984.078125
+          "NanosecondsPerOperation": 54767.3828125,
+          "BytesPerOperation": 69984
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 54138.671875,
-          "BytesPerOperation": 69984.078125
+          "NanosecondsPerOperation": 55565.8203125,
+          "BytesPerOperation": 69984
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 54428.125,
-          "BytesPerOperation": 69984.078125
+          "NanosecondsPerOperation": 54103.7109375,
+          "BytesPerOperation": 69984
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 54035.546875,
-          "BytesPerOperation": 69984.078125
+          "NanosecondsPerOperation": 55727.9296875,
+          "BytesPerOperation": 69984
         }
       ]
     },
@@ -350,54 +350,54 @@
       "Vertices": 64,
       "Method": "WindingEndpointBridged",
       "InputSha256": "01BCEE32C4DBDA8F1C7AFA17F273068E6712E4F86275D16B1B0468C1D92D56A5",
-      "Value": 18.289305714348703,
-      "MedianNanoseconds": 21542.96875,
-      "MedianBytes": 0.0390625,
+      "Value": 18.28930571434871,
+      "MedianNanoseconds": 26387.98828125,
+      "MedianBytes": 0,
       "Samples": [
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 21466.40625,
-          "BytesPerOperation": 0.0390625
+          "NanosecondsPerOperation": 26900.68359375,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 21840.234375,
-          "BytesPerOperation": 0.0390625
+          "NanosecondsPerOperation": 27077.9296875,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 22896.6796875,
-          "BytesPerOperation": 0.0390625
+          "NanosecondsPerOperation": 26064.55078125,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 21862.6953125,
-          "BytesPerOperation": 0.0390625
+          "NanosecondsPerOperation": 26451.953125,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 21318.65234375,
-          "BytesPerOperation": 0.0390625
+          "NanosecondsPerOperation": 26387.98828125,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 21485.9375,
-          "BytesPerOperation": 0.0390625
+          "NanosecondsPerOperation": 26832.03125,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 21592.7734375,
-          "BytesPerOperation": 0.0390625
+          "NanosecondsPerOperation": 25748.92578125,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 21542.96875,
-          "BytesPerOperation": 0.0390625
+          "NanosecondsPerOperation": 26153.41796875,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 1024,
-          "NanosecondsPerOperation": 21291.9921875,
-          "BytesPerOperation": 0.0390625
+          "NanosecondsPerOperation": 25554.00390625,
+          "BytesPerOperation": 0
         }
       ]
     },
@@ -407,53 +407,53 @@
       "Method": "ClipperFilledRegionOverlap",
       "InputSha256": "04B9B33DE8F69F3ED061D1C3C42E73112385A386D860B28F44D0F61781F4DD9C",
       "Value": 1.437905359871499,
-      "MedianNanoseconds": 50865.0390625,
-      "MedianBytes": 63992.078125,
+      "MedianNanoseconds": 49679.4921875,
+      "MedianBytes": 63992,
       "Samples": [
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 55239.84375,
-          "BytesPerOperation": 63992.078125
+          "NanosecondsPerOperation": 55000,
+          "BytesPerOperation": 63992
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 50468.75,
-          "BytesPerOperation": 63992.078125
+          "NanosecondsPerOperation": 49679.4921875,
+          "BytesPerOperation": 63992
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 49768.5546875,
-          "BytesPerOperation": 63992.078125
+          "NanosecondsPerOperation": 51941.6015625,
+          "BytesPerOperation": 63992
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 50865.0390625,
-          "BytesPerOperation": 63992.078125
+          "NanosecondsPerOperation": 49440.8203125,
+          "BytesPerOperation": 63992
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 52072.265625,
-          "BytesPerOperation": 63992.078125
+          "NanosecondsPerOperation": 50589.84375,
+          "BytesPerOperation": 63992
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 51306.0546875,
-          "BytesPerOperation": 63992.078125
+          "NanosecondsPerOperation": 49516.6015625,
+          "BytesPerOperation": 63992
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 49976.7578125,
-          "BytesPerOperation": 63992.078125
+          "NanosecondsPerOperation": 50914.6484375,
+          "BytesPerOperation": 63992
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 51209.765625,
-          "BytesPerOperation": 63992.078125
+          "NanosecondsPerOperation": 49598.6328125,
+          "BytesPerOperation": 63992
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 49916.40625,
-          "BytesPerOperation": 63992.078125
+          "NanosecondsPerOperation": 49296.09375,
+          "BytesPerOperation": 63992
         }
       ]
     },
@@ -462,54 +462,54 @@
       "Vertices": 64,
       "Method": "WindingFilledRegions",
       "InputSha256": "04B9B33DE8F69F3ED061D1C3C42E73112385A386D860B28F44D0F61781F4DD9C",
-      "Value": 1.437905708903016,
-      "MedianNanoseconds": 8176.85546875,
-      "MedianBytes": 0.009765625,
+      "Value": 1.4379057089030163,
+      "MedianNanoseconds": 13028.515625,
+      "MedianBytes": 0,
       "Samples": [
         {
-          "Iterations": 4096,
-          "NanosecondsPerOperation": 8203.7841796875,
-          "BytesPerOperation": 0.009765625
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 13028.515625,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 4096,
-          "NanosecondsPerOperation": 8176.85546875,
-          "BytesPerOperation": 0.009765625
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 12541.50390625,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 4096,
-          "NanosecondsPerOperation": 7982.470703125,
-          "BytesPerOperation": 0.009765625
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 13025.5859375,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 4096,
-          "NanosecondsPerOperation": 7963.3544921875,
-          "BytesPerOperation": 0.009765625
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 13587.59765625,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 4096,
-          "NanosecondsPerOperation": 8101.6845703125,
-          "BytesPerOperation": 0.009765625
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 13795.8984375,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 4096,
-          "NanosecondsPerOperation": 8259.033203125,
-          "BytesPerOperation": 0.009765625
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 14926.3671875,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 4096,
-          "NanosecondsPerOperation": 8223.779296875,
-          "BytesPerOperation": 0.009765625
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 13024.51171875,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 4096,
-          "NanosecondsPerOperation": 8313.0615234375,
-          "BytesPerOperation": 0.009765625
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 12771.826171875,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 4096,
-          "NanosecondsPerOperation": 8176.0498046875,
-          "BytesPerOperation": 0.009765625
+          "Iterations": 2048,
+          "NanosecondsPerOperation": 13144.580078125,
+          "BytesPerOperation": 0
         }
       ]
     },
@@ -519,53 +519,53 @@
       "Method": "ClipperEndpointBridged",
       "InputSha256": "D3BA64433756E66CF2D036A274EB1F8397787477BDEAB61FCB7F771A10FA7E97",
       "Value": 0.15073735096649998,
-      "MedianNanoseconds": 98274.21875,
-      "MedianBytes": 130920.15625,
+      "MedianNanoseconds": 96122.265625,
+      "MedianBytes": 130920,
       "Samples": [
         {
           "Iterations": 256,
-          "NanosecondsPerOperation": 100583.59375,
-          "BytesPerOperation": 130920.15625
+          "NanosecondsPerOperation": 101260.9375,
+          "BytesPerOperation": 130920
         },
         {
           "Iterations": 256,
-          "NanosecondsPerOperation": 97776.953125,
-          "BytesPerOperation": 130920.15625
+          "NanosecondsPerOperation": 108147.265625,
+          "BytesPerOperation": 130920
         },
         {
           "Iterations": 256,
-          "NanosecondsPerOperation": 96966.015625,
-          "BytesPerOperation": 130920.15625
+          "NanosecondsPerOperation": 128790.625,
+          "BytesPerOperation": 130920
         },
         {
           "Iterations": 256,
-          "NanosecondsPerOperation": 102432.421875,
-          "BytesPerOperation": 130920.15625
+          "NanosecondsPerOperation": 102787.109375,
+          "BytesPerOperation": 130920
         },
         {
           "Iterations": 256,
-          "NanosecondsPerOperation": 108130.078125,
-          "BytesPerOperation": 130920.15625
+          "NanosecondsPerOperation": 91342.96875,
+          "BytesPerOperation": 130920
         },
         {
           "Iterations": 256,
-          "NanosecondsPerOperation": 96774.609375,
-          "BytesPerOperation": 130920.15625
+          "NanosecondsPerOperation": 91964.84375,
+          "BytesPerOperation": 130920
         },
         {
           "Iterations": 256,
-          "NanosecondsPerOperation": 101474.21875,
-          "BytesPerOperation": 130920.15625
+          "NanosecondsPerOperation": 92415.234375,
+          "BytesPerOperation": 130920
         },
         {
           "Iterations": 256,
-          "NanosecondsPerOperation": 91562.890625,
-          "BytesPerOperation": 130920.15625
+          "NanosecondsPerOperation": 96122.265625,
+          "BytesPerOperation": 130920
         },
         {
           "Iterations": 256,
-          "NanosecondsPerOperation": 98274.21875,
-          "BytesPerOperation": 130920.15625
+          "NanosecondsPerOperation": 95097.265625,
+          "BytesPerOperation": 130920
         }
       ]
     },
@@ -574,54 +574,54 @@
       "Vertices": 256,
       "Method": "WindingEndpointBridged",
       "InputSha256": "D3BA64433756E66CF2D036A274EB1F8397787477BDEAB61FCB7F771A10FA7E97",
-      "Value": 0.1507374519931507,
-      "MedianNanoseconds": 38807.03125,
-      "MedianBytes": 0.0390625,
+      "Value": 0.15073745199315067,
+      "MedianNanoseconds": 45082.6171875,
+      "MedianBytes": 0,
       "Samples": [
         {
-          "Iterations": 1024,
-          "NanosecondsPerOperation": 38918.75,
-          "BytesPerOperation": 0.0390625
+          "Iterations": 512,
+          "NanosecondsPerOperation": 45043.1640625,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 1024,
-          "NanosecondsPerOperation": 38807.03125,
-          "BytesPerOperation": 0.0390625
+          "Iterations": 512,
+          "NanosecondsPerOperation": 44304.4921875,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 1024,
-          "NanosecondsPerOperation": 38565.13671875,
-          "BytesPerOperation": 0.0390625
+          "Iterations": 512,
+          "NanosecondsPerOperation": 44770.8984375,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 1024,
-          "NanosecondsPerOperation": 38549.51171875,
-          "BytesPerOperation": 0.0390625
+          "Iterations": 512,
+          "NanosecondsPerOperation": 44450.5859375,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 1024,
-          "NanosecondsPerOperation": 38360.25390625,
-          "BytesPerOperation": 0.0390625
+          "Iterations": 512,
+          "NanosecondsPerOperation": 45462.109375,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 1024,
-          "NanosecondsPerOperation": 38885.546875,
-          "BytesPerOperation": 0.0390625
+          "Iterations": 512,
+          "NanosecondsPerOperation": 45082.6171875,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 1024,
-          "NanosecondsPerOperation": 38254.4921875,
-          "BytesPerOperation": 0.0390625
+          "Iterations": 512,
+          "NanosecondsPerOperation": 45364.0625,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 1024,
-          "NanosecondsPerOperation": 39631.15234375,
-          "BytesPerOperation": 0.0390625
+          "Iterations": 512,
+          "NanosecondsPerOperation": 45339.6484375,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 1024,
-          "NanosecondsPerOperation": 39815.52734375,
-          "BytesPerOperation": 0.0390625
+          "Iterations": 512,
+          "NanosecondsPerOperation": 45133.203125,
+          "BytesPerOperation": 0
         }
       ]
     },
@@ -630,54 +630,54 @@
       "Vertices": 256,
       "Method": "WindingEndpointBridged",
       "InputSha256": "6E37A9AFB059D20AD5F9CDBDB91CB517CB87B9AB8140C1A7AF5288E82AFBCE71",
-      "Value": 25.50000001131861,
-      "MedianNanoseconds": 42844.921875,
-      "MedianBytes": 0.078125,
+      "Value": 25.500000011318594,
+      "MedianNanoseconds": 56650.390625,
+      "MedianBytes": 0,
       "Samples": [
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 45850.9765625,
-          "BytesPerOperation": 0.078125
+          "NanosecondsPerOperation": 54952.1484375,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 42712.6953125,
-          "BytesPerOperation": 0.078125
+          "NanosecondsPerOperation": 57606.4453125,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 41676.7578125,
-          "BytesPerOperation": 0.078125
+          "NanosecondsPerOperation": 55803.90625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 43338.4765625,
-          "BytesPerOperation": 0.078125
+          "NanosecondsPerOperation": 57021.484375,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 49337.5,
-          "BytesPerOperation": 0.078125
+          "NanosecondsPerOperation": 56444.7265625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 41723.828125,
-          "BytesPerOperation": 0.078125
+          "NanosecondsPerOperation": 57115.625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 43183.984375,
-          "BytesPerOperation": 0.078125
+          "NanosecondsPerOperation": 58063.8671875,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 42104.4921875,
-          "BytesPerOperation": 0.078125
+          "NanosecondsPerOperation": 56650.390625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 42844.921875,
-          "BytesPerOperation": 0.078125
+          "NanosecondsPerOperation": 54998.2421875,
+          "BytesPerOperation": 0
         }
       ]
     },
@@ -687,53 +687,53 @@
       "Method": "GraphIntegral",
       "InputSha256": "6E37A9AFB059D20AD5F9CDBDB91CB517CB87B9AB8140C1A7AF5288E82AFBCE71",
       "Value": 25.500000011318605,
-      "MedianNanoseconds": 13860.986328125,
-      "MedianBytes": 0.01953125,
+      "MedianNanoseconds": 13959.5703125,
+      "MedianBytes": 0,
       "Samples": [
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 13860.986328125,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 13928.80859375,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 14689.990234375,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 14299.951171875,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 13962.3046875,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 14065.771484375,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 13829.39453125,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 13950.09765625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 13852.392578125,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 13808.837890625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 13871.484375,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 13980.126953125,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 13907.763671875,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 13959.5703125,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 13859.765625,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 14246.044921875,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 2048,
-          "NanosecondsPerOperation": 13814.208984375,
-          "BytesPerOperation": 0.01953125
+          "NanosecondsPerOperation": 13877.05078125,
+          "BytesPerOperation": 0
         }
       ]
     },
@@ -743,53 +743,53 @@
       "Method": "ClipperEndpointBridged",
       "InputSha256": "6E37A9AFB059D20AD5F9CDBDB91CB517CB87B9AB8140C1A7AF5288E82AFBCE71",
       "Value": 25.500000521500006,
-      "MedianNanoseconds": 116376.953125,
-      "MedianBytes": 260168.15625,
+      "MedianNanoseconds": 116132.8125,
+      "MedianBytes": 260168,
       "Samples": [
         {
           "Iterations": 256,
-          "NanosecondsPerOperation": 122353.125,
-          "BytesPerOperation": 260168.15625
+          "NanosecondsPerOperation": 129504.296875,
+          "BytesPerOperation": 260168
         },
         {
           "Iterations": 256,
-          "NanosecondsPerOperation": 118333.59375,
-          "BytesPerOperation": 260168.15625
+          "NanosecondsPerOperation": 118688.28125,
+          "BytesPerOperation": 260168
         },
         {
           "Iterations": 256,
-          "NanosecondsPerOperation": 113928.515625,
-          "BytesPerOperation": 260168.15625
+          "NanosecondsPerOperation": 116132.8125,
+          "BytesPerOperation": 260168
         },
         {
           "Iterations": 256,
-          "NanosecondsPerOperation": 115590.234375,
-          "BytesPerOperation": 260168.15625
+          "NanosecondsPerOperation": 116939.453125,
+          "BytesPerOperation": 260168
         },
         {
           "Iterations": 256,
-          "NanosecondsPerOperation": 116376.953125,
-          "BytesPerOperation": 260168.15625
+          "NanosecondsPerOperation": 115872.265625,
+          "BytesPerOperation": 260168
         },
         {
           "Iterations": 256,
-          "NanosecondsPerOperation": 118795.3125,
-          "BytesPerOperation": 260168.15625
+          "NanosecondsPerOperation": 115484.375,
+          "BytesPerOperation": 260168
         },
         {
           "Iterations": 256,
-          "NanosecondsPerOperation": 119670.703125,
-          "BytesPerOperation": 260168.15625
+          "NanosecondsPerOperation": 116659.375,
+          "BytesPerOperation": 260168
         },
         {
           "Iterations": 256,
-          "NanosecondsPerOperation": 113432.421875,
-          "BytesPerOperation": 260168.15625
+          "NanosecondsPerOperation": 113705.46875,
+          "BytesPerOperation": 260168
         },
         {
           "Iterations": 256,
-          "NanosecondsPerOperation": 116012.890625,
-          "BytesPerOperation": 260168.15625
+          "NanosecondsPerOperation": 114603.515625,
+          "BytesPerOperation": 260168
         }
       ]
     },
@@ -799,53 +799,53 @@
       "Method": "ClipperEndpointBridged",
       "InputSha256": "DA0BE57CEBEC0A7A792D102818336F3C31946B2A36362DAB86ED31405F93E97A",
       "Value": 75.37160117609851,
-      "MedianNanoseconds": 316095.3125,
-      "MedianBytes": 239552.625,
+      "MedianNanoseconds": 314748.4375,
+      "MedianBytes": 239552,
       "Samples": [
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 318868.75,
-          "BytesPerOperation": 239552.625
+          "NanosecondsPerOperation": 353715.625,
+          "BytesPerOperation": 239552
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 315170.3125,
-          "BytesPerOperation": 239552.625
+          "NanosecondsPerOperation": 314393.75,
+          "BytesPerOperation": 239552
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 312654.6875,
-          "BytesPerOperation": 239552.625
+          "NanosecondsPerOperation": 311932.8125,
+          "BytesPerOperation": 239552
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 310870.3125,
-          "BytesPerOperation": 239552.625
+          "NanosecondsPerOperation": 313273.4375,
+          "BytesPerOperation": 239552
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 318509.375,
-          "BytesPerOperation": 239552.625
+          "NanosecondsPerOperation": 335182.8125,
+          "BytesPerOperation": 239552
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 318892.1875,
-          "BytesPerOperation": 239552.625
+          "NanosecondsPerOperation": 323209.375,
+          "BytesPerOperation": 239552
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 326682.8125,
-          "BytesPerOperation": 239552.625
+          "NanosecondsPerOperation": 314748.4375,
+          "BytesPerOperation": 239552
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 314040.625,
-          "BytesPerOperation": 239552.625
+          "NanosecondsPerOperation": 316139.0625,
+          "BytesPerOperation": 239552
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 316095.3125,
-          "BytesPerOperation": 239552.625
+          "NanosecondsPerOperation": 313937.5,
+          "BytesPerOperation": 239552
         }
       ]
     },
@@ -854,54 +854,54 @@
       "Vertices": 256,
       "Method": "WindingEndpointBridged",
       "InputSha256": "DA0BE57CEBEC0A7A792D102818336F3C31946B2A36362DAB86ED31405F93E97A",
-      "Value": 75.37159959168966,
-      "MedianNanoseconds": 167361.71875,
-      "MedianBytes": 0.3125,
+      "Value": 75.37159959168967,
+      "MedianNanoseconds": 207172.65625,
+      "MedianBytes": 0,
       "Samples": [
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 168936.71875,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 207423.4375,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 166353.90625,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 206178.90625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 167815.625,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 206632.8125,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 167361.71875,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 208216.40625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 166861.71875,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 208924.21875,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 166446.09375,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 208065.625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 166662.5,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 205128.125,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 167802.34375,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 205910.15625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 170033.59375,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 207172.65625,
+          "BytesPerOperation": 0
         }
       ]
     },
@@ -911,53 +911,53 @@
       "Method": "ClipperFilledRegionOverlap",
       "InputSha256": "A31F50754BFDC38599AB7551444A0117A9F703C91466C24E264197DCFFD0B102",
       "Value": 1.456471100346999,
-      "MedianNanoseconds": 188272.65625,
-      "MedianBytes": 214616.3125,
+      "MedianNanoseconds": 189667.1875,
+      "MedianBytes": 214616,
       "Samples": [
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 216450.78125,
-          "BytesPerOperation": 214616.3125
+          "NanosecondsPerOperation": 205224.21875,
+          "BytesPerOperation": 214616
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 185681.25,
-          "BytesPerOperation": 214616.3125
+          "NanosecondsPerOperation": 232492.1875,
+          "BytesPerOperation": 214616
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 181986.71875,
-          "BytesPerOperation": 214616.3125
+          "NanosecondsPerOperation": 191929.6875,
+          "BytesPerOperation": 214616
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 190737.5,
-          "BytesPerOperation": 214616.3125
+          "NanosecondsPerOperation": 202159.375,
+          "BytesPerOperation": 214616
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 186497.65625,
-          "BytesPerOperation": 214616.3125
+          "NanosecondsPerOperation": 186318.75,
+          "BytesPerOperation": 214616
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 189532.03125,
-          "BytesPerOperation": 214616.3125
+          "NanosecondsPerOperation": 183893.75,
+          "BytesPerOperation": 214616
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 189517.1875,
-          "BytesPerOperation": 214616.3125
+          "NanosecondsPerOperation": 189667.1875,
+          "BytesPerOperation": 214616
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 188272.65625,
-          "BytesPerOperation": 214616.3125
+          "NanosecondsPerOperation": 185584.375,
+          "BytesPerOperation": 214616
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 182262.5,
-          "BytesPerOperation": 214616.3125
+          "NanosecondsPerOperation": 189248.4375,
+          "BytesPerOperation": 214616
         }
       ]
     },
@@ -966,54 +966,54 @@
       "Vertices": 256,
       "Method": "WindingFilledRegions",
       "InputSha256": "A31F50754BFDC38599AB7551444A0117A9F703C91466C24E264197DCFFD0B102",
-      "Value": 1.4564706372339389,
-      "MedianNanoseconds": 37248.046875,
-      "MedianBytes": 0.0390625,
+      "Value": 1.4564706372339387,
+      "MedianNanoseconds": 60920.8984375,
+      "MedianBytes": 0,
       "Samples": [
         {
-          "Iterations": 1024,
-          "NanosecondsPerOperation": 37687.40234375,
-          "BytesPerOperation": 0.0390625
+          "Iterations": 512,
+          "NanosecondsPerOperation": 60920.8984375,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 1024,
-          "NanosecondsPerOperation": 36942.96875,
-          "BytesPerOperation": 0.0390625
+          "Iterations": 512,
+          "NanosecondsPerOperation": 61297.8515625,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 1024,
-          "NanosecondsPerOperation": 37594.82421875,
-          "BytesPerOperation": 0.0390625
+          "Iterations": 512,
+          "NanosecondsPerOperation": 60403.7109375,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 1024,
-          "NanosecondsPerOperation": 36562.79296875,
-          "BytesPerOperation": 0.0390625
+          "Iterations": 512,
+          "NanosecondsPerOperation": 60452.1484375,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 1024,
-          "NanosecondsPerOperation": 37568.5546875,
-          "BytesPerOperation": 0.0390625
+          "Iterations": 512,
+          "NanosecondsPerOperation": 60425.1953125,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 1024,
-          "NanosecondsPerOperation": 37063.76953125,
-          "BytesPerOperation": 0.0390625
+          "Iterations": 512,
+          "NanosecondsPerOperation": 60610.546875,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 1024,
-          "NanosecondsPerOperation": 37740.4296875,
-          "BytesPerOperation": 0.0390625
+          "Iterations": 512,
+          "NanosecondsPerOperation": 62099.0234375,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 1024,
-          "NanosecondsPerOperation": 36801.07421875,
-          "BytesPerOperation": 0.0390625
+          "Iterations": 512,
+          "NanosecondsPerOperation": 62166.796875,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 1024,
-          "NanosecondsPerOperation": 37248.046875,
-          "BytesPerOperation": 0.0390625
+          "Iterations": 512,
+          "NanosecondsPerOperation": 61092.7734375,
+          "BytesPerOperation": 0
         }
       ]
     },
@@ -1023,53 +1023,53 @@
       "Method": "ClipperEndpointBridged",
       "InputSha256": "0AD74381A51996FC967ACC43D34B35DFB48144B2204D3D8C4B57AC775F7FD4BF",
       "Value": 0.1508367945384994,
-      "MedianNanoseconds": 354631.25,
-      "MedianBytes": 464936.625,
+      "MedianNanoseconds": 362668.75,
+      "MedianBytes": 464936,
       "Samples": [
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 418496.875,
-          "BytesPerOperation": 464936.625
+          "NanosecondsPerOperation": 401254.6875,
+          "BytesPerOperation": 464936
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 363112.5,
-          "BytesPerOperation": 464936.625
+          "NanosecondsPerOperation": 357050,
+          "BytesPerOperation": 464936
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 352515.625,
-          "BytesPerOperation": 464936.625
+          "NanosecondsPerOperation": 363309.375,
+          "BytesPerOperation": 464936
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 360846.875,
-          "BytesPerOperation": 464936.625
+          "NanosecondsPerOperation": 357207.8125,
+          "BytesPerOperation": 464936
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 348548.4375,
-          "BytesPerOperation": 464936.625
+          "NanosecondsPerOperation": 371548.4375,
+          "BytesPerOperation": 464936
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 361357.8125,
-          "BytesPerOperation": 464936.625
+          "NanosecondsPerOperation": 362668.75,
+          "BytesPerOperation": 464936
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 351370.3125,
-          "BytesPerOperation": 464936.625
+          "NanosecondsPerOperation": 358437.5,
+          "BytesPerOperation": 464936
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 354631.25,
-          "BytesPerOperation": 464936.625
+          "NanosecondsPerOperation": 355523.4375,
+          "BytesPerOperation": 464936
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 353528.125,
-          "BytesPerOperation": 464936.625
+          "NanosecondsPerOperation": 368434.375,
+          "BytesPerOperation": 464936
         }
       ]
     },
@@ -1079,53 +1079,53 @@
       "Method": "WindingEndpointBridged",
       "InputSha256": "0AD74381A51996FC967ACC43D34B35DFB48144B2204D3D8C4B57AC775F7FD4BF",
       "Value": 0.15083685702954186,
-      "MedianNanoseconds": 174742.1875,
-      "MedianBytes": 0.3125,
+      "MedianNanoseconds": 207056.25,
+      "MedianBytes": 0,
       "Samples": [
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 174517.96875,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 208134.375,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 176135.15625,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 207056.25,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 174742.1875,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 207101.5625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 175476.5625,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 206142.96875,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 174325,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 206895.3125,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 175009.375,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 206346.875,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 174362.5,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 206353.90625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 173701.5625,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 207692.1875,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 176608.59375,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 209363.28125,
+          "BytesPerOperation": 0
         }
       ]
     },
@@ -1134,54 +1134,54 @@
       "Vertices": 1024,
       "Method": "WindingEndpointBridged",
       "InputSha256": "7BF1DD5B4A6FF659F766738E5928696E0D2429868AF510877A67F1CBF1DE2203",
-      "Value": 102.3000000826422,
-      "MedianNanoseconds": 210996.09375,
-      "MedianBytes": 0.3125,
+      "Value": 102.30000008264216,
+      "MedianNanoseconds": 262030.46875,
+      "MedianBytes": 0,
       "Samples": [
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 221707.8125,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 262695.3125,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 210996.09375,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 261025,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 205860.9375,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 261556.25,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 235017.96875,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 258041.40625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 223823.4375,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 264107.8125,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 205195.3125,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 265589.0625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 212989.0625,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 260215.625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 204645.3125,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 264190.625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 204695.3125,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 262030.46875,
+          "BytesPerOperation": 0
         }
       ]
     },
@@ -1191,53 +1191,53 @@
       "Method": "GraphIntegral",
       "InputSha256": "7BF1DD5B4A6FF659F766738E5928696E0D2429868AF510877A67F1CBF1DE2203",
       "Value": 102.30000008264216,
-      "MedianNanoseconds": 55509.375,
-      "MedianBytes": 0.078125,
+      "MedianNanoseconds": 56049.21875,
+      "MedianBytes": 0,
       "Samples": [
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 55294.921875,
-          "BytesPerOperation": 0.078125
+          "NanosecondsPerOperation": 56049.21875,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 55653.125,
-          "BytesPerOperation": 0.078125
+          "NanosecondsPerOperation": 56396.875,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 55540.625,
-          "BytesPerOperation": 0.078125
+          "NanosecondsPerOperation": 56156.0546875,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 55447.8515625,
-          "BytesPerOperation": 0.078125
+          "NanosecondsPerOperation": 55195.1171875,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 55509.375,
-          "BytesPerOperation": 0.078125
+          "NanosecondsPerOperation": 56048.046875,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 55524.0234375,
-          "BytesPerOperation": 0.078125
+          "NanosecondsPerOperation": 58016.9921875,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 55602.1484375,
-          "BytesPerOperation": 0.078125
+          "NanosecondsPerOperation": 55420.8984375,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 55230.078125,
-          "BytesPerOperation": 0.078125
+          "NanosecondsPerOperation": 55377.9296875,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 512,
-          "NanosecondsPerOperation": 55483.59375,
-          "BytesPerOperation": 0.078125
+          "NanosecondsPerOperation": 56425.5859375,
+          "BytesPerOperation": 0
         }
       ]
     },
@@ -1247,53 +1247,53 @@
       "Method": "ClipperEndpointBridged",
       "InputSha256": "7BF1DD5B4A6FF659F766738E5928696E0D2429868AF510877A67F1CBF1DE2203",
       "Value": 102.30000058681962,
-      "MedianNanoseconds": 479842.1875,
-      "MedianBytes": 1034408.625,
+      "MedianNanoseconds": 482807.8125,
+      "MedianBytes": 1034408,
       "Samples": [
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 547151.5625,
-          "BytesPerOperation": 1034408.625
+          "NanosecondsPerOperation": 541251.5625,
+          "BytesPerOperation": 1034408
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 489792.1875,
-          "BytesPerOperation": 1034408.625
+          "NanosecondsPerOperation": 530939.0625,
+          "BytesPerOperation": 1034408
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 482331.25,
-          "BytesPerOperation": 1034408.625
+          "NanosecondsPerOperation": 473667.1875,
+          "BytesPerOperation": 1034408
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 477714.0625,
-          "BytesPerOperation": 1034408.625
+          "NanosecondsPerOperation": 480201.5625,
+          "BytesPerOperation": 1034408
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 479842.1875,
-          "BytesPerOperation": 1034408.625
+          "NanosecondsPerOperation": 473782.8125,
+          "BytesPerOperation": 1034408
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 521368.75,
-          "BytesPerOperation": 1034408.625
+          "NanosecondsPerOperation": 474556.25,
+          "BytesPerOperation": 1034408
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 474795.3125,
-          "BytesPerOperation": 1034408.625
+          "NanosecondsPerOperation": 483609.375,
+          "BytesPerOperation": 1034408
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 471939.0625,
-          "BytesPerOperation": 1034408.625
+          "NanosecondsPerOperation": 484979.6875,
+          "BytesPerOperation": 1034408
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 478187.5,
-          "BytesPerOperation": 1034408.625
+          "NanosecondsPerOperation": 482807.8125,
+          "BytesPerOperation": 1034408
         }
       ]
     },
@@ -1303,53 +1303,53 @@
       "Method": "ClipperEndpointBridged",
       "InputSha256": "4AB9EF23EC617BD4CB677DE608BBA40B485D4E8EE17F0BC9AEBFD8F0736CCE54",
       "Value": 283.9691295669114,
-      "MedianNanoseconds": 2194481.25,
-      "MedianBytes": 1019434.5,
+      "MedianNanoseconds": 2190012.5,
+      "MedianBytes": 1019432,
       "Samples": [
         {
           "Iterations": 16,
-          "NanosecondsPerOperation": 2191056.25,
-          "BytesPerOperation": 1019434.5
+          "NanosecondsPerOperation": 2195125,
+          "BytesPerOperation": 1019432
         },
         {
           "Iterations": 16,
-          "NanosecondsPerOperation": 2186912.5,
-          "BytesPerOperation": 1019434.5
+          "NanosecondsPerOperation": 2344781.25,
+          "BytesPerOperation": 1019432
         },
         {
           "Iterations": 16,
-          "NanosecondsPerOperation": 2194481.25,
-          "BytesPerOperation": 1019434.5
+          "NanosecondsPerOperation": 2190012.5,
+          "BytesPerOperation": 1019432
         },
         {
           "Iterations": 16,
-          "NanosecondsPerOperation": 2198475,
-          "BytesPerOperation": 1019434.5
+          "NanosecondsPerOperation": 2216643.75,
+          "BytesPerOperation": 1019432
         },
         {
           "Iterations": 16,
-          "NanosecondsPerOperation": 2200531.25,
-          "BytesPerOperation": 1019434.5
+          "NanosecondsPerOperation": 2174756.25,
+          "BytesPerOperation": 1019432
         },
         {
           "Iterations": 16,
-          "NanosecondsPerOperation": 2210218.75,
-          "BytesPerOperation": 1019434.5
+          "NanosecondsPerOperation": 2182500,
+          "BytesPerOperation": 1019432
         },
         {
           "Iterations": 16,
-          "NanosecondsPerOperation": 2176081.25,
-          "BytesPerOperation": 1019434.5
+          "NanosecondsPerOperation": 2186243.75,
+          "BytesPerOperation": 1019432
         },
         {
           "Iterations": 16,
-          "NanosecondsPerOperation": 2188137.5,
-          "BytesPerOperation": 1019434.5
+          "NanosecondsPerOperation": 2180068.75,
+          "BytesPerOperation": 1019432
         },
         {
           "Iterations": 16,
-          "NanosecondsPerOperation": 2196468.75,
-          "BytesPerOperation": 1019434.5
+          "NanosecondsPerOperation": 2223262.5,
+          "BytesPerOperation": 1019432
         }
       ]
     },
@@ -1359,53 +1359,53 @@
       "Method": "WindingEndpointBridged",
       "InputSha256": "4AB9EF23EC617BD4CB677DE608BBA40B485D4E8EE17F0BC9AEBFD8F0736CCE54",
       "Value": 283.96914373992655,
-      "MedianNanoseconds": 1046009.375,
-      "MedianBytes": 1.25,
+      "MedianNanoseconds": 1257768.75,
+      "MedianBytes": 0,
       "Samples": [
         {
-          "Iterations": 32,
-          "NanosecondsPerOperation": 1046687.5,
-          "BytesPerOperation": 1.25
+          "Iterations": 16,
+          "NanosecondsPerOperation": 1264368.75,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 32,
-          "NanosecondsPerOperation": 1046009.375,
-          "BytesPerOperation": 1.25
+          "Iterations": 16,
+          "NanosecondsPerOperation": 1257768.75,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 32,
-          "NanosecondsPerOperation": 1052609.375,
-          "BytesPerOperation": 1.25
+          "Iterations": 16,
+          "NanosecondsPerOperation": 1262150,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 32,
-          "NanosecondsPerOperation": 1043903.125,
-          "BytesPerOperation": 1.25
+          "Iterations": 16,
+          "NanosecondsPerOperation": 1279037.5,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 32,
-          "NanosecondsPerOperation": 1040815.625,
-          "BytesPerOperation": 1.25
+          "Iterations": 16,
+          "NanosecondsPerOperation": 1256543.75,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 32,
-          "NanosecondsPerOperation": 1037531.25,
-          "BytesPerOperation": 1.25
+          "Iterations": 16,
+          "NanosecondsPerOperation": 1255856.25,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 32,
-          "NanosecondsPerOperation": 1041846.875,
-          "BytesPerOperation": 1.25
+          "Iterations": 16,
+          "NanosecondsPerOperation": 1254812.5,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 32,
-          "NanosecondsPerOperation": 1051903.125,
-          "BytesPerOperation": 1.25
+          "Iterations": 16,
+          "NanosecondsPerOperation": 1254081.25,
+          "BytesPerOperation": 0
         },
         {
-          "Iterations": 32,
-          "NanosecondsPerOperation": 1049003.125,
-          "BytesPerOperation": 1.25
+          "Iterations": 16,
+          "NanosecondsPerOperation": 1263387.5,
+          "BytesPerOperation": 0
         }
       ]
     },
@@ -1415,53 +1415,53 @@
       "Method": "ClipperFilledRegionOverlap",
       "InputSha256": "906FC210D53650711E99A746473EA67E9186A8A6D0E407C2AA3FCE6FF1E2B167",
       "Value": 1.4576341949045002,
-      "MedianNanoseconds": 711562.5,
-      "MedianBytes": 816921.25,
+      "MedianNanoseconds": 709962.5,
+      "MedianBytes": 816920,
       "Samples": [
         {
           "Iterations": 32,
-          "NanosecondsPerOperation": 803015.625,
-          "BytesPerOperation": 816921.25
+          "NanosecondsPerOperation": 812459.375,
+          "BytesPerOperation": 816920
         },
         {
           "Iterations": 32,
-          "NanosecondsPerOperation": 743575,
-          "BytesPerOperation": 816921.25
+          "NanosecondsPerOperation": 706568.75,
+          "BytesPerOperation": 816920
         },
         {
           "Iterations": 32,
-          "NanosecondsPerOperation": 699900,
-          "BytesPerOperation": 816921.25
+          "NanosecondsPerOperation": 711259.375,
+          "BytesPerOperation": 816920
         },
         {
           "Iterations": 32,
-          "NanosecondsPerOperation": 711415.625,
-          "BytesPerOperation": 816921.25
+          "NanosecondsPerOperation": 707071.875,
+          "BytesPerOperation": 816920
         },
         {
           "Iterations": 32,
-          "NanosecondsPerOperation": 711268.75,
-          "BytesPerOperation": 816921.25
+          "NanosecondsPerOperation": 709962.5,
+          "BytesPerOperation": 816920
         },
         {
           "Iterations": 32,
-          "NanosecondsPerOperation": 704487.5,
-          "BytesPerOperation": 816921.25
+          "NanosecondsPerOperation": 738371.875,
+          "BytesPerOperation": 816920
         },
         {
           "Iterations": 32,
-          "NanosecondsPerOperation": 746103.125,
-          "BytesPerOperation": 816921.25
+          "NanosecondsPerOperation": 712534.375,
+          "BytesPerOperation": 816920
         },
         {
           "Iterations": 32,
-          "NanosecondsPerOperation": 711562.5,
-          "BytesPerOperation": 816921.25
+          "NanosecondsPerOperation": 703696.875,
+          "BytesPerOperation": 816920
         },
         {
           "Iterations": 32,
-          "NanosecondsPerOperation": 722103.125,
-          "BytesPerOperation": 816921.25
+          "NanosecondsPerOperation": 709862.5,
+          "BytesPerOperation": 816920
         }
       ]
     },
@@ -1470,54 +1470,54 @@
       "Vertices": 1024,
       "Method": "WindingFilledRegions",
       "InputSha256": "906FC210D53650711E99A746473EA67E9186A8A6D0E407C2AA3FCE6FF1E2B167",
-      "Value": 1.4576342760037138,
-      "MedianNanoseconds": 178381.25,
-      "MedianBytes": 0.3125,
+      "Value": 1.457634276003714,
+      "MedianNanoseconds": 263653.125,
+      "MedianBytes": 0,
       "Samples": [
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 184395.3125,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 264199.21875,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 180876.5625,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 269751.5625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 196120.3125,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 281093.75,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 179545.3125,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 264221.09375,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 176159.375,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 263653.125,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 176857.8125,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 263276.5625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 178381.25,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 262260.15625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 177321.09375,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 263577.34375,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 128,
-          "NanosecondsPerOperation": 177610.15625,
-          "BytesPerOperation": 0.3125
+          "NanosecondsPerOperation": 261917.1875,
+          "BytesPerOperation": 0
         }
       ]
     },
@@ -1527,53 +1527,53 @@
       "Method": "ClipperEndpointBridged",
       "InputSha256": "CAE8FD098613C8EA4D4C22CFF468760E4FFA34A4BD7D628772263686EE53ADCD",
       "Value": 35.78590244306901,
-      "MedianNanoseconds": 323915.625,
-      "MedianBytes": 249208.625,
+      "MedianNanoseconds": 321720.3125,
+      "MedianBytes": 249208,
       "Samples": [
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 379818.75,
-          "BytesPerOperation": 249208.625
+          "NanosecondsPerOperation": 380529.6875,
+          "BytesPerOperation": 249208
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 324271.875,
-          "BytesPerOperation": 249208.625
+          "NanosecondsPerOperation": 321864.0625,
+          "BytesPerOperation": 249208
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 321812.5,
-          "BytesPerOperation": 249208.625
+          "NanosecondsPerOperation": 319290.625,
+          "BytesPerOperation": 249208
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 323379.6875,
-          "BytesPerOperation": 249208.625
+          "NanosecondsPerOperation": 319790.625,
+          "BytesPerOperation": 249208
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 323581.25,
-          "BytesPerOperation": 249208.625
+          "NanosecondsPerOperation": 320229.6875,
+          "BytesPerOperation": 249208
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 323764.0625,
-          "BytesPerOperation": 249208.625
+          "NanosecondsPerOperation": 321325,
+          "BytesPerOperation": 249208
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 326073.4375,
-          "BytesPerOperation": 249208.625
+          "NanosecondsPerOperation": 323918.75,
+          "BytesPerOperation": 249208
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 327996.875,
-          "BytesPerOperation": 249208.625
+          "NanosecondsPerOperation": 321720.3125,
+          "BytesPerOperation": 249208
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 323915.625,
-          "BytesPerOperation": 249208.625
+          "NanosecondsPerOperation": 323551.5625,
+          "BytesPerOperation": 249208
         }
       ]
     },
@@ -1583,53 +1583,53 @@
       "Method": "WindingEndpointBridged",
       "InputSha256": "CAE8FD098613C8EA4D4C22CFF468760E4FFA34A4BD7D628772263686EE53ADCD",
       "Value": 35.78590508330491,
-      "MedianNanoseconds": 318721.875,
-      "MedianBytes": 0.625,
+      "MedianNanoseconds": 440915.625,
+      "MedianBytes": 0,
       "Samples": [
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 348581.25,
-          "BytesPerOperation": 0.625
+          "NanosecondsPerOperation": 438634.375,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 316810.9375,
-          "BytesPerOperation": 0.625
+          "NanosecondsPerOperation": 440915.625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 321000,
-          "BytesPerOperation": 0.625
+          "NanosecondsPerOperation": 478656.25,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 315179.6875,
-          "BytesPerOperation": 0.625
+          "NanosecondsPerOperation": 446689.0625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 320689.0625,
-          "BytesPerOperation": 0.625
+          "NanosecondsPerOperation": 470776.5625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 317373.4375,
-          "BytesPerOperation": 0.625
+          "NanosecondsPerOperation": 438173.4375,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 318721.875,
-          "BytesPerOperation": 0.625
+          "NanosecondsPerOperation": 439095.3125,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 319421.875,
-          "BytesPerOperation": 0.625
+          "NanosecondsPerOperation": 450381.25,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 64,
-          "NanosecondsPerOperation": 314034.375,
-          "BytesPerOperation": 0.625
+          "NanosecondsPerOperation": 439857.8125,
+          "BytesPerOperation": 0
         }
       ]
     },
@@ -1639,53 +1639,53 @@
       "Method": "ClipperEndpointBridged",
       "InputSha256": "D26635AE9A5D749D9825BA6E954C2956E22E4B732C897C4C333F3088DCF58EF4",
       "Value": 42.88496960508802,
-      "MedianNanoseconds": 5579525,
-      "MedianBytes": 2036154,
+      "MedianNanoseconds": 5295050,
+      "MedianBytes": 2036144,
       "Samples": [
         {
           "Iterations": 4,
-          "NanosecondsPerOperation": 5952400,
-          "BytesPerOperation": 2036154
+          "NanosecondsPerOperation": 5744750,
+          "BytesPerOperation": 2036144
         },
         {
           "Iterations": 4,
-          "NanosecondsPerOperation": 5579525,
-          "BytesPerOperation": 2036154
+          "NanosecondsPerOperation": 5253375,
+          "BytesPerOperation": 2036144
         },
         {
           "Iterations": 4,
-          "NanosecondsPerOperation": 5563475,
-          "BytesPerOperation": 2036154
+          "NanosecondsPerOperation": 5237450,
+          "BytesPerOperation": 2036144
         },
         {
           "Iterations": 4,
-          "NanosecondsPerOperation": 5553875,
-          "BytesPerOperation": 2036154
+          "NanosecondsPerOperation": 5392125,
+          "BytesPerOperation": 2036144
         },
         {
           "Iterations": 4,
-          "NanosecondsPerOperation": 5428925,
-          "BytesPerOperation": 2036154
+          "NanosecondsPerOperation": 5304525,
+          "BytesPerOperation": 2036144
         },
         {
           "Iterations": 4,
-          "NanosecondsPerOperation": 5685900,
-          "BytesPerOperation": 2036154
+          "NanosecondsPerOperation": 5262425,
+          "BytesPerOperation": 2036144
         },
         {
           "Iterations": 4,
-          "NanosecondsPerOperation": 5755850,
-          "BytesPerOperation": 2036154
+          "NanosecondsPerOperation": 5375175,
+          "BytesPerOperation": 2036144
         },
         {
           "Iterations": 4,
-          "NanosecondsPerOperation": 5545800,
-          "BytesPerOperation": 2036154
+          "NanosecondsPerOperation": 5218075,
+          "BytesPerOperation": 2036144
         },
         {
           "Iterations": 4,
-          "NanosecondsPerOperation": 5934075,
-          "BytesPerOperation": 2036154
+          "NanosecondsPerOperation": 5295050,
+          "BytesPerOperation": 2036144
         }
       ]
     },
@@ -1695,53 +1695,53 @@
       "Method": "WindingEndpointBridged",
       "InputSha256": "D26635AE9A5D749D9825BA6E954C2956E22E4B732C897C4C333F3088DCF58EF4",
       "Value": 42.88497122632596,
-      "MedianNanoseconds": 5611000,
-      "MedianBytes": 10,
+      "MedianNanoseconds": 7891900,
+      "MedianBytes": 0,
       "Samples": [
         {
           "Iterations": 4,
-          "NanosecondsPerOperation": 5666500,
-          "BytesPerOperation": 10
+          "NanosecondsPerOperation": 7818625,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 4,
-          "NanosecondsPerOperation": 5654375,
-          "BytesPerOperation": 10
+          "NanosecondsPerOperation": 7790650,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 4,
-          "NanosecondsPerOperation": 5600025,
-          "BytesPerOperation": 10
+          "NanosecondsPerOperation": 7983375,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 4,
-          "NanosecondsPerOperation": 5611000,
-          "BytesPerOperation": 10
+          "NanosecondsPerOperation": 7956400,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 4,
-          "NanosecondsPerOperation": 5582100,
-          "BytesPerOperation": 10
+          "NanosecondsPerOperation": 7864225,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 4,
-          "NanosecondsPerOperation": 5647475,
-          "BytesPerOperation": 10
+          "NanosecondsPerOperation": 8664050,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 4,
-          "NanosecondsPerOperation": 5562625,
-          "BytesPerOperation": 10
+          "NanosecondsPerOperation": 7848550,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 4,
-          "NanosecondsPerOperation": 5623825,
-          "BytesPerOperation": 10
+          "NanosecondsPerOperation": 7891900,
+          "BytesPerOperation": 0
         },
         {
           "Iterations": 4,
-          "NanosecondsPerOperation": 5564350,
-          "BytesPerOperation": 10
+          "NanosecondsPerOperation": 7953650,
+          "BytesPerOperation": 0
         }
       ]
     }

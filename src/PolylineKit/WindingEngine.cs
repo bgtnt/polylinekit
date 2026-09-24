@@ -22,8 +22,9 @@ internal struct WindingStatistics
 /// Each chain is formed exactly before any area term is evaluated. Edges that overlap collinearly are split at
 /// each other's endpoints, so a shared boundary piece is the same segment in every loop that contains it, and
 /// identical segments of a chain are netted by their integer coefficients. Only the remaining net segments are
-/// summed, around the center of their own bounds. A long shared boundary then cancels exactly instead of leaving
-/// rounding of its large terms, and a small region keeps its area regardless of what else the input contains.
+/// summed: around the loop's bounds center for one loop, and around the center of each chain's own segments for
+/// two. A long shared boundary then cancels exactly instead of leaving rounding of its large terms, and a small
+/// region keeps its area regardless of what else the input contains.
 /// </remarks>
 internal static class WindingEngine
 {
