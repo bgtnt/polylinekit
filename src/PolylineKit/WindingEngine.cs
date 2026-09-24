@@ -61,11 +61,11 @@ internal static class WindingEngine
         internal bool[] Overlapping = new bool[256];
         internal Crossing[] Found = new Crossing[256];
         internal Crossing[] Sorted = new Crossing[256];
-        internal double[] BucketKeys = new double[32];
-        internal int[] BucketItems = new int[32];
-        internal Crossing[] BucketCopy = new Crossing[32];
+        internal double[] CrossingKeys = new double[256];
+        internal int[] CrossingOrder = new int[256];
         internal Piece[] Shared = new Piece[64];
         internal int SharedCount;
+        internal int[] Slots = new int[128];
         internal readonly double[] MinX = new double[MaxChains], MinY = new double[MaxChains], MaxX = new double[MaxChains], MaxY = new double[MaxChains];
         internal readonly bool[] Used = new bool[MaxChains];
         internal readonly Point2[] Origin = new Point2[MaxChains];
@@ -311,27 +311,50 @@ internal static class WindingEngine
         }
     }
 
-    // Sorts the collected sub-edges of overlapping edges and nets identical segments by their coefficients.
-    // Returns the number of remaining segments, stored at the start of ws.Shared.
+    // Nets identical collected segments by their coefficients in one pass over an open-addressing table, and
+    // returns the number of remaining segments, stored at the start of ws.Shared in order of first occurrence.
     private static int Net(Workspace ws)
     {
+        int count = ws.SharedCount;
+        if (count == 0) return 0;
+        int size = 128;
+        while (size < 2 * count) size *= 2;
+        if (ws.Slots.Length < size) ws.Slots = new int[size];
+        int[] slots = ws.Slots; // index + 1 of a distinct segment, 0 when empty
+        Array.Clear(slots, 0, size);
         Piece[] shared = ws.Shared;
-        SortPieces(shared, ws.SharedCount);
-        int net = 0;
-        for (int x = 0; x < ws.SharedCount;)
+        int distinct = 0, mask = size - 1;
+        for (int x = 0; x < count; x++)
         {
-            Piece total = shared[x];
-            int y = x + 1;
-            for (; y < ws.SharedCount && SameSegment(shared[x], shared[y]); y++)
+            Piece piece = shared[x];
+            for (int h = Hash(piece) & mask; ; h = (h + 1) & mask)
             {
-                total.W0 += shared[y].W0; total.W1 += shared[y].W1; total.W2 += shared[y].W2;
-                total.W3 += shared[y].W3; total.W4 += shared[y].W4;
+                int slot = slots[h];
+                if (slot == 0) { shared[distinct] = piece; slots[h] = ++distinct; break; } // distinct <= x
+                ref Piece total = ref shared[slot - 1];
+                if (!SameSegment(total, piece)) continue;
+                total.W0 += piece.W0; total.W1 += piece.W1; total.W2 += piece.W2; total.W3 += piece.W3; total.W4 += piece.W4;
+                break;
             }
-            if (!total.IsZero) shared[net++] = total;
-            x = y;
         }
+        int net = 0;
+        for (int x = 0; x < distinct; x++)
+            if (!shared[x].IsZero) shared[net++] = shared[x];
         return net;
     }
+
+    private static int Hash(Piece piece)
+    {
+        ulong h = Bits(piece.P0.X);
+        h = (h ^ Bits(piece.P0.Y)) * 0x9E3779B97F4A7C15UL;
+        h = (h ^ Bits(piece.P1.X)) * 0x9E3779B97F4A7C15UL;
+        h = (h ^ Bits(piece.P1.Y)) * 0x9E3779B97F4A7C15UL;
+        return (int)(h >> 32);
+    }
+
+    // Equal coordinates must hash equally: 0 and -0 compare equal.
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static ulong Bits(double value) => value == 0 ? 0UL : (ulong)BitConverter.DoubleToInt64Bits(value);
 
     private static void Include(Workspace ws, Piece piece, int chains)
     {
@@ -365,47 +388,6 @@ internal static class WindingEngine
     private static bool Less(Point2 p, Point2 q) => p.X < q.X || (p.X == q.X && p.Y < q.Y);
 
     private static bool SameSegment(Piece x, Piece y) => PathInput.Same(x.P0, y.P0) && PathInput.Same(x.P1, y.P1);
-
-    private static int Compare(Piece x, Piece y)
-    {
-        if (!PathInput.Same(x.P0, y.P0)) return Less(x.P0, y.P0) ? -1 : 1;
-        if (!PathInput.Same(x.P1, y.P1)) return Less(x.P1, y.P1) ? -1 : 1;
-        return 0;
-    }
-
-    // In-place heap sort: only pieces of collinearly overlapping edges are sorted, and no delegate is allocated.
-    private static void SortPieces(Piece[] items, int count)
-    {
-        if (count <= 16)
-        {
-            for (int x = 1; x < count; x++)
-            {
-                Piece key = items[x]; int y = x - 1;
-                while (y >= 0 && Compare(items[y], key) > 0) { items[y + 1] = items[y]; y--; }
-                items[y + 1] = key;
-            }
-            return;
-        }
-        for (int root = count / 2 - 1; root >= 0; root--) SiftDown(items, root, count);
-        for (int end = count - 1; end > 0; end--)
-        {
-            (items[0], items[end]) = (items[end], items[0]);
-            SiftDown(items, 0, end);
-        }
-    }
-
-    private static void SiftDown(Piece[] items, int root, int count)
-    {
-        while (true)
-        {
-            int child = 2 * root + 1;
-            if (child >= count) return;
-            if (child + 1 < count && Compare(items[child + 1], items[child]) > 0) child++;
-            if (Compare(items[root], items[child]) >= 0) return;
-            (items[root], items[child]) = (items[child], items[root]);
-            root = child;
-        }
-    }
 
     // Winding number of loop [from, to) at perturbed vertex p, by a rightward horizontal ray.
     private static int WindingAt(Point2[] v, int[] nx, int p, int from, int to, ref WindingStatistics statistics)
@@ -518,21 +500,27 @@ internal static class WindingEngine
         for (int c = 0; c < count; c++) s[found[c].Edge + 1]++;
         for (int e = 0; e < n; e++) s[e + 1] += s[e];
         if (ws.Sorted.Length < count) ws.Sorted = new Crossing[Grow(count)];
+        if (ws.CrossingKeys.Length < count) { ws.CrossingKeys = new double[Grow(count)]; ws.CrossingOrder = new int[ws.CrossingKeys.Length]; }
         Crossing[] sorted = ws.Sorted;
+        double[] keys = ws.CrossingKeys;
+        int[] items = ws.CrossingOrder;
         for (int e = 0; e < n; e++) o[e] = s[e];
-        for (int c = 0; c < count; c++) sorted[o[found[c].Edge]++] = found[c];
+        for (int c = 0; c < count; c++) { int at = o[found[c].Edge]++; keys[at] = found[c].T; items[at] = c; }
+        // Long runs are presorted by T with a keyed primitive sort (a comparer would allocate a delegate), so each
+        // crossing is copied once. Equal T may still differ in U or point, and short runs are not presorted:
+        // an insertion pass with the full comparison finishes every edge.
+        for (int e = 0; e < n; e++)
+            if (s[e + 1] - s[e] > 16) Array.Sort(keys, items, s[e], s[e + 1] - s[e]);
+        for (int x = 0; x < count; x++) sorted[x] = found[items[x]];
         for (int e = 0; e < n; e++)
         {
-            int lo = s[e], length = s[e + 1] - lo;
             Point2 direction = new(v[nx[e]].X - v[e].X, v[nx[e]].Y - v[e].Y);
-            if (length > 16) SortLarge(ws, lo, length, direction);
-            else
-                for (int x = lo + 1; x < lo + length; x++)
-                {
-                    Crossing key = sorted[x]; int y = x - 1;
-                    while (y >= lo && After(sorted[y], key, direction)) { sorted[y + 1] = sorted[y]; y--; }
-                    sorted[y + 1] = key;
-                }
+            for (int x = s[e] + 1, lo = s[e]; x < s[e + 1]; x++)
+            {
+                Crossing key = sorted[x]; int y = x - 1;
+                while (y >= lo && After(sorted[y], key, direction)) { sorted[y + 1] = sorted[y]; y--; }
+                sorted[y + 1] = key;
+            }
         }
         return crossings;
     }
@@ -586,28 +574,6 @@ internal static class WindingEngine
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static int Sign(double value) => value > 0 ? 1 : -1;
-
-    // Keyed primitive sort: Array.Sort with an IComparer allocates a delegate on every call.
-    private static void SortLarge(Workspace ws, int lo, int length, Point2 direction)
-    {
-        if (ws.BucketKeys.Length < length)
-        {
-            int size = Grow(length);
-            ws.BucketKeys = new double[size]; ws.BucketItems = new int[size]; ws.BucketCopy = new Crossing[size];
-        }
-        Crossing[] list = ws.Sorted, copy = ws.BucketCopy;
-        double[] keys = ws.BucketKeys; int[] items = ws.BucketItems;
-        for (int x = 0; x < length; x++) { keys[x] = list[lo + x].T; items[x] = x; copy[x] = list[lo + x]; }
-        Array.Sort(keys, items, 0, length);
-        for (int x = 0; x < length; x++) list[lo + x] = copy[items[x]];
-        // Equal T near the edge end may still differ in U; order those runs with the full comparison.
-        for (int x = lo + 1; x < lo + length; x++)
-        {
-            Crossing key = list[x]; int y = x - 1;
-            while (y >= lo && After(list[y], key, direction)) { list[y + 1] = list[y]; y--; }
-            list[y + 1] = key;
-        }
-    }
 
     // Order along an edge: by distance from the start, then by distance from the end (larger U comes first).
     // Crossings whose parameters both round to the same values on a very long edge are ordered by their points
