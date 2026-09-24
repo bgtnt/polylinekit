@@ -66,6 +66,13 @@ internal static class ClipperAccuracy
                 WindingArea.FilledRegions(a, b).IntersectionArea,
                 Clipper.Area(Clipper.Intersect(Paths(a), Paths(b), FillRule.NonZero, precision)), precision);
         }
+        const double distance = 1e8;
+        Point2[] distant = [new(0, 0), new(1, 0), new(1, 1), new(0, 1), new(0, 0),
+            new(distance, distance), new(distance + 1, distance), new(distance + 1, distance + 1),
+            new(distance, distance + 1), new(distance, distance)];
+        Add("unit squares 1e8 apart with retraced bridge", "area", "1+1", 2,
+            WindingArea.ClosedPath(distant).NonZero,
+            Clipper.Area(Clipper.Union(Paths(distant), new PathsD(), FillRule.NonZero, 8)), 8);
         var result = new
         {
             FixtureSource = document.RootElement.GetProperty("Source").GetString(),

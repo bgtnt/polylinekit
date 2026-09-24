@@ -22,6 +22,10 @@ It returns both areas, intersection, union, XOR and optional IoU/Jaccard distanc
 Zero union makes those ratios null. Area is not a metric on stroke trajectories
 and cannot bound the largest local deviation.
 
+Each operand is one walk, not a collection of rings. A hole can be encoded with
+an exactly retraced bridge and suitable orientation/fill rule, but separate-ring
+input is not implemented. Contours and offsets require another tool.
+
 Coordinates must be finite with magnitude at most 1e100. Exact orientation signs
 do not imply exact intersections or final areas. There is no snap grid; very long,
 thin intersecting strips can lose intersection-area precision. See the complete

@@ -91,9 +91,10 @@ dotnet benchmarks/PolylineKit.Benchmarks/bin/Release/net10.0/PolylineKit.Benchma
 
 The smoke verifies repeated execution and a known overlapping-square result for
 every method, plus four exact thin triangles; it records no timings. The separate
-accuracy command emits 28 quantities: five previously arbitrated integer-grid
-disagreements, four thin triangles and three long tilted-strip intersections.
-The latter deliberately retains a known winding precision limitation. Archived
+accuracy command emits 29 quantities: five previously arbitrated integer-grid
+disagreements, four thin triangles, three long tilted-strip intersections and
+one walk joining two distant unit squares with a retraced bridge.
+The tilted strips deliberately retain a known winding precision limitation. Archived
 rational expectations and their source are in `fixtures/clipper-accuracy.json`;
 all reported implementation values are recomputed. These selected failures do
 not establish representative accuracy or general superiority over Clipper.

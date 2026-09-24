@@ -56,8 +56,8 @@ Known regression examples make these limits concrete:
 | Input | Observed limit |
 | --- | --- |
 | Triangles `(0,0)`, `(L,L)`, `(2L,double.BitIncrement(2L))`, for `L=1e4,1e8,1e12,1e16` | Edge-product cancellation is corrected: areas now equal the exact binary64-input areas. The previous engine lost up to **32.9%** on these cases. Reversal, cyclic shifts, tiny scaling and containment have independent dyadic-oracle regressions. |
-| Unit-wide crossing strips, tilted by `1/1000`, half-length `1e16` | Intersection relative error reaches **1e-3** across the checked orientations/rules; approximately `1.3e-8` at half-length `1e12` and `6e-12` at `1e8`. Own, union and XOR areas in these fixtures remain exact to rounding. |
-| Two unit squares `1e8` apart, connected as one walk by a retraced bridge | Relative error is approximately `1e-8`; a single chain's distant parts share one accumulation origin. |
+| Crossing strips bounded by `y=x/1000 ± 1` and `x=-y/1000 ± 1`, half-length `1e16` | Intersection relative error reaches **1e-3** across the checked orientations/rules; approximately `1.3e-8` at half-length `1e12` and `6e-12` at `1e8`. Own, union and XOR areas in these fixtures remain exact to rounding. |
+| Two unit squares `1e8` apart, connected as one walk by a retraced bridge | The corrected engine returns exactly 2 on this control (previous relative error was about `1e-8`). This does not establish an error bound for arbitrary distant components sharing one origin. |
 
 These are measured examples, not general error bounds. A tiny region formed by very long edges loses accuracy because crossing positions round relative to the edges' coordinates, not the tiny region. Translate/scale upstream while precision is available, and separate distant components where the intended semantics permit it. Neither normalization nor exact predicates guarantee a well-conditioned area for every shape.
 

@@ -76,6 +76,7 @@ Install the .NET 10 SDK and run:
 dotnet restore PolylineKit.slnx --locked-mode
 dotnet build PolylineKit.slnx -c Release --no-restore
 pwsh -File scripts/verify-implementations.ps1
+pwsh -File scripts/verify-consumers.ps1
 dotnet run --project examples/Basic -c Release --no-build
 ```
 
@@ -88,11 +89,13 @@ Windows and Linux, including benchmark smoke checks without collecting timings.
 
 | Directory | Purpose |
 | --- | --- |
-| [`src/PolylineKit`](src/PolylineKit) | Library implementation and public API. |
+| [`src/PolylineKit.Winding`](src/PolylineKit.Winding) | Independent winding and overlap areas; framework-only runtime dependencies. |
+| [`src/PolylineKit`](src/PolylineKit) | Broader comparison, normalization, sampling and alignment API. |
 | [`examples/Basic`](examples/Basic) | Small runnable consumer. |
 | [`docs`](docs) | Contracts, limitations and a concise performance assessment. |
 | [`tests/PolylineKit.Checks`](tests/PolylineKit.Checks) | Deterministic geometry, numeric, transformation and dispatch checks. |
-| [`benchmarks`](benchmarks/README.md) | Maintained runners, deterministic generators and one fixed input fixture. |
+| [`tests/Consumers`](tests/Consumers) | Standalone, portable and precompiled binary consumer checks. |
+| [`benchmarks`](benchmarks/README.md) | Maintained runners, deterministic fixtures and compact measurement evidence. |
 | [`scripts`](scripts) | Build verification and benchmark orchestration. |
 | [`research`](research/README.md) | Index and checksums for the archived experiments and raw evidence. |
 

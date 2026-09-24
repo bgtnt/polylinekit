@@ -417,7 +417,7 @@ internal static class WindingAreaChecks
                 && self.UnionArea == area && self.SymmetricDifferenceArea == 0 && self.IntersectionOverUnion == 1);
         }
 
-        // Unit-wide strips of half-length l tilted by m / l cross near the origin. Parameters of the crossings on
+        // Strips of coordinate half-width 1 and half-length l, tilted by m / l, cross near the origin. Crossings on
         // the long edges were ordered opposite to their shared points, which reversed part of the intersection
         // boundary (negative area at l = 1e16). The exact intersection of the binary64 input is 4000000/1000001
         // (rational clipping). Points are rounded relative to the coordinates of the edges that form them, about
