@@ -21,6 +21,12 @@ These area operations are different definitions, not interchangeable implementat
 
 `WindingArea` computes areas without Clipper2: crossing decisions use exact orientation predicates with Simulation of Simplicity, so shared vertices, touching and collinear overlap are handled consistently. It returns no contours. Boundary chains are formed exactly, so a small difference between large or distant regions keeps its area. On the measured workloads it takes 47–68% of the time of the Clipper-based bridged area and 28–39% for filled-region overlap, with no allocation on warm calls. Adversarial degenerate integer grids take 1.4–1.5× as long as with Clipper2. It changed no area ranking on any pair of the frozen recognition evaluation (last run at `a0b3295`). See [boundary winding areas](docs/winding-area.md), including five degenerate inputs where Clipper2 2.0.0 returns wrong areas.
 
+The [winding performance assessment](docs/winding-performance.md) measures a
+subsequent managed optimization against `9fff4d2`, including source ablations,
+an orientation stress case and a C++ microkernel comparison. Ordinary similar
+strokes improve by 1.23–1.39× and random walks by 1.33–1.48× on the measured
+machine; the evidence does not justify a whole-engine native port.
+
 ## Compare, normalize, align
 
 ```csharp

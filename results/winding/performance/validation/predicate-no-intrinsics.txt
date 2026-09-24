@@ -1,0 +1,9 @@
+FMA=False; ARM64=False
+860000 orientation cases; exact failures=0; certified filter failures=0; expansion value mismatches=0
+860000 valid crossing cases; baseline parameter mismatches=0
+t=1E-100/(1+1E-100), expected~1E-100; success=True; actual=1E-100; u=1; vertex=0
+t=1E-121/(1+1E-121), expected~1E-121; success=True; actual=9.999999999999998E-122; u=0.9999999999999999; vertex=0
+t=1E-150/(1+1E-150), expected~1E-150; success=True; actual=9.999999999999999E-151; u=0.9999999999999999; vertex=0
+t=1E-200/(1+1E-200), expected~1E-200; success=True; actual=9.999999999999998E-201; u=0.9999999999999999; vertex=0
+t=1E-300/(1+1E-300), expected~1E-300; success=True; actual=9.999999999999999E-301; u=0.9999999999999999; vertex=0
+t=5E-324/(1+5E-324), expected~5E-324; success=True; actual=5E-324; u=0.9999999999999999; vertex=0

@@ -1,0 +1,142 @@
+[
+  {
+    "Name": "similar-strokes",
+    "N": 64,
+    "Baseline": 13.29,
+    "Scalar": 9.96,
+    "Predicates": 11.72,
+    "Full": 9.61,
+    "FmaGain": 1.037,
+    "FullGain": 1.38
+  },
+  {
+    "Name": "similar-strokes",
+    "N": 256,
+    "Baseline": 45.38,
+    "Scalar": 33.95,
+    "Predicates": 45.22,
+    "Full": 33.8,
+    "FmaGain": 1.004,
+    "FullGain": 1.34
+  },
+  {
+    "Name": "similar-strokes",
+    "N": 1024,
+    "Baseline": 218.34,
+    "Scalar": 172.67,
+    "Predicates": 217.94,
+    "Full": 172.54,
+    "FmaGain": 1.001,
+    "FullGain": 1.27
+  },
+  {
+    "Name": "filled-regions",
+    "N": 64,
+    "Baseline": 14.59,
+    "Scalar": 13.71,
+    "Predicates": 14.41,
+    "Full": 13.84,
+    "FmaGain": 0.991,
+    "FullGain": 1.05
+  },
+  {
+    "Name": "filled-regions",
+    "N": 256,
+    "Baseline": 67.75,
+    "Scalar": 58.05,
+    "Predicates": 67.26,
+    "Full": 55.67,
+    "FmaGain": 1.043,
+    "FullGain": 1.22
+  },
+  {
+    "Name": "filled-regions",
+    "N": 1024,
+    "Baseline": 289.0,
+    "Scalar": 259.91,
+    "Predicates": 291.48,
+    "Full": 262.67,
+    "FmaGain": 0.99,
+    "FullGain": 1.1
+  },
+  {
+    "Name": "degenerate-grid",
+    "N": 64,
+    "Baseline": 455.38,
+    "Scalar": 407.13,
+    "Predicates": 419.63,
+    "Full": 401.78,
+    "FmaGain": 1.013,
+    "FullGain": 1.13
+  },
+  {
+    "Name": "degenerate-grid",
+    "N": 256,
+    "Baseline": 8140.22,
+    "Scalar": 7280.72,
+    "Predicates": 7383.65,
+    "Full": 7351.22,
+    "FmaGain": 0.99,
+    "FullGain": 1.11
+  },
+  {
+    "Name": "vertical-bands",
+    "N": 256,
+    "Baseline": 94.18,
+    "Scalar": 18.52,
+    "Predicates": 86.12,
+    "Full": 18.5,
+    "FmaGain": 1.001,
+    "FullGain": 5.09
+  },
+  {
+    "Name": "vertical-bands",
+    "N": 1024,
+    "Baseline": 1224.15,
+    "Scalar": 80.28,
+    "Predicates": 1185.35,
+    "Full": 79.21,
+    "FmaGain": 1.014,
+    "FullGain": 15.46
+  },
+  {
+    "Name": "vertical-bands",
+    "N": 4096,
+    "Baseline": 17838.2,
+    "Scalar": 428.23,
+    "Predicates": 17624.9,
+    "Full": 429.05,
+    "FmaGain": 0.998,
+    "FullGain": 41.58
+  },
+  {
+    "Name": "horizontal-bands",
+    "N": 256,
+    "Baseline": 25.75,
+    "Scalar": 18.44,
+    "Predicates": 18.52,
+    "Full": 18.42,
+    "FmaGain": 1.001,
+    "FullGain": 1.4
+  },
+  {
+    "Name": "horizontal-bands",
+    "N": 1024,
+    "Baseline": 109.54,
+    "Scalar": 78.79,
+    "Predicates": 80.81,
+    "Full": 80.88,
+    "FmaGain": 0.974,
+    "FullGain": 1.35
+  },
+  {
+    "Name": "horizontal-bands",
+    "N": 4096,
+    "Baseline": 550.84,
+    "Scalar": 425.45,
+    "Predicates": 437.06,
+    "Full": 427.76,
+    "FmaGain": 0.995,
+    "FullGain": 1.29
+  }
+]

@@ -108,6 +108,10 @@ The per-thread workspace keeps its largest size. Earlier benchmark tables showed
 - regressions for the third review: a triangle at (2⁵², 2⁵²) and a triangle with legs 2⁻¹⁰⁷⁴ and 2³⁰⁰, whose areas 1/2 and 2⁻⁷⁷⁵ are returned exactly by all methods; tilted strips of half-length 10⁸ to 10¹⁶, also scaled by 2⁻⁵⁴, under both fill rules, swapped and reversed, against the exact intersection within `8 · (l/1000) · 2⁻⁵³` relative and the exact symmetric difference to rounding; and zigzags across a strip 2¹⁰¹ long. Every group except the zigzag, which checked a cost, fails on `474db55`;
 - zero warm-call allocation and input rejection.
 
+The performance follow-up adds 94 checks for tall subdivided paths in both
+orientations, both fill rules, duplicate runs, shared bridging endpoints and
+independent rejection of collapsed input paths.
+
 ### Independent reviews
 
 An independent review of `7dee036` reproduced the method's advantages and found three public failures, fixed in `a0b3295`:
@@ -202,6 +206,10 @@ The validation was not rerun after exact chain formation. The converted datasets
 About 6–7% of real normalized stroke pairs contain exact degeneracies. Pixel coordinates put extreme points and straight runs exactly on the normalized bounds. A floating-point shortcut that fails there would not be rare.
 
 ### Time and allocation
+
+This section records the earlier `becc37d` measurements. The later
+[performance assessment](winding-performance.md) compares `9fff4d2` with the
+optimized managed engine and reports the C++ experiment separately.
 
 Three fresh processes, tiered compilation disabled, nine batch samples each, measured at `becc37d`; full table in [summary.md](../results/winding/benchmarks/summary.md), inputs in `inputs.json`. Reproduce with `pwsh -File scripts/benchmark.ps1 -Suite Winding -OutputDirectory artifacts/winding-benchmarks`.
 
