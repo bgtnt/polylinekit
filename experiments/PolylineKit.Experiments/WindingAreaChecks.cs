@@ -25,6 +25,7 @@ internal static class WindingAreaChecks
         CheckReviewRegressions();
         CheckPerformancePaths();
         CheckSearchPipeline();
+        CheckOwnAreaIndependence();
         CheckAllocations();
         CheckInvalidInputs();
         Console.WriteLine($"Clipper2 disagreements on degenerate grid inputs: {ClipperDisagreements.Count} of {checkedClipper} checked; winding matched the slab sweep in every case.");
@@ -620,6 +621,42 @@ internal static class WindingAreaChecks
                     Identical(name + " scalar equality", actual, WindingArea.ClosedPath(path));
                 }
                 finally { AppContext.SetSwitch("PolylineKit.DisableSimd", disabled); }
+            }
+        }
+    }
+
+    private static void CheckOwnAreaIndependence()
+    {
+        // The other path's crossings may subdivide a simple boundary many times, but cannot
+        // change that path's own area. The star also checks that the general winding path
+        // remains active independently for the second input, including when inputs are swapped.
+        foreach (int exponent in new[] { -400, 0, 200 })
+        foreach (bool reverse in new[] { false, true })
+        {
+            double scale = Math.ScaleB(1, exponent), areaScale = scale * scale;
+            Point2[] simple = Enumerable.Range(0, 41).Select(i =>
+            {
+                double angle = 2 * Math.PI * i / 41;
+                return new Point2((20 + 2 * Math.Cos(angle)) * scale, (-17 + Math.Sin(angle)) * scale);
+            }).ToArray();
+            Point2[] star = Enumerable.Range(0, 17).Select(i =>
+            {
+                double angle = 2 * Math.PI * ((i * 8) % 17) / 17;
+                return new Point2((20.123 + 3 * Math.Cos(angle)) * scale, (-16.969 + 2 * Math.Sin(angle)) * scale);
+            }).ToArray();
+            if (reverse) { Array.Reverse(simple); Array.Reverse(star); }
+            WindingAreaResult simpleArea = WindingArea.ClosedPath(simple), starArea = WindingArea.ClosedPath(star);
+            True("own-area fixture has a simple and a self-crossing boundary", simpleArea.CrossingCount == 0 && starArea.CrossingCount > 0);
+            foreach (PathFillRule rule in new[] { PathFillRule.NonZero, PathFillRule.EvenOdd })
+            foreach (bool swap in new[] { false, true })
+            {
+                WindingOverlapResult actual = swap ? WindingArea.FilledRegions(star, simple, rule) : WindingArea.FilledRegions(simple, star, rule);
+                double expectedSimple = rule == PathFillRule.NonZero ? simpleArea.NonZero : simpleArea.EvenOdd;
+                double expectedStar = rule == PathFillRule.NonZero ? starArea.NonZero : starArea.EvenOdd;
+                string label = $"own area independent of other crossings, exponent={exponent}, reverse={reverse}, rule={rule}, swap={swap}";
+                True(label + " simple area is unchanged", (swap ? actual.SecondArea : actual.FirstArea) == expectedSimple);
+                Near(label + " self-crossing area", expectedStar / areaScale, (swap ? actual.FirstArea : actual.SecondArea) / areaScale);
+                True(label + " paths intersect", actual.IntersectionArea > 0 && actual.IntersectionArea < expectedSimple);
             }
         }
     }
