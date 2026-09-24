@@ -3,9 +3,59 @@
 A .NET 10 console consumer for replaying one supported open stroke against a
 frozen template bank. It calls the same `RecognitionEngine` methods as the
 evaluation and writes a self-contained local HTML/SVG inspection page.
-It has project references, no separately published package or drawing UI.
+It has project references and no separately published package. An optional local
+drawing page calls this same CLI; it does not implement another recognizer.
 
 Run the following commands from the repository root.
+
+## Draw your own stroke locally
+
+After the normal [dataset import](../../scripts/datasets/README.md), build the
+consumer and start the optional adapter with Python 3.10+ (standard library only;
+Python is already used by the development tools):
+
+```powershell
+dotnet restore examples/StrokeTemplates/StrokeTemplates.csproj --locked-mode
+dotnet build examples/StrokeTemplates/StrokeTemplates.csproj -c Release --no-restore
+python examples/StrokeTemplates/serve.py --data artifacts/recognition/data --freeze results/recognition/frozen.json
+```
+
+Open the printed `http://127.0.0.1:<port>/` URL. Draw one continuous stroke,
+choose a scorer and select **Compare**. The page shows the existing consumer's
+top-three result with actual overlays and area contours. **Save query JSON**
+exports the same schema used by `--query`. Clear before drawing again: a second
+pen-down is rejected, and interrupted input is discarded instead of joining paths.
+Mouse, pen and touch use pointer events. Consecutive identical positions are
+omitted; other samples are neither smoothed nor resampled by the page. The C#
+consumer performs its existing preparation. Captured elapsed timestamps are
+optional metadata and do not enter the scores.
+
+The default is Pendigits, seed 1729, 50 templates. `--dataset dollar` selects the
+first frozen $1 bank (held-out writer s02), seed 1729, 48 templates and its included
+scorers. External queries use `split: "external"`, an empty label and a fresh ID;
+they are not additional held-out measurements. These are closed-set matchers:
+an unfamiliar drawing still receives the nearest known labels, not an unknown
+classification or confidence estimate.
+
+Canvas coordinates use positive Y down. **Invert Y** explicitly exports/compares
+`y = canvasHeight - capturedY`; the captured points remain unchanged. Select the
+axis convention appropriate to the template source. The adapter does not infer
+an axis convention from class labels or choose whichever reflection scores best.
+The inspection page displays both paths with positive Y down, as documented below.
+
+Each comparison saves `query.json` and `result.html` under a new directory inside
+`artifacts/stroke-input/` (override with `--output`). Files are retained when the
+server stops. The server binds only to loopback, validates same-origin JSON
+requests, limits input to 1 MiB/10,000 points and calls the prebuilt consumer with
+a 30-second timeout. Each request starts a process and prepares the bank again;
+this interface is for inspection, not latency measurement. No runtime package is
+added to PolylineKit. Stop with Ctrl+C. A fixed port can be selected with `--port`.
+
+Adapter checks (no datasets or built consumer needed):
+
+```powershell
+python -m unittest discover -s examples/StrokeTemplates -p 'test_*.py'
+```
 
 ## Fresh synthetic demonstration
 
