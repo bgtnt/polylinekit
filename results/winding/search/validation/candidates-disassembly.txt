@@ -1,0 +1,222 @@
+; Assembly listing for method PolylineKit.WindingEngine:Candidates(PolylineKit.WindingEngine+Workspace,int,int,double,double,double,bool):int (FullOpts)
+; Emitting BLENDED_CODE for generic X64 + VEX on Windows
+; FullOpts code
+; optimized code
+; rsp based frame
+; fully interruptible
+; No PGO data
+; 0 inlinees with PGO data; 1 single block inlinees; 0 inlinees without PGO data
+
+G_M000_IG01:                ;; offset=0x0000
+       push     r15
+       push     r14
+       push     rdi
+       push     rsi
+       push     rbp
+       push     rbx
+       sub      rsp, 56
+       vmovaps  xmmword ptr [rsp+0x20], xmm6
+       vmovsd   xmm0, qword ptr [rsp+0x90]
+       vmovsd   xmm1, qword ptr [rsp+0x98]
+ 
+G_M000_IG02:                ;; offset=0x0024
+       mov      rax, gword ptr [rcx+0x18]
+       mov      r10, gword ptr [rcx+0x50]
+       mov      r9, gword ptr [rcx+0x58]
+       mov      rcx, gword ptr [rcx+0x40]
+       xor      r11d, r11d
+       cmp      byte  ptr [rsp+0xA0], 0
+       jne      G_M000_IG12
+ 
+G_M000_IG03:                ;; offset=0x0045
+       mov      r14d, r11d
+       jmp      SHORT G_M000_IG05
+       align    [0 bytes for IG07]
+ 
+G_M000_IG04:                ;; offset=0x004A
+       mov      r14d, r11d
+ 
+G_M000_IG05:                ;; offset=0x004D
+       cmp      edx, r8d
+       jge      G_M000_IG10
+ 
+G_M000_IG06:                ;; offset=0x0056
+       test     rax, rax
+       je       G_M000_IG20
+       test     r9, r9
+       je       G_M000_IG20
+       test     r10, r10
+       je       G_M000_IG20
+       mov      r11d, edx
+       or       r11d, r8d
+       jl       G_M000_IG20
+       mov      esi, dword ptr [rax+0x08]
+       cmp      esi, r8d
+       jl       G_M000_IG20
+       cmp      dword ptr [r9+0x08], r8d
+       jl       G_M000_IG20
+       cmp      dword ptr [r10+0x08], r8d
+       jl       G_M000_IG20
+ 
+G_M000_IG07:                ;; offset=0x009D
+       mov      r11d, edx
+       vucomisd xmm3, qword ptr [rax+8*r11+0x10]
+       jb       SHORT G_M000_IG10
+       vmovsd   xmm2, qword ptr [r9+8*r11+0x10]
+       vucomisd xmm2, xmm0
+       jb       SHORT G_M000_IG09
+ 
+G_M000_IG08:                ;; offset=0x00B6
+       vucomisd xmm1, qword ptr [r10+8*r11+0x10]
+       jb       SHORT G_M000_IG09
+       mov      r11d, r14d
+       lea      r14d, [r11+0x01]
+       mov      ebp, dword ptr [rcx+0x08]
+       cmp      r11d, ebp
+       jae      G_M000_IG29
+       mov      dword ptr [rcx+4*r11+0x10], edx
+ 
+G_M000_IG09:                ;; offset=0x00D7
+       inc      edx
+       cmp      edx, r8d
+       jl       SHORT G_M000_IG07
+ 
+G_M000_IG10:                ;; offset=0x00DE
+       mov      eax, r14d
+ 
+G_M000_IG11:                ;; offset=0x00E1
+       vzeroupper 
+       vmovaps  xmm6, xmmword ptr [rsp+0x20]
+       add      rsp, 56
+       pop      rbx
+       pop      rbp
+       pop      rsi
+       pop      rdi
+       pop      r14
+       pop      r15
+       ret      
+ 
+G_M000_IG12:                ;; offset=0x00F7
+       lea      ebx, [r8-0x10]
+       cmp      edx, ebx
+       jle      SHORT G_M000_IG14
+ 
+G_M000_IG13:                ;; offset=0x00FF
+       mov      r14d, r11d
+       jmp      G_M000_IG05
+       align    [0 bytes for IG27]
+ 
+G_M000_IG14:                ;; offset=0x0107
+       lea      ebx, [rdx+0x0F]
+       mov      esi, dword ptr [rax+0x08]
+       cmp      ebx, esi
+       jae      G_M000_IG29
+       vucomisd xmm3, qword ptr [rax+8*rbx+0x10]
+       jae      SHORT G_M000_IG16
+ 
+G_M000_IG15:                ;; offset=0x011D
+       mov      r14d, r11d
+       jmp      G_M000_IG05
+ 
+G_M000_IG16:                ;; offset=0x0125
+       vbroadcastsd ymm2, ymm0
+       vbroadcastsd ymm4, ymm1
+       lea      ebx, [r8-0x04]
+       cmp      edx, ebx
+       jle      G_M000_IG25
+ 
+G_M000_IG17:                ;; offset=0x013B
+       mov      r14d, r11d
+       jmp      G_M000_IG05
+ 
+G_M000_IG18:                ;; offset=0x0143
+       mov      r11d, r14d
+       lea      r14d, [r11+0x01]
+       mov      ebp, dword ptr [rcx+0x08]
+       cmp      r11d, ebp
+       jae      G_M000_IG29
+       mov      dword ptr [rcx+4*r11+0x10], edx
+ 
+G_M000_IG19:                ;; offset=0x015B
+       inc      edx
+       cmp      edx, r8d
+       jge      G_M000_IG10
+ 
+G_M000_IG20:                ;; offset=0x0166
+       mov      esi, dword ptr [rax+0x08]
+       cmp      edx, esi
+       jae      G_M000_IG29
+       mov      r11d, edx
+       vucomisd xmm3, qword ptr [rax+8*r11+0x10]
+       jb       G_M000_IG10
+       cmp      edx, dword ptr [r9+0x08]
+       jae      G_M000_IG29
+       mov      r11d, edx
+       vmovsd   xmm2, qword ptr [r9+8*r11+0x10]
+       vucomisd xmm2, xmm0
+       jb       SHORT G_M000_IG19
+ 
+G_M000_IG21:                ;; offset=0x019B
+       cmp      edx, dword ptr [r10+0x08]
+       jae      G_M000_IG29
+       mov      r11d, edx
+       vucomisd xmm1, qword ptr [r10+8*r11+0x10]
+       jb       SHORT G_M000_IG19
+       jmp      SHORT G_M000_IG18
+ 
+G_M000_IG22:                ;; offset=0x01B3
+       mov      r14d, r11d
+ 
+G_M000_IG23:                ;; offset=0x01B6
+       add      edx, 4
+       cmp      edx, ebx
+       jg       G_M000_IG05
+ 
+G_M000_IG24:                ;; offset=0x01C1
+       mov      r11d, r14d
+ 
+G_M000_IG25:                ;; offset=0x01C4
+       lea      edi, [rdx+0x03]
+       cmp      edi, esi
+       jae      SHORT G_M000_IG29
+       vucomisd xmm3, qword ptr [rax+8*rdi+0x10]
+       jb       G_M000_IG04
+       cmp      dword ptr [r10+0x08], 0
+       jbe      SHORT G_M000_IG29
+       movsxd   rdi, edx
+       vmovups  ymm5, ymmword ptr [r10+8*rdi+0x10]
+       vcmplepd ymm5, ymm5, ymm4
+       cmp      dword ptr [r9+0x08], 0
+       jbe      SHORT G_M000_IG29
+       vmovups  ymm6, ymmword ptr [r9+8*rdi+0x10]
+       vcmpgepd ymm6, ymm6, ymm2
+       vandpd   ymm5, ymm6, ymm5
+       vmovmskpd rdi, ymm5
+       test     edi, edi
+       je       SHORT G_M000_IG22
+ 
+G_M000_IG26:                ;; offset=0x020C
+       mov      ebp, dword ptr [rcx+0x08]
+ 
+G_M000_IG27:                ;; offset=0x020F
+       lea      r14d, [r11+0x01]
+       cmp      r11d, ebp
+       jae      SHORT G_M000_IG29
+       mov      r11d, r11d
+       xor      r15d, r15d
+       tzcnt    r15d, edi
+       add      r15d, edx
+       mov      dword ptr [rcx+4*r11+0x10], r15d
+       blsr     edi, edi
+       je       SHORT G_M000_IG23
+ 
+G_M000_IG28:                ;; offset=0x0232
+       mov      r11d, r14d
+       jmp      SHORT G_M000_IG27
+ 
+G_M000_IG29:                ;; offset=0x0237
+       call     CORINFO_HELP_RNGCHKFAIL
+       int3     
+ 
+; Total bytes of code 573
+

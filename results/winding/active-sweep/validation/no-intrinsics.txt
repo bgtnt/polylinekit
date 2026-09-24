@@ -1,0 +1,3 @@
+Known arithmetic limitation L=1000000000000: simple=134217728, engine=134217728, exact=122070312.5
+Known arithmetic limitation L=10000000000000000: simple=18014398509481984, engine=18014398509481984, exact=20000000000000000
+Active sweep: 53810 checks; 4083 certified paths; 18252 fallback paths; 476 exact rational area cases.

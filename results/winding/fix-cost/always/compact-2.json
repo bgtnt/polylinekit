@@ -1,0 +1,671 @@
+{
+  "Kernel": "C:\\Users\\mapso\\source\\repos\\junk\\MPR001\\artifacts\\winding-search\\compact\\src\\PolylineKit\\bin\\Release\\net10.0\\PolylineKit.dll",
+  "Runtime": ".NET 10.0.12",
+  "Cpu": "Intel64 Family 6 Model 158 Stepping 12, GenuineIntel",
+  "TieredCompilation": "0",
+  "Vector256": true,
+  "ForcedScalar": false,
+  "Utc": "2026-09-24T15:50:06.0003401+00:00",
+  "Measurements": [
+    {
+      "Name": "similar-strokes",
+      "N": 64,
+      "Iterations": 2048,
+      "Value": 0.14912008547189545,
+      "MedianUs": 9.837646484375,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        9.837646484375,
+        9.79248046875,
+        9.80673828125,
+        9.86474609375,
+        9.878857421875
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "dense-graph",
+      "N": 64,
+      "Iterations": 2048,
+      "Value": 6.299999966024439,
+      "MedianUs": 12.649951171875,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        12.4525390625,
+        12.649951171875,
+        12.949267578125,
+        14.17041015625,
+        12.466455078125
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "random-walks",
+      "N": 64,
+      "Iterations": 1024,
+      "Value": 18.289305714348718,
+      "MedianUs": 16.859765625,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        16.6787109375,
+        16.9203125,
+        16.6158203125,
+        16.97001953125,
+        16.859765625
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "filled-regions",
+      "N": 64,
+      "Iterations": 2048,
+      "Value": 1.4379057089030163,
+      "MedianUs": 13.76826171875,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        13.7205078125,
+        13.6732421875,
+        13.83916015625,
+        13.79482421875,
+        13.76826171875
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "similar-strokes",
+      "N": 256,
+      "Iterations": 1024,
+      "Value": 0.15073745199315064,
+      "MedianUs": 32.7037109375,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        32.70517578125,
+        32.681640625,
+        32.45810546875,
+        32.7037109375,
+        33.32431640625
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "dense-graph",
+      "N": 256,
+      "Iterations": 512,
+      "Value": 25.500000011310583,
+      "MedianUs": 45.2146484375,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        45.177734375,
+        45.2146484375,
+        45.3703125,
+        45.1876953125,
+        45.250390625
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "random-walks",
+      "N": 256,
+      "Iterations": 256,
+      "Value": 75.37159959168967,
+      "MedianUs": 141.98046875,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        141.98046875,
+        141.31171875,
+        141.6859375,
+        144.04921875,
+        145.474609375
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "filled-regions",
+      "N": 256,
+      "Iterations": 512,
+      "Value": 1.4564706372339387,
+      "MedianUs": 56.764453125,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        57.38203125,
+        56.9162109375,
+        56.582421875,
+        56.764453125,
+        56.67890625
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "similar-strokes",
+      "N": 1024,
+      "Iterations": 256,
+      "Value": 0.15083685702954172,
+      "MedianUs": 135.794921875,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        150.909375,
+        138.397265625,
+        135.794921875,
+        133.92578125,
+        134.285546875
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "dense-graph",
+      "N": 1024,
+      "Iterations": 128,
+      "Value": 102.30000008262344,
+      "MedianUs": 179.88125,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        201.2796875,
+        179.15625,
+        179.88125,
+        179.40703125,
+        180.4390625
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "random-walks",
+      "N": 1024,
+      "Iterations": 32,
+      "Value": 283.9691437399268,
+      "MedianUs": 711.678125,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        712.41875,
+        713.578125,
+        709.078125,
+        711.678125,
+        709.08125
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "filled-regions",
+      "N": 1024,
+      "Iterations": 128,
+      "Value": 1.4576342760037142,
+      "MedianUs": 229.80546875,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        227.4984375,
+        231.60703125,
+        238.34140625,
+        226.11328125,
+        229.80546875
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "degenerate-grid",
+      "N": 64,
+      "Iterations": 64,
+      "Value": 35.78590508330492,
+      "MedianUs": 403.925,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        403.209375,
+        405.3484375,
+        403.925,
+        404.8578125,
+        403.446875
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "degenerate-grid",
+      "N": 256,
+      "Iterations": 4,
+      "Value": 42.88497122632596,
+      "MedianUs": 7068.2,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        7122.75,
+        7028.7,
+        7068.2,
+        7040.675,
+        7122.475
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "vertical-bands",
+      "N": 256,
+      "Iterations": 2048,
+      "Value": 254,
+      "MedianUs": 16.01181640625,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        16.092041015625,
+        16.01181640625,
+        17.37236328125,
+        15.998388671875,
+        15.99423828125
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "horizontal-bands",
+      "N": 256,
+      "Iterations": 2048,
+      "Value": 254,
+      "MedianUs": 15.837255859375,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        15.91494140625,
+        15.835693359375,
+        15.837255859375,
+        15.79375,
+        15.85224609375
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "vertical-bands",
+      "N": 1024,
+      "Iterations": 512,
+      "Value": 1022,
+      "MedianUs": 62.2724609375,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        62.2724609375,
+        62.2671875,
+        62.1953125,
+        62.38515625,
+        62.344921875
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "horizontal-bands",
+      "N": 1024,
+      "Iterations": 512,
+      "Value": 1022,
+      "MedianUs": 62.5525390625,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        64.9123046875,
+        62.5525390625,
+        62.321484375,
+        62.2205078125,
+        62.6095703125
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "vertical-bands",
+      "N": 4096,
+      "Iterations": 128,
+      "Value": 4094,
+      "MedianUs": 249.10859375,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        264.8546875,
+        254.7171875,
+        249.10859375,
+        248.18515625,
+        247.7359375
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "horizontal-bands",
+      "N": 4096,
+      "Iterations": 128,
+      "Value": 4094,
+      "MedianUs": 246.68203125,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        247.328125,
+        247.359375,
+        246.51796875,
+        246.68203125,
+        246.5625
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "ring",
+      "N": 256,
+      "Iterations": 2048,
+      "Value": 31412.77250932773,
+      "MedianUs": 13.68056640625,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        13.59072265625,
+        13.68056640625,
+        13.656005859375,
+        15.157470703125,
+        15.1869140625
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "stacked-bars",
+      "N": 256,
+      "Iterations": 256,
+      "Value": 32768,
+      "MedianUs": 88.31328125,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        88.3140625,
+        85.60703125,
+        88.31328125,
+        88.31328125,
+        85.144921875
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "ring",
+      "N": 1024,
+      "Iterations": 512,
+      "Value": 31415.729403670914,
+      "MedianUs": 53.9240234375,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        54.087109375,
+        54,
+        53.876953125,
+        53.9240234375,
+        53.8619140625
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "stacked-bars",
+      "N": 1024,
+      "Iterations": 32,
+      "Value": 524288,
+      "MedianUs": 816.0125,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        821.1375,
+        816.0125,
+        824.065625,
+        815.890625,
+        815.403125
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "ring",
+      "N": 4096,
+      "Iterations": 128,
+      "Value": 31415.914215112,
+      "MedianUs": 216.83046875,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        218.78828125,
+        216.1953125,
+        217.45625,
+        216.54609375,
+        216.83046875
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "stacked-bars",
+      "N": 4096,
+      "Iterations": 8,
+      "Value": 8388608,
+      "MedianUs": 4755.1625,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        4746,
+        4752.725,
+        4831.275,
+        4755.1625,
+        4774.9375
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "diagonal-bars",
+      "N": 64,
+      "Iterations": 1024,
+      "Value": 2048,
+      "MedianUs": 22.0818359375,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        22.0818359375,
+        21.8482421875,
+        23.2171875,
+        22.57197265625,
+        21.98974609375
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "radial-star",
+      "N": 64,
+      "Iterations": 4096,
+      "Value": 313.65484905459124,
+      "MedianUs": 7.1579833984375,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        8.3074462890625,
+        7.1579833984375,
+        6.9296875,
+        6.943115234375,
+        7.9486083984375
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "diagonal-bars",
+      "N": 256,
+      "Iterations": 128,
+      "Value": 32768,
+      "MedianUs": 210.934375,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        231.78984375,
+        212.2984375,
+        210.715625,
+        210.934375,
+        210.4234375
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "Name": "radial-star",
+      "N": 256,
+      "Iterations": 256,
+      "Value": 314.12772509327715,
+      "MedianUs": 88.830859375,
+      "MedianBytes": 0,
+      "SamplesUs": [
+        88.830859375,
+        99.260546875,
+        90.26484375,
+        83.943359375,
+        84.0671875
+      ],
+      "SamplesBytes": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ]
+}

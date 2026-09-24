@@ -10,12 +10,35 @@ Experimental C# methods for polyline area comparison, bounds normalization, arc-
 | `PolylineComparison.EndpointBridgedArea(p, q)` | Fill area of the closed walk `p + reverse(q)`, joined by straight endpoint connectors. |
 | `PolylineComparison.FilledRegionDifference(p, q)` | Symmetric difference area of two independently filled closed contours. |
 | `PolylineComparison.FilledRegionOverlap(p, q)` | Filled union/XOR areas, Jaccard distance and intersection-over-union. |
+| `WindingArea.ClosedPath(p)` / `EndpointBridged(p, q)` | NonZero, EvenOdd, absolute-winding and signed areas of a self-intersecting walk, from its boundary; no clipping grid. |
+| `WindingArea.FilledRegions(p, q)` | Intersection, union and XOR areas of two filled paths in one boundary pass. |
 | `PolylineNormalization.ToUnitBounds(p)` | Center and fit a path inside a unit square; return transformed points and affine map. |
 | `PolylineNormalization.MatchBounds(p, q)` | Center and fit `p` inside `q`'s bounds, with uniform or independent axis scaling. |
 | `PolylineAlignment.FitSimilarity(p, q)` | Sample along arc length, then fit translation, rotation and optional uniform scale. |
 | `PolylineSampling.ResampleByArcLength(p)` | Equidistant samples along an open or closed path. |
 
 These area operations are different definitions, not interchangeable implementations of a universal distance. Read the [comparison and transformation contracts](docs/comparison-api.md), including fill rules, precision, closed-path phase and degenerate cases.
+
+`WindingArea` computes areas without Clipper2: crossing decisions use exact orientation predicates with Simulation of Simplicity, so shared vertices, touching and collinear overlap are handled consistently. It returns no contours. Boundary chains are formed exactly, so a small difference between large or distant regions keeps its area. On the measured workloads it takes 47–68% of the time of the Clipper-based bridged area and 28–39% for filled-region overlap, with no allocation on warm calls. Adversarial degenerate integer grids take 1.4–1.5× as long as with Clipper2. It changed no area ranking on any pair of the frozen recognition evaluation (last run at `a0b3295`). See [boundary winding areas](docs/winding-area.md), including five degenerate inputs where Clipper2 2.0.0 returns wrong areas.
+
+The [winding performance assessment](docs/winding-performance.md) measures a
+subsequent managed optimization against `9fff4d2`, including source ablations,
+an orientation stress case and a C++ microkernel comparison. Ordinary similar
+strokes improve by 1.23–1.39× and random walks by 1.33–1.48× on the measured
+machine; the evidence does not justify a whole-engine native port.
+
+The [sorting/SIMD follow-up](docs/winding-search.md) then separates bounds
+filtering from exact geometry and tests a packed hierarchy. It reports further
+large-input gains, small-input regressions, scalar ablations and architectural
+alternatives for removing repeated work.
+
+The [integrated simple-path sweep](docs/winding-integrated-sweep.md) avoids
+enumerating the remaining candidate pairs when a bounded sweep proves a closed
+walk has no self-intersections. On measured inputs it gives 10.7x on a new
+2048-vertex contour and 20x on a constructed diagonal comb, while some smooth
+contours and smaller stars become slower. The [integration review](docs/winding-integrated-sweep-review.md)
+records independent integer-grid checks, budget-exhaustion recovery and the
+remaining numerical and performance limits.
 
 ## Compare, normalize, align
 
@@ -46,7 +69,7 @@ Bounds-area ratio is a geometric ratio, **not a calibrated similarity percentage
 
 ## Build and verify
 
-The core targets **.NET Standard 2.0** for consumer compatibility and **.NET 10** for optional packed-double SIMD transformations; examples and experiments target .NET 10. The core has one runtime package dependency, **Clipper2 2.0.0**, for general polygon fill/Boolean operations. The graph integral, transforms, normalization, resampling and fitting are original implementations. There is no dependency on RtTools or MPR001.
+The core targets **.NET Standard 2.0** for consumer compatibility and **.NET 10** for optional packed-double SIMD transformations and winding bounds filtering; examples and experiments target .NET 10. The core has one runtime package dependency, **Clipper2 2.0.0**, for general polygon fill/Boolean operations. The graph integral, winding-area engine and its exact predicates, transforms, normalization, resampling and fitting are original implementations. There is no dependency on RtTools or MPR001.
 
 Install the .NET 10 SDK and run:
 

@@ -1,0 +1,81 @@
+using System.Numerics;
+using System.Reflection;
+using PolylineKit;
+
+var robust = typeof(WindingArea).Assembly.GetType("PolylineKit.RobustOrientation")!;
+var exact = robust.GetMethod("ExactSign", BindingFlags.Static | BindingFlags.NonPublic)!.CreateDelegate<Func<Point2, Point2, Point2, int>>();
+var filter = robust.GetMethod("TryFilter", BindingFlags.Static | BindingFlags.NonPublic)!.CreateDelegate<Filter>();
+var crossing = robust.GetMethod("CrossingParameter", BindingFlags.Static | BindingFlags.NonPublic)!.CreateDelegate<Crossing>();
+var expansion = robust.GetMethod("TryExpansion", BindingFlags.Static | BindingFlags.NonPublic)!.CreateDelegate<Expansion>();
+var baselineExpansion = typeof(Baseline.RobustOrientation).GetMethod("TryExpansion", BindingFlags.Static | BindingFlags.NonPublic)!.CreateDelegate<Expansion>();
+var random = new Random(17717);
+int signFailures = 0, filterFailures = 0, valueFailures = 0, crossingFailures = 0, count = 0, crossings = 0;
+foreach (var (a,b,c) in Cases())
+{
+    var reference = Exact(a,b,c);
+    var actual = exact(a,b,c);
+    if (actual != reference && signFailures++ < 5) Console.WriteLine($"Exact failure: {Text(a)} {Text(b)} {Text(c)} actual={actual} reference={reference}");
+    if (filter(a,b,c,out var det,out var bound) && Math.Sign(det)!=reference && filterFailures++ < 5) Console.WriteLine($"Filter failure: {Text(a)} {Text(b)} {Text(c)} actual={Math.Sign(det)} reference={reference} det={det:R} bound={bound:R}");
+    if (expansion(a,b,c,out var ev) && baselineExpansion(a,b,c,out var bv) && ev != bv && valueFailures++ < 5)
+        Console.WriteLine($"Expansion value mismatch: {Text(a)} {Text(b)} {Text(c)} candidate={ev:R} baseline={bv:R}");
+    // Cross a line through the origin: reflection through its origin preserves every input bit
+    // other than sign, giving opposite exact orientations and valid crossing parameters.
+    Point2 d = new(-c.X,-c.Y);
+    bool next = crossing(new(0,0), b, c, d, out double nt, out double nu, out int nv);
+    bool old = Baseline.RobustOrientation.CrossingParameter(new(0,0), b, c, d, out double ot, out double ou, out int ov);
+    if ((next != old || nt != ot || nu != ou || nv != ov) && crossingFailures++ < 5)
+        Console.WriteLine($"Crossing mismatch: line=(0,0)->{Text(b)}, endpoints={Text(c)},{Text(d)}, candidate={next},{nt:R},{nu:R},{nv}; baseline={old},{ot:R},{ou:R},{ov}");
+    crossings++;
+    count++;
+}
+Console.WriteLine($"FMA={System.Runtime.Intrinsics.X86.Fma.IsSupported}; ARM64={System.Runtime.Intrinsics.Arm.AdvSimd.Arm64.IsSupported}");
+Console.WriteLine($"{count} orientation cases; exact failures={signFailures}; certified filter failures={filterFailures}; expansion value mismatches={valueFailures}");
+Console.WriteLine($"{crossings} valid crossing cases; baseline parameter mismatches={crossingFailures}");
+foreach (var tiny in new[] {1e-100,1e-121,1e-150,1e-200,1e-300,double.Epsilon})
+{
+    bool ok = crossing(new(0,0), new(0,1), new(-tiny,0),new(1,1), out var t, out var u, out var vertex);
+    Console.WriteLine($"t={tiny:R}/(1+{tiny:R}), expected~{tiny:R}; success={ok}; actual={t:R}; u={u:R}; vertex={vertex}");
+}
+return signFailures+filterFailures+valueFailures+crossingFailures == 0 ? 0 : 1;
+
+IEnumerable<(Point2,Point2,Point2)> Cases()
+{
+    for (int i=0;i<200000;i++)
+    {
+        double scale = Math.ScaleB(1,random.Next(-1074,332));
+        Point2 a = RandomPoint(scale), b = RandomPoint(scale), c = RandomPoint(scale);
+        yield return (a,b,c);
+        double t=random.NextDouble();
+        c = new(a.X+(b.X-a.X)*t, a.Y+(b.Y-a.Y)*t);
+        yield return (a,b,c);
+        yield return (a,b,new(c.X,Math.BitIncrement(c.Y)));
+        yield return (a,b,new(c.X,Math.BitDecrement(c.Y)));
+        if (i < 10000)
+        {
+            yield return (a,a,c); yield return(a,b,a); yield return(a,b,b);
+            yield return(a,new(a.X,b.Y),new(a.X,c.Y));
+            yield return(a,new(b.X,a.Y),new(c.X,a.Y));
+        }
+    }
+    for(int i=0;i<10000;i++)
+    {
+        double NextValue()=>Math.ScaleB(random.NextDouble()*2-1,random.Next(-1074,332));
+        yield return(new(NextValue(),NextValue()),new(NextValue(),NextValue()),new(NextValue(),NextValue()));
+    }
+}
+Point2 RandomPoint(double scale)=>new((random.NextDouble()*2-1)*scale,(random.NextDouble()*2-1)*scale);
+static string Text(Point2 p)=>$"({p.X:R},{p.Y:R})";
+static BigInteger Int(double x)
+{
+    long bits=BitConverter.DoubleToInt64Bits(x);
+    int exponent=(int)((bits>>52)&2047);
+    BigInteger mantissa=bits & 0xfffffffffffffL;
+    if(exponent>0) mantissa += BigInteger.One<<52;
+    var result=mantissa << (exponent == 0?0:exponent-1);
+    return bits<0 ? -result : result;
+}
+static int Exact(Point2 a,Point2 b,Point2 c)=>( (Int(b.X)-Int(a.X))*(Int(c.Y)-Int(a.Y))-(Int(b.Y)-Int(a.Y))*(Int(c.X)-Int(a.X)) ).Sign;
+delegate bool Filter(Point2 a,Point2 b,Point2 c,out double det,out double bound);
+delegate bool Expansion(Point2 a,Point2 b,Point2 c,out double value);
+delegate bool Crossing(Point2 c,Point2 d,Point2 a,Point2 b,out double t,out double u,out int vertex);
+namespace Baseline { internal struct WindingStatistics { public int ExactPredicates; public int SymbolicTieBreaks; } }

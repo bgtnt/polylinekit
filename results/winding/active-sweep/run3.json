@@ -1,0 +1,2132 @@
+{
+  "Runtime": ".NET 10.0.12",
+  "OS": "Microsoft Windows 10.0.26200",
+  "Cpu": "Intel64 Family 6 Model 158 Stepping 12, GenuineIntel",
+  "LogicalProcessors": 16,
+  "TieredCompilation": "0",
+  "HardwareIntrinsics": null,
+  "Run": 3,
+  "Utc": "2026-09-24T16:26:43.0878035+00:00",
+  "Measurements": [
+    {
+      "Name": "similar-strokes",
+      "Vertices": 128,
+      "InputSha256": "0da5d6f0818eacbcbe9fc20553f4db2d5ef962a30d162e8366066a65827db4bf",
+      "Accepted": false,
+      "Value": 0.14912008547189545,
+      "Statistics": {
+        "Vertices": 128,
+        "Comparisons": 7,
+        "NeighborChecks": 7,
+        "ExactPredicates": 1,
+        "PeakActive": 2,
+        "SignedArea": 0
+      },
+      "Baseline": {
+        "Iterations": 4096,
+        "MedianUs": 10.08935546875,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          10.4854248046875,
+          10.026416015625,
+          10.039306640625,
+          10.08935546875,
+          12.053466796875
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 2048,
+        "MedianUs": 16.4267578125,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          16.301025390625,
+          16.415966796875,
+          16.4267578125,
+          16.48125,
+          16.44228515625
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "dense-graph",
+      "Vertices": 128,
+      "InputSha256": "7affc2ad71464057c183c3e65d898f7899b58985caa83056e9af291061b0d700",
+      "Accepted": false,
+      "Value": 6.299999966024439,
+      "Statistics": {
+        "Vertices": 128,
+        "Comparisons": 2,
+        "NeighborChecks": 2,
+        "ExactPredicates": 1,
+        "PeakActive": 2,
+        "SignedArea": 0
+      },
+      "Baseline": {
+        "Iterations": 4096,
+        "MedianUs": 12.778076171875,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          12.83818359375,
+          12.723291015625,
+          12.778076171875,
+          12.722705078125,
+          12.8705810546875
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 2048,
+        "MedianUs": 19.70390625,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          19.5755859375,
+          19.70390625,
+          20.46142578125,
+          19.653759765625,
+          19.934912109375
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "random-walks",
+      "Vertices": 128,
+      "InputSha256": "cc01bd4b9f63fa838c898b71111233e0e5dc48945a5b3623757c15829b8d14dc",
+      "Accepted": false,
+      "Value": 18.289305714348718,
+      "Statistics": {
+        "Vertices": 128,
+        "Comparisons": 52,
+        "NeighborChecks": 27,
+        "ExactPredicates": 7,
+        "PeakActive": 12,
+        "SignedArea": 0
+      },
+      "Baseline": {
+        "Iterations": 2048,
+        "MedianUs": 17.129736328125,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          17.129736328125,
+          17.2771484375,
+          17.12373046875,
+          17.289990234375,
+          16.884814453125
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 2048,
+        "MedianUs": 29.61484375,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          28.29296875,
+          30.8099609375,
+          29.61484375,
+          27.2626953125,
+          29.723828125
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "similar-strokes",
+      "Vertices": 512,
+      "InputSha256": "4ca42b4961e08e7ac999f31d0896d72f2fa58f9c534d892356d2fd809e9331e7",
+      "Accepted": false,
+      "Value": 0.15073745199315064,
+      "Statistics": {
+        "Vertices": 512,
+        "Comparisons": 26,
+        "NeighborChecks": 26,
+        "ExactPredicates": 1,
+        "PeakActive": 2,
+        "SignedArea": 0
+      },
+      "Baseline": {
+        "Iterations": 1024,
+        "MedianUs": 34.2953125,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          43.97021484375,
+          34.2953125,
+          41.00234375,
+          34.0154296875,
+          33.8529296875
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 512,
+        "MedianUs": 73.0345703125,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          73.0345703125,
+          77.8330078125,
+          71.966796875,
+          73.2576171875,
+          70.6771484375
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "dense-graph",
+      "Vertices": 512,
+      "InputSha256": "1cd8c21f3f5a4dd38c3c77950483d03603eed1f13a73c3eb5b0fc4ee6d6da45f",
+      "Accepted": false,
+      "Value": 25.500000011310583,
+      "Statistics": {
+        "Vertices": 512,
+        "Comparisons": 2,
+        "NeighborChecks": 2,
+        "ExactPredicates": 1,
+        "PeakActive": 2,
+        "SignedArea": 0
+      },
+      "Baseline": {
+        "Iterations": 1024,
+        "MedianUs": 47.1072265625,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          47.10634765625,
+          47.1072265625,
+          48.451953125,
+          46.8978515625,
+          47.55400390625
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 512,
+        "MedianUs": 87.38203125,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          85.7751953125,
+          88.056640625,
+          89.48671875,
+          86.535546875,
+          87.38203125
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "random-walks",
+      "Vertices": 512,
+      "InputSha256": "33998e5cc04e57a94ae6bf58ff30db052d5f915ca30305de2ebaeaab53114f78",
+      "Accepted": false,
+      "Value": 75.37159959168967,
+      "Statistics": {
+        "Vertices": 512,
+        "Comparisons": 3,
+        "NeighborChecks": 2,
+        "ExactPredicates": 1,
+        "PeakActive": 3,
+        "SignedArea": 0
+      },
+      "Baseline": {
+        "Iterations": 256,
+        "MedianUs": 148.1125,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          143.2015625,
+          152.212109375,
+          170.90546875,
+          142.4,
+          148.1125
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 256,
+        "MedianUs": 193.87734375,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          191.94921875,
+          193.87734375,
+          181.226171875,
+          197.338671875,
+          197.455078125
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "similar-strokes",
+      "Vertices": 2048,
+      "InputSha256": "7916ee34db4e7afd33b2c151ea838249118937de9ccef43c6416059847b8c997",
+      "Accepted": false,
+      "Value": 0.15083685702954172,
+      "Statistics": {
+        "Vertices": 2048,
+        "Comparisons": 101,
+        "NeighborChecks": 101,
+        "ExactPredicates": 1,
+        "PeakActive": 2,
+        "SignedArea": 0
+      },
+      "Baseline": {
+        "Iterations": 256,
+        "MedianUs": 138.470703125,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          137.778515625,
+          137.50859375,
+          138.470703125,
+          140.786328125,
+          138.850390625
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 128,
+        "MedianUs": 334.99375,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          310.465625,
+          334.99375,
+          340.0625,
+          344.68046875,
+          324.015625
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "dense-graph",
+      "Vertices": 2048,
+      "InputSha256": "8ca5774cdc267439a59e1dc493c98b29b69ca3b5d7b4d7375f8f18f99c45e47e",
+      "Accepted": false,
+      "Value": 102.30000008262344,
+      "Statistics": {
+        "Vertices": 2048,
+        "Comparisons": 2,
+        "NeighborChecks": 2,
+        "ExactPredicates": 1,
+        "PeakActive": 2,
+        "SignedArea": 0
+      },
+      "Baseline": {
+        "Iterations": 256,
+        "MedianUs": 192.440234375,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          192.440234375,
+          215.230078125,
+          186.286328125,
+          246.358984375,
+          192.380078125
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 128,
+        "MedianUs": 441.396875,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          441.09296875,
+          425.9203125,
+          441.396875,
+          444.99609375,
+          459.2984375
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "random-walks",
+      "Vertices": 2048,
+      "InputSha256": "5c6b177aed4c34661ccc4a2f4ceb76542102a36bb1e5cd8ac8a12dd047c86c3c",
+      "Accepted": false,
+      "Value": 283.9691437399268,
+      "Statistics": {
+        "Vertices": 2048,
+        "Comparisons": 21,
+        "NeighborChecks": 16,
+        "ExactPredicates": 3,
+        "PeakActive": 6,
+        "SignedArea": 0
+      },
+      "Baseline": {
+        "Iterations": 64,
+        "MedianUs": 721.415625,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          734.66875,
+          747.365625,
+          721.415625,
+          715.75,
+          716.0640625
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 64,
+        "MedianUs": 887.35625,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          886.8171875,
+          889.7171875,
+          886.078125,
+          887.35625,
+          900.115625
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "degenerate-grid",
+      "Vertices": 128,
+      "InputSha256": "a40816203aa4ee31f98a68c9fff25c3a13b55352e7669dffe0a19e5b4c0f85a0",
+      "Accepted": false,
+      "Value": 35.78590508330492,
+      "Statistics": {
+        "Vertices": 126,
+        "Comparisons": 0,
+        "NeighborChecks": 0,
+        "ExactPredicates": 0,
+        "PeakActive": 0,
+        "SignedArea": 0
+      },
+      "Baseline": {
+        "Iterations": 128,
+        "MedianUs": 407.17109375,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          443.0953125,
+          407.17109375,
+          404.92109375,
+          418.79140625,
+          404.74296875
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 128,
+        "MedianUs": 416.5796875,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          416.396875,
+          418.53359375,
+          416.5796875,
+          414.7859375,
+          416.8265625
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "degenerate-grid",
+      "Vertices": 512,
+      "InputSha256": "249b0039526cf726efb2308c5ffca9ee5391f9de311a9d15139d2a094a0e8d4d",
+      "Accepted": false,
+      "Value": 42.88497122632596,
+      "Statistics": {
+        "Vertices": 507,
+        "Comparisons": 0,
+        "NeighborChecks": 0,
+        "ExactPredicates": 0,
+        "PeakActive": 0,
+        "SignedArea": 0
+      },
+      "Baseline": {
+        "Iterations": 8,
+        "MedianUs": 7425.875,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          9326.7625,
+          8451.6,
+          7262.1625,
+          7044.9375,
+          7425.875
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 8,
+        "MedianUs": 7131.1875,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          7131.1875,
+          6968.2125,
+          7064.9125,
+          7221.95,
+          7248.15
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "ring",
+      "Vertices": 64,
+      "InputSha256": "c8305a39bba6ca330625e27f0ede7d48e1e11dded48809713d959404e110fb17",
+      "Accepted": true,
+      "Value": 31365.484905459394,
+      "Statistics": {
+        "Vertices": 64,
+        "Comparisons": 63,
+        "NeighborChecks": 63,
+        "ExactPredicates": 1,
+        "PeakActive": 2,
+        "SignedArea": 31365.484905459394
+      },
+      "Baseline": {
+        "Iterations": 8192,
+        "MedianUs": 3.8653564453125,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          3.8567626953125,
+          3.87989501953125,
+          3.8653564453125,
+          3.8624755859375,
+          3.91627197265625
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 8192,
+        "MedianUs": 7.56441650390625,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          7.799853515625,
+          7.56441650390625,
+          7.25064697265625,
+          8.5764892578125,
+          7.08516845703125
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "radial-star",
+      "Vertices": 64,
+      "InputSha256": "9cd3c4cc9b6f7bcf5b8bd64cb79f71c911d006e5697b8a89f11355cea92a1821",
+      "Accepted": true,
+      "Value": 313.65484905459124,
+      "Statistics": {
+        "Vertices": 64,
+        "Comparisons": 227,
+        "NeighborChecks": 133,
+        "ExactPredicates": 29,
+        "PeakActive": 30,
+        "SignedArea": 313.65484905459124
+      },
+      "Baseline": {
+        "Iterations": 8192,
+        "MedianUs": 6.9607421875,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          7.059912109375,
+          6.9607421875,
+          8.3194580078125,
+          6.82611083984375,
+          6.85260009765625
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 4096,
+        "MedianUs": 11.7124755859375,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          10.9281982421875,
+          10.6496826171875,
+          11.79990234375,
+          11.7124755859375,
+          12.7898193359375
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "stacked-bars",
+      "Vertices": 64,
+      "InputSha256": "77b98f7b8053eac33ac21ed1bdb04f7beaf3ad77b0e6b7d8e1c8505d3ea5060d",
+      "Accepted": false,
+      "Value": 2048,
+      "Statistics": {
+        "Vertices": 64,
+        "Comparisons": 2,
+        "NeighborChecks": 1,
+        "ExactPredicates": 2,
+        "PeakActive": 2,
+        "SignedArea": 0
+      },
+      "Baseline": {
+        "Iterations": 2048,
+        "MedianUs": 14.813330078125,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          14.8474609375,
+          14.201416015625,
+          14.914453125,
+          14.813330078125,
+          12.94755859375
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 2048,
+        "MedianUs": 17.118212890625,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          17.118212890625,
+          16.606884765625,
+          17.70517578125,
+          15.9177734375,
+          21.231005859375
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "diagonal-bars",
+      "Vertices": 64,
+      "InputSha256": "2ff90640c11ff909484ceb76edba39605401ca55bbb01eb4984208b8cad85785",
+      "Accepted": false,
+      "Value": 2048,
+      "Statistics": {
+        "Vertices": 64,
+        "Comparisons": 2,
+        "NeighborChecks": 1,
+        "ExactPredicates": 2,
+        "PeakActive": 2,
+        "SignedArea": 0
+      },
+      "Baseline": {
+        "Iterations": 1024,
+        "MedianUs": 30.6486328125,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          34.02451171875,
+          30.6486328125,
+          34.93359375,
+          29.92626953125,
+          21.65478515625
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 1024,
+        "MedianUs": 30.762109375,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          31.47666015625,
+          32.91865234375,
+          30.762109375,
+          25.9759765625,
+          27.589453125
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "simple-comb",
+      "Vertices": 66,
+      "InputSha256": "9711383f1e9a3f2f7f9730401cc13af3aa29f1c7967ef0f41bd7467a30e2b1a8",
+      "Accepted": true,
+      "Value": 2079,
+      "Statistics": {
+        "Vertices": 66,
+        "Comparisons": 232,
+        "NeighborChecks": 125,
+        "ExactPredicates": 16,
+        "PeakActive": 32,
+        "SignedArea": 2079
+      },
+      "Baseline": {
+        "Iterations": 8192,
+        "MedianUs": 5.11329345703125,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          5.32958984375,
+          5.11329345703125,
+          5.62637939453125,
+          4.87364501953125,
+          4.96463623046875
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 4096,
+        "MedianUs": 11.1976806640625,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          11.1757568359375,
+          11.16787109375,
+          11.32255859375,
+          11.1976806640625,
+          13.2976318359375
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "simple-diagonal-comb",
+      "Vertices": 66,
+      "InputSha256": "c7d0b21000392dd037afa6a2e1d3e15460eeae0eb8e5c176ccb87b11a27d366c",
+      "Accepted": true,
+      "Value": 2079,
+      "Statistics": {
+        "Vertices": 66,
+        "Comparisons": 232,
+        "NeighborChecks": 125,
+        "ExactPredicates": 17,
+        "PeakActive": 32,
+        "SignedArea": 2079
+      },
+      "Baseline": {
+        "Iterations": 4096,
+        "MedianUs": 13.9796630859375,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          14.4566162109375,
+          14.2083251953125,
+          13.30517578125,
+          13.9796630859375,
+          13.00224609375
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 4096,
+        "MedianUs": 11.6819091796875,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          11.61591796875,
+          11.6654296875,
+          11.8022705078125,
+          12.08115234375,
+          11.6819091796875
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "vertical-band",
+      "Vertices": 64,
+      "InputSha256": "a9408c4acaaf78e828b839f62f29653627814d5f034641091d54ea1740bcbab0",
+      "Accepted": true,
+      "Value": 62,
+      "Statistics": {
+        "Vertices": 64,
+        "Comparisons": 63,
+        "NeighborChecks": 63,
+        "ExactPredicates": 1,
+        "PeakActive": 2,
+        "SignedArea": -62
+      },
+      "Baseline": {
+        "Iterations": 8192,
+        "MedianUs": 4.68697509765625,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          4.6734619140625,
+          4.68697509765625,
+          4.70980224609375,
+          4.7739013671875,
+          4.41343994140625
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 8192,
+        "MedianUs": 6.88363037109375,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          6.6412841796875,
+          7.08746337890625,
+          6.6032958984375,
+          7.13106689453125,
+          6.88363037109375
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "ring",
+      "Vertices": 256,
+      "InputSha256": "09d76e79cd4b4ca1b3166df113abecfceca683dea4b68a332a3cde8a317b4ac1",
+      "Accepted": true,
+      "Value": 31412.77250932773,
+      "Statistics": {
+        "Vertices": 256,
+        "Comparisons": 255,
+        "NeighborChecks": 255,
+        "ExactPredicates": 1,
+        "PeakActive": 2,
+        "SignedArea": 31412.77250932773
+      },
+      "Baseline": {
+        "Iterations": 4096,
+        "MedianUs": 15.7467529296875,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          20.651806640625,
+          15.7467529296875,
+          13.8739990234375,
+          16.2072265625,
+          14.012841796875
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 1024,
+        "MedianUs": 32.74345703125,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          32.74345703125,
+          32.6849609375,
+          32.7287109375,
+          34.04423828125,
+          33.433203125
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "radial-star",
+      "Vertices": 256,
+      "InputSha256": "77fcd40d8b461db9bfbe30186a820ee88bedd46079da2569110db9c59c5041a4",
+      "Accepted": true,
+      "Value": 314.12772509327715,
+      "Statistics": {
+        "Vertices": 256,
+        "Comparisons": 1826,
+        "NeighborChecks": 565,
+        "ExactPredicates": 125,
+        "PeakActive": 126,
+        "SignedArea": 314.12772509327715
+      },
+      "Baseline": {
+        "Iterations": 512,
+        "MedianUs": 90.303515625,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          90.6626953125,
+          84.5912109375,
+          84.2193359375,
+          90.303515625,
+          94.7888671875
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 512,
+        "MedianUs": 72.723046875,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          72.7677734375,
+          72.723046875,
+          72.63203125,
+          72.642578125,
+          74.8845703125
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "stacked-bars",
+      "Vertices": 256,
+      "InputSha256": "698fdcc3f943f10a12468696799ed487d7b815242c34fff1f15c56c667312809",
+      "Accepted": false,
+      "Value": 32768,
+      "Statistics": {
+        "Vertices": 256,
+        "Comparisons": 2,
+        "NeighborChecks": 1,
+        "ExactPredicates": 2,
+        "PeakActive": 2,
+        "SignedArea": 0
+      },
+      "Baseline": {
+        "Iterations": 512,
+        "MedianUs": 85.753125,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          88.1845703125,
+          85.425390625,
+          85.5689453125,
+          85.753125,
+          87.259765625
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 512,
+        "MedianUs": 106.9158203125,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          106.9158203125,
+          103.338671875,
+          110.7693359375,
+          114.7392578125,
+          105.686328125
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "diagonal-bars",
+      "Vertices": 256,
+      "InputSha256": "95362c9be9145b2da97dd2de4e5c7fa9f3c016b3b05187df189eb9dd99806680",
+      "Accepted": false,
+      "Value": 32768,
+      "Statistics": {
+        "Vertices": 256,
+        "Comparisons": 2,
+        "NeighborChecks": 1,
+        "ExactPredicates": 2,
+        "PeakActive": 2,
+        "SignedArea": 0
+      },
+      "Baseline": {
+        "Iterations": 256,
+        "MedianUs": 212.105859375,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          215.828125,
+          209.428515625,
+          212.105859375,
+          211.915234375,
+          223.561328125
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 256,
+        "MedianUs": 225.157421875,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          227.987890625,
+          224.5890625,
+          225.157421875,
+          224.34453125,
+          233.678125
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "simple-comb",
+      "Vertices": 258,
+      "InputSha256": "cdd8a6efd4e5b9cc84636a3b289e00a23bed77b999db45775b4fd57d94460c72",
+      "Accepted": true,
+      "Value": 32895,
+      "Statistics": {
+        "Vertices": 258,
+        "Comparisons": 1286,
+        "NeighborChecks": 509,
+        "ExactPredicates": 64,
+        "PeakActive": 128,
+        "SignedArea": 32895
+      },
+      "Baseline": {
+        "Iterations": 1024,
+        "MedianUs": 29.35625,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          30.22578125,
+          29.57197265625,
+          29.35625,
+          29.34345703125,
+          29.285546875
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 1024,
+        "MedianUs": 53.70634765625,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          53.5865234375,
+          53.782421875,
+          53.70634765625,
+          53.48173828125,
+          54.128125
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "simple-diagonal-comb",
+      "Vertices": 258,
+      "InputSha256": "5c8d5ae089c9e6261e4eb4062da21d3b3276f376f5647e267005888e098e3c68",
+      "Accepted": true,
+      "Value": 32895,
+      "Statistics": {
+        "Vertices": 258,
+        "Comparisons": 1286,
+        "NeighborChecks": 509,
+        "ExactPredicates": 65,
+        "PeakActive": 128,
+        "SignedArea": 32895
+      },
+      "Baseline": {
+        "Iterations": 256,
+        "MedianUs": 153.409765625,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          153.67265625,
+          152.071875,
+          153.409765625,
+          152.71171875,
+          154.050390625
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 1024,
+        "MedianUs": 55.656640625,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          55.656640625,
+          56.0353515625,
+          55.32109375,
+          55.9849609375,
+          55.5609375
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "vertical-band",
+      "Vertices": 256,
+      "InputSha256": "21bfd1980b618efc1067508268b49c8c83bebd199ab9858861345e70a8b9f99d",
+      "Accepted": true,
+      "Value": 254,
+      "Statistics": {
+        "Vertices": 256,
+        "Comparisons": 255,
+        "NeighborChecks": 255,
+        "ExactPredicates": 1,
+        "PeakActive": 2,
+        "SignedArea": -254
+      },
+      "Baseline": {
+        "Iterations": 2048,
+        "MedianUs": 15.9806640625,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          15.9806640625,
+          15.943701171875,
+          15.966943359375,
+          16.601953125,
+          16.177783203125
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 2048,
+        "MedianUs": 27.24140625,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          26.709326171875,
+          28.119140625,
+          27.324951171875,
+          27.24140625,
+          26.544677734375
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "ring",
+      "Vertices": 1024,
+      "InputSha256": "3b6a7aaf9f2dfe102780dd9624a4c9148b544faada87806d796fbf7f27cfd263",
+      "Accepted": true,
+      "Value": 31415.729403670914,
+      "Statistics": {
+        "Vertices": 1024,
+        "Comparisons": 1023,
+        "NeighborChecks": 1023,
+        "ExactPredicates": 1,
+        "PeakActive": 2,
+        "SignedArea": 31415.729403670914
+      },
+      "Baseline": {
+        "Iterations": 1024,
+        "MedianUs": 53.79189453125,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          53.75517578125,
+          53.62841796875,
+          55.57900390625,
+          53.79189453125,
+          56.25576171875
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 256,
+        "MedianUs": 175.160546875,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          175.160546875,
+          167.623828125,
+          187.75390625,
+          269.53515625,
+          160.746484375
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "radial-star",
+      "Vertices": 1024,
+      "InputSha256": "894ab3cd72b02f9d680855399e0eab647e1100587d4d70f36139e65b4e99d190",
+      "Accepted": true,
+      "Value": 314.15729403670974,
+      "Statistics": {
+        "Vertices": 1024,
+        "Comparisons": 8630,
+        "NeighborChecks": 2293,
+        "ExactPredicates": 509,
+        "PeakActive": 510,
+        "SignedArea": 314.15729403670974
+      },
+      "Baseline": {
+        "Iterations": 32,
+        "MedianUs": 1242.73125,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          1242.73125,
+          1306.75625,
+          1289.478125,
+          1234.3125,
+          1239.69375
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 128,
+        "MedianUs": 336.253125,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          337.5234375,
+          351.8046875,
+          333.7375,
+          333.5328125,
+          336.253125
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "stacked-bars",
+      "Vertices": 1024,
+      "InputSha256": "834444991931e5bc9fbeb5ccc7d9895bf1a47e66b9effac5e955625c60b81e89",
+      "Accepted": false,
+      "Value": 524288,
+      "Statistics": {
+        "Vertices": 1024,
+        "Comparisons": 2,
+        "NeighborChecks": 1,
+        "ExactPredicates": 2,
+        "PeakActive": 2,
+        "SignedArea": 0
+      },
+      "Baseline": {
+        "Iterations": 64,
+        "MedianUs": 816.68125,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          905.503125,
+          812.2953125,
+          814.4109375,
+          816.68125,
+          822.0671875
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 64,
+        "MedianUs": 892.321875,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          894.6765625,
+          900.6625,
+          892.321875,
+          887.0296875,
+          892.2625
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "diagonal-bars",
+      "Vertices": 1024,
+      "InputSha256": "15baa97e0614ebebe94b7cfa5aee2f10b3603b15eca4f529c6e8e736383d5e2d",
+      "Accepted": false,
+      "Value": 524288,
+      "Statistics": {
+        "Vertices": 1024,
+        "Comparisons": 2,
+        "NeighborChecks": 1,
+        "ExactPredicates": 2,
+        "PeakActive": 2,
+        "SignedArea": 0
+      },
+      "Baseline": {
+        "Iterations": 16,
+        "MedianUs": 2802.9875,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          2871.65,
+          2834.50625,
+          2766.94375,
+          2769.6125,
+          2802.9875
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 16,
+        "MedianUs": 2836.3,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          2836.3,
+          2829.75,
+          2884.54375,
+          2827.83125,
+          2844.1375
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "simple-comb",
+      "Vertices": 1026,
+      "InputSha256": "a296c65d7e62d1af906b140341cf162826eb56c295ee0acb6a802f484e41ff1a",
+      "Accepted": true,
+      "Value": 524799,
+      "Statistics": {
+        "Vertices": 1026,
+        "Comparisons": 6420,
+        "NeighborChecks": 2045,
+        "ExactPredicates": 256,
+        "PeakActive": 512,
+        "SignedArea": 524799
+      },
+      "Baseline": {
+        "Iterations": 128,
+        "MedianUs": 263.09375,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          265.9109375,
+          266.0640625,
+          261.2328125,
+          261.5640625,
+          263.09375
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 128,
+        "MedianUs": 253.23828125,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          253.01484375,
+          255.26015625,
+          253.23828125,
+          255.18671875,
+          253.11484375
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "simple-diagonal-comb",
+      "Vertices": 1026,
+      "InputSha256": "9bcc1c253aeac0248a921934e0ba476a879959ec6d9a053d3862702ed0d5f613",
+      "Accepted": true,
+      "Value": 524799,
+      "Statistics": {
+        "Vertices": 1026,
+        "Comparisons": 6420,
+        "NeighborChecks": 2045,
+        "ExactPredicates": 257,
+        "PeakActive": 512,
+        "SignedArea": 524799
+      },
+      "Baseline": {
+        "Iterations": 16,
+        "MedianUs": 2222.1125,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          2222.1125,
+          2225.9125,
+          2283.35,
+          2204.55625,
+          2194.2875
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 128,
+        "MedianUs": 259.89453125,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          272.2828125,
+          259.32265625,
+          259.89453125,
+          261.2765625,
+          259.053125
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "vertical-band",
+      "Vertices": 1024,
+      "InputSha256": "cffa8160f34b86bc97e6414c734854dc1e911e5ae83e93cf88da68bf0ab3bc9d",
+      "Accepted": true,
+      "Value": 1022,
+      "Statistics": {
+        "Vertices": 1024,
+        "Comparisons": 1023,
+        "NeighborChecks": 1023,
+        "ExactPredicates": 1,
+        "PeakActive": 2,
+        "SignedArea": -1022
+      },
+      "Baseline": {
+        "Iterations": 512,
+        "MedianUs": 62.2875,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          62.065234375,
+          62.323046875,
+          62.2875,
+          62.4349609375,
+          62.15625
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 512,
+        "MedianUs": 117.088671875,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          117.150390625,
+          116.823828125,
+          117.3099609375,
+          116.668359375,
+          117.088671875
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "ring",
+      "Vertices": 4096,
+      "InputSha256": "8fc4a4c90d87e4a450f64a63ba2d6b53eeedeb16d24d8aeba48dc2d928758900",
+      "Accepted": true,
+      "Value": 31415.914215112,
+      "Statistics": {
+        "Vertices": 4096,
+        "Comparisons": 4095,
+        "NeighborChecks": 4095,
+        "ExactPredicates": 1,
+        "PeakActive": 2,
+        "SignedArea": 31415.914215112
+      },
+      "Baseline": {
+        "Iterations": 256,
+        "MedianUs": 214.375390625,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          214.375390625,
+          228.173046875,
+          214.23515625,
+          214.060546875,
+          214.48984375
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 64,
+        "MedianUs": 816.0453125,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          812.5265625,
+          816.0453125,
+          816.8296875,
+          814.8515625,
+          818.609375
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "radial-star",
+      "Vertices": 4096,
+      "InputSha256": "4113d493c01d7cd8aa21d8a84a5149284f86a64170e5025f9322468e569a191c",
+      "Accepted": true,
+      "Value": 314.1591421511169,
+      "Statistics": {
+        "Vertices": 4096,
+        "Comparisons": 40361,
+        "NeighborChecks": 9205,
+        "ExactPredicates": 2045,
+        "PeakActive": 2034,
+        "SignedArea": 314.1591421511169
+      },
+      "Baseline": {
+        "Iterations": 2,
+        "MedianUs": 18712,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          18648.75,
+          18645,
+          18757.9,
+          18801.25,
+          18712
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 32,
+        "MedianUs": 1447.80625,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          1444.678125,
+          1449.26875,
+          1450.75625,
+          1439.61875,
+          1447.80625
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "stacked-bars",
+      "Vertices": 4096,
+      "InputSha256": "d09865962f2605ef04171210859bee6f3e47b0fcb1f12cd7a2c9eff8eaf93d40",
+      "Accepted": false,
+      "Value": 8388608,
+      "Statistics": {
+        "Vertices": 4096,
+        "Comparisons": 2,
+        "NeighborChecks": 1,
+        "ExactPredicates": 2,
+        "PeakActive": 2,
+        "SignedArea": 0
+      },
+      "Baseline": {
+        "Iterations": 8,
+        "MedianUs": 4713.925,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          4759.1,
+          4734.2875,
+          4713.925,
+          4705.8625,
+          4705.25
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 8,
+        "MedianUs": 5069.4875,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          5058.7625,
+          5053.275,
+          5211.325,
+          5149.825,
+          5069.4875
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "diagonal-bars",
+      "Vertices": 4096,
+      "InputSha256": "06dcee86671410fb45efbe7392620cac86344583c34d2097ebde6ab0396fba95",
+      "Accepted": false,
+      "Value": 8388608,
+      "Statistics": {
+        "Vertices": 4096,
+        "Comparisons": 2,
+        "NeighborChecks": 1,
+        "ExactPredicates": 2,
+        "PeakActive": 2,
+        "SignedArea": 0
+      },
+      "Baseline": {
+        "Iterations": 1,
+        "MedianUs": 35865.2,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          35857,
+          38526,
+          35865.2,
+          35784.2,
+          35894.4
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 1,
+        "MedianUs": 36204.4,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          36219.8,
+          38596.3,
+          36102.9,
+          36144.7,
+          36204.4
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "simple-comb",
+      "Vertices": 4098,
+      "InputSha256": "8b221c06292228c1819adab3d9559ee919139a6cff14d1119c4aec659752d4ee",
+      "Accepted": true,
+      "Value": 8390655,
+      "Statistics": {
+        "Vertices": 4098,
+        "Comparisons": 35413,
+        "NeighborChecks": 8189,
+        "ExactPredicates": 1024,
+        "PeakActive": 2048,
+        "SignedArea": 8390655
+      },
+      "Baseline": {
+        "Iterations": 16,
+        "MedianUs": 3158.11875,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          3158.11875,
+          3164.0625,
+          3160.48125,
+          3148.575,
+          3152.0625
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 32,
+        "MedianUs": 1196.35625,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          1224.734375,
+          1191.234375,
+          1244.06875,
+          1188.7625,
+          1196.35625
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "simple-diagonal-comb",
+      "Vertices": 4098,
+      "InputSha256": "2eea7a2a97992e7774ef8c5ca3f6e47ad053d9e790aa4112e70615c0081b1d35",
+      "Accepted": true,
+      "Value": 8390655,
+      "Statistics": {
+        "Vertices": 4098,
+        "Comparisons": 35413,
+        "NeighborChecks": 8189,
+        "ExactPredicates": 1025,
+        "PeakActive": 2048,
+        "SignedArea": 8390655
+      },
+      "Baseline": {
+        "Iterations": 1,
+        "MedianUs": 34175.2,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          34249.8,
+          34175.2,
+          34206.8,
+          33899.3,
+          34098.4
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 32,
+        "MedianUs": 1217.7,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          1217.153125,
+          1220.28125,
+          1228.00625,
+          1217.7,
+          1215.940625
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "vertical-band",
+      "Vertices": 4096,
+      "InputSha256": "ba228326cdae5ad43fbc208c6d6f57923b37be24d9b3537381604d8fffd5dba0",
+      "Accepted": true,
+      "Value": 4094,
+      "Statistics": {
+        "Vertices": 4096,
+        "Comparisons": 4095,
+        "NeighborChecks": 4095,
+        "ExactPredicates": 1,
+        "PeakActive": 2,
+        "SignedArea": -4094
+      },
+      "Baseline": {
+        "Iterations": 128,
+        "MedianUs": 246.484375,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          246.484375,
+          246.04921875,
+          246.5984375,
+          253.084375,
+          245.859375
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 64,
+        "MedianUs": 516.2953125,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          517.128125,
+          515.703125,
+          516.2953125,
+          515.7828125,
+          517.0390625
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    },
+    {
+      "Name": "late-crossing",
+      "Vertices": 6,
+      "InputSha256": "4ca8ef75a1f3b3809a42e666af8b662b61bddffb9158dd899d68ad8bbf3eae62",
+      "Accepted": false,
+      "Value": 1999,
+      "Statistics": {
+        "Vertices": 6,
+        "Comparisons": 3,
+        "NeighborChecks": 3,
+        "ExactPredicates": 1,
+        "PeakActive": 2,
+        "SignedArea": 0
+      },
+      "Baseline": {
+        "Iterations": 65536,
+        "MedianUs": 0.48682708740234376,
+        "MedianBytes": 0,
+        "SamplesUs": [
+          0.4870361328125,
+          0.48682708740234376,
+          0.48334197998046874,
+          0.48977508544921877,
+          0.48129119873046877
+        ],
+        "SamplesBytes": [
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "Hybrid": {
+        "Iterations": 32768,
+        "MedianUs": 0.94437255859375,
+        "MedianBytes": 64,
+        "SamplesUs": [
+          0.944281005859375,
+          0.9445587158203125,
+          0.94437255859375,
+          0.9452239990234375,
+          0.9414947509765625
+        ],
+        "SamplesBytes": [
+          64,
+          64,
+          64,
+          64,
+          64
+        ]
+      }
+    }
+  ]
+}

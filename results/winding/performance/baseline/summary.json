@@ -1,0 +1,374 @@
+[
+  {
+    "Workload": "degenerate-grid",
+    "Vertices": 64,
+    "Method": "ClipperEndpointBridged",
+    "MedianUs": 331.8890625,
+    "MinUs": 331.0984375,
+    "MaxUs": 336.8078125,
+    "Bytes": 249208,
+    "Values": [
+      35.78590244306901
+    ]
+  },
+  {
+    "Workload": "degenerate-grid",
+    "Vertices": 64,
+    "Method": "WindingEndpointBridged",
+    "MedianUs": 459.98125,
+    "MinUs": 457.740625,
+    "MaxUs": 507.2265625,
+    "Bytes": 0,
+    "Values": [
+      35.78590508330492
+    ]
+  },
+  {
+    "Workload": "degenerate-grid",
+    "Vertices": 256,
+    "Method": "ClipperEndpointBridged",
+    "MedianUs": 5517.825,
+    "MinUs": 5489.275,
+    "MaxUs": 5576.675,
+    "Bytes": 2036144,
+    "Values": [
+      42.88496960508802
+    ]
+  },
+  {
+    "Workload": "degenerate-grid",
+    "Vertices": 256,
+    "Method": "WindingEndpointBridged",
+    "MedianUs": 8256.375,
+    "MinUs": 8188.575,
+    "MaxUs": 8462.175,
+    "Bytes": 0,
+    "Values": [
+      42.88497122632596
+    ]
+  },
+  {
+    "Workload": "dense-graph",
+    "Vertices": 64,
+    "Method": "ClipperEndpointBridged",
+    "MedianUs": 30.3125,
+    "MinUs": 29.575390625,
+    "MaxUs": 31.69931640625,
+    "Bytes": 66536,
+    "Values": [
+      6.300000505220002
+    ]
+  },
+  {
+    "Workload": "dense-graph",
+    "Vertices": 64,
+    "Method": "GraphIntegral",
+    "MedianUs": 3.57265625,
+    "MinUs": 3.437353515625,
+    "MaxUs": 3.64228515625,
+    "Bytes": 0,
+    "Values": [
+      6.299999966024399
+    ]
+  },
+  {
+    "Workload": "dense-graph",
+    "Vertices": 64,
+    "Method": "WindingEndpointBridged",
+    "MedianUs": 13.93359375,
+    "MinUs": 13.88515625,
+    "MaxUs": 14.049072265625,
+    "Bytes": 0,
+    "Values": [
+      6.299999966024439
+    ]
+  },
+  {
+    "Workload": "dense-graph",
+    "Vertices": 256,
+    "Method": "ClipperEndpointBridged",
+    "MedianUs": 118.873828125,
+    "MinUs": 117.62265625,
+    "MaxUs": 120.141796875,
+    "Bytes": 260168,
+    "Values": [
+      25.500000521500006
+    ]
+  },
+  {
+    "Workload": "dense-graph",
+    "Vertices": 256,
+    "Method": "GraphIntegral",
+    "MedianUs": 14.22158203125,
+    "MinUs": 13.739111328125,
+    "MaxUs": 14.592041015625,
+    "Bytes": 0,
+    "Values": [
+      25.500000011318605
+    ]
+  },
+  {
+    "Workload": "dense-graph",
+    "Vertices": 256,
+    "Method": "WindingEndpointBridged",
+    "MedianUs": 57.3568359375,
+    "MinUs": 56.5546875,
+    "MaxUs": 59.256640625,
+    "Bytes": 0,
+    "Values": [
+      25.500000011310583
+    ]
+  },
+  {
+    "Workload": "dense-graph",
+    "Vertices": 1024,
+    "Method": "ClipperEndpointBridged",
+    "MedianUs": 499.2078125,
+    "MinUs": 498.5203125,
+    "MaxUs": 501.1609375,
+    "Bytes": 1034408,
+    "Values": [
+      102.30000058681962
+    ]
+  },
+  {
+    "Workload": "dense-graph",
+    "Vertices": 1024,
+    "Method": "GraphIntegral",
+    "MedianUs": 57.1787109375,
+    "MinUs": 55.25,
+    "MaxUs": 58.9986328125,
+    "Bytes": 0,
+    "Values": [
+      102.30000008264216
+    ]
+  },
+  {
+    "Workload": "dense-graph",
+    "Vertices": 1024,
+    "Method": "WindingEndpointBridged",
+    "MedianUs": 269.13125,
+    "MinUs": 268.2796875,
+    "MaxUs": 269.18125,
+    "Bytes": 0,
+    "Values": [
+      102.30000008262344
+    ]
+  },
+  {
+    "Workload": "filled-regions",
+    "Vertices": 64,
+    "Method": "ClipperFilledRegionOverlap",
+    "MedianUs": 52.621875,
+    "MinUs": 51.8935546875,
+    "MaxUs": 54.0255859375,
+    "Bytes": 63992,
+    "Values": [
+      1.437905359871499
+    ]
+  },
+  {
+    "Workload": "filled-regions",
+    "Vertices": 64,
+    "Method": "WindingFilledRegions",
+    "MedianUs": 14.851123046875,
+    "MinUs": 14.714990234375,
+    "MaxUs": 15.284814453125,
+    "Bytes": 0,
+    "Values": [
+      1.4379057089030163
+    ]
+  },
+  {
+    "Workload": "filled-regions",
+    "Vertices": 256,
+    "Method": "ClipperFilledRegionOverlap",
+    "MedianUs": 193.46640625,
+    "MinUs": 192.3765625,
+    "MaxUs": 200.26015625,
+    "Bytes": 214616,
+    "Values": [
+      1.456471100346999
+    ]
+  },
+  {
+    "Workload": "filled-regions",
+    "Vertices": 256,
+    "Method": "WindingFilledRegions",
+    "MedianUs": 66.3078125,
+    "MinUs": 65.45390625,
+    "MaxUs": 70.1107421875,
+    "Bytes": 0,
+    "Values": [
+      1.4564706372339387
+    ]
+  },
+  {
+    "Workload": "filled-regions",
+    "Vertices": 1024,
+    "Method": "ClipperFilledRegionOverlap",
+    "MedianUs": 733.23125,
+    "MinUs": 729.234375,
+    "MaxUs": 876.8625,
+    "Bytes": 816920,
+    "Values": [
+      1.4576341949045002
+    ]
+  },
+  {
+    "Workload": "filled-regions",
+    "Vertices": 1024,
+    "Method": "WindingFilledRegions",
+    "MedianUs": 289.7515625,
+    "MinUs": 289.66796875,
+    "MaxUs": 292.878125,
+    "Bytes": 0,
+    "Values": [
+      1.4576342760037142
+    ]
+  },
+  {
+    "Workload": "random-walks",
+    "Vertices": 64,
+    "Method": "ClipperEndpointBridged",
+    "MedianUs": 57.4466796875,
+    "MinUs": 56.771875,
+    "MaxUs": 58.0767578125,
+    "Bytes": 69984,
+    "Values": [
+      18.289305266607492
+    ]
+  },
+  {
+    "Workload": "random-walks",
+    "Vertices": 64,
+    "Method": "WindingEndpointBridged",
+    "MedianUs": 26.1306640625,
+    "MinUs": 25.60166015625,
+    "MaxUs": 26.76767578125,
+    "Bytes": 0,
+    "Values": [
+      18.289305714348718
+    ]
+  },
+  {
+    "Workload": "random-walks",
+    "Vertices": 256,
+    "Method": "ClipperEndpointBridged",
+    "MedianUs": 322.515625,
+    "MinUs": 322.290625,
+    "MaxUs": 344.26875,
+    "Bytes": 239552,
+    "Values": [
+      75.37160117609851
+    ]
+  },
+  {
+    "Workload": "random-walks",
+    "Vertices": 256,
+    "Method": "WindingEndpointBridged",
+    "MedianUs": 217.340625,
+    "MinUs": 217.29140625,
+    "MaxUs": 223.11953125,
+    "Bytes": 0,
+    "Values": [
+      75.37159959168967
+    ]
+  },
+  {
+    "Workload": "random-walks",
+    "Vertices": 1024,
+    "Method": "ClipperEndpointBridged",
+    "MedianUs": 2255.2875,
+    "MinUs": 2239.50625,
+    "MaxUs": 2387.13125,
+    "Bytes": 1019432,
+    "Values": [
+      283.9691295669114
+    ]
+  },
+  {
+    "Workload": "random-walks",
+    "Vertices": 1024,
+    "Method": "WindingEndpointBridged",
+    "MedianUs": 1279.81875,
+    "MinUs": 1275.4375,
+    "MaxUs": 1298.775,
+    "Bytes": 0,
+    "Values": [
+      283.9691437399268
+    ]
+  },
+  {
+    "Workload": "similar-strokes",
+    "Vertices": 64,
+    "Method": "ClipperEndpointBridged",
+    "MedianUs": 26.94951171875,
+    "MinUs": 26.25029296875,
+    "MaxUs": 28.11220703125,
+    "Bytes": 38960,
+    "Values": [
+      0.14912006935400018
+    ]
+  },
+  {
+    "Workload": "similar-strokes",
+    "Vertices": 64,
+    "Method": "WindingEndpointBridged",
+    "MedianUs": 13.820849609375,
+    "MinUs": 13.799658203125,
+    "MaxUs": 14.409423828125,
+    "Bytes": 0,
+    "Values": [
+      0.14912008547189545
+    ]
+  },
+  {
+    "Workload": "similar-strokes",
+    "Vertices": 256,
+    "Method": "ClipperEndpointBridged",
+    "MedianUs": 99.288671875,
+    "MinUs": 99.25859375,
+    "MaxUs": 102.543359375,
+    "Bytes": 130920,
+    "Values": [
+      0.15073735096649998
+    ]
+  },
+  {
+    "Workload": "similar-strokes",
+    "Vertices": 256,
+    "Method": "WindingEndpointBridged",
+    "MedianUs": 46.505859375,
+    "MinUs": 46.1533203125,
+    "MaxUs": 47.1638671875,
+    "Bytes": 0,
+    "Values": [
+      0.15073745199315064
+    ]
+  },
+  {
+    "Workload": "similar-strokes",
+    "Vertices": 1024,
+    "Method": "ClipperEndpointBridged",
+    "MedianUs": 379.984375,
+    "MinUs": 365.9203125,
+    "MaxUs": 382.98125,
+    "Bytes": 464936,
+    "Values": [
+      0.1508367945384994
+    ]
+  },
+  {
+    "Workload": "similar-strokes",
+    "Vertices": 1024,
+    "Method": "WindingEndpointBridged",
+    "MedianUs": 216.14609375,
+    "MinUs": 213.99140625,
+    "MaxUs": 219.43671875,
+    "Bytes": 0,
+    "Values": [
+      0.15083685702954172
+    ]
+  }
+]
