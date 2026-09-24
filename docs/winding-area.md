@@ -121,9 +121,20 @@ Three fresh processes, tiered compilation disabled, nine batch samples each, mea
 
 The specialized `PolylineArea.BetweenGraphs` remains 3–4× faster than `WindingArea` on graphs, since it needs no crossing search. On the degenerate grid family nearly every edge pair crosses and exact predicates dominate. There `WindingArea` is not faster than Clipper2, only allocation-free. Timings describe this workstation and these fixtures only.
 
+## Consequence for area-only recognition
+
+The original MPR001 experiment ranked templates by a loop-sum area close to `AbsoluteWinding`, while the frozen evaluation used NonZero. No new held-out evaluation is needed to bound the difference, and none was run. A prediction can change only where the area-only winning template changes. Those counts come from the table above and use no labels. Added to the published area-only accuracy in [recognition-evaluation.md](recognition-evaluation.md), they give an upper bound for `AbsoluteWinding` area alone on the same frozen banks:
+
+| | Published NonZero area | Rankings with a changed winner | Upper bound, AbsoluteWinding area | Published RMS | Published DTW |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| $1, all 4,800 records (14,400 trials) | 85.319% | 218 (1.514%) | 86.833% | 97.146% | not included |
+| Pendigits, supported 2,744 (8,232 trials) | 72.631% | 381 (4.628%) | 77.259% | 84.329% | 89.043% |
+
+Even if every changed ranking became correct, absolute-winding area alone would remain well below RMS on both datasets. A combined RMS/AbsoluteWinding score would need a new weight selection, a tuning round that [protocol v1](recognition-protocol.md) excludes unless it is registered in advance. It is not pursued, because DTW already exceeds the published digit combination by 3.6 points.
+
 ## Limits
 
 - No contours are produced; use the Clipper2-based methods for resolved boundaries.
 - Candidate search is quadratic in the worst case.
 - Values carry floating-point rounding. Results differ from the Clipper2-based methods by their quantization, which is `1e-6` by default.
-- `AbsoluteWinding` changes 1.5% ($1) to 4.6% (Pendigits) of area-only template winners. Whether it ranks better has not been tested by the frozen protocol. [Recognition protocol v1](recognition-protocol.md) and its verdict are unchanged.
+- `AbsoluteWinding` changes 1.5% ($1) to 4.6% (Pendigits) of area-only template winners; the bound above caps what that can mean for accuracy. [Recognition protocol v1](recognition-protocol.md) and its verdict are unchanged.
