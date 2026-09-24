@@ -208,8 +208,29 @@ internal static class RobustOrientation
         BigInteger da = Determinant(s, 0, 2, 4), db = Determinant(s, 0, 2, 6);
         t = 0;
         if (da.IsZero && db.IsZero) return false;
-        t = (double)((da << 62) / (da - db)) / 4611686018427387904.0; // 2^62
+        t = Ratio(BigInteger.Abs(da), BigInteger.Abs(da - db));
         return true;
+    }
+
+    // numerator / denominator for 0 <= numerator <= denominator, with relative (not absolute) precision:
+    // the integer quotient keeps at least 64 significant bits before scaling back by a power of two.
+    internal static double Ratio(BigInteger numerator, BigInteger denominator)
+    {
+        if (numerator.IsZero) return 0;
+        int shift = 64 + BitLength(denominator) - BitLength(numerator);
+        double quotient = (double)((numerator << shift) / denominator);
+        // Two half steps avoid a premature underflow of 2^-shift for very small ratios.
+        return quotient * Math.Pow(2, -(shift / 2)) * Math.Pow(2, -(shift - shift / 2));
+    }
+
+    private static int BitLength(BigInteger positive)
+    {
+        byte[] bytes = positive.ToByteArray();
+        int top = bytes.Length - 1;
+        while (top > 0 && bytes[top] == 0) top--;
+        int bits = top * 8;
+        for (int value = bytes[top]; value != 0; value >>= 1) bits++;
+        return bits;
     }
 
     // (p_b - p_a) x (p_c - p_a) for points stored as consecutive (x, y) pairs starting at the given offsets.

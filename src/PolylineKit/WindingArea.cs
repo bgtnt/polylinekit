@@ -80,9 +80,16 @@ public readonly struct WindingOverlapResult
 /// (shared vertices, vertices on edges, collinear overlap) are resolved by Simulation of Simplicity as one
 /// consistent infinitesimal perturbation of the input. Area is continuous in the vertices, so the result is the
 /// exact area of the given binary64 input up to rounding in crossing positions, products and summation.
-/// Candidate pairs come from an x-sorted sweep: O(n log n + candidates) time, with candidates O(n^2) in the
-/// worst case. Working buffers are reused per thread; steady-state calls on inputs whose predicates are all
-/// certified allocate no managed memory. Results differ from the Clipper2-based methods by their quantization.
+/// Shoelace terms are taken relative to a path's own bounds center (for an intersection, the center of the
+/// overlapping bounds) in the form cross(a - o, b - a); their rounding grows with the distance of edges from
+/// that center, which matters for one closed path whose parts are far apart relative to their size.
+/// Time is O(n log n + m + k log k) for n edges, m candidate pairs from an x-sorted sweep and k crossings;
+/// m and k are O(n^2) in the worst case. Each call uses its own working storage: a per-thread workspace is
+/// reused by consecutive calls, and a call made while another is active on the same thread (for example from
+/// a list indexer) gets a separate one. Warm calls whose predicates are decided by the filter or by expansion
+/// arithmetic allocate no managed memory; first use, buffer growth, nested calls and the integer path do, and
+/// the per-thread workspace keeps its largest size. Results differ from the Clipper2-based methods by their
+/// quantization.
 /// </remarks>
 public static class WindingArea
 {
@@ -97,12 +104,17 @@ public static class WindingArea
     {
         if (path is null) throw new ArgumentNullException(nameof(path));
         if (path.Count == 0) throw new ArgumentException("The path must not be empty.", nameof(path));
-        Point2[] v = WindingEngine.Vertices(path.Count);
-        int n = 0;
-        for (int i = 0; i < path.Count; i++) WindingEngine.Append(v, ref n, 0, path[i], nameof(path));
-        WindingEngine.CloseLoop(v, ref n, 0);
-        if (n < 3) throw new ArgumentException("The path requires at least 3 vertices after duplicate removal.", nameof(path));
-        return WindingEngine.SingleLoop(v, n);
+        var workspace = WindingEngine.Workspace.Rent();
+        try
+        {
+            Point2[] v = workspace.VertexBuffer(path.Count);
+            int n = 0;
+            for (int i = 0; i < path.Count; i++) WindingEngine.Append(v, ref n, 0, path[i], nameof(path));
+            WindingEngine.CloseLoop(v, ref n, 0);
+            if (n < 3) throw new ArgumentException("The path requires at least 3 vertices after duplicate removal.", nameof(path));
+            return WindingEngine.SingleLoop(workspace, n);
+        }
+        finally { WindingEngine.Workspace.Return(workspace); }
     }
 
     /// <summary>Winding integrals of the closed walk first + reverse(second), joined by straight endpoint connectors.</summary>
@@ -117,12 +129,17 @@ public static class WindingArea
     {
         int firstCount = CleanCount(first, nameof(first)), secondCount = CleanCount(second, nameof(second));
         if (firstCount < 2 || secondCount < 2) throw new ArgumentException("Each path requires at least 2 vertices after duplicate removal.");
-        Point2[] v = WindingEngine.Vertices(first.Count + second.Count);
-        int n = 0;
-        for (int i = 0; i < first.Count; i++) WindingEngine.Append(v, ref n, 0, first[i], nameof(first));
-        for (int i = second.Count - 1; i >= 0; i--) WindingEngine.Append(v, ref n, 0, second[i], nameof(second));
-        WindingEngine.CloseLoop(v, ref n, 0);
-        return WindingEngine.SingleLoop(v, n);
+        var workspace = WindingEngine.Workspace.Rent();
+        try
+        {
+            Point2[] v = workspace.VertexBuffer(first.Count + second.Count);
+            int n = 0;
+            for (int i = 0; i < first.Count; i++) WindingEngine.Append(v, ref n, 0, first[i], nameof(first));
+            for (int i = second.Count - 1; i >= 0; i--) WindingEngine.Append(v, ref n, 0, second[i], nameof(second));
+            WindingEngine.CloseLoop(v, ref n, 0);
+            return WindingEngine.SingleLoop(workspace, n);
+        }
+        finally { WindingEngine.Workspace.Return(workspace); }
     }
 
     /// <summary>Intersection, union and symmetric-difference areas of two independently filled closed paths.</summary>
@@ -142,15 +159,20 @@ public static class WindingArea
         if (second is null) throw new ArgumentNullException(nameof(second));
         if (first.Count == 0) throw new ArgumentException("The path must not be empty.", nameof(first));
         if (second.Count == 0) throw new ArgumentException("The path must not be empty.", nameof(second));
-        Point2[] v = WindingEngine.Vertices(first.Count + second.Count);
-        int n = 0;
-        for (int i = 0; i < first.Count; i++) WindingEngine.Append(v, ref n, 0, first[i], nameof(first));
-        WindingEngine.CloseLoop(v, ref n, 0);
-        int split = n;
-        for (int i = 0; i < second.Count; i++) WindingEngine.Append(v, ref n, split, second[i], nameof(second));
-        WindingEngine.CloseLoop(v, ref n, split);
-        if (split < 3 || n - split < 3) throw new ArgumentException("Each path requires at least 3 vertices after duplicate removal.");
-        return WindingEngine.TwoLoops(v, split, n, fillRule);
+        var workspace = WindingEngine.Workspace.Rent();
+        try
+        {
+            Point2[] v = workspace.VertexBuffer(first.Count + second.Count);
+            int n = 0;
+            for (int i = 0; i < first.Count; i++) WindingEngine.Append(v, ref n, 0, first[i], nameof(first));
+            WindingEngine.CloseLoop(v, ref n, 0);
+            int split = n;
+            for (int i = 0; i < second.Count; i++) WindingEngine.Append(v, ref n, split, second[i], nameof(second));
+            WindingEngine.CloseLoop(v, ref n, split);
+            if (split < 3 || n - split < 3) throw new ArgumentException("Each path requires at least 3 vertices after duplicate removal.");
+            return WindingEngine.TwoLoops(workspace, split, n, fillRule);
+        }
+        finally { WindingEngine.Workspace.Return(workspace); }
     }
 
     private static int CleanCount(IReadOnlyList<Point2> path, string name)

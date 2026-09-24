@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Numerics;
 using Clipper2Lib;
 using PolylineKit;
@@ -21,6 +22,7 @@ internal static class WindingAreaChecks
         CheckMetamorphic();
         CheckFilledRegions();
         CheckReviewedNearDegeneracy();
+        CheckReviewRegressions();
         CheckAllocations();
         CheckInvalidInputs();
         Console.WriteLine($"Clipper2 disagreements on degenerate grid inputs: {ClipperDisagreements.Count} of {checkedClipper} checked; winding matched the slab sweep in every case.");
@@ -118,6 +120,15 @@ internal static class WindingAreaChecks
             True("extreme-exponent separated triple " + exponent, RobustOrientation.ExactSign(a, b, c) == RationalSign(a, b, c));
         }
         True("exact sign trials include true zeros and nonzeros", zero > 200 && nonzero > 1000);
+
+        // Components below 2^-400 take the integer path. The crossing parameter 1 / (1 + 2^m) rounds to 2^-m;
+        // an absolute 2^-62 grid would return zero here.
+        double tinyScale = Math.Pow(2, -450);
+        foreach (int m in new[] { 70, 100, 300, 500 })
+        {
+            bool crosses = RobustOrientation.CrossingParameter(new(-tinyScale, 0), new(tinyScale, 0), new(0, -tinyScale * Math.Pow(2, -m)), new(0, tinyScale), out double t);
+            True($"integer-path crossing parameter 2^-{m} is relative", crosses && NearlyRelative(Math.Pow(2, -m), t, 1e-15));
+        }
     }
 
     private static void CheckGraphAgreement()
@@ -288,6 +299,142 @@ internal static class WindingAreaChecks
             if (x == -.5) True("exactly degenerate bridge used symbolic predicates", result.SymbolicTieBreakCount > 0);
         }
     }
+
+    // Regressions for the independent review of 7dee036.
+    private static void CheckReviewRegressions()
+    {
+        static Point2[] Square(double x, double y, double size = 1) => [new(x, y), new(x + size, y), new(x + size, y + size), new(x, y + size)];
+        PathFillRule[] rules = [PathFillRule.NonZero, PathFillRule.EvenOdd];
+
+        // Separated small regions: a shared distant origin used to cancel their whole area.
+        foreach (double distance in new[] { 1e6, 1e8, 1e10, 1e12, 1e14 })
+        foreach (PathFillRule rule in rules)
+        {
+            var apart = WindingArea.FilledRegions(Square(0, 0), Square(distance, distance), rule);
+            Overlap($"unit squares {distance:G} apart {rule}", apart, 1, 1, 0, 2, 2);
+            True($"unit squares {distance:G} apart Jaccard {rule}", apart.JaccardDistance == 1 && apart.IntersectionOverUnion == 0);
+            Overlap($"overlapping unit squares at {distance:G} {rule}",
+                WindingArea.FilledRegions(Square(distance, distance), Square(distance + .5, distance + .5), rule), 1, 1, .25, 1.75, 1.5);
+            Areas($"unit square at {distance:G} {rule}", WindingArea.ClosedPath(Square(distance, -distance)), 1, 1, 1, 1);
+        }
+        var inside = WindingArea.FilledRegions(Square(0, 0, 1e8), Square(1e8 - 3, 1e8 - 3));
+        Near("small square in a distant corner of a large one: second", 1, inside.SecondArea, 0);
+        Near("small square in a distant corner of a large one: intersection", 1, inside.IntersectionArea, 1e-12);
+        Near("small square in a distant corner of a large one: union", 1e16, inside.UnionArea, 1e-15);
+        foreach (double distance in new[] { 1e4, 1e8 })
+        {
+            // One closed path: two unit squares joined by a retraced bridge. Rounding grows with the distance
+            // of edges from the path's own center, so this bound is looser than for separate paths.
+            Point2[] walk = [.. Square(0, 0), new(0, 0), .. Square(distance, distance), new(distance, distance)];
+            var result = WindingArea.ClosedPath(walk);
+            double tolerance = 1e-15 * distance * 16;
+            Near($"retraced bridge {distance:G} nonzero", 2, result.NonZero, tolerance);
+            Near($"retraced bridge {distance:G} absolute", 2, result.AbsoluteWinding, tolerance);
+            Near($"retraced bridge {distance:G} signed", 2, result.Signed, tolerance);
+        }
+
+        // Tiny coordinates: a squared edge length underflowed and a guessed midpoint halved the area.
+        double tiny = Math.Pow(2, -600);
+        var flat = WindingArea.ClosedPath([new(0, 0), new(3 * tiny, 0), new(-2 * tiny, 0), new(0, -1), new(3 * tiny, 0)]);
+        foreach (var (name, value) in new[] { ("nonzero", flat.NonZero), ("evenodd", flat.EvenOdd), ("absolute", flat.AbsoluteWinding), ("signed", flat.Signed) })
+            True("tiny retraced triangle " + name, NearlyRelative(2.5 * tiny, value, 1e-12));
+        True("tiny retraced triangle keeps |w| >= |signed|", flat.AbsoluteWinding >= Math.Abs(flat.Signed) * (1 - 1e-12));
+
+        // Anisotropic and tiny scales on degenerate integer walks and region pairs, against unscaled oracles.
+        Random random = new(734221);
+        foreach (var (sx, sy) in new[] { (Math.Pow(2, -600), Math.Pow(2, 300)), (Math.Pow(2, 300), Math.Pow(2, -600)), (Math.Pow(2, -500), Math.Pow(2, -500)), (1e-3, 1e5) })
+        for (int trial = 0; trial < 250; trial++)
+        {
+            Point2[] points = ClosedClean(Enumerable.Range(0, random.Next(4, 16)).Select(_ => new Point2(random.Next(-3, 4), random.Next(-3, 4))).ToArray());
+            if (points.Length < 3) continue;
+            Point2[] scaled = points.Select(p => new Point2(p.X * sx, p.Y * sy)).ToArray();
+            var expected = ContourSweep.Measure(points);
+            var actual = WindingArea.ClosedPath(scaled);
+            double areaUnit = sx * sy;
+            string name = $"anisotropic ({sx:G3},{sy:G3}) #{trial}";
+            True(name + " nonzero", NearlyScaled(expected.NonZero, actual.NonZero, areaUnit));
+            True(name + " evenodd", NearlyScaled(expected.EvenOdd, actual.EvenOdd, areaUnit));
+            True(name + " absolute", NearlyScaled(expected.AbsoluteWinding, actual.AbsoluteWinding, areaUnit));
+            True(name + " signed", NearlyScaled(expected.Signed, actual.Signed, areaUnit));
+            if (trial % 5 != 0) continue;
+            Point2[] other = ClosedClean(Enumerable.Range(0, random.Next(4, 12)).Select(_ => new Point2(random.Next(-3, 4), random.Next(-3, 4))).ToArray());
+            if (other.Length < 3) continue;
+            var regions = RegionSweep.Measure(points, other, true);
+            var overlap = WindingArea.FilledRegions(scaled, other.Select(p => new Point2(p.X * sx, p.Y * sy)).ToArray());
+            True(name + " regions intersection", NearlyScaled(regions.Intersection, overlap.IntersectionArea, areaUnit));
+            True(name + " regions union", NearlyScaled(regions.Union, overlap.UnionArea, areaUnit));
+            True(name + " regions difference", NearlyScaled(regions.SymmetricDifference, overlap.SymmetricDifferenceArea, areaUnit));
+        }
+
+        // Large translations keep results close to the untranslated ones; the input itself is rounded.
+        for (int trial = 0; trial < 100; trial++)
+        {
+            Point2[] walk = ClosedClean(RandomWalk(random, 6 + trial % 20, 1, false));
+            if (walk.Length < 3) continue;
+            var reference = WindingArea.ClosedPath(walk);
+            var moved = WindingArea.ClosedPath(AffineTransform2D.Translation(1e8, -1e8).Apply(walk));
+            double tolerance = 1e-5 * Math.Max(1, reference.AbsoluteWinding);
+            Near("translated by 1e8 nonzero #" + trial, reference.NonZero, moved.NonZero, tolerance);
+            Near("translated by 1e8 absolute #" + trial, reference.AbsoluteWinding, moved.AbsoluteWinding, tolerance);
+        }
+
+        // Calls nested inside a list indexer on the same thread must not share working storage.
+        Point2[] unit = Square(0, 0), shifted = Square(.5, .5);
+        Point2[] open = [new(0, 0), new(1, 1), new(2, 0)], openOther = [new(0, 1), new(1, 0), new(2, 1)];
+        var plainClosed = WindingArea.ClosedPath(unit);
+        var plainBridged = WindingArea.EndpointBridged(open, openOther);
+        var plainRegions = WindingArea.FilledRegions(unit, shifted);
+        Action[] nested =
+        [
+            () => WindingArea.ClosedPath(Square(10, 10, 10)),
+            () => WindingArea.EndpointBridged([new(5, 5), new(9, 1), new(7, 8)], [new(5, 9), new(9, 5)]),
+            () => WindingArea.FilledRegions(Square(20, 20, 3), Square(21, 21, 3)),
+            () => WindingArea.ClosedPath(new NestedList(Square(40, 40, 7), () => WindingArea.ClosedPath(Square(-9, -9, 4)))),
+            () => { try { WindingArea.ClosedPath([new(0, 0), new(double.NaN, 0), new(0, 1)]); } catch (ArgumentException) { } }
+        ];
+        for (int k = 0; k < nested.Length; k++)
+        {
+            string name = "nested call " + k;
+            Identical(name + " inside ClosedPath", plainClosed, WindingArea.ClosedPath(new NestedList(unit, nested[k])));
+            Identical(name + " inside EndpointBridged first", plainBridged, WindingArea.EndpointBridged(new NestedList(open, nested[k]), openOther));
+            Identical(name + " inside EndpointBridged second", plainBridged, WindingArea.EndpointBridged(open, new NestedList(openOther, nested[k])));
+            Identical(name + " inside FilledRegions first", plainRegions, WindingArea.FilledRegions(new NestedList(unit, nested[k]), shifted));
+            Identical(name + " inside FilledRegions second", plainRegions, WindingArea.FilledRegions(unit, new NestedList(shifted, nested[k])));
+        }
+        // An outer call that fails after a nested call still releases its storage.
+        Reject<InvalidOperationException>("indexer failure after a nested call", () => WindingArea.ClosedPath(new NestedList(unit, () =>
+        {
+            WindingArea.ClosedPath(Square(3, 3, 2));
+            throw new InvalidOperationException("indexer failure");
+        })));
+        Identical("call after a failed nested call", plainClosed, WindingArea.ClosedPath(unit));
+        Identical("regions after a failed nested call", plainRegions, WindingArea.FilledRegions(unit, shifted));
+    }
+
+    /// <summary>A valid list whose indexer runs other geometry when index 1 is read.</summary>
+    private sealed class NestedList(Point2[] data, Action onSecond) : IReadOnlyList<Point2>
+    {
+        public int Count => data.Length;
+        public Point2 this[int index] { get { if (index == 1) onSecond(); return data[index]; } }
+        public IEnumerator<Point2> GetEnumerator() => ((IEnumerable<Point2>)data).GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
+    private static bool NearlyRelative(double expected, double actual, double relative) =>
+        double.IsFinite(actual) && Math.Abs(expected - actual) <= relative * Math.Abs(expected);
+
+    // Scaled integer-grid results: compare in units of the area scale, which may be far from 1.
+    private static bool NearlyScaled(double unscaled, double actual, double unit) =>
+        double.IsFinite(actual) && Math.Abs(actual / unit - unscaled) <= 1e-9 * Math.Max(1, Math.Abs(unscaled));
+
+    private static void Identical(string name, WindingAreaResult expected, WindingAreaResult actual) =>
+        True(name, expected.NonZero == actual.NonZero && expected.EvenOdd == actual.EvenOdd &&
+            expected.AbsoluteWinding == actual.AbsoluteWinding && expected.Signed == actual.Signed && expected.CrossingCount == actual.CrossingCount);
+
+    private static void Identical(string name, WindingOverlapResult expected, WindingOverlapResult actual) =>
+        True(name, expected.FirstArea == actual.FirstArea && expected.SecondArea == actual.SecondArea &&
+            expected.IntersectionArea == actual.IntersectionArea && expected.UnionArea == actual.UnionArea &&
+            expected.SymmetricDifferenceArea == actual.SymmetricDifferenceArea);
 
     private static void CheckAllocations()
     {

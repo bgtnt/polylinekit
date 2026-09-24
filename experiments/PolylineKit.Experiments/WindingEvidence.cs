@@ -1,3 +1,4 @@
+using System.Numerics;
 using System.Text.Json;
 using Clipper2Lib;
 using PolylineKit;
@@ -6,7 +7,7 @@ namespace PolylineKit.Experiments;
 
 /// <summary>
 /// Arbitrates every degenerate check where Clipper2 disagreed with the winding engine and the slab sweep,
-/// using a third method: a scanline integral with a stated error bound.
+/// using a third method in exact rational arithmetic: vertical slabs split at every vertex and crossing.
 /// </summary>
 internal static class WindingEvidence
 {
@@ -19,44 +20,40 @@ internal static class WindingEvidence
             bool nonZero = name.EndsWith("NonZero", StringComparison.Ordinal);
             PathFillRule rule = nonZero ? PathFillRule.NonZero : PathFillRule.EvenOdd;
             FillRule clipperRule = nonZero ? FillRule.NonZero : FillRule.EvenOdd;
+            bool Filled(int w) => nonZero ? w != 0 : (w & 1) != 0;
             if (second is null)
             {
                 var winding = WindingArea.ClosedPath(first);
-                var sweep = ContourSweep.Measure(first);
-                double clipper = ClipperOracle.Contour(first, clipperRule);
-                double scanline = Scanline([first], [w => nonZero ? w[0] != 0 : (w[0] & 1) != 0], out double bound)[0];
+                Fraction exact = ExactAreas([first], [w => Filled(w[0])])[0];
+                double ours = nonZero ? winding.NonZero : winding.EvenOdd, clipper = ClipperOracle.Contour(first, clipperRule);
                 cases.Add(new
                 {
                     Name = name, Kind = "closed walk", FillRule = rule.ToString(), Input = first,
-                    Winding = nonZero ? winding.NonZero : winding.EvenOdd, SlabSweep = nonZero ? sweep.NonZero : sweep.EvenOdd,
-                    Clipper2Precision8 = clipper, Scanline = scanline, ScanlineErrorBound = bound,
-                    WindingWithinScanlineBound = Math.Abs((nonZero ? winding.NonZero : winding.EvenOdd) - scanline) <= bound,
-                    ClipperWithinScanlineBound = Math.Abs(clipper - scanline) <= bound
+                    Exact = exact.ToString(), ExactValue = exact.ToDouble(), Winding = ours, Clipper2Precision8 = clipper,
+                    WindingError = ours - exact.ToDouble(), Clipper2Error = clipper - exact.ToDouble()
                 });
             }
             else
             {
                 var winding = WindingArea.FilledRegions(first, second, rule);
-                var sweep = RegionSweep.Measure(first, second, nonZero);
                 PathsD subject = [new PathD(first.Select(p => new PointD(p.X, p.Y)))], clip = [new PathD(second.Select(p => new PointD(p.X, p.Y)))];
                 double Area(PathsD paths) => Math.Abs(Clipper.Area(paths));
-                bool Filled(int w) => nonZero ? w != 0 : (w & 1) != 0;
                 double[] clipper = [Area(Clipper.Union(subject, new PathsD(), clipperRule, 8)), Area(Clipper.Union(clip, new PathsD(), clipperRule, 8)),
                     Area(Clipper.Intersect(subject, clip, clipperRule, 8)), Area(Clipper.Union(subject, clip, clipperRule, 8)), Area(Clipper.Xor(subject, clip, clipperRule, 8))];
                 double[] ours = [winding.FirstArea, winding.SecondArea, winding.IntersectionArea, winding.UnionArea, winding.SymmetricDifferenceArea];
-                double[] slabs = [sweep.First, sweep.Second, sweep.Intersection, sweep.Union, sweep.SymmetricDifference];
-                double[] scanline = Scanline([first, second],
+                Fraction[] exact = ExactAreas([first, second],
                 [
                     w => Filled(w[0]), w => Filled(w[1]), w => Filled(w[0]) && Filled(w[1]),
                     w => Filled(w[0]) || Filled(w[1]), w => Filled(w[0]) != Filled(w[1])
-                ], out double bound);
+                ]);
                 cases.Add(new
                 {
                     Name = name, Kind = "filled regions", FillRule = rule.ToString(), Input = new[] { first, second },
                     Quantities = new[] { "first", "second", "intersection", "union", "symmetric difference" },
-                    Winding = ours, SlabSweep = slabs, Clipper2Precision8 = clipper, Scanline = scanline, ScanlineErrorBound = bound,
-                    WindingWithinScanlineBound = ours.Zip(scanline).All(x => Math.Abs(x.First - x.Second) <= bound),
-                    ClipperWithinScanlineBound = clipper.Zip(scanline).All(x => Math.Abs(x.First - x.Second) <= bound)
+                    Exact = exact.Select(e => e.ToString()).ToArray(), ExactValue = exact.Select(e => e.ToDouble()).ToArray(),
+                    Winding = ours, Clipper2Precision8 = clipper,
+                    WindingError = ours.Zip(exact).Select(x => x.First - x.Second.ToDouble()).ToArray(),
+                    Clipper2Error = clipper.Zip(exact).Select(x => x.First - x.Second.ToDouble()).ToArray()
                 });
             }
             Console.WriteLine("arbitrated " + name);
@@ -64,53 +61,76 @@ internal static class WindingEvidence
         Directory.CreateDirectory(directory);
         var report = new
         {
-            Description = "Degenerate integer-grid checks where Clipper2 2.0.0 (precision 8) disagreed with both WindingArea and an independent slab sweep, arbitrated by an independent scanline integral with a stated error bound.",
-            Clipper2 = typeof(Clipper).Assembly.GetName().Version?.ToString(), ScanlineRows = Rows,
-            ScanlineErrorBound = "(vertices + pairwise crossings + 1) * row height * width: exact interval lengths per row, midpoint rule in y, exact between breakpoint heights",
+            Description = "Degenerate integer-grid checks where Clipper2 2.0.0 (precision 8) disagreed with both WindingArea and an independent slab sweep, arbitrated by exact rational slab integration.",
+            Clipper2 = typeof(Clipper).Assembly.GetName().Version?.ToString(),
+            Method = "Integer inputs; vertical slabs split at every vertex x and every pairwise segment crossing x; inside a slab edge heights are linear, so rational mid-slab heights give the exact area. No floating-point arithmetic is involved.",
             Cases = cases
         };
         File.WriteAllText(Path.Combine(directory, "clipper-disagreements.json"), JsonSerializer.Serialize(report, Evidence.JsonOptions) + "\n");
     }
 
-    // Areas where each predicate on the loops' winding numbers holds. Every row integrates exact interval
-    // lengths at its mid height (the midpoint rule in y). Between y values of vertices and crossings those
-    // lengths are linear in y, so the rule is exact there; a row containing such a breakpoint errs by at most
-    // its height times the width. The bound counts all vertices and all pairwise crossings as breakpoints.
-    private static double[] Scanline(Point2[][] loops, Func<int[], bool>[] predicates, out double bound)
+    // Exact areas where each predicate on the loops' winding numbers holds, for integer-coordinate loops.
+    private static Fraction[] ExactAreas(Point2[][] loops, Func<int[], bool>[] predicates)
     {
-        var all = loops.SelectMany(l => l).ToArray();
-        double minX = all.Min(p => p.X), maxX = all.Max(p => p.X), minY = all.Min(p => p.Y), maxY = all.Max(p => p.Y);
-        double h = (maxY - minY) / Rows;
-        var edges = loops.SelectMany((l, id) => Enumerable.Range(0, l.Length).Select(i => (A: l[i], B: l[(i + 1) % l.Length], Loop: id)))
-            .Where(e => e.A.Y != e.B.Y).ToArray();
-        var areas = new double[predicates.Length];
-        var hits = new List<(double X, int Loop, int Delta)>();
-        int[] w = new int[loops.Length];
-        for (int row = 0; row < Rows; row++)
+        if (loops.SelectMany(l => l).Any(p => p.X != Math.Floor(p.X) || p.Y != Math.Floor(p.Y) || Math.Abs(p.X) > 1e9 || Math.Abs(p.Y) > 1e9))
+            throw new ArgumentException("Exact arbitration expects moderate integer coordinates.");
+        var edges = loops.SelectMany((l, id) => Enumerable.Range(0, l.Length)
+                .Select(i => (A: ((long)l[i].X, (long)l[i].Y), B: ((long)l[(i + 1) % l.Length].X, (long)l[(i + 1) % l.Length].Y), Loop: id)))
+            .Where(e => e.A != e.B).ToArray();
+        var cuts = new SortedSet<Fraction>(edges.Select(e => new Fraction(e.A.Item1)));
+        foreach (var e in edges)
+        foreach (var f in edges)
         {
-            double y = minY + (row + .5) * h;
-            hits.Clear();
-            foreach (var e in edges)
-                if ((e.A.Y <= y) != (e.B.Y <= y))
-                    hits.Add((e.A.X + (y - e.A.Y) * (e.B.X - e.A.X) / (e.B.Y - e.A.Y), e.Loop, e.B.Y > e.A.Y ? 1 : -1));
-            hits.Sort((a, b) => a.X.CompareTo(b.X));
+            long d1x = e.B.Item1 - e.A.Item1, d1y = e.B.Item2 - e.A.Item2, d2x = f.B.Item1 - f.A.Item1, d2y = f.B.Item2 - f.A.Item2;
+            long den = d1x * d2y - d1y * d2x;
+            if (den == 0) continue;
+            var t = new Fraction((f.A.Item1 - e.A.Item1) * d2y - (f.A.Item2 - e.A.Item2) * d2x, den);
+            var u = new Fraction((f.A.Item1 - e.A.Item1) * d1y - (f.A.Item2 - e.A.Item2) * d1x, den);
+            if (t.Sign < 0 || t > Fraction.One || u.Sign < 0 || u > Fraction.One) continue;
+            cuts.Add(new Fraction(e.A.Item1) + t * new Fraction(d1x));
+        }
+        var areas = Enumerable.Repeat(Fraction.Zero, predicates.Length).ToArray();
+        Fraction[] xs = cuts.ToArray();
+        int[] w = new int[loops.Length];
+        for (int k = 1; k < xs.Length; k++)
+        {
+            Fraction mid = (xs[k - 1] + xs[k]) * new Fraction(1, 2), width = xs[k] - xs[k - 1];
+            var active = edges.Where(e => new Fraction(Math.Min(e.A.Item1, e.B.Item1)) < mid && mid < new Fraction(Math.Max(e.A.Item1, e.B.Item1)))
+                .Select(e => (Y: new Fraction(e.A.Item2) + new Fraction(e.B.Item2 - e.A.Item2) * (mid - new Fraction(e.A.Item1)) / new Fraction(e.B.Item1 - e.A.Item1),
+                              e.Loop, Delta: e.B.Item1 > e.A.Item1 ? 1 : -1))
+                .OrderBy(e => e.Y).ToArray();
             Array.Clear(w, 0, w.Length);
-            // Winding at x = -infinity is zero; crossing an edge from left to right subtracts its upward delta.
-            for (int k = 0; k + 1 < hits.Count; k++)
+            for (int i = 0; i + 1 < active.Length; i++)
             {
-                w[hits[k].Loop] -= hits[k].Delta;
-                double length = hits[k + 1].X - hits[k].X;
-                for (int p = 0; p < predicates.Length; p++) if (predicates[p](w)) areas[p] += length * h;
+                w[active[i].Loop] += active[i].Delta;
+                Fraction piece = (active[i + 1].Y - active[i].Y) * width;
+                for (int p = 0; p < predicates.Length; p++) if (predicates[p](w)) areas[p] += piece;
             }
         }
-        int crossings = 0, vertices = loops.Sum(l => l.Length);
-        var segments = loops.SelectMany(l => Enumerable.Range(0, l.Length).Select(i => (A: l[i], B: l[(i + 1) % l.Length]))).ToArray();
-        for (int i = 0; i < segments.Length; i++)
-        for (int j = i + 1; j < segments.Length; j++)
-            if (Geometry.Intersection(segments[i].A, segments[i].B, segments[j].A, segments[j].B, out _, out _)) crossings++;
-        bound = (vertices + crossings + 1) * h * (maxX - minX);
         return areas;
     }
 
-    private const int Rows = 1_000_000;
+    private readonly struct Fraction : IComparable<Fraction>
+    {
+        private readonly BigInteger n, d;
+        public Fraction(BigInteger numerator, BigInteger denominator)
+        {
+            if (denominator.Sign < 0) { numerator = -numerator; denominator = -denominator; }
+            BigInteger g = BigInteger.GreatestCommonDivisor(numerator, denominator);
+            if (!g.IsZero && !g.IsOne) { numerator /= g; denominator /= g; }
+            n = numerator; d = denominator.IsZero ? BigInteger.One : denominator;
+        }
+        public Fraction(long value) : this(value, 1) { }
+        public static readonly Fraction Zero = new(0), One = new(1);
+        public int Sign => n.Sign;
+        public static Fraction operator +(Fraction a, Fraction b) => new(a.n * b.d + b.n * a.d, a.d * b.d);
+        public static Fraction operator -(Fraction a, Fraction b) => new(a.n * b.d - b.n * a.d, a.d * b.d);
+        public static Fraction operator *(Fraction a, Fraction b) => new(a.n * b.n, a.d * b.d);
+        public static Fraction operator /(Fraction a, Fraction b) => new(a.n * b.d, a.d * b.n);
+        public static bool operator <(Fraction a, Fraction b) => a.CompareTo(b) < 0;
+        public static bool operator >(Fraction a, Fraction b) => a.CompareTo(b) > 0;
+        public int CompareTo(Fraction other) => (n * other.d).CompareTo(other.n * d);
+        public double ToDouble() => (double)n / (double)d;
+        public override string ToString() => d.IsOne ? n.ToString() : $"{n}/{d}";
+    }
 }
