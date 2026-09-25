@@ -1,6 +1,8 @@
 # A double-input scanline experiment
 
-This is an architectural proposal, not an implemented backend or speed claim.
+This is the design rationale for the separate experimental `GuardedDoubleSweep`.
+Its [fixed protocol](DOUBLE-PROTOCOL.md) defines certification, fallback and
+measurement. It is not a shipping backend or a speed claim.
 The bounded-integer experiment does not require the eventual scanline algorithm
 to quantize user coordinates. ClipperD itself still converts through an integer
 grid, but that is a numerical design choice rather than a requirement of sweeping.

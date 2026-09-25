@@ -65,8 +65,18 @@ internal static partial class Program
             case "summarize-real" when args.Length == 2:
                 SummarizeReal(args[1]);
                 return 0;
+            case "check-double" when args.Length == 2:
+                DoubleSweepChecks.Run();
+                ValidateDouble(LoadReal(), args[1]);
+                return 0;
+            case "benchmark-double" when args.Length == 4:
+                RunDouble(args[1], int.Parse(args[2]), args[3]);
+                return 0;
+            case "summarize-double" when args.Length == 2:
+                SummarizeDouble(args[1]);
+                return 0;
             default:
-                Console.Error.WriteLine("check | check-wide | check-real <directory> | benchmark[-real|-wide] <directory> <run 1..3> <revision> | summarize[-real|-wide] <directory> | inspect <file.json>");
+                Console.Error.WriteLine("check | check-wide | check-real|check-double <directory> | benchmark[-real|-wide|-double] <directory> <run 1..3> <revision> | summarize[-real|-wide|-double] <directory> | inspect <file.json>");
                 return 2;
         }
     }

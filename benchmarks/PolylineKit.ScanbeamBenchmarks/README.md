@@ -26,8 +26,11 @@ or `benchmark-wide`/`summarize-wide` with the same arguments as the original
 runner below, in distinct artifact directories. The original results remain
 historical measurements of their explicitly identified commits.
 The [expanded results](EXPANDED-RESULTS.md) show that neither extension passes its
-full gate. A [double-input incremental scanline](DOUBLE-SCANLINE.md) is proposed
-as a separate experiment; it is not implemented by this integer prototype.
+full gate. The separate [guarded double sweep protocol](DOUBLE-PROTOCOL.md)
+tests the [double-input design](DOUBLE-SCANLINE.md) on original coordinates.
+Use `check-double <directory>`, `benchmark-double <directory> <run> <revision>`
+and `summarize-double <directory>`. This additional prototype does not change
+the integer engine or the shipping APIs.
 
 From the repository root, using PowerShell:
 
