@@ -9,8 +9,9 @@
 | `WindingArea.ClosedPath(path)` | One implicitly closed walk; returns `NonZero`, `EvenOdd`, `AbsoluteWinding` and `Signed`. |
 | `WindingArea.EndpointBridged(first, second)` | The walk `first + reverse(second)` with straight endpoint connectors; returns the same four integrals. |
 | `WindingArea.FilledRegions(first, second, fillRule)` | Independently filled closed paths; returns first, second, intersection, union and symmetric-difference areas, plus Jaccard distance and IoU. |
+| `WindingArea.IntersectionArea(first, second, fillRule)` | The same independently filled intersection, returned as a `double`; no own/union/XOR areas or diagnostics are returned. |
 
-Inputs are not mutated. Coordinates must be finite and have magnitude at most `1e100`. Consecutive duplicates are removed. A repeated closing point is optional for `ClosedPath` and `FilledRegions`; both close their input rings implicitly. These methods need at least three vertices per ring after cleanup; each `EndpointBridged` input needs at least two vertices after consecutive duplicate removal. Self-intersections, loops, retracing and collinear overlap are accepted. Invalid inputs throw rather than produce an invented result.
+Inputs are not mutated. Coordinates must be finite and have magnitude at most `1e100`. Consecutive duplicates are removed. A repeated closing point is optional for `ClosedPath`, `FilledRegions` and `IntersectionArea`; all close their input rings implicitly. These methods need at least three vertices per ring after cleanup; each `EndpointBridged` input needs at least two vertices after consecutive duplicate removal. Self-intersections, loops, retracing and collinear overlap are accepted. Invalid inputs throw rather than produce an invented result.
 
 All areas have squared coordinate units. The readonly result structs also expose `CrossingCount`, `ExactPredicateCount` and `SymbolicTieBreakCount`. These diagnose geometric work; predicate counts can change with dispatch and do not define the area.
 
@@ -33,7 +34,7 @@ Input order and endpoints matter for `EndpointBridged`; zero area does not imply
 |---|---|
 | A null path in any argument | `ArgumentNullException`. |
 | An empty path, one surviving point, or all coincident points | `ArgumentException`; no implicit empty-region result. |
-| Two surviving vertices | Invalid for `ClosedPath` and `FilledRegions`; a valid stroke for `EndpointBridged`. |
+| Two surviving vertices | Invalid for `ClosedPath`, `FilledRegions` and `IntersectionArea`; a valid stroke for `EndpointBridged`. |
 | Three collinear vertices, or an adequately long fully retraced walk | Valid input with zero filled area. Vertex count after cleanup is not a count of distinct positions. |
 | Nonfinite coordinates or magnitude above `1e100` | `ArgumentException`, including nonempty inputs that are also too short. |
 | An undefined `PathFillRule` value | `ArgumentOutOfRangeException`. |
@@ -69,7 +70,7 @@ accumulation after inserting crossings. See the
 before equating AbsoluteWinding with independent filled-region XOR. No mathematical
 novelty is claimed for these area definitions.
 
-Edges are split at crossings and overlap endpoints. Each directed sub-edge contributes an area term weighted by the difference of the desired winding function on its two sides. Winding numbers start at a leftmost vertex and propagate across crossings. One closed walk supplies all four single-path integrals; two independently filled paths supply five boundary chains: each whole path, the two exclusive regions and their intersection. Union and symmetric difference are sums of disjoint parts, avoiding subtraction of nearly equal rounded totals.
+Edges are split at crossings and overlap endpoints. Each directed sub-edge contributes an area term weighted by the difference of the desired winding function on its two sides. Winding numbers start at a leftmost vertex and propagate across crossings. One closed walk supplies all four single-path integrals; `FilledRegions` supplies five boundary chains: each whole path, the two exclusive regions and their intersection. Union and symmetric difference are sums of disjoint parts, avoiding subtraction of nearly equal rounded totals. `IntersectionArea` uses the same crossing and winding decisions but only evaluates the intersection chain's area. It keeps that chain's own net bounds origin and shared-boundary cancellation; it does not subtract rounded whole-region areas.
 
 Crossing decisions use a floating-point orientation filter followed, when needed, by exact expansion arithmetic. Extreme exponents use integer arithmetic. Exact zeros are resolved consistently by Simulation of Simplicity (Edelsbrunner and Mücke, 1990); all orientation and winding decisions use the same infinitesimal perturbation. The filter follows Shewchuk's orient2d error bound. These predicates decide topology exactly for the supplied binary64 coordinates under IEEE binary64 evaluation; they do not make area arithmetic exact.
 

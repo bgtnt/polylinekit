@@ -8,6 +8,8 @@ if (closed.NonZero != 4 || closed.EvenOdd != 4 || closed.Signed != 4 || closed.A
 foreach (PathFillRule rule in new[] { PathFillRule.NonZero, PathFillRule.EvenOdd })
 {
     var overlap = WindingArea.FilledRegions(square, shifted, rule);
+    if (WindingArea.IntersectionArea(square, shifted, rule) != 2)
+        throw new InvalidOperationException("Standalone intersection-only value disagrees with analytic squares.");
     if (overlap.FirstArea != 4 || overlap.SecondArea != 4 || overlap.IntersectionArea != 2 || overlap.UnionArea != 6
         || overlap.SymmetricDifferenceArea != 4 || overlap.IntersectionOverUnion != 1.0 / 3)
         throw new InvalidOperationException("Standalone filled-region values disagree with analytic squares.");

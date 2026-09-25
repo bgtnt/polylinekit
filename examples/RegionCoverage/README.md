@@ -6,17 +6,16 @@ and **zone coverage `I / area(A)`**. Coverage is directional and is not IoU
 `null`. There is no alignment, normalization, recognition or matching here.
 
 ```csharp
-var areas = WindingArea.FilledRegions(zone, query);
-double intersection = areas.IntersectionArea;
+double intersection = WindingArea.IntersectionArea(zone, query);
 double? coverage = zoneArea > 0 ? intersection / zoneArea : null;
 ```
 
 Cache `zoneArea` when preparing an immutable zone, using
 `WindingArea.ClosedPath(zone).NonZero`. For this example's independently certified
 simple rings, the adapters can use a cheaper translated shoelace area during
-preparation. The current library still computes all
-FilledRegions areas per comparison; this example does not pretend it has a
-prepared intersection-only core. No public library API changes are required.
+preparation. `IntersectionArea` accumulates only the requested intersection.
+It still validates the inputs and computes their crossings per call; preparation
+in this example does not cache Winding's internal edges or pair results.
 
 The [measured result](RESULTS.md) reports three independent processes on the
 frozen population, with all-row values and binary/input hashes in its evidence manifest.
@@ -55,6 +54,7 @@ GEOS and NTS Lab comparisons.
 | Method | Prepared state and query operation |
 |---|---|
 | Winding | Immutable coordinate arrays and own areas; `FilledRegions` per candidate. |
+| Winding-intersection-only | Identical preparation; `IntersectionArea` skips unused own/union/XOR area accumulation per candidate. |
 | Clipper64-reused-data | Integer coordinates, local-minimum data and own areas; reusable engine executes one intersection and sums its output contours. |
 | NTS-legacy | Polygon objects and own areas; explicitly selected legacy overlay. |
 | NTS-OverlayNG | Same objects; robust OverlayNG intersection. |

@@ -196,4 +196,38 @@ public static class WindingArea
         finally { WindingEngine.Workspace.Return(workspace); }
     }
 
+    /// <summary>Area filled by both independently filled closed paths, in squared coordinate units.</summary>
+    /// <remarks>
+    /// Uses the same fill, crossing and numerical rules as <see cref="FilledRegions"/>, while accumulating only
+    /// the intersection boundary. Closure is implicit and a repeated closing point is optional. Each path needs
+    /// at least three vertices after consecutive duplicate removal. Self intersections, retracing and collinear
+    /// overlap are accepted. The result carries floating-point rounding and is not clamped.
+    /// </remarks>
+    /// <exception cref="ArgumentNullException">A path is null.</exception>
+    /// <exception cref="ArgumentException">A path is empty, has nonfinite or too large coordinates, or too few vertices.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The fill rule is not defined.</exception>
+    public static double IntersectionArea(IReadOnlyList<Point2> first, IReadOnlyList<Point2> second,
+        PathFillRule fillRule = PathFillRule.NonZero)
+    {
+        if (fillRule != PathFillRule.NonZero && fillRule != PathFillRule.EvenOdd) throw new ArgumentOutOfRangeException(nameof(fillRule));
+        if (first is null) throw new ArgumentNullException(nameof(first));
+        if (second is null) throw new ArgumentNullException(nameof(second));
+        if (first.Count == 0) throw new ArgumentException("The path must not be empty.", nameof(first));
+        if (second.Count == 0) throw new ArgumentException("The path must not be empty.", nameof(second));
+        var workspace = WindingEngine.Workspace.Rent();
+        try
+        {
+            Point2[] v = workspace.VertexBuffer(first.Count + second.Count);
+            int n = 0;
+            for (int i = 0; i < first.Count; i++) WindingEngine.Append(v, ref n, 0, first[i], nameof(first));
+            WindingEngine.CloseLoop(v, ref n, 0);
+            int split = n;
+            for (int i = 0; i < second.Count; i++) WindingEngine.Append(v, ref n, split, second[i], nameof(second));
+            WindingEngine.CloseLoop(v, ref n, split);
+            if (split < 3 || n - split < 3) throw new ArgumentException("Each path requires at least 3 vertices after duplicate removal.");
+            return WindingEngine.Intersection(workspace, split, n, fillRule);
+        }
+        finally { WindingEngine.Workspace.Return(workspace); }
+    }
+
 }

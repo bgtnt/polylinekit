@@ -13,12 +13,16 @@ Point2[] b = [new(1, 0), new(3, 0), new(3, 2), new(1, 2)];
 var area = WindingArea.ClosedPath(a); // NonZero = EvenOdd = AbsoluteWinding = 4
 var overlap = WindingArea.FilledRegions(a, b);
 // IntersectionArea = 2; UnionArea = 6; SymmetricDifferenceArea = 4; IoU = 1/3.
+double intersection = WindingArea.IntersectionArea(a, b); // 2, without the other areas.
 ```
 
 `ClosedPath` permits self-intersections and implicit closure. `EndpointBridged`
 closes `first + reverse(second)` with straight endpoint connectors; input direction
 matters. `FilledRegions` applies NonZero or EvenOdd to each of two paths separately.
 It returns both areas, intersection, union, XOR and optional IoU/Jaccard distance.
+`IntersectionArea` returns only the intersection as a `double`, with the same
+input and fill-rule contracts and numerical limits. It preserves the general
+crossing/overlap processing but accumulates only the intersection boundary chain.
 Zero union makes those ratios null. Area is not a metric on stroke trajectories
 and cannot bound the largest local deviation.
 

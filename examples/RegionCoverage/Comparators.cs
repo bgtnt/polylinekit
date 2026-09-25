@@ -53,13 +53,14 @@ internal static class Comparators
     // A new call creates independent mutable workspaces, including cold NTS prepared indexes.
     internal static CoverageComparator[] Create(double scale) =>
     [
-        new WindingComparator(), new ClipperComparator(scale), new NtsComparator(false, false),
+        new WindingComparator(), new IntersectionComparator(), new ClipperComparator(scale), new NtsComparator(false, false),
         new NtsComparator(true, false), new NtsComparator(true, true), new ConvexComparator()
     ];
 
     internal static CoverageComparator? Create(string name, double scale) => name switch
     {
         "Winding" => new WindingComparator(),
+        "Winding-intersection-only" => new IntersectionComparator(),
         "Clipper64-reused-data" => new ClipperComparator(scale),
         "NTS-legacy" => new NtsComparator(false, false),
         "NTS-OverlayNG" => new NtsComparator(true, false),
@@ -82,6 +83,15 @@ internal static class Comparators
         }
         protected override double Intersection(PreparedRegion zone, PreparedRegion query) =>
             WindingArea.FilledRegions(zone.Points, query.Points, PathFillRule.NonZero).IntersectionArea;
+    }
+
+    private sealed class IntersectionComparator : CoverageComparator
+    {
+        internal override string Name => "Winding-intersection-only";
+        internal override PreparedRegion Prepare(Point2[] points, bool zone) =>
+            new(points, RegionPreparation.Bounds(points), Math.Abs(RegionPreparation.SignedArea(points)));
+        protected override double Intersection(PreparedRegion zone, PreparedRegion query) =>
+            WindingArea.IntersectionArea(zone.Points, query.Points, PathFillRule.NonZero);
     }
 
     private sealed class ClipperRegion(Point2[] points, RegionBounds bounds, double area,

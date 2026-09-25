@@ -81,6 +81,7 @@ internal static class WindingTermChecks
                 Equal(selfLabel + " first", expected, self.FirstArea);
                 Equal(selfLabel + " second", expected, self.SecondArea);
                 Equal(selfLabel + " intersection", expected, self.IntersectionArea);
+                Equal(selfLabel + " narrow intersection", expected, WindingArea.IntersectionArea(path, path, rule));
                 Equal(selfLabel + " union", expected, self.UnionArea);
                 Equal(selfLabel + " xor", 0, self.SymmetricDifferenceArea);
                 NullableEqual(selfLabel + " IoU", expected > 0 ? 1 : null, self.IntersectionOverUnion);
@@ -106,6 +107,8 @@ internal static class WindingTermChecks
                 Equal(label2 + " first", swap ? outerArea : expected, result.FirstArea, swap ? 2 : 0);
                 Equal(label2 + " second", swap ? expected : outerArea, result.SecondArea, swap ? 0 : 2);
                 Equal(label2 + " intersection", expected, result.IntersectionArea);
+                Equal(label2 + " narrow intersection", expected, swap ? WindingArea.IntersectionArea(container, path, rule)
+                    : WindingArea.IntersectionArea(path, container, rule));
                 Equal(label2 + " union", outerArea, result.UnionArea, 2);
                 // The container's coordinates/products and the difference chain have ordinary
                 // floating-point arithmetic. Allow two representable neighbors of their exact areas.

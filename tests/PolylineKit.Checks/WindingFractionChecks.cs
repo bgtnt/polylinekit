@@ -68,6 +68,8 @@ internal static class WindingFractionChecks
             Equal(name + " first", swap ? second : first, result.FirstArea);
             Equal(name + " second", swap ? first : second, result.SecondArea);
             Equal(name + " intersection", intersection, result.IntersectionArea);
+            Equal(name + " narrow intersection", intersection, swap ? WindingArea.IntersectionArea(b, a, rule)
+                : WindingArea.IntersectionArea(a, b, rule));
             Equal(name + " union", union, result.UnionArea);
             Equal(name + " XOR", xor, result.SymmetricDifferenceArea);
             Equal(name + " IoU", intersection / union, result.IntersectionOverUnion!.Value, 8);

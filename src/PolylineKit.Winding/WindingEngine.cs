@@ -244,6 +244,91 @@ internal static class WindingEngine
         return new WindingOverlapResult(Area(ws, OwnA), Area(ws, OwnB), both, aOnly + bOnly + both, aOnly + bOnly, rule, statistics);
     }
 
+    /// <summary>The intersection chain alone, with the same topology and term order as TwoLoops.</summary>
+    internal static double Intersection(Workspace ws, int split, int n, PathFillRule rule)
+    {
+        var statistics = new WindingStatistics();
+        Point2[] v = ws.Vertices;
+        int[] nx = Links(ws, split, n);
+        statistics.Crossings = FindCrossings(ws, n, split, ref statistics);
+        bool nonZero = rule == PathFillRule.NonZero;
+        int firstA = Leftmost(v, 0, split), firstB = Leftmost(v, split, n);
+        int ownA = RobustOrientation.Sign(v, Previous(firstA, 0, split), firstA, nx[firstA], ref statistics) > 0 ? 0 : -1;
+        int ownB = RobustOrientation.Sign(v, Previous(firstB, split, n), firstB, nx[firstB], ref statistics) > 0 ? 0 : -1;
+        int bAtA = WindingAt(v, nx, firstA, split, n, ref statistics), aAtB = WindingAt(v, nx, firstB, 0, split, ref statistics);
+        ws.SharedCount = 0;
+        ws.Used[Both] = false;
+        ws.Sums[Both] = default;
+        WalkIntersection(ws, split, firstA, ownA, bAtA, nonZero, false);
+        WalkIntersection(ws, n - split, firstB, ownB, aAtB, nonZero, false);
+        int net = Net(ws);
+        for (int x = 0; x < net; x++)
+        {
+            Piece piece = ws.Shared[x];
+            if (piece.W4 != 0) Include(ws, Both, piece.P0, piece.P1);
+        }
+        // No ordinary or netted shared segment contributes: the compensated sum would remain exactly zero.
+        if (!ws.Used[Both]) return 0;
+        ws.Origin[Both] = new Point2(ws.MinX[Both] + (ws.MaxX[Both] - ws.MinX[Both]) / 2,
+            ws.MinY[Both] + (ws.MaxY[Both] - ws.MinY[Both]) / 2);
+        WalkIntersection(ws, split, firstA, ownA, bAtA, nonZero, true);
+        WalkIntersection(ws, n - split, firstB, ownB, aAtB, nonZero, true);
+        for (int x = 0; x < net; x++)
+        {
+            Piece piece = ws.Shared[x];
+            if (piece.W4 != 0) ws.Sums[Both].Add(Cross(piece.P0, piece.P1, ws.Origin[Both]) * piece.W4);
+        }
+        return Area(ws, Both);
+    }
+
+    // Only the jump of 1[filled(A) && filled(B)] contributes: the own-path fill must change while the other
+    // path is filled. Keep the full crossing propagation even outside the intersection or on retraced edges.
+    private static void WalkIntersection(Workspace ws, int edges, int first, int w, int other, bool nonZero, bool sum)
+    {
+        Point2[] v = ws.Vertices;
+        int[] nx = ws.Next, offsets = ws.Start;
+        Crossing[] list = ws.Sorted;
+        Point2 origin = ws.Origin[Both];
+        for (int step = 0, e = first; step < edges; step++, e = nx[e])
+        {
+            Point2 a = v[e], b = v[nx[e]], p0 = a;
+            bool overlapping = ws.Overlapping[e], xDominant = Math.Abs(b.X - a.X) >= Math.Abs(b.Y - a.Y);
+            bool wholeEdge = offsets[e] == offsets[e + 1], known = false;
+            double term = 0;
+            for (int x = offsets[e]; x <= offsets[e + 1]; x++)
+            {
+                bool last = x == offsets[e + 1];
+                Point2 p1 = last ? b : list[x].P;
+                int change = Fill(w + 1, nonZero) - Fill(w, nonZero);
+                if (change != 0 && !WindingInput.Same(p0, p1))
+                {
+                    bool inside = Fill(other, nonZero) != 0;
+                    if (overlapping)
+                    {
+                        // W0 is a bookkeeping coefficient only. Even a piece initially outside the other
+                        // path must establish its hash entry: a later identical piece can contribute to Both.
+                        // This preserves first-occurrence order, and thus Both's sum order, from TwoLoops.
+                        if (!sum) ws.Take(new Piece { P0 = p0, P1 = p1, W0 = change, W4 = inside ? change : 0 }, true);
+                    }
+                    else if (inside)
+                    {
+                        if (!sum) Include(ws, Both, p0, p1);
+                        else
+                        {
+                            if (!known) { term = Cross(a, b, origin); known = true; }
+                            bool scaled = false;
+                            double fraction = wholeEdge ? 1 : Fraction(a, b, p0, p1, xDominant, out scaled);
+                            ws.Sums[Both].Add(FractionProduct(term, fraction, scaled) * change);
+                        }
+                    }
+                }
+                if (last) break;
+                p0 = p1;
+                if (list[x].SameLoop) w += list[x].Delta; else other += list[x].Delta;
+            }
+        }
+    }
+
     // One walk around loop A ([0, split)) or B ([split, n)) from its initial winding state. Without sum it records
     // chain bounds of ordinary sub-edges and collects those of overlapping edges; with sum it adds their terms.
     // An ordinary sub-edge contributes its share of its edge's term, so a crossing point off the edge's line

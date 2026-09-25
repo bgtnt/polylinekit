@@ -238,22 +238,22 @@ internal static class WindingAreaChecks
         Point2[] far = AffineTransform2D.Translation(100, 100).Apply(square);
         foreach (PathFillRule rule in new[] { PathFillRule.NonZero, PathFillRule.EvenOdd })
         {
-            Overlap("identity " + rule, WindingArea.FilledRegions(square, square, rule), 1, 1, 1, 1, 0);
-            Overlap("reversed identity " + rule, WindingArea.FilledRegions(square, square.Reverse().ToArray(), rule), 1, 1, 1, 1, 0);
-            Overlap("cyclic identity " + rule, WindingArea.FilledRegions(square, [square[2], square[3], square[0], square[1]], rule), 1, 1, 1, 1, 0);
-            var diagonal = WindingArea.FilledRegions(square, offset, rule);
+            Overlap("identity " + rule, CheckedFilledRegions(square, square, rule), 1, 1, 1, 1, 0);
+            Overlap("reversed identity " + rule, CheckedFilledRegions(square, square.Reverse().ToArray(), rule), 1, 1, 1, 1, 0);
+            Overlap("cyclic identity " + rule, CheckedFilledRegions(square, [square[2], square[3], square[0], square[1]], rule), 1, 1, 1, 1, 0);
+            var diagonal = CheckedFilledRegions(square, offset, rule);
             Overlap("diagonal offset " + rule, diagonal, 1, 1, .25, 1.75, 1.5);
             Near("diagonal Jaccard " + rule, 6.0 / 7, diagonal.JaccardDistance!.Value);
             Near("diagonal IoU " + rule, 1.0 / 7, diagonal.IntersectionOverUnion!.Value);
-            var apart = WindingArea.FilledRegions(square, far, rule);
+            var apart = CheckedFilledRegions(square, far, rule);
             Overlap("far apart " + rule, apart, 1, 1, 0, 2, 2);
             Near("far apart Jaccard " + rule, 1, apart.JaccardDistance!.Value);
             True("metadata " + rule, diagonal.FillRule == rule);
         }
         Point2[] hole = Fixtures.Contours()["hole-with-retraced-bridge"];
         Point2[] inner = [new(1, 1), new(3, 1), new(3, 3), new(1, 3)];
-        Overlap("hole and its filling", WindingArea.FilledRegions(hole, inner), 12, 4, 0, 16, 16);
-        True("collinear region has undefined Jaccard", WindingArea.FilledRegions([new(0, 0), new(1, 0), new(2, 0)], [new(0, 0), new(1, 0), new(3, 0)]).JaccardDistance is null);
+        Overlap("hole and its filling", CheckedFilledRegions(hole, inner), 12, 4, 0, 16, 16);
+        True("collinear region has undefined Jaccard", CheckedFilledRegions([new(0, 0), new(1, 0), new(2, 0)], [new(0, 0), new(1, 0), new(3, 0)]).JaccardDistance is null);
 
         Random random = new(55);
         foreach (bool grid in new[] { false, true })
@@ -266,7 +266,7 @@ internal static class WindingAreaChecks
                 FillRule clipperRule = rule == PathFillRule.NonZero ? FillRule.NonZero : FillRule.EvenOdd;
                 PathsD subject = [new PathD(a.Select(p => new PointD(p.X, p.Y)))], clip = [new PathD(b.Select(p => new PointD(p.X, p.Y)))];
                 double Area(PathsD paths) => Math.Abs(Clipper.Area(paths));
-                var result = WindingArea.FilledRegions(a, b, rule);
+                var result = CheckedFilledRegions(a, b, rule);
                 var sweep = RegionSweep.Measure(ClosedClean(a), ClosedClean(b), rule == PathFillRule.NonZero);
                 string name = $"{(grid ? "grid" : "random")} regions #{trial} {rule}";
                 Near(name + " first vs slab sweep", sweep.First, result.FirstArea, 1e-9);
@@ -280,7 +280,7 @@ internal static class WindingAreaChecks
                 bool agrees = clipper.Zip(ours).All(x => Math.Abs(x.First - x.Second) <= 1e-7 * Math.Max(1, x.First));
                 if (grid) { checkedClipper++; if (!agrees) ClipperDisagreements.Add((name, ClosedClean(a), ClosedClean(b))); }
                 else True(name + " generic regions agree with Clipper", agrees);
-                var swapped = WindingArea.FilledRegions(b, a, rule);
+                var swapped = CheckedFilledRegions(b, a, rule);
                 Near(name + " exchange symmetry", result.IntersectionArea, swapped.IntersectionArea, 1e-12);
                 Near(name + " inclusion-exclusion", result.FirstArea + result.SecondArea - result.IntersectionArea, result.UnionArea, 1e-12);
             }
@@ -314,14 +314,14 @@ internal static class WindingAreaChecks
         foreach (double distance in new[] { 1e6, 1e8, 1e10, 1e12, 1e14 })
         foreach (PathFillRule rule in rules)
         {
-            var apart = WindingArea.FilledRegions(Square(0, 0), Square(distance, distance), rule);
+            var apart = CheckedFilledRegions(Square(0, 0), Square(distance, distance), rule);
             Overlap($"unit squares {distance:G} apart {rule}", apart, 1, 1, 0, 2, 2);
             True($"unit squares {distance:G} apart Jaccard {rule}", apart.JaccardDistance == 1 && apart.IntersectionOverUnion == 0);
             Overlap($"overlapping unit squares at {distance:G} {rule}",
-                WindingArea.FilledRegions(Square(distance, distance), Square(distance + .5, distance + .5), rule), 1, 1, .25, 1.75, 1.5);
+                CheckedFilledRegions(Square(distance, distance), Square(distance + .5, distance + .5), rule), 1, 1, .25, 1.75, 1.5);
             Areas($"unit square at {distance:G} {rule}", WindingArea.ClosedPath(Square(distance, -distance)), 1, 1, 1, 1);
         }
-        var inside = WindingArea.FilledRegions(Square(0, 0, 1e8), Square(1e8 - 3, 1e8 - 3));
+        var inside = CheckedFilledRegions(Square(0, 0, 1e8), Square(1e8 - 3, 1e8 - 3));
         Near("small square in a distant corner of a large one: second", 1, inside.SecondArea, 0);
         Near("small square in a distant corner of a large one: intersection", 1, inside.IntersectionArea, 1e-12);
         Near("small square in a distant corner of a large one: union", 1e16, inside.UnionArea, 1e-15);
@@ -354,7 +354,7 @@ internal static class WindingAreaChecks
             ("reverse first", first.Reverse().ToArray(), second), ("reverse second", first, second.Reverse().ToArray())
         })
         {
-            var result = WindingArea.FilledRegions(a, b, rule);
+            var result = CheckedFilledRegions(a, b, rule);
             string name = $"{label} of side 2^-27 {variant} {rule}";
             True(name + " symmetric difference", NearlyRelative(expected, result.SymmetricDifferenceArea, 1e-9));
             True(name + " Jaccard distance", result.JaccardDistance is double jd && NearlyRelative(expected, jd, 1e-9));
@@ -368,7 +368,7 @@ internal static class WindingAreaChecks
             foreach (PathFillRule rule in rules)
             foreach (var (variant, a, b) in new[] { ("normal", large, holed), ("swap", holed, large), ("reverse", large.Reverse().ToArray(), holed.Reverse().ToArray()) })
             {
-                var result = WindingArea.FilledRegions(a, b, rule);
+                var result = CheckedFilledRegions(a, b, rule);
                 string name = $"unit hole in square {length:G} {variant} {rule}";
                 True(name + " symmetric difference", NearlyRelative(1, result.SymmetricDifferenceArea, 1e-12));
                 True(name + " union", NearlyRelative(length * length, result.UnionArea, 1e-15));
@@ -385,7 +385,7 @@ internal static class WindingAreaChecks
             double expected = length * shift + (length + shift - length) * length;
             foreach (var (variant, a, b) in new[] { ("x", square, moved), ("x swapped", moved, square), ("y", square, lifted), ("x reversed", square.Reverse().ToArray(), moved) })
             {
-                var result = WindingArea.FilledRegions(a, b);
+                var result = CheckedFilledRegions(a, b);
                 True($"square {length:G} shifted {shift:G} in {variant}: symmetric difference", NearlyRelative(expected, result.SymmetricDifferenceArea, 1e-9));
             }
         }
@@ -396,7 +396,7 @@ internal static class WindingAreaChecks
         {
             Point2[] horizontal = [new(-length, -.5), new(length, -.5), new(length, .5), new(-length, .5)];
             Point2[] vertical = [new(-.5, -length), new(.5, -length), new(.5, length), new(-.5, length)];
-            var strips = WindingArea.FilledRegions(horizontal, vertical);
+            var strips = CheckedFilledRegions(horizontal, vertical);
             True($"crossed strips {length:G} intersection", NearlyRelative(1, strips.IntersectionArea, 1e-12));
             True($"crossed strips {length:G} symmetric difference", NearlyRelative(4 * length - 2, strips.SymmetricDifferenceArea, 1e-15));
         }
@@ -412,7 +412,7 @@ internal static class WindingAreaChecks
         {
             var closed = WindingArea.ClosedPath(triangle);
             True(label + " closed path", closed.NonZero == area && closed.EvenOdd == area && closed.AbsoluteWinding == area && closed.Signed == area);
-            var self = WindingArea.FilledRegions(triangle, triangle);
+            var self = CheckedFilledRegions(triangle, triangle);
             True(label + " filled with itself", self.FirstArea == area && self.SecondArea == area && self.IntersectionArea == area
                 && self.UnionArea == area && self.SymmetricDifferenceArea == 0 && self.IntersectionOverUnion == 1);
         }
@@ -435,7 +435,7 @@ internal static class WindingAreaChecks
                 ("normal", a, b), ("swap", b, a), ("reverse both", a.Reverse().ToArray(), b.Reverse().ToArray()), ("reverse first", a.Reverse().ToArray(), b)
             })
             {
-                var result = WindingArea.FilledRegions(first, second, rule);
+                var result = CheckedFilledRegions(first, second, rule);
                 string name = $"tilted strips {l:G} scaled {scale:G3} {variant} {rule}";
                 True(name + " intersection", result.IntersectionArea > 0 && NearlyRelative(exact, result.IntersectionArea, bound));
                 True(name + " symmetric difference", NearlyRelative(8 * l * scale * scale - 2 * exact, result.SymmetricDifferenceArea, 1e-15));
@@ -449,7 +449,7 @@ internal static class WindingAreaChecks
             double half = Math.ScaleB(1, 100);
             Point2[] strip = [new(-half, 0), new(half, 0), new(half, 1), new(-half, 1)];
             Point2[] zigzag = [.. Enumerable.Range(1, count).Select(k => new Point2(k, k % 2 == 1 ? -1 : 2)), new(count, -3), new(1, -3)];
-            var result = WindingArea.FilledRegions(strip, zigzag);
+            var result = CheckedFilledRegions(strip, zigzag);
             True($"zigzag of {count} across a 2^101 strip", NearlyRelative((count - 1) / 2.0, result.IntersectionArea, 1e-14));
         }
 
@@ -480,7 +480,7 @@ internal static class WindingAreaChecks
             Point2[] other = ClosedClean(Enumerable.Range(0, random.Next(4, 12)).Select(_ => new Point2(random.Next(-3, 4), random.Next(-3, 4))).ToArray());
             if (other.Length < 3) continue;
             var regions = RegionSweep.Measure(points, other, true);
-            var overlap = WindingArea.FilledRegions(scaled, other.Select(p => new Point2(p.X * sx, p.Y * sy)).ToArray());
+            var overlap = CheckedFilledRegions(scaled, other.Select(p => new Point2(p.X * sx, p.Y * sy)).ToArray());
             True(name + " regions intersection", NearlyScaled(regions.Intersection, overlap.IntersectionArea, areaUnit));
             True(name + " regions union", NearlyScaled(regions.Union, overlap.UnionArea, areaUnit));
             True(name + " regions difference", NearlyScaled(regions.SymmetricDifference, overlap.SymmetricDifferenceArea, areaUnit));
@@ -503,12 +503,12 @@ internal static class WindingAreaChecks
         Point2[] open = [new(0, 0), new(1, 1), new(2, 0)], openOther = [new(0, 1), new(1, 0), new(2, 1)];
         var plainClosed = WindingArea.ClosedPath(unit);
         var plainBridged = WindingArea.EndpointBridged(open, openOther);
-        var plainRegions = WindingArea.FilledRegions(unit, shifted);
+        var plainRegions = CheckedFilledRegions(unit, shifted);
         Action[] nested =
         [
             () => WindingArea.ClosedPath(Square(10, 10, 10)),
             () => WindingArea.EndpointBridged([new(5, 5), new(9, 1), new(7, 8)], [new(5, 9), new(9, 5)]),
-            () => WindingArea.FilledRegions(Square(20, 20, 3), Square(21, 21, 3)),
+            () => CheckedFilledRegions(Square(20, 20, 3), Square(21, 21, 3)),
             () => WindingArea.ClosedPath(new NestedList(Square(40, 40, 7), () => WindingArea.ClosedPath(Square(-9, -9, 4)))),
             () => { try { WindingArea.ClosedPath([new(0, 0), new(double.NaN, 0), new(0, 1)]); } catch (ArgumentException) { } }
         ];
@@ -518,8 +518,8 @@ internal static class WindingAreaChecks
             Identical(name + " inside ClosedPath", plainClosed, WindingArea.ClosedPath(new NestedList(unit, nested[k])));
             Identical(name + " inside EndpointBridged first", plainBridged, WindingArea.EndpointBridged(new NestedList(open, nested[k]), openOther));
             Identical(name + " inside EndpointBridged second", plainBridged, WindingArea.EndpointBridged(open, new NestedList(openOther, nested[k])));
-            Identical(name + " inside FilledRegions first", plainRegions, WindingArea.FilledRegions(new NestedList(unit, nested[k]), shifted));
-            Identical(name + " inside FilledRegions second", plainRegions, WindingArea.FilledRegions(unit, new NestedList(shifted, nested[k])));
+            Identical(name + " inside FilledRegions first", plainRegions, CheckedFilledRegions(new NestedList(unit, nested[k]), shifted));
+            Identical(name + " inside FilledRegions second", plainRegions, CheckedFilledRegions(unit, new NestedList(shifted, nested[k])));
         }
         // An outer call that fails after a nested call still releases its storage.
         Reject<InvalidOperationException>("indexer failure after a nested call", () => WindingArea.ClosedPath(new NestedList(unit, () =>
@@ -528,7 +528,7 @@ internal static class WindingAreaChecks
             throw new InvalidOperationException("indexer failure");
         })));
         Identical("call after a failed nested call", plainClosed, WindingArea.ClosedPath(unit));
-        Identical("regions after a failed nested call", plainRegions, WindingArea.FilledRegions(unit, shifted));
+        Identical("regions after a failed nested call", plainRegions, CheckedFilledRegions(unit, shifted));
     }
 
     /// <summary>A valid list whose indexer runs other geometry when index 1 is read.</summary>
@@ -573,7 +573,7 @@ internal static class WindingAreaChecks
                 Point2[] shifted = path.Select(p => swap ? new Point2(p.X, p.Y + .5) : new Point2(p.X + .5, p.Y)).ToArray();
                 foreach (PathFillRule rule in new[] { PathFillRule.NonZero, PathFillRule.EvenOdd })
                     Overlap($"thin subdivided overlap {sidePoints}, swap={swap}, {rule}",
-                        WindingArea.FilledRegions(path, shifted, rule), 2 * height, 2 * height,
+                        CheckedFilledRegions(path, shifted, rule), 2 * height, 2 * height,
                         1.5 * height, 2.5 * height, height);
             }
         }
@@ -650,9 +650,9 @@ internal static class WindingAreaChecks
         Reject<ArgumentNullException>("null bridged path", () => WindingArea.EndpointBridged(ok, null!));
         Reject<ArgumentException>("bridged single point", () => WindingArea.EndpointBridged(ok, [new(1, 1), new(1, 1)]));
         Reject<ArgumentException>("bridged infinite", () => WindingArea.EndpointBridged(ok, [new(1, 1), new(double.PositiveInfinity, 1)]));
-        Reject<ArgumentNullException>("null region", () => WindingArea.FilledRegions(null!, ok));
-        Reject<ArgumentException>("region too short", () => WindingArea.FilledRegions(ok, [new(0, 0), new(1, 1), new(0, 0)]));
-        Reject<ArgumentOutOfRangeException>("undefined fill rule", () => WindingArea.FilledRegions(ok, ok, (PathFillRule)7));
+        Reject<ArgumentNullException>("null region", () => CheckedFilledRegions(null!, ok));
+        Reject<ArgumentException>("region too short", () => CheckedFilledRegions(ok, [new(0, 0), new(1, 1), new(0, 0)]));
+        Reject<ArgumentOutOfRangeException>("undefined fill rule", () => CheckedFilledRegions(ok, ok, (PathFillRule)7));
         Areas("bridged collapse to a segment", WindingArea.EndpointBridged([new(0, 0), new(1, 0)], [new(0, 0), new(1, 0)]), 0, 0, 0, 0);
     }
 
@@ -701,6 +701,19 @@ internal static class WindingAreaChecks
         Near(name + " evenodd", evenOdd, actual.EvenOdd);
         Near(name + " absolute", absolute, actual.AbsoluteWinding);
         Near(name + " signed", signed, actual.Signed);
+    }
+
+    // Reuse every analytic, sweep-oracle and reviewed overlap case for the narrower public API.
+    // Existing full-result assertions remain unchanged; only successful valid calls reach parity.
+    private static WindingOverlapResult CheckedFilledRegions(IReadOnlyList<Point2> first, IReadOnlyList<Point2> second,
+        PathFillRule fillRule = PathFillRule.NonZero)
+    {
+        var full = WindingArea.FilledRegions(first, second, fillRule);
+        double narrow = WindingArea.IntersectionArea(first, second, fillRule);
+        if (!double.IsFinite(narrow) || narrow != full.IntersectionArea)
+            throw new InvalidOperationException($"Intersection-only differs: {narrow:R} versus full {full.IntersectionArea:R}, {fillRule}.");
+        passed++;
+        return full;
     }
 
     private static void Overlap(string name, WindingOverlapResult actual, double first, double second, double intersection, double union, double difference)

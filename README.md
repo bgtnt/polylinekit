@@ -60,6 +60,7 @@ opt-in; closed-path fitting searches discrete cyclic sample shifts.
 | `PolylineArea.BetweenGraphs(p, q)` | Absolute vertical separation integrated over a shared x interval; strictly increasing-x graphs only. |
 | `WindingArea.ClosedPath(p)` / `EndpointBridged(p, q)` | NonZero, EvenOdd, absolute-winding and signed areas; accepts self-intersections and returns areas without constructing contours. |
 | `WindingArea.FilledRegions(p, q)` | Intersection, union and XOR areas of two independently filled paths. |
+| `WindingArea.IntersectionArea(p, q)` | Only the intersection area of two independently filled paths; skips the unused own/union/XOR area accumulation. |
 | `PolylineComparison.EndpointBridgedArea(p, q)` | Fill area of `p + reverse(q)` with straight endpoint connectors; Clipper2 precision and optional resolved contours. |
 | `PolylineComparison.FilledRegionDifference(p, q)` / `FilledRegionOverlap(p, q)` | Independent filled-region XOR, or union/XOR and Jaccard distance/IoU, through Clipper2. |
 | `PolylineNormalization.ToUnitBounds(p)` / `MatchBounds(p, q)` | Center and scale; returns transformed points and the applied affine map. |
@@ -136,6 +137,8 @@ LIP/GenLIP and optimization experiments. They are not needed to build or use the
 
 ## License and provenance
 
-Original code is [MIT-licensed](LICENSE). RtTools.Geometry was inspected for ideas
-only; neither it nor MPR001 is included or used as a test oracle or benchmark.
+Original code is [MIT-licensed](LICENSE). RtTools.Geometry was inspected for ideas;
+an optional private RtTools adapter was also measured in the dynamic-index experiment.
+Its code and binaries are not distributed or required. MPR001 is not included or
+used as a test oracle or benchmark.
 See [third-party notices](THIRD-PARTY-NOTICES.md) for dependency and algorithm attribution.

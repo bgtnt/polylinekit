@@ -49,6 +49,12 @@ internal static partial class CoverageExperiment
         var methods = Comparators.Create(Scale).ToList(); AddPlatformComparators(methods); return methods.ToArray();
     }
 
+    // The targeted ablation keeps the established strongest direct Clipper baseline and
+    // the unchanged full-metrics Winding operation under the same six STRtree scopes.
+    private static string[] MeasuredMethods(bool intersectionOnly) => intersectionOnly
+        ? ["Winding", "Winding-intersection-only", "Clipper64-reused-data"]
+        : Methods().Select(m => m.Name).ToArray();
+
     internal static int Run(string[] args)
     {
         if (args.Length == 0) args = ["check"];
@@ -65,8 +71,12 @@ internal static partial class CoverageExperiment
                 Benchmark(data, args[1], int.Parse(args[2], CultureInfo.InvariantCulture), args[3]); return 0;
             case "summarize" when args.Length == 2:
                 Summarize(data, args[1]); return 0;
+            case "benchmark-intersection" when args.Length == 4:
+                Benchmark(data, args[1], int.Parse(args[2], CultureInfo.InvariantCulture), args[3], true); return 0;
+            case "summarize-intersection" when args.Length == 2:
+                Summarize(data, args[1], true); return 0;
             default:
-                Console.Error.WriteLine("Commands: check | run <output> | benchmark <output> <run:1..3> <revision> | summarize <output>");
+                Console.Error.WriteLine("Commands: check | run <output> | benchmark[-intersection] <output> <run:1..3> <revision> | summarize[-intersection] <output>");
                 return 2;
         }
     }
@@ -171,6 +181,13 @@ internal static partial class CoverageExperiment
                     SameDigest(linear, packed.Indexed()) && SameDigest(linear, hilbert.Indexed()),
                     "Query index changed results.");
                 Console.WriteLine($"{direction.Name}/{method.Name}: {pairs.Count} pairs, {failed} outside numerical budget.");
+            }
+            var fullValues = values.Where(v => v.Method == "Winding").ToDictionary(v => (v.Zone, v.Query));
+            foreach (var narrow in values.Where(v => v.Method == "Winding-intersection-only"))
+            {
+                var full = fullValues[(narrow.Zone, narrow.Query)];
+                Require(narrow.Intersection == full.Intersection && narrow.Coverage == full.Coverage,
+                    "Intersection-only changed the full operation's area/coverage value: " + narrow.Zone + "/" + narrow.Query);
             }
             output.Add(new(direction.Name, pairs.ToArray(), values.ToArray()));
             Console.WriteLine($"{direction.Name}: {pairs.Count(p => p.BoundsCandidate)} bbox candidates, " +
@@ -329,14 +346,14 @@ internal static partial class CoverageExperiment
         AddPlatformHashes(hashes); return hashes;
     }
 
-    private static void Benchmark(Inputs data, string directory, int run, string revision)
+    private static void Benchmark(Inputs data, string directory, int run, string revision, bool intersectionOnly = false)
     {
         if (run is < 1 or > 3) throw new ArgumentOutOfRangeException(nameof(run));
         Accuracy[] accuracy = Check(data);
         var rows = new List<Measurement>(); var firstUses = new List<FirstUse>();
         foreach (Direction direction in Directions(data))
         {
-            string[] names = Methods().Select(m => m.Name).ToArray();
+            string[] names = MeasuredMethods(intersectionOnly);
             foreach (string name in names.Skip(run - 1).Concat(names.Take(run - 1)))
             {
                 var prepared = Prepare(direction, Fresh(name));
@@ -351,6 +368,11 @@ internal static partial class CoverageExperiment
                 rows.Add(Measure(direction.Name, name, "warm-indexed-table", 1, prepared.Indexed));
                 rows.Add(Measure(direction.Name, name, "prepare-plus-one-table", 1, () => Session(direction, name, 1)));
                 rows.Add(Measure(direction.Name, name, "prepare-plus-eight-tables", 8, () => Session(direction, name, 8)));
+                if (intersectionOnly)
+                {
+                    Console.WriteLine($"Run {run}: {direction.Name}/{name} complete.");
+                    continue;
+                }
                 foreach (var (label, kind) in new[] { ("packed", OuterIndex.Packed), ("hilbert", OuterIndex.Hilbert) })
                 {
                     var alternative = Prepare(direction, Fresh(name), kind);
@@ -371,7 +393,7 @@ internal static partial class CoverageExperiment
         GC.KeepAlive(sink);
     }
 
-    private static void Summarize(Inputs data, string directory)
+    private static void Summarize(Inputs data, string directory, bool intersectionOnly = false)
     {
         var runs = Enumerable.Range(1, 3).Select(i => JsonSerializer.Deserialize<BenchmarkRun>(
             File.ReadAllText(Path.Combine(directory, $"run-{i}.json")))!).ToArray();
@@ -383,7 +405,7 @@ internal static partial class CoverageExperiment
         var expected = new Dictionary<(string Direction, string Method, string Scope), (int Tables, Digest Value)>();
         var expectedFirstUses = new Dictionary<(string Direction, string Method), Digest>();
         foreach (Direction direction in Directions(data))
-        foreach (string name in Methods().Select(m => m.Name))
+        foreach (string name in MeasuredMethods(intersectionOnly))
         {
             var prepared = Prepare(direction, Fresh(name));
             Digest preparation = prepared.PreparationValue(), indexed = prepared.Indexed(), linear = prepared.Linear();
@@ -395,6 +417,7 @@ internal static partial class CoverageExperiment
             expected.Add((direction.Name, name, "warm-indexed-table"), (1, indexed));
             expected.Add((direction.Name, name, "prepare-plus-one-table"), (1, indexed));
             expected.Add((direction.Name, name, "prepare-plus-eight-tables"), (8, indexed));
+            if (intersectionOnly) continue;
             foreach (var (label, kind) in new[] { ("packed", OuterIndex.Packed), ("hilbert", OuterIndex.Hilbert) })
             {
                 var alternative = Prepare(direction, Fresh(name), kind);
@@ -427,6 +450,23 @@ internal static partial class CoverageExperiment
         Require(JsonSerializer.Serialize(Check(data)) == JsonSerializer.Serialize(runs[0].Accuracy), "Current numerical evidence differs.");
         var report = new StringBuilder("# Prepared region coverage results\n\n");
         report.AppendLine($"Source `{runs[0].Revision}`; {runs[0].Utc:yyyy-MM-dd} UTC; {runs[0].Runtime}; {runs[0].OS}; {runs[0].CPU}. Three fresh sequential processes, five calibrated batches each. Tiered compilation `{runs[0].TieredCompilation}`; SDK and commands are recorded separately.\n");
+        if (intersectionOnly)
+        {
+            var gates = (from direction in Directions(data)
+                from scope in new[] { "warm-indexed-table", "prepare-plus-one-table" }
+                let clipper = maps.Select(m => m[(direction.Name, "Clipper64-reused-data", scope)].MedianNanoseconds).Order().ElementAt(1)
+                let narrow = maps.Select(m => m[(direction.Name, "Winding-intersection-only", scope)].MedianNanoseconds).Order().ElementAt(1)
+                select new { Direction = direction.Name, Scope = scope, ClipperNanoseconds = clipper,
+                    IntersectionNanoseconds = narrow, Ratio = clipper / narrow, Passed = clipper / narrow >= 1.25 }).ToArray();
+            bool passed = gates.All(g => g.Passed);
+            File.WriteAllText(Path.Combine(directory, "decision.json"), JsonSerializer.Serialize(new
+                { Revision = runs[0].Revision, MinimumRatio = 1.25, Passed = passed, Cells = gates }, Json) + "\n");
+            report.AppendLine($"Intersection-only predeclared gate: **{(passed ? "PASS" : "FAIL")}**. Every indexed/fresh-one-table ratio must be at least 1.25; accuracy is verified independently above. This is a local engineering gate, not statistical significance.\n");
+            report.AppendLine("| Direction | Scope | Clipper / intersection-only | Pass |\n|---|---|---:|---|");
+            foreach (var gate in gates)
+                report.AppendLine(FormattableString.Invariant($"| {gate.Direction} | {gate.Scope} | {gate.Ratio:F3} | {gate.Passed} |"));
+            report.AppendLine();
+        }
         report.AppendLine(FormattableString.Invariant($"{data.Counties.Length} complete county rings, {data.Districts.Length} complete district rings. Common translated origin = ({data.OriginX:R}, {data.OriginY:R}) in EPSG:5070 metres. No per-shape alignment or simplification. See data/PROTOCOL.md for predeclared selection, exclusions and agreement budgets.\n"));
         foreach (var accuracy in runs[0].Accuracy)
         {
@@ -439,7 +479,7 @@ internal static partial class CoverageExperiment
         foreach (string scope in runs[0].Measurements.Select(m => m.Scope).Distinct())
         {
             report.AppendLine($"\n## {direction}: {scope}\n\n| Method | ms per table/preparation (min–max) | Managed B per table/preparation |\n|---|---:|---:|");
-            foreach (string method in Methods().Select(m => m.Name))
+            foreach (string method in MeasuredMethods(intersectionOnly))
             {
                 var values = maps.Select(m => m[(direction, method, scope)]).ToArray();
                 report.AppendLine(FormattableString.Invariant($"| {method} | {values.Select(v => v.MedianNanoseconds).Order().ElementAt(1)/1e6:F4} ({values.Min(v => v.MedianNanoseconds)/1e6:F4}–{values.Max(v => v.MedianNanoseconds)/1e6:F4}) | {values.Max(v => v.MedianBytes):F0} |"));
