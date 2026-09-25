@@ -25,6 +25,9 @@ The extension adds a [real-contour intersection protocol](REAL-PROTOCOL.md) and
 or `benchmark-wide`/`summarize-wide` with the same arguments as the original
 runner below, in distinct artifact directories. The original results remain
 historical measurements of their explicitly identified commits.
+The [expanded results](EXPANDED-RESULTS.md) show that neither extension passes its
+full gate. A [double-input incremental scanline](DOUBLE-SCANLINE.md) is proposed
+as a separate experiment; it is not implemented by this integer prototype.
 
 From the repository root, using PowerShell:
 

@@ -1,0 +1,3072 @@
+{
+  "Real": {
+    "Protocol": "benchmarks/PolylineKit.ScanbeamBenchmarks/REAL-PROTOCOL.md",
+    "Environment": {
+      "Run": 1,
+      "Revision": "9a947c769e3859a468fdfe90283ccb543c3abc70",
+      "Utc": "2026-09-25T09:54:52.3350287+00:00",
+      "SourceHash": "c42265beea7590918ecf06107263ad63f1395dc33f592653344c5980bda379b0",
+      "Origin": {
+        "X": 1423255,
+        "Y": 1517079
+      },
+      "Runtime": ".NET 10.0.12",
+      "OS": "Microsoft Windows 10.0.26200",
+      "Architecture": "X64",
+      "Cpu": "Intel64 Family 6 Model 158 Stepping 12, GenuineIntel",
+      "LogicalProcessors": 16,
+      "TieredCompilation": "0",
+      "HarnessHash": "e4bd320ea2d3a4e3db336fc2de052524102c1e6f03c95b2643547997dd8a0d0a",
+      "WindingHash": "94a2c64f2c0a5ea2290f656be2a9113645fd481b78ee2eeb3dabe3648600ddb9",
+      "ClipperHash": "e9bf01e01f494ef6072cd46c792ed4f3004288a92b1e98c1f44931e558b8a5d0",
+      "NtsHash": "98fa6bae8b75b5f9445236679883fa27750d990aec11e985b85b57a30c37a858",
+      "Rows": []
+    },
+    "SampleCount": 270,
+    "SpeedPass": false,
+    "OriginalEquivalent": false,
+    "IntegrationPass": false,
+    "RawFiles": [
+      {
+        "File": "run-1.json",
+        "Sha256": "dfbb5ec173ca00ad29b656106e65c51ed07a6d968138c399a62afd235283f25d"
+      },
+      {
+        "File": "run-2.json",
+        "Sha256": "99aadfc37b6d232ac89fd06c89994e3ae4e13837b146ee27e391744497264fef"
+      },
+      {
+        "File": "run-3.json",
+        "Sha256": "eb090ef9761c4953875b95975de58b11535bb5b1d50c2a14a123ec2374636933"
+      }
+    ],
+    "DiagnosticFiles": [
+      {
+        "File": "features.json",
+        "Sha256": "37af59557601b7da878c2e5f9085f918765bf2aa13afb42372c2a24be93a6459"
+      },
+      {
+        "File": "validation.json",
+        "Sha256": "7e76b25c12b73748a4ec809f09b77338d8582903e2f13ecf47e81ef3714ba6cd"
+      }
+    ],
+    "Validation": {
+      "SourceHash": "c42265beea7590918ecf06107263ad63f1395dc33f592653344c5980bda379b0",
+      "Origin": {
+        "X": 1423255,
+        "Y": 1517079
+      },
+      "Features": 109,
+      "Vertices": 10588,
+      "CollapsedEdges": 6,
+      "InvalidOriginal": [],
+      "InvalidRounded": [],
+      "NonSimpleOriginal": [],
+      "NonSimpleRounded": [
+        "37113"
+      ],
+      "OriginalEquivalenceFailures": 312,
+      "BackendFailures": 0,
+      "MaxRoundingDisplacement": 0.7012754521611845,
+      "MaxOwnAreaChange": 31603.968021392822,
+      "MaxIntersectionChange": 15681.396790266037,
+      "MaxCoverageChange": 2.9061917231176793e-05,
+      "MaxWindingError": 1.0728836059570312e-06,
+      "MaxScanbeamError": 9.5367431640625e-07,
+      "MaxClipperError": 0.012103915214538574,
+      "RoundedCandidatesPerDirection": 211,
+      "Pairs": []
+    },
+    "Gates": [
+      {
+        "Direction": "county-zones",
+        "Scope": "prepare-plus-one",
+        "ClipperOverPrototype": 0.16977948266465434,
+        "Pass": false
+      },
+      {
+        "Direction": "county-zones",
+        "Scope": "warm-table",
+        "ClipperOverPrototype": 0.1651219089529431,
+        "Pass": false
+      },
+      {
+        "Direction": "district-zones",
+        "Scope": "prepare-plus-one",
+        "ClipperOverPrototype": 0.16825850347262233,
+        "Pass": false
+      },
+      {
+        "Direction": "district-zones",
+        "Scope": "warm-table",
+        "ClipperOverPrototype": 0.16410095249842213,
+        "Pass": false
+      }
+    ],
+    "Measurements": [
+      {
+        "Direction": "county-zones",
+        "Method": "Clipper64-reused-data",
+        "Scope": "prepare",
+        "Value": 225407872405.5,
+        "MedianNs": 529832.8125,
+        "MinNs": 523850,
+        "MaxNs": 571281.25,
+        "MedianBytes": 1158016
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Clipper64-reused-data",
+        "Scope": "prepare-plus-one",
+        "Value": 99289904954.77284,
+        "MedianNs": 12959200,
+        "MinNs": 12929200,
+        "MaxNs": 13397750,
+        "MedianBytes": 1844320
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Clipper64-reused-data",
+        "Scope": "warm-table",
+        "Value": 99289904954.77284,
+        "MedianNs": 12577600,
+        "MinNs": 12530150,
+        "MaxNs": 12712850,
+        "MedianBytes": 650784
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "IntegerScanbeam-intersection",
+        "Scope": "prepare",
+        "Value": 225407872405.5,
+        "MedianNs": 233736.71875,
+        "MinNs": 232795.3125,
+        "MaxNs": 235473.4375,
+        "MedianBytes": 200392
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "IntegerScanbeam-intersection",
+        "Scope": "prepare-plus-one",
+        "Value": 99289904954.82007,
+        "MedianNs": 76329600,
+        "MinNs": 76217200,
+        "MaxNs": 76619400,
+        "MedianBytes": 477704
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "IntegerScanbeam-intersection",
+        "Scope": "warm-table",
+        "Value": 99289904954.82007,
+        "MedianNs": 76171600,
+        "MinNs": 76064200,
+        "MaxNs": 76343000,
+        "MedianBytes": 0
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Winding-intersection-only",
+        "Scope": "prepare",
+        "Value": 225407872405.5,
+        "MedianNs": 233400,
+        "MinNs": 233051.5625,
+        "MaxNs": 234931.25,
+        "MedianBytes": 200008
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Winding-intersection-only",
+        "Scope": "prepare-plus-one",
+        "Value": 99289904954.82007,
+        "MedianNs": 10527150,
+        "MinNs": 10520850,
+        "MaxNs": 10551650,
+        "MedianBytes": 199944
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Winding-intersection-only",
+        "Scope": "warm-table",
+        "Value": 99289904954.82007,
+        "MedianNs": 10275050,
+        "MinNs": 10273100,
+        "MaxNs": 10288500,
+        "MedianBytes": 0
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Clipper64-reused-data",
+        "Scope": "prepare",
+        "Value": 225407872405.5,
+        "MedianNs": 527032.8125,
+        "MinNs": 526534.375,
+        "MaxNs": 530092.1875,
+        "MedianBytes": 1158016
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Clipper64-reused-data",
+        "Scope": "prepare-plus-one",
+        "Value": 99289904884.3322,
+        "MedianNs": 12849700,
+        "MinNs": 12825600,
+        "MaxNs": 12869350,
+        "MedianBytes": 1841912
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Clipper64-reused-data",
+        "Scope": "warm-table",
+        "Value": 99289904884.3322,
+        "MedianNs": 12506150,
+        "MinNs": 12348500,
+        "MaxNs": 12558100,
+        "MedianBytes": 650560
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "IntegerScanbeam-intersection",
+        "Scope": "prepare",
+        "Value": 225407872405.5,
+        "MedianNs": 234949.21875,
+        "MinNs": 232883.59375,
+        "MaxNs": 235521.875,
+        "MedianBytes": 200392
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "IntegerScanbeam-intersection",
+        "Scope": "prepare-plus-one",
+        "Value": 99289904884.37941,
+        "MedianNs": 76368800,
+        "MinNs": 76263800,
+        "MaxNs": 76655000,
+        "MedianBytes": 468416
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "IntegerScanbeam-intersection",
+        "Scope": "warm-table",
+        "Value": 99289904884.37941,
+        "MedianNs": 76210100,
+        "MinNs": 76132300,
+        "MaxNs": 76562400,
+        "MedianBytes": 0
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Winding-intersection-only",
+        "Scope": "prepare",
+        "Value": 225407872405.5,
+        "MedianNs": 234925,
+        "MinNs": 233189.0625,
+        "MaxNs": 234944.53125,
+        "MedianBytes": 200008
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Winding-intersection-only",
+        "Scope": "prepare-plus-one",
+        "Value": 99289904884.37941,
+        "MedianNs": 10220950,
+        "MinNs": 10196750,
+        "MaxNs": 10226000,
+        "MedianBytes": 199944
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Winding-intersection-only",
+        "Scope": "warm-table",
+        "Value": 99289904884.37941,
+        "MedianNs": 9967150,
+        "MinNs": 9943875,
+        "MaxNs": 9973400,
+        "MedianBytes": 0
+      }
+    ]
+  },
+  "Wide": {
+    "Protocol": "benchmarks/PolylineKit.ScanbeamBenchmarks/WIDE-PROTOCOL.md",
+    "Environment": {
+      "Run": 1,
+      "Revision": "9a947c769e3859a468fdfe90283ccb543c3abc70",
+      "Utc": "2026-09-25T09:55:16.0964363+00:00",
+      "Runtime": ".NET 10.0.12",
+      "OS": "Microsoft Windows 10.0.26200",
+      "Architecture": "X64",
+      "Cpu": "Intel64 Family 6 Model 158 Stepping 12, GenuineIntel",
+      "LogicalProcessors": 16,
+      "TieredCompilation": "0",
+      "HarnessHash": "e4bd320ea2d3a4e3db336fc2de052524102c1e6f03c95b2643547997dd8a0d0a",
+      "WindingHash": "94a2c64f2c0a5ea2290f656be2a9113645fd481b78ee2eeb3dabe3648600ddb9",
+      "ClipperHash": "e9bf01e01f494ef6072cd46c792ed4f3004288a92b1e98c1f44931e558b8a5d0",
+      "Rows": []
+    },
+    "RawFiles": [
+      {
+        "File": "run-1.json",
+        "Sha256": "3dd413d02387ad4f2100cf3a67421ed2d22a7bfbee4f690024dd52c3d5f69417"
+      },
+      {
+        "File": "run-2.json",
+        "Sha256": "d3109c15f97d86c2ad854f3004c959759749a14c9d06a439f6f240a6e4c630d7"
+      },
+      {
+        "File": "run-3.json",
+        "Sha256": "48a84d78273ac0e4d9364fc5c1f3e3bf045929ccd7cb8010315d7943715b7de6"
+      }
+    ],
+    "SampleCount": 480,
+    "Pass": false,
+    "Gates": [
+      {
+        "Input": "frozen-grid-256-scaled-65536",
+        "Rule": 1,
+        "ClipperOverPrototype": 1.5812995013831348,
+        "Pass": true
+      },
+      {
+        "Input": "frozen-grid-256-scaled-65536",
+        "Rule": 0,
+        "ClipperOverPrototype": 0.7823400600451886,
+        "Pass": false
+      },
+      {
+        "Input": "frozen-grid-256-translated-400000",
+        "Rule": 1,
+        "ClipperOverPrototype": 1.5931068084751492,
+        "Pass": true
+      },
+      {
+        "Input": "frozen-grid-256-translated-400000",
+        "Rule": 0,
+        "ClipperOverPrototype": 0.800432433717939,
+        "Pass": false
+      },
+      {
+        "Input": "frozen-grid-64-scaled-65536",
+        "Rule": 1,
+        "ClipperOverPrototype": 1.3488426646240754,
+        "Pass": true
+      },
+      {
+        "Input": "frozen-grid-64-scaled-65536",
+        "Rule": 0,
+        "ClipperOverPrototype": 0.7556410426202912,
+        "Pass": false
+      },
+      {
+        "Input": "frozen-grid-64-translated-400000",
+        "Rule": 1,
+        "ClipperOverPrototype": 1.4209737641260516,
+        "Pass": true
+      },
+      {
+        "Input": "frozen-grid-64-translated-400000",
+        "Rule": 0,
+        "ClipperOverPrototype": 0.7883799556388225,
+        "Pass": false
+      }
+    ],
+    "Measurements": [
+      {
+        "Input": "frozen-grid-256-scaled-65536",
+        "Vertices": 512,
+        "InputHash": "f4f5bca05db086cc05936d68d40bd56fa03215fe045bf9154897f33c4142a4e0",
+        "Gate": true,
+        "Rule": 1,
+        "Method": "Clipper64-preloaded-p6",
+        "Area": 105702131674.1994,
+        "WindingArea": 105702131674.27838,
+        "UnscaledClipperArea": 105702069318.5,
+        "MedianNs": 9189050,
+        "MinNs": 9111250,
+        "MaxNs": 9339900,
+        "MedianBytes": 2011416
+      },
+      {
+        "Input": "frozen-grid-256-scaled-65536",
+        "Vertices": 512,
+        "InputHash": "f4f5bca05db086cc05936d68d40bd56fa03215fe045bf9154897f33c4142a4e0",
+        "Gate": true,
+        "Rule": 1,
+        "Method": "Clipper64-reused-p6",
+        "Area": 105702131674.1994,
+        "WindingArea": 105702131674.27838,
+        "UnscaledClipperArea": 105702069318.5,
+        "MedianNs": 9285150,
+        "MinNs": 9188300,
+        "MaxNs": 9541550,
+        "MedianBytes": 2011504
+      },
+      {
+        "Input": "frozen-grid-256-scaled-65536",
+        "Vertices": 512,
+        "InputHash": "f4f5bca05db086cc05936d68d40bd56fa03215fe045bf9154897f33c4142a4e0",
+        "Gate": true,
+        "Rule": 1,
+        "Method": "IntegerScanbeam",
+        "Area": 105702131674.2784,
+        "WindingArea": 105702131674.27838,
+        "UnscaledClipperArea": 105702069318.5,
+        "MedianNs": 5811075,
+        "MinNs": 5792700,
+        "MaxNs": 5815050,
+        "MedianBytes": 0
+      },
+      {
+        "Input": "frozen-grid-256-scaled-65536",
+        "Vertices": 512,
+        "InputHash": "f4f5bca05db086cc05936d68d40bd56fa03215fe045bf9154897f33c4142a4e0",
+        "Gate": true,
+        "Rule": 1,
+        "Method": "WindingArea",
+        "Area": 105702131674.27838,
+        "WindingArea": 105702131674.27838,
+        "UnscaledClipperArea": 105702069318.5,
+        "MedianNs": 6968225,
+        "MinNs": 6927350,
+        "MaxNs": 7471000,
+        "MedianBytes": 0
+      },
+      {
+        "Input": "frozen-grid-256-scaled-65536",
+        "Vertices": 512,
+        "InputHash": "f4f5bca05db086cc05936d68d40bd56fa03215fe045bf9154897f33c4142a4e0",
+        "Gate": true,
+        "Rule": 0,
+        "Method": "Clipper64-preloaded-p6",
+        "Area": 184189548906.83865,
+        "WindingArea": 184189548906.971,
+        "UnscaledClipperArea": 184189445635,
+        "MedianNs": 5055325,
+        "MinNs": 5047150,
+        "MaxNs": 5179650,
+        "MedianBytes": 352536
+      },
+      {
+        "Input": "frozen-grid-256-scaled-65536",
+        "Vertices": 512,
+        "InputHash": "f4f5bca05db086cc05936d68d40bd56fa03215fe045bf9154897f33c4142a4e0",
+        "Gate": true,
+        "Rule": 0,
+        "Method": "Clipper64-reused-p6",
+        "Area": 184189548906.83865,
+        "WindingArea": 184189548906.971,
+        "UnscaledClipperArea": 184189445635,
+        "MedianNs": 5109375,
+        "MinNs": 5045900,
+        "MaxNs": 5110900,
+        "MedianBytes": 352624
+      },
+      {
+        "Input": "frozen-grid-256-scaled-65536",
+        "Vertices": 512,
+        "InputHash": "f4f5bca05db086cc05936d68d40bd56fa03215fe045bf9154897f33c4142a4e0",
+        "Gate": true,
+        "Rule": 0,
+        "Method": "IntegerScanbeam",
+        "Area": 184189548906.97095,
+        "WindingArea": 184189548906.971,
+        "UnscaledClipperArea": 184189445635,
+        "MedianNs": 6461800,
+        "MinNs": 6457600,
+        "MaxNs": 6478450,
+        "MedianBytes": 0
+      },
+      {
+        "Input": "frozen-grid-256-scaled-65536",
+        "Vertices": 512,
+        "InputHash": "f4f5bca05db086cc05936d68d40bd56fa03215fe045bf9154897f33c4142a4e0",
+        "Gate": true,
+        "Rule": 0,
+        "Method": "WindingArea",
+        "Area": 184189548906.971,
+        "WindingArea": 184189548906.971,
+        "UnscaledClipperArea": 184189445635,
+        "MedianNs": 6928875,
+        "MinNs": 6900500,
+        "MaxNs": 7528875,
+        "MedianBytes": 0
+      },
+      {
+        "Input": "frozen-grid-256-translated-400000",
+        "Vertices": 512,
+        "InputHash": "76e3135ec38bd28fd3aee732d422620f92fb01e508cb714a840d37b30f775a04",
+        "Gate": true,
+        "Rule": 1,
+        "Method": "Clipper64-preloaded-p6",
+        "Area": 24.6106927883725,
+        "WindingArea": 24.61069535471518,
+        "UnscaledClipperArea": 1.5,
+        "MedianNs": 9073500,
+        "MinNs": 9051100,
+        "MaxNs": 9332000,
+        "MedianBytes": 2012560
+      },
+      {
+        "Input": "frozen-grid-256-translated-400000",
+        "Vertices": 512,
+        "InputHash": "76e3135ec38bd28fd3aee732d422620f92fb01e508cb714a840d37b30f775a04",
+        "Gate": true,
+        "Rule": 1,
+        "Method": "Clipper64-reused-p6",
+        "Area": 24.6106927883725,
+        "WindingArea": 24.61069535471518,
+        "UnscaledClipperArea": 1.5,
+        "MedianNs": 9417150,
+        "MinNs": 9024900,
+        "MaxNs": 9644650,
+        "MedianBytes": 2012648
+      },
+      {
+        "Input": "frozen-grid-256-translated-400000",
+        "Vertices": 512,
+        "InputHash": "76e3135ec38bd28fd3aee732d422620f92fb01e508cb714a840d37b30f775a04",
+        "Gate": true,
+        "Rule": 1,
+        "Method": "IntegerScanbeam",
+        "Area": 24.61069535330832,
+        "WindingArea": 24.61069535471518,
+        "UnscaledClipperArea": 1.5,
+        "MedianNs": 5695475,
+        "MinNs": 5692925,
+        "MaxNs": 5853375,
+        "MedianBytes": 0
+      },
+      {
+        "Input": "frozen-grid-256-translated-400000",
+        "Vertices": 512,
+        "InputHash": "76e3135ec38bd28fd3aee732d422620f92fb01e508cb714a840d37b30f775a04",
+        "Gate": true,
+        "Rule": 1,
+        "Method": "WindingArea",
+        "Area": 24.61069535471518,
+        "WindingArea": 24.61069535471518,
+        "UnscaledClipperArea": 1.5,
+        "MedianNs": 6657950,
+        "MinNs": 6602050,
+        "MaxNs": 7147350,
+        "MedianBytes": 0
+      },
+      {
+        "Input": "frozen-grid-256-translated-400000",
+        "Vertices": 512,
+        "InputHash": "76e3135ec38bd28fd3aee732d422620f92fb01e508cb714a840d37b30f775a04",
+        "Gate": true,
+        "Rule": 0,
+        "Method": "Clipper64-preloaded-p6",
+        "Area": 42.884968294677,
+        "WindingArea": 42.8849712270277,
+        "UnscaledClipperArea": 43.5,
+        "MedianNs": 5048587.5,
+        "MinNs": 5037187.5,
+        "MaxNs": 5118175,
+        "MedianBytes": 352184
+      },
+      {
+        "Input": "frozen-grid-256-translated-400000",
+        "Vertices": 512,
+        "InputHash": "76e3135ec38bd28fd3aee732d422620f92fb01e508cb714a840d37b30f775a04",
+        "Gate": true,
+        "Rule": 0,
+        "Method": "Clipper64-reused-p6",
+        "Area": 42.884968294677,
+        "WindingArea": 42.8849712270277,
+        "UnscaledClipperArea": 43.5,
+        "MedianNs": 5063112.5,
+        "MinNs": 5062775,
+        "MaxNs": 5139250,
+        "MedianBytes": 352272
+      },
+      {
+        "Input": "frozen-grid-256-translated-400000",
+        "Vertices": 512,
+        "InputHash": "76e3135ec38bd28fd3aee732d422620f92fb01e508cb714a840d37b30f775a04",
+        "Gate": true,
+        "Rule": 0,
+        "Method": "IntegerScanbeam",
+        "Area": 42.884971226325945,
+        "WindingArea": 42.8849712270277,
+        "UnscaledClipperArea": 43.5,
+        "MedianNs": 6307325,
+        "MinNs": 6267475,
+        "MaxNs": 6322150,
+        "MedianBytes": 0
+      },
+      {
+        "Input": "frozen-grid-256-translated-400000",
+        "Vertices": 512,
+        "InputHash": "76e3135ec38bd28fd3aee732d422620f92fb01e508cb714a840d37b30f775a04",
+        "Gate": true,
+        "Rule": 0,
+        "Method": "WindingArea",
+        "Area": 42.8849712270277,
+        "WindingArea": 42.8849712270277,
+        "UnscaledClipperArea": 43.5,
+        "MedianNs": 6638325,
+        "MinNs": 6604875,
+        "MaxNs": 7083050,
+        "MedianBytes": 0
+      },
+      {
+        "Input": "frozen-grid-64-scaled-65536",
+        "Vertices": 128,
+        "InputHash": "e18e8ff4e55895bdca95df609d11a80a31dab1cd8c004492f2be195bf247c941",
+        "Gate": true,
+        "Rule": 1,
+        "Method": "Clipper64-preloaded-p6",
+        "Area": 98280915304.18254,
+        "WindingArea": 98280915304.10028,
+        "UnscaledClipperArea": 98280979312.5,
+        "MedianNs": 440239.0625,
+        "MinNs": 438537.5,
+        "MaxNs": 443998.4375,
+        "MedianBytes": 135552
+      },
+      {
+        "Input": "frozen-grid-64-scaled-65536",
+        "Vertices": 128,
+        "InputHash": "e18e8ff4e55895bdca95df609d11a80a31dab1cd8c004492f2be195bf247c941",
+        "Gate": true,
+        "Rule": 1,
+        "Method": "Clipper64-reused-p6",
+        "Area": 98280915304.18254,
+        "WindingArea": 98280915304.10028,
+        "UnscaledClipperArea": 98280979312.5,
+        "MedianNs": 444675,
+        "MinNs": 444139.0625,
+        "MaxNs": 447603.125,
+        "MedianBytes": 135640
+      },
+      {
+        "Input": "frozen-grid-64-scaled-65536",
+        "Vertices": 128,
+        "InputHash": "e18e8ff4e55895bdca95df609d11a80a31dab1cd8c004492f2be195bf247c941",
+        "Gate": true,
+        "Rule": 1,
+        "Method": "IntegerScanbeam",
+        "Area": 98280915304.10022,
+        "WindingArea": 98280915304.10028,
+        "UnscaledClipperArea": 98280979312.5,
+        "MedianNs": 326382.8125,
+        "MinNs": 325475,
+        "MaxNs": 328950,
+        "MedianBytes": 0
+      },
+      {
+        "Input": "frozen-grid-64-scaled-65536",
+        "Vertices": 128,
+        "InputHash": "e18e8ff4e55895bdca95df609d11a80a31dab1cd8c004492f2be195bf247c941",
+        "Gate": true,
+        "Rule": 1,
+        "Method": "WindingArea",
+        "Area": 98280915304.10028,
+        "WindingArea": 98280915304.10028,
+        "UnscaledClipperArea": 98280979312.5,
+        "MedianNs": 400973.4375,
+        "MinNs": 400968.75,
+        "MaxNs": 432889.0625,
+        "MedianBytes": 0
+      },
+      {
+        "Input": "frozen-grid-64-scaled-65536",
+        "Vertices": 128,
+        "InputHash": "e18e8ff4e55895bdca95df609d11a80a31dab1cd8c004492f2be195bf247c941",
+        "Gate": true,
+        "Rule": 0,
+        "Method": "Clipper64-preloaded-p6",
+        "Area": 153699291990.62234,
+        "WindingArea": 153699291990.55478,
+        "UnscaledClipperArea": 153699390024.5,
+        "MedianNs": 285280.46875,
+        "MinNs": 284921.09375,
+        "MaxNs": 286103.90625,
+        "MedianBytes": 45848
+      },
+      {
+        "Input": "frozen-grid-64-scaled-65536",
+        "Vertices": 128,
+        "InputHash": "e18e8ff4e55895bdca95df609d11a80a31dab1cd8c004492f2be195bf247c941",
+        "Gate": true,
+        "Rule": 0,
+        "Method": "Clipper64-reused-p6",
+        "Area": 153699291990.62234,
+        "WindingArea": 153699291990.55478,
+        "UnscaledClipperArea": 153699390024.5,
+        "MedianNs": 311589.84375,
+        "MinNs": 310555.46875,
+        "MaxNs": 313068.75,
+        "MedianBytes": 45936
+      },
+      {
+        "Input": "frozen-grid-64-scaled-65536",
+        "Vertices": 128,
+        "InputHash": "e18e8ff4e55895bdca95df609d11a80a31dab1cd8c004492f2be195bf247c941",
+        "Gate": true,
+        "Rule": 0,
+        "Method": "IntegerScanbeam",
+        "Area": 153699291990.55475,
+        "WindingArea": 153699291990.55478,
+        "UnscaledClipperArea": 153699390024.5,
+        "MedianNs": 377534.375,
+        "MinNs": 377414.0625,
+        "MaxNs": 377645.3125,
+        "MedianBytes": 0
+      },
+      {
+        "Input": "frozen-grid-64-scaled-65536",
+        "Vertices": 128,
+        "InputHash": "e18e8ff4e55895bdca95df609d11a80a31dab1cd8c004492f2be195bf247c941",
+        "Gate": true,
+        "Rule": 0,
+        "Method": "WindingArea",
+        "Area": 153699291990.55478,
+        "WindingArea": 153699291990.55478,
+        "UnscaledClipperArea": 153699390024.5,
+        "MedianNs": 401698.4375,
+        "MinNs": 400246.875,
+        "MaxNs": 432682.8125,
+        "MedianBytes": 0
+      },
+      {
+        "Input": "frozen-grid-64-translated-400000",
+        "Vertices": 128,
+        "InputHash": "42b662cd251d5836f11de4c16854c0d3ed226c4f590faafbe24617be0e3ade70",
+        "Gate": true,
+        "Rule": 1,
+        "Method": "Clipper64-preloaded-p6",
+        "Area": 22.8828085236325,
+        "WindingArea": 22.882808769811493,
+        "UnscaledClipperArea": 6,
+        "MedianNs": 448481.25,
+        "MinNs": 442260.9375,
+        "MaxNs": 448789.0625,
+        "MedianBytes": 135136
+      },
+      {
+        "Input": "frozen-grid-64-translated-400000",
+        "Vertices": 128,
+        "InputHash": "42b662cd251d5836f11de4c16854c0d3ed226c4f590faafbe24617be0e3ade70",
+        "Gate": true,
+        "Rule": 1,
+        "Method": "Clipper64-reused-p6",
+        "Area": 22.8828085236325,
+        "WindingArea": 22.882808769811493,
+        "UnscaledClipperArea": 6,
+        "MedianNs": 445985.9375,
+        "MinNs": 445378.125,
+        "MaxNs": 449567.1875,
+        "MedianBytes": 135224
+      },
+      {
+        "Input": "frozen-grid-64-translated-400000",
+        "Vertices": 128,
+        "InputHash": "42b662cd251d5836f11de4c16854c0d3ed226c4f590faafbe24617be0e3ade70",
+        "Gate": true,
+        "Rule": 1,
+        "Method": "IntegerScanbeam",
+        "Area": 22.8828087691451,
+        "WindingArea": 22.882808769811493,
+        "UnscaledClipperArea": 6,
+        "MedianNs": 313859.375,
+        "MinNs": 312973.4375,
+        "MaxNs": 314667.1875,
+        "MedianBytes": 0
+      },
+      {
+        "Input": "frozen-grid-64-translated-400000",
+        "Vertices": 128,
+        "InputHash": "42b662cd251d5836f11de4c16854c0d3ed226c4f590faafbe24617be0e3ade70",
+        "Gate": true,
+        "Rule": 1,
+        "Method": "WindingArea",
+        "Area": 22.882808769811493,
+        "WindingArea": 22.882808769811493,
+        "UnscaledClipperArea": 6,
+        "MedianNs": 420435.9375,
+        "MinNs": 389323.4375,
+        "MaxNs": 447048.4375,
+        "MedianBytes": 0
+      },
+      {
+        "Input": "frozen-grid-64-translated-400000",
+        "Vertices": 128,
+        "InputHash": "42b662cd251d5836f11de4c16854c0d3ed226c4f590faafbe24617be0e3ade70",
+        "Gate": true,
+        "Rule": 0,
+        "Method": "Clipper64-preloaded-p6",
+        "Area": 35.7859051703995,
+        "WindingArea": 35.78590508321675,
+        "UnscaledClipperArea": 33.5,
+        "MedianNs": 286015.625,
+        "MinNs": 285690.625,
+        "MaxNs": 286471.09375,
+        "MedianBytes": 45936
+      },
+      {
+        "Input": "frozen-grid-64-translated-400000",
+        "Vertices": 128,
+        "InputHash": "42b662cd251d5836f11de4c16854c0d3ed226c4f590faafbe24617be0e3ade70",
+        "Gate": true,
+        "Rule": 0,
+        "Method": "Clipper64-reused-p6",
+        "Area": 35.7859051703995,
+        "WindingArea": 35.78590508321675,
+        "UnscaledClipperArea": 33.5,
+        "MedianNs": 287291.40625,
+        "MinNs": 286964.84375,
+        "MaxNs": 288201.5625,
+        "MedianBytes": 46024
+      },
+      {
+        "Input": "frozen-grid-64-translated-400000",
+        "Vertices": 128,
+        "InputHash": "42b662cd251d5836f11de4c16854c0d3ed226c4f590faafbe24617be0e3ade70",
+        "Gate": true,
+        "Rule": 0,
+        "Method": "IntegerScanbeam",
+        "Area": 35.78590508330491,
+        "WindingArea": 35.78590508321675,
+        "UnscaledClipperArea": 33.5,
+        "MedianNs": 362789.0625,
+        "MinNs": 362528.125,
+        "MaxNs": 363535.9375,
+        "MedianBytes": 0
+      },
+      {
+        "Input": "frozen-grid-64-translated-400000",
+        "Vertices": 128,
+        "InputHash": "42b662cd251d5836f11de4c16854c0d3ed226c4f590faafbe24617be0e3ade70",
+        "Gate": true,
+        "Rule": 0,
+        "Method": "WindingArea",
+        "Area": 35.78590508321675,
+        "WindingArea": 35.78590508321675,
+        "UnscaledClipperArea": 33.5,
+        "MedianNs": 388065.625,
+        "MinNs": 387384.375,
+        "MaxNs": 423675,
+        "MedianBytes": 0
+      }
+    ]
+  },
+  "OriginalEquivalenceFailureColumns": [
+    "direction",
+    "zone",
+    "query",
+    "intersectionDeltaM2",
+    "coverageDelta"
+  ],
+  "OriginalEquivalenceFailures": [
+    [
+      "county-zones",
+      "37001",
+      "3704",
+      2958.359346147805,
+      2.631977261832812e-06
+    ],
+    [
+      "county-zones",
+      "37001",
+      "3705",
+      76.75370083912418,
+      6.828781831554419e-08
+    ],
+    [
+      "county-zones",
+      "37001",
+      "3709",
+      12002.32646203041,
+      1.5895000199384057e-06
+    ],
+    [
+      "county-zones",
+      "37003",
+      "3705",
+      7307.715649366379,
+      2.794880276435485e-06
+    ],
+    [
+      "county-zones",
+      "37003",
+      "3710",
+      1910.055807442286,
+      2.794880276545511e-06
+    ],
+    [
+      "county-zones",
+      "37005",
+      "3705",
+      2026.0840643644333,
+      9.69313220988699e-06
+    ],
+    [
+      "county-zones",
+      "37007",
+      "3708",
+      1155.666247367859,
+      2.220446049250313e-16
+    ],
+    [
+      "county-zones",
+      "37009",
+      "3705",
+      4189.87141084671,
+      3.867680053892819e-06
+    ],
+    [
+      "county-zones",
+      "37011",
+      "3705",
+      1928.760252062595,
+      3.021939070141735e-06
+    ],
+    [
+      "county-zones",
+      "37011",
+      "3711",
+      10958.813167095184,
+      8.193216669893921e-06
+    ],
+    [
+      "county-zones",
+      "37011",
+      "3714",
+      1096.8121297697799,
+      1.7183900257426328e-06
+    ],
+    [
+      "county-zones",
+      "37013",
+      "3701",
+      3144.127440544966,
+      1.405345557969159e-06
+    ],
+    [
+      "county-zones",
+      "37015",
+      "3701",
+      6427.311593055725,
+      1.0862586206084046e-06
+    ],
+    [
+      "county-zones",
+      "37017",
+      "3707",
+      3956.181197166443,
+      1.9987762307493995e-06
+    ],
+    [
+      "county-zones",
+      "37019",
+      "3707",
+      9661.136361598969,
+      3.19170994633744e-07
+    ],
+    [
+      "county-zones",
+      "37021",
+      "3711",
+      2493.8020803928375,
+      1.1088656848290412e-07
+    ],
+    [
+      "county-zones",
+      "37021",
+      "3714",
+      190.29788955217344,
+      1.108865684972289e-07
+    ],
+    [
+      "county-zones",
+      "37023",
+      "3705",
+      454.5693817741558,
+      3.4060254774468404e-07
+    ],
+    [
+      "county-zones",
+      "37023",
+      "3711",
+      4404.294430017591,
+      3.300419510970198e-06
+    ],
+    [
+      "county-zones",
+      "37023",
+      "3714",
+      6263.911003828049,
+      2.9598169625222326e-06
+    ],
+    [
+      "county-zones",
+      "37025",
+      "3706",
+      3110.794788479805,
+      2.599771863398548e-06
+    ],
+    [
+      "county-zones",
+      "37025",
+      "3708",
+      2903.6899584531784,
+      5.491567282245313e-06
+    ],
+    [
+      "county-zones",
+      "37025",
+      "3710",
+      863.849809033587,
+      9.175951772090677e-07
+    ],
+    [
+      "county-zones",
+      "37025",
+      "3712",
+      1326.0192405754115,
+      1.4085003066393724e-06
+    ],
+    [
+      "county-zones",
+      "37025",
+      "3714",
+      2260.298479798733,
+      2.4008902897716597e-06
+    ],
+    [
+      "county-zones",
+      "37027",
+      "3705",
+      7703.359706401825,
+      2.5999378635566117e-06
+    ],
+    [
+      "county-zones",
+      "37027",
+      "3710",
+      98.01874860528699,
+      7.983776944271638e-08
+    ],
+    [
+      "county-zones",
+      "37027",
+      "3711",
+      2529.062720929156,
+      2.0599865325681097e-06
+    ],
+    [
+      "county-zones",
+      "37027",
+      "3714",
+      564.8891392609052,
+      4.601135614327145e-07
+    ],
+    [
+      "county-zones",
+      "37029",
+      "3701",
+      9065.924284219742,
+      1.7821663503836405e-06
+    ],
+    [
+      "county-zones",
+      "37033",
+      "3705",
+      6431.625625585048,
+      5.796724190250665e-06
+    ],
+    [
+      "county-zones",
+      "37035",
+      "3705",
+      193.5298213258393,
+      1.7931601980039182e-07
+    ],
+    [
+      "county-zones",
+      "37035",
+      "3710",
+      4241.790827512741,
+      4.792070059211895e-06
+    ],
+    [
+      "county-zones",
+      "37035",
+      "3714",
+      4977.999529612247,
+      4.6127540397353745e-06
+    ],
+    [
+      "county-zones",
+      "37037",
+      "3704",
+      4040.646602869034,
+      4.168527888370743e-06
+    ],
+    [
+      "county-zones",
+      "37037",
+      "3709",
+      13943.909964323044,
+      3.124424200473541e-06
+    ],
+    [
+      "county-zones",
+      "37039",
+      "3711",
+      3765.680736064911,
+      5.415556881271932e-06
+    ],
+    [
+      "county-zones",
+      "37041",
+      "3701",
+      4912.777310371399,
+      8.969670529657137e-07
+    ],
+    [
+      "county-zones",
+      "37043",
+      "3711",
+      4338.552920103073,
+      1.3549790622846558e-08
+    ],
+    [
+      "county-zones",
+      "37045",
+      "3710",
+      219.7192631274729,
+      1.8133974651122127e-07
+    ],
+    [
+      "county-zones",
+      "37045",
+      "3714",
+      1882.3086459636688,
+      1.8133974644118922e-07
+    ],
+    [
+      "county-zones",
+      "37047",
+      "3707",
+      11889.509938716888,
+      2.1083059135174054e-06
+    ],
+    [
+      "county-zones",
+      "37049",
+      "3701",
+      2810.9526877515073,
+      1.4620826468526906e-06
+    ],
+    [
+      "county-zones",
+      "37051",
+      "3707",
+      7051.751174926758,
+      6.3212602150475306e-06
+    ],
+    [
+      "county-zones",
+      "37051",
+      "3709",
+      2346.024974644184,
+      8.16983598800336e-07
+    ],
+    [
+      "county-zones",
+      "37053",
+      "3701",
+      9241.125661373138,
+      2.9061917231176793e-05
+    ],
+    [
+      "county-zones",
+      "37057",
+      "3706",
+      10555.691101789474,
+      7.427201446086329e-07
+    ],
+    [
+      "county-zones",
+      "37057",
+      "3709",
+      1091.564991489106,
+      7.427201441376081e-07
+    ],
+    [
+      "county-zones",
+      "37059",
+      "3706",
+      3821.528615951538,
+      1.854910401388743e-06
+    ],
+    [
+      "county-zones",
+      "37059",
+      "3710",
+      1283.956419020993,
+      1.8549104010607244e-06
+    ],
+    [
+      "county-zones",
+      "37061",
+      "3701",
+      3689.7814315729265,
+      1.7389380272080385e-06
+    ],
+    [
+      "county-zones",
+      "37063",
+      "3704",
+      1297.302155137062,
+      5.740556830446941e-06
+    ],
+    [
+      "county-zones",
+      "37065",
+      "3701",
+      4251.143446922302,
+      6.821499676235021e-08
+    ],
+    [
+      "county-zones",
+      "37067",
+      "3705",
+      5998.306130011933,
+      5.622097217633474e-06
+    ],
+    [
+      "county-zones",
+      "37067",
+      "3706",
+      6785.505165696144,
+      4.825077021874957e-06
+    ],
+    [
+      "county-zones",
+      "37067",
+      "3710",
+      8125.776479005814,
+      1.0447174239702761e-05
+    ],
+    [
+      "county-zones",
+      "37069",
+      "3701",
+      12556.655128887425,
+      9.790748537173945e-06
+    ],
+    [
+      "county-zones",
+      "37071",
+      "3710",
+      8861.341828124328,
+      9.419994770849135e-06
+    ],
+    [
+      "county-zones",
+      "37071",
+      "3714",
+      3374.656450152397,
+      9.41999477110933e-06
+    ],
+    [
+      "county-zones",
+      "37073",
+      "3701",
+      9556.52027118206,
+      6.297785240638731e-06
+    ],
+    [
+      "county-zones",
+      "37075",
+      "3711",
+      5400.9359657764435,
+      2.3833447926335793e-07
+    ],
+    [
+      "county-zones",
+      "37077",
+      "3701",
+      1997.1805005669594,
+      1.1095722986867451e-06
+    ],
+    [
+      "county-zones",
+      "37077",
+      "3704",
+      3344.3914734357686,
+      2.403574651165378e-06
+    ],
+    [
+      "county-zones",
+      "37079",
+      "3701",
+      6021.752873539925,
+      3.941924473838121e-06
+    ],
+    [
+      "county-zones",
+      "37081",
+      "3705",
+      4910.395873367786,
+      2.036574352437537e-06
+    ],
+    [
+      "county-zones",
+      "37081",
+      "3706",
+      4768.9578766822815,
+      2.367406654019133e-06
+    ],
+    [
+      "county-zones",
+      "37081",
+      "3709",
+      4942.007300019264,
+      4.4039810065399365e-06
+    ],
+    [
+      "county-zones",
+      "37083",
+      "3701",
+      3106.339395046234,
+      4.440892098500626e-16
+    ],
+    [
+      "county-zones",
+      "37085",
+      "3704",
+      791.269504963614,
+      5.085848593943547e-07
+    ],
+    [
+      "county-zones",
+      "37085",
+      "3709",
+      5857.903457561704,
+      3.765182555741198e-06
+    ],
+    [
+      "county-zones",
+      "37087",
+      "3711",
+      10337.096359014511,
+      1.7716355723562671e-06
+    ],
+    [
+      "county-zones",
+      "37089",
+      "3711",
+      7291.0132204294205,
+      1.1901258529789516e-06
+    ],
+    [
+      "county-zones",
+      "37089",
+      "3714",
+      566.1783190456808,
+      5.851342907741712e-07
+    ],
+    [
+      "county-zones",
+      "37091",
+      "3701",
+      7356.772614479065,
+      3.973143627211684e-06
+    ],
+    [
+      "county-zones",
+      "37093",
+      "3707",
+      503.99046061089757,
+      4.972742688975158e-07
+    ],
+    [
+      "county-zones",
+      "37093",
+      "3708",
+      1172.840950395475,
+      1.1571845270276361e-06
+    ],
+    [
+      "county-zones",
+      "37093",
+      "3709",
+      5572.66962313652,
+      6.599102581050786e-07
+    ],
+    [
+      "county-zones",
+      "37097",
+      "3705",
+      9081.093979525787,
+      5.876449092034762e-06
+    ],
+    [
+      "county-zones",
+      "37097",
+      "3706",
+      1207.4398590285055,
+      7.813644951435524e-07
+    ],
+    [
+      "county-zones",
+      "37097",
+      "3710",
+      6500.50980424881,
+      5.095084596784538e-06
+    ],
+    [
+      "county-zones",
+      "37099",
+      "3711",
+      1883.780832529068,
+      3.3306690738754696e-16
+    ],
+    [
+      "county-zones",
+      "37101",
+      "3701",
+      4644.260963593602,
+      2.2514898194700524e-06
+    ],
+    [
+      "county-zones",
+      "37103",
+      "3701",
+      2087.9986308819825,
+      1.7006196660119985e-06
+    ],
+    [
+      "county-zones",
+      "37105",
+      "3709",
+      8365.311221195003,
+      1.2470286118858241e-05
+    ],
+    [
+      "county-zones",
+      "37107",
+      "3701",
+      2015.9016168117523,
+      1.7046045525104248e-06
+    ],
+    [
+      "county-zones",
+      "37109",
+      "3710",
+      5027.888943552971,
+      3.8936123063493255e-06
+    ],
+    [
+      "county-zones",
+      "37109",
+      "3714",
+      3072.931771077562,
+      3.893612306420017e-06
+    ],
+    [
+      "county-zones",
+      "37111",
+      "3711",
+      3338.8219928741455,
+      5.358606510519337e-06
+    ],
+    [
+      "county-zones",
+      "37111",
+      "3714",
+      6167.844704654592,
+      5.358606509880675e-06
+    ],
+    [
+      "county-zones",
+      "37113",
+      "3711",
+      846.4031841754913,
+      4.440892098500626e-16
+    ],
+    [
+      "county-zones",
+      "37115",
+      "3711",
+      3544.5955786705017,
+      1.1814685036970474e-06
+    ],
+    [
+      "county-zones",
+      "37117",
+      "3701",
+      1277.8453056812286,
+      1.3719749267782078e-06
+    ],
+    [
+      "county-zones",
+      "37119",
+      "3706",
+      1898.4446999798565,
+      1.3410434302418505e-06
+    ],
+    [
+      "county-zones",
+      "37119",
+      "3708",
+      2729.0569000840187,
+      1.929675255973873e-06
+    ],
+    [
+      "county-zones",
+      "37119",
+      "3710",
+      1154.2159594261157,
+      8.153271270651702e-07
+    ],
+    [
+      "county-zones",
+      "37119",
+      "3712",
+      3519.1114540100098,
+      2.4789118525658793e-06
+    ],
+    [
+      "county-zones",
+      "37119",
+      "3714",
+      5311.2431953549385,
+      3.7568272882593234e-06
+    ],
+    [
+      "county-zones",
+      "37121",
+      "3711",
+      904.0580079555511,
+      5.49751722833669e-06
+    ],
+    [
+      "county-zones",
+      "37123",
+      "3706",
+      2097.628625875853,
+      1.6136088455918667e-06
+    ],
+    [
+      "county-zones",
+      "37123",
+      "3708",
+      9485.01098561287,
+      2.3075064824462643e-06
+    ],
+    [
+      "county-zones",
+      "37123",
+      "3709",
+      5097.0723192644255,
+      3.921115327887782e-06
+    ],
+    [
+      "county-zones",
+      "37125",
+      "3708",
+      8405.620293446209,
+      4.596970177640679e-06
+    ],
+    [
+      "county-zones",
+      "37125",
+      "3709",
+      13414.437499284744,
+      3.7123931385663056e-06
+    ],
+    [
+      "county-zones",
+      "37127",
+      "3701",
+      2130.3321986198425,
+      1.0209641777558787e-05
+    ],
+    [
+      "county-zones",
+      "37129",
+      "3707",
+      6712.760588049889,
+      0
+    ],
+    [
+      "county-zones",
+      "37131",
+      "3701",
+      4046.964397907257,
+      8.846007258478394e-06
+    ],
+    [
+      "county-zones",
+      "37133",
+      "3707",
+      5534.1949018006535,
+      2.626518657943645e-06
+    ],
+    [
+      "county-zones",
+      "37135",
+      "3704",
+      1304.7954782247543,
+      1.9396158379425543e-06
+    ],
+    [
+      "county-zones",
+      "37135",
+      "3709",
+      1820.7221921931832,
+      1.7542048346235251e-06
+    ],
+    [
+      "county-zones",
+      "37139",
+      "3701",
+      1493.0288299322128,
+      2.686310351496246e-06
+    ],
+    [
+      "county-zones",
+      "37141",
+      "3707",
+      15632.10913515091,
+      9.277524985695784e-06
+    ],
+    [
+      "county-zones",
+      "37143",
+      "3701",
+      8087.038909077644,
+      5.751986927649e-06
+    ],
+    [
+      "county-zones",
+      "37147",
+      "3701",
+      5038.4356374757335,
+      2.9723526799605477e-06
+    ],
+    [
+      "county-zones",
+      "37149",
+      "3711",
+      2099.798122882843,
+      5.791033326263406e-06
+    ],
+    [
+      "county-zones",
+      "37149",
+      "3714",
+      4784.200296938419,
+      5.229791519179017e-06
+    ],
+    [
+      "county-zones",
+      "37151",
+      "3706",
+      2100.5210250743075,
+      1.0268026130209972e-06
+    ],
+    [
+      "county-zones",
+      "37151",
+      "3709",
+      4067.3862025737762,
+      1.026802613268707e-06
+    ],
+    [
+      "county-zones",
+      "37153",
+      "3708",
+      1572.2126848697662,
+      1.0004257011697604e-06
+    ],
+    [
+      "county-zones",
+      "37153",
+      "3709",
+      1245.271272104732,
+      1.0004257010208842e-06
+    ],
+    [
+      "county-zones",
+      "37155",
+      "3707",
+      438.25632071495056,
+      4.748344717420139e-07
+    ],
+    [
+      "county-zones",
+      "37155",
+      "3708",
+      4537.069494962692,
+      2.2179094179008985e-06
+    ],
+    [
+      "county-zones",
+      "37155",
+      "3709",
+      3193.4946078874636,
+      1.2978081092744414e-06
+    ],
+    [
+      "county-zones",
+      "37157",
+      "3705",
+      78.88922548294067,
+      6.410394798317398e-06
+    ],
+    [
+      "county-zones",
+      "37157",
+      "3709",
+      6.620248176420868,
+      4.4629764931313684e-09
+    ],
+    [
+      "county-zones",
+      "37159",
+      "3706",
+      3805.026959180832,
+      8.183890318202991e-06
+    ],
+    [
+      "county-zones",
+      "37159",
+      "3710",
+      11103.779349513698,
+      8.183890318317794e-06
+    ],
+    [
+      "county-zones",
+      "37161",
+      "3711",
+      1304.8627344214692,
+      8.8525664530276e-07
+    ],
+    [
+      "county-zones",
+      "37161",
+      "3714",
+      4791.07935833931,
+      8.852566451000854e-07
+    ],
+    [
+      "county-zones",
+      "37163",
+      "3701",
+      165.7110221926123,
+      6.74840027721171e-08
+    ],
+    [
+      "county-zones",
+      "37163",
+      "3707",
+      8241.881415426731,
+      2.7882326915085187e-06
+    ],
+    [
+      "county-zones",
+      "37165",
+      "3708",
+      1542.0345208644867,
+      1.1229102788279377e-05
+    ],
+    [
+      "county-zones",
+      "37165",
+      "3709",
+      8474.786099554887,
+      1.0223759034890178e-05
+    ],
+    [
+      "county-zones",
+      "37167",
+      "3706",
+      2949.381278146091,
+      2.811534032103167e-06
+    ],
+    [
+      "county-zones",
+      "37167",
+      "3708",
+      9122.797427415848,
+      2.8115340322543148e-06
+    ],
+    [
+      "county-zones",
+      "37169",
+      "3705",
+      10033.392102718353,
+      4.484220820888396e-06
+    ],
+    [
+      "county-zones",
+      "37171",
+      "3705",
+      13543.175812005997,
+      1.4930500049636919e-06
+    ],
+    [
+      "county-zones",
+      "37171",
+      "3710",
+      1078.008314021947,
+      7.739303978373362e-07
+    ],
+    [
+      "county-zones",
+      "37173",
+      "3711",
+      6487.200170755386,
+      2.20926150196199e-06
+    ],
+    [
+      "county-zones",
+      "37175",
+      "3711",
+      2221.0405712127686,
+      6.577290264653257e-07
+    ],
+    [
+      "county-zones",
+      "37177",
+      "3701",
+      6347.482760190964,
+      4.75833387802993e-06
+    ],
+    [
+      "county-zones",
+      "37179",
+      "3708",
+      7338.60667014122,
+      8.145525522973429e-07
+    ],
+    [
+      "county-zones",
+      "37179",
+      "3714",
+      1401.9014632182725,
+      8.466207997194273e-07
+    ],
+    [
+      "county-zones",
+      "37181",
+      "3701",
+      2070.823188662529,
+      7.733284747013514e-06
+    ],
+    [
+      "county-zones",
+      "37183",
+      "3704",
+      884.8784584403038,
+      1.7206363617239262e-07
+    ],
+    [
+      "county-zones",
+      "37183",
+      "3709",
+      7156.444893106358,
+      3.226939392798885e-06
+    ],
+    [
+      "county-zones",
+      "37185",
+      "3701",
+      15681.396790266037,
+      2.2682572066168305e-06
+    ],
+    [
+      "county-zones",
+      "37187",
+      "3701",
+      10669.779446005821,
+      1.4116563544774863e-06
+    ],
+    [
+      "county-zones",
+      "37189",
+      "3705",
+      5941.024171113968,
+      8.036783267773018e-06
+    ],
+    [
+      "county-zones",
+      "37189",
+      "3711",
+      3909.002937891365,
+      4.824194123661582e-06
+    ],
+    [
+      "county-zones",
+      "37191",
+      "3701",
+      1887.3596951961517,
+      1.1728666127197585e-06
+    ],
+    [
+      "county-zones",
+      "37193",
+      "3705",
+      4631.584441423416,
+      4.7252401225161833e-07
+    ],
+    [
+      "county-zones",
+      "37193",
+      "3710",
+      926.7752550573059,
+      4.725240113587353e-07
+    ],
+    [
+      "county-zones",
+      "37195",
+      "3701",
+      2876.19404065609,
+      5.941799080533272e-07
+    ],
+    [
+      "county-zones",
+      "37197",
+      "3705",
+      8447.053763688738,
+      9.679457733237557e-06
+    ],
+    [
+      "county-zones",
+      "37197",
+      "3710",
+      1908.7422186136246,
+      9.679457732891805e-06
+    ],
+    [
+      "county-zones",
+      "37199",
+      "3711",
+      231.72509038448334,
+      7.978072740888464e-06
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37013",
+      3144.127440553493,
+      1.418818712785657e-07
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37015",
+      6427.3115928173065,
+      4.091258077459914e-07
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37029",
+      9065.924284338951,
+      4.5043867668431714e-07
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37041",
+      4912.777310431004,
+      2.516580391263845e-07
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37049",
+      2810.9526877535955,
+      1.2684543498498805e-07
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37053",
+      9241.125661849976,
+      4.6644369613296766e-07
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37061",
+      3689.781431554482,
+      1.6650038782548786e-07
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37065",
+      4251.143446922302,
+      1.0723224547204424e-07
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37069",
+      12556.655129031285,
+      5.666241027070861e-07
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37073",
+      9556.520271420479,
+      4.888226865784606e-07
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37077",
+      1997.180500537157,
+      8.491108616573428e-08
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37079",
+      6021.752873182297,
+      3.163138462131121e-07
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37083",
+      3106.339395046234,
+      1.8566198911607046e-08
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37091",
+      7356.772614359856,
+      2.722304461647007e-07
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37101",
+      4644.260963595776,
+      2.0957266697855464e-07
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37103",
+      2087.998630833241,
+      9.42199012399337e-08
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37107",
+      2015.9016168117523,
+      2.4013628210917126e-08
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37117",
+      1277.8453056812286,
+      1.338509033055324e-07
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37127",
+      2130.3321993350983,
+      1.8671644594348002e-07
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37131",
+      4046.9643976688385,
+      9.097823758241752e-08
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37139",
+      1493.0288298130035,
+      2.8394115728774816e-08
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37143",
+      8087.038909077644,
+      3.2249405395798347e-07
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37147",
+      5038.435637407238,
+      2.2736322968977477e-07
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37163",
+      165.71102218935266,
+      7.477223177236823e-09
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37177",
+      6347.482760429382,
+      3.5581050197158737e-07
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37181",
+      2070.8231884241104,
+      4.8601898387790055e-08
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37185",
+      15681.396789550781,
+      6.335481557429024e-07
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37187",
+      10669.77944624424,
+      4.188270173455244e-07
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37191",
+      1887.3596949577332,
+      1.7821657807837177e-07
+    ],
+    [
+      "district-zones",
+      "3701",
+      "37195",
+      2876.1940405368805,
+      6.762350163169728e-08
+    ],
+    [
+      "district-zones",
+      "3704",
+      "37001",
+      2958.3593461481723,
+      1.0536676544492315e-06
+    ],
+    [
+      "district-zones",
+      "3704",
+      "37037",
+      4040.6466026306152,
+      1.2955877377318625e-06
+    ],
+    [
+      "district-zones",
+      "3704",
+      "37063",
+      1297.3021552562714,
+      2.643982109362675e-07
+    ],
+    [
+      "district-zones",
+      "3704",
+      "37077",
+      3344.3914734330756,
+      1.1911600338515026e-06
+    ],
+    [
+      "district-zones",
+      "3704",
+      "37085",
+      791.2695049634303,
+      2.8182116197726087e-07
+    ],
+    [
+      "district-zones",
+      "3704",
+      "37135",
+      1304.7954788208008,
+      1.99272522150018e-07
+    ],
+    [
+      "district-zones",
+      "3704",
+      "37183",
+      884.878458738327,
+      2.037480562044891e-07
+    ],
+    [
+      "district-zones",
+      "3705",
+      "37001",
+      76.75370083911969,
+      6.9891415184715595e-09
+    ],
+    [
+      "district-zones",
+      "3705",
+      "37003",
+      7307.7156492471695,
+      6.864434846029499e-07
+    ],
+    [
+      "district-zones",
+      "3705",
+      "37005",
+      2026.0840648412704,
+      1.6565489780601128e-07
+    ],
+    [
+      "district-zones",
+      "3705",
+      "37009",
+      4189.871409654617,
+      4.15667655462304e-07
+    ],
+    [
+      "district-zones",
+      "3705",
+      "37011",
+      1928.7602520636792,
+      1.7563169924224323e-07
+    ],
+    [
+      "district-zones",
+      "3705",
+      "37023",
+      454.56938176331823,
+      4.139196733423911e-08
+    ],
+    [
+      "district-zones",
+      "3705",
+      "37027",
+      7703.359707117081,
+      6.637205306470051e-07
+    ],
+    [
+      "district-zones",
+      "3705",
+      "37033",
+      6431.625625564377,
+      5.856591853814049e-07
+    ],
+    [
+      "district-zones",
+      "3705",
+      "37035",
+      193.52982134281046,
+      1.76232439740182e-08
+    ],
+    [
+      "district-zones",
+      "3705",
+      "37067",
+      5998.306129983408,
+      5.462020728611232e-07
+    ],
+    [
+      "district-zones",
+      "3705",
+      "37081",
+      4910.395873367786,
+      4.630653088893988e-07
+    ],
+    [
+      "district-zones",
+      "3705",
+      "37097",
+      9081.093979545589,
+      8.269166532673603e-07
+    ],
+    [
+      "district-zones",
+      "3705",
+      "37157",
+      78.88922548294067,
+      3.841550078043099e-08
+    ],
+    [
+      "district-zones",
+      "3705",
+      "37169",
+      10033.392102003098,
+      8.773209452528352e-07
+    ],
+    [
+      "district-zones",
+      "3705",
+      "37171",
+      13543.175812482834,
+      1.190412268925467e-06
+    ],
+    [
+      "district-zones",
+      "3705",
+      "37189",
+      5941.024171113968,
+      5.160765165074244e-07
+    ],
+    [
+      "district-zones",
+      "3705",
+      "37193",
+      4631.584441661835,
+      4.820418612883071e-07
+    ],
+    [
+      "district-zones",
+      "3705",
+      "37197",
+      8447.053763672353,
+      7.691833670068365e-07
+    ],
+    [
+      "district-zones",
+      "3706",
+      "37025",
+      3110.7947885394096,
+      7.959056432249589e-07
+    ],
+    [
+      "district-zones",
+      "3706",
+      "37057",
+      10555.691102266312,
+      1.8333380186752457e-06
+    ],
+    [
+      "district-zones",
+      "3706",
+      "37059",
+      3821.528615951538,
+      6.003936199872051e-07
+    ],
+    [
+      "district-zones",
+      "3706",
+      "37067",
+      6785.505165874958,
+      1.7005592648500212e-06
+    ],
+    [
+      "district-zones",
+      "3706",
+      "37081",
+      4768.957876950502,
+      1.1955660148901814e-06
+    ],
+    [
+      "district-zones",
+      "3706",
+      "37097",
+      1207.4398590285055,
+      2.7620464373753007e-07
+    ],
+    [
+      "district-zones",
+      "3706",
+      "37119",
+      1898.4446999802622,
+      4.3427434594280857e-07
+    ],
+    [
+      "district-zones",
+      "3706",
+      "37123",
+      2097.6286258763676,
+      4.798341424283041e-07
+    ],
+    [
+      "district-zones",
+      "3706",
+      "37151",
+      2100.5210251313874,
+      4.804911340336172e-07
+    ],
+    [
+      "district-zones",
+      "3706",
+      "37159",
+      3805.026959180832,
+      3.337783929802107e-07
+    ],
+    [
+      "district-zones",
+      "3706",
+      "37167",
+      2949.3812781458364,
+      6.746746041834225e-07
+    ],
+    [
+      "district-zones",
+      "3707",
+      "37017",
+      3956.1811995506287,
+      2.839703041324082e-07
+    ],
+    [
+      "district-zones",
+      "3707",
+      "37019",
+      9661.136362075806,
+      7.76584798328761e-07
+    ],
+    [
+      "district-zones",
+      "3707",
+      "37047",
+      11889.509938716888,
+      8.999719120772465e-07
+    ],
+    [
+      "district-zones",
+      "3707",
+      "37051",
+      7051.7511739730835,
+      5.634187194847318e-07
+    ],
+    [
+      "district-zones",
+      "3707",
+      "37093",
+      503.99046061066474,
+      3.9248863024980155e-08
+    ],
+    [
+      "district-zones",
+      "3707",
+      "37129",
+      6712.760588049889,
+      5.287202712381256e-07
+    ],
+    [
+      "district-zones",
+      "3707",
+      "37133",
+      5534.194901800919,
+      4.30981999622697e-07
+    ],
+    [
+      "district-zones",
+      "3707",
+      "37141",
+      15632.109137058258,
+      1.1934298626559148e-06
+    ],
+    [
+      "district-zones",
+      "3707",
+      "37155",
+      438.25632095336914,
+      2.271643839701909e-08
+    ],
+    [
+      "district-zones",
+      "3707",
+      "37163",
+      8241.881415605545,
+      6.466548223629798e-07
+    ],
+    [
+      "district-zones",
+      "3708",
+      "37007",
+      1155.666247367859,
+      1.0495721747272313e-07
+    ],
+    [
+      "district-zones",
+      "3708",
+      "37025",
+      2903.6899584531784,
+      2.9039745154391117e-07
+    ],
+    [
+      "district-zones",
+      "3708",
+      "37093",
+      1172.8409503945613,
+      1.20135019820704e-07
+    ],
+    [
+      "district-zones",
+      "3708",
+      "37119",
+      2729.056900113821,
+      2.7767182181337446e-07
+    ],
+    [
+      "district-zones",
+      "3708",
+      "37123",
+      9485.010986089706,
+      9.59009817030898e-07
+    ],
+    [
+      "district-zones",
+      "3708",
+      "37125",
+      8405.620293451038,
+      8.609945318989104e-07
+    ],
+    [
+      "district-zones",
+      "3708",
+      "37153",
+      1572.2126846313477,
+      1.4902825856699664e-07
+    ],
+    [
+      "district-zones",
+      "3708",
+      "37155",
+      4537.069495439529,
+      4.5149056554505407e-07
+    ],
+    [
+      "district-zones",
+      "3708",
+      "37165",
+      1542.0345208644867,
+      1.4995065364398208e-07
+    ],
+    [
+      "district-zones",
+      "3708",
+      "37167",
+      9122.797427654266,
+      9.445814198177915e-07
+    ],
+    [
+      "district-zones",
+      "3708",
+      "37179",
+      7338.606669425964,
+      7.357156407150622e-07
+    ],
+    [
+      "district-zones",
+      "3709",
+      "37001",
+      12002.326462984085,
+      1.4835689303160926e-06
+    ],
+    [
+      "district-zones",
+      "3709",
+      "37037",
+      13943.909963846207,
+      1.5387762481167133e-06
+    ],
+    [
+      "district-zones",
+      "3709",
+      "37051",
+      2346.0249747633934,
+      2.990763122989737e-07
+    ],
+    [
+      "district-zones",
+      "3709",
+      "37057",
+      1091.5649914887474,
+      1.2760525905821853e-07
+    ],
+    [
+      "district-zones",
+      "3709",
+      "37081",
+      4942.007299661636,
+      6.436643792545604e-07
+    ],
+    [
+      "district-zones",
+      "3709",
+      "37085",
+      5857.90345756022,
+      6.847952659694498e-07
+    ],
+    [
+      "district-zones",
+      "3709",
+      "37093",
+      5572.66962313652,
+      7.240233891592229e-07
+    ],
+    [
+      "district-zones",
+      "3709",
+      "37105",
+      8365.311221189317,
+      9.779126135922458e-07
+    ],
+    [
+      "district-zones",
+      "3709",
+      "37123",
+      5097.072319266816,
+      5.958520719851497e-07
+    ],
+    [
+      "district-zones",
+      "3709",
+      "37125",
+      13414.437498807907,
+      1.6990914199210838e-06
+    ],
+    [
+      "district-zones",
+      "3709",
+      "37135",
+      1820.722192191488,
+      2.1284387496453951e-07
+    ],
+    [
+      "district-zones",
+      "3709",
+      "37151",
+      4067.3862023353577,
+      3.290035110459222e-07
+    ],
+    [
+      "district-zones",
+      "3709",
+      "37153",
+      1245.271272106198,
+      1.4557435529763358e-07
+    ],
+    [
+      "district-zones",
+      "3709",
+      "37155",
+      3193.4946078400026,
+      3.7332159168522717e-07
+    ],
+    [
+      "district-zones",
+      "3709",
+      "37157",
+      6.620248176420887,
+      7.739149662813225e-10
+    ],
+    [
+      "district-zones",
+      "3709",
+      "37165",
+      8474.786099563356,
+      9.907123395983338e-07
+    ],
+    [
+      "district-zones",
+      "3709",
+      "37183",
+      7156.444893103748,
+      8.365979049849587e-07
+    ],
+    [
+      "district-zones",
+      "3710",
+      "37003",
+      1910.0558074413605,
+      3.8369264474499017e-07
+    ],
+    [
+      "district-zones",
+      "3710",
+      "37025",
+      863.8498090339594,
+      1.735293554243692e-07
+    ],
+    [
+      "district-zones",
+      "3710",
+      "37027",
+      98.01874860528915,
+      1.9690031488264482e-08
+    ],
+    [
+      "district-zones",
+      "3710",
+      "37035",
+      4241.790827512741,
+      5.168030126345702e-07
+    ],
+    [
+      "district-zones",
+      "3710",
+      "37045",
+      219.71926312746677,
+      4.4137836073413095e-08
+    ],
+    [
+      "district-zones",
+      "3710",
+      "37059",
+      1283.956419051421,
+      2.5792901097673623e-07
+    ],
+    [
+      "district-zones",
+      "3710",
+      "37067",
+      8125.776479244232,
+      1.4173771963887916e-06
+    ],
+    [
+      "district-zones",
+      "3710",
+      "37071",
+      8861.341828107485,
+      1.780058007735681e-06
+    ],
+    [
+      "district-zones",
+      "3710",
+      "37097",
+      6500.509805202484,
+      8.257035232217547e-07
+    ],
+    [
+      "district-zones",
+      "3710",
+      "37109",
+      5027.8889437913895,
+      1.2552114753983101e-06
+    ],
+    [
+      "district-zones",
+      "3710",
+      "37119",
+      1154.2159594299283,
+      2.318640109464843e-07
+    ],
+    [
+      "district-zones",
+      "3710",
+      "37159",
+      11103.77934951884,
+      2.2305342102628634e-06
+    ],
+    [
+      "district-zones",
+      "3710",
+      "37171",
+      1078.008314022037,
+      2.16550788088756e-07
+    ],
+    [
+      "district-zones",
+      "3710",
+      "37193",
+      926.7752550574951,
+      1.8617085215105205e-07
+    ],
+    [
+      "district-zones",
+      "3710",
+      "37197",
+      1908.7422187328339,
+      1.1230976548759486e-07
+    ],
+    [
+      "district-zones",
+      "3711",
+      "37011",
+      10958.813167214394,
+      6.383834358844598e-07
+    ],
+    [
+      "district-zones",
+      "3711",
+      "37021",
+      2493.8020803928375,
+      2.4039311766199667e-07
+    ],
+    [
+      "district-zones",
+      "3711",
+      "37023",
+      4404.294430026639,
+      2.6967274701561766e-07
+    ],
+    [
+      "district-zones",
+      "3711",
+      "37027",
+      2529.06272092769,
+      1.5485309050000596e-07
+    ],
+    [
+      "district-zones",
+      "3711",
+      "37039",
+      3765.680736064911,
+      1.6884045789256064e-07
+    ],
+    [
+      "district-zones",
+      "3711",
+      "37043",
+      4338.552920103073,
+      2.3645820729917277e-07
+    ],
+    [
+      "district-zones",
+      "3711",
+      "37075",
+      5400.935966253281,
+      3.7069160974123605e-07
+    ],
+    [
+      "district-zones",
+      "3711",
+      "37087",
+      10337.096357584,
+      5.596602081076041e-07
+    ],
+    [
+      "district-zones",
+      "3711",
+      "37089",
+      7291.01322054863,
+      4.958696317169942e-07
+    ],
+    [
+      "district-zones",
+      "3711",
+      "37099",
+      1883.780832529068,
+      1.8058894504791034e-07
+    ],
+    [
+      "district-zones",
+      "3711",
+      "37111",
+      3338.8219928741455,
+      1.4561427567894025e-07
+    ],
+    [
+      "district-zones",
+      "3711",
+      "37113",
+      846.4031841754913,
+      1.7110937167164053e-08
+    ],
+    [
+      "district-zones",
+      "3711",
+      "37115",
+      3544.5955789089203,
+      1.572821297646243e-07
+    ],
+    [
+      "district-zones",
+      "3711",
+      "37121",
+      904.0580084323883,
+      8.459922636039341e-08
+    ],
+    [
+      "district-zones",
+      "3711",
+      "37149",
+      2099.798122704029,
+      1.133946343455372e-07
+    ],
+    [
+      "district-zones",
+      "3711",
+      "37161",
+      1304.862734378301,
+      7.989385407292341e-08
+    ],
+    [
+      "district-zones",
+      "3711",
+      "37173",
+      6487.200170516968,
+      3.2571544419934817e-07
+    ],
+    [
+      "district-zones",
+      "3711",
+      "37175",
+      2221.0405716896057,
+      8.558460449364924e-08
+    ],
+    [
+      "district-zones",
+      "3711",
+      "37189",
+      3909.0029378926115,
+      2.3934556306812266e-07
+    ],
+    [
+      "district-zones",
+      "3711",
+      "37199",
+      231.72509014606476,
+      5.576856788869211e-08
+    ],
+    [
+      "district-zones",
+      "3712",
+      "37025",
+      1326.019240576368,
+      1.8673221213688225e-06
+    ],
+    [
+      "district-zones",
+      "3712",
+      "37119",
+      3519.111453771591,
+      1.8673221218179492e-06
+    ],
+    [
+      "district-zones",
+      "3714",
+      "37011",
+      1096.8121297698817,
+      1.894030404736537e-07
+    ],
+    [
+      "district-zones",
+      "3714",
+      "37021",
+      190.29788955216645,
+      3.2861597623343134e-08
+    ],
+    [
+      "district-zones",
+      "3714",
+      "37023",
+      6263.911005020142,
+      1.745231065636288e-06
+    ],
+    [
+      "district-zones",
+      "3714",
+      "37025",
+      2260.2984797963018,
+      3.903186912277695e-07
+    ],
+    [
+      "district-zones",
+      "3714",
+      "37027",
+      564.8891392611536,
+      9.75474485487648e-08
+    ],
+    [
+      "district-zones",
+      "3714",
+      "37035",
+      4977.999529612942,
+      8.596166236412442e-07
+    ],
+    [
+      "district-zones",
+      "3714",
+      "37045",
+      1882.3086462020874,
+      9.275442505451981e-07
+    ],
+    [
+      "district-zones",
+      "3714",
+      "37071",
+      3374.656450152397,
+      1.1501630214905134e-07
+    ],
+    [
+      "district-zones",
+      "3714",
+      "37089",
+      566.1783190453716,
+      9.777035095220162e-08
+    ],
+    [
+      "district-zones",
+      "3714",
+      "37109",
+      3072.931771078819,
+      5.306485849782234e-07
+    ],
+    [
+      "district-zones",
+      "3714",
+      "37111",
+      6167.844704658313,
+      1.0650917644635008e-06
+    ],
+    [
+      "district-zones",
+      "3714",
+      "37119",
+      5311.24319589138,
+      1.171777134115204e-06
+    ],
+    [
+      "district-zones",
+      "3714",
+      "37149",
+      4784.200297117233,
+      6.679378460675012e-07
+    ],
+    [
+      "district-zones",
+      "3714",
+      "37161",
+      4791.079357385635,
+      1.560188662874662e-06
+    ],
+    [
+      "district-zones",
+      "3714",
+      "37179",
+      1401.9014632170843,
+      2.420857436532452e-07
+    ]
+  ],
+  "NonSimpleRoundedFeatures": [
+    {
+      "Id": "37113",
+      "County": true,
+      "Vertices": 62,
+      "OriginalArea": 1348965559.4031837,
+      "RoundedArea": 1348964713,
+      "ExactRoundedArea": 1348964713,
+      "OriginalValid": true,
+      "RoundedValid": true,
+      "OriginalSimple": true,
+      "RoundedSimple": false,
+      "OriginalValidityError": null,
+      "RoundedValidityError": null,
+      "CollapsedEdges": 1,
+      "MaxDisplacement": 0.6767770220689194
+    }
+  ],
+  "LocalArchive": {
+    "File": "artifacts/scanbeam-expanded-9a947c7.zip",
+    "Bytes": 65710,
+    "Sha256": "804c7c44c6bbec19c35f03ee95f77cd2979a215fdb983a619955cd86abbeb39d",
+    "PubliclyHosted": false
+  }
+}

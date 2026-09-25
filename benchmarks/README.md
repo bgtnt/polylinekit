@@ -6,6 +6,9 @@ Its exact-integer input contract is separate from the shipping binary64 engine.
 The [results](PolylineKit.ScanbeamBenchmarks/RESULTS.md) and
 [evidence](scanbeam-evidence.json) include both failed arithmetic baselines,
 the final grid gains and the unfavorable controls.
+The [expanded results](PolylineKit.ScanbeamBenchmarks/EXPANDED-RESULTS.md) test
+real-contour intersections and larger coordinates: both full gates fail, and
+the original-input effects of metre-grid rounding are reported separately.
 
 For an area-engine optimization with a predeclared Clipper gate, see the
 [intersection-only protocol](../examples/RegionCoverage/INTERSECTION-PROTOCOL.md),

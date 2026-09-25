@@ -8,6 +8,15 @@ It loses on the star and many-level controls, accepts only bounded integer
 coordinates, and remains outside the shipping library. These are scalar
 Int64/Int128 changes, not SIMD or C++ measurements.
 
+The [expanded experiment](../benchmarks/PolylineKit.ScanbeamBenchmarks/EXPANDED-RESULTS.md)
+at `9a947c7` limits that conclusion further: the prototype takes about 76 ms per
+rounded real-contour table versus 12.5 ms for Clipper and 10 ms for existing
+Winding intersection. All four real speed gates fail. Metre-grid conversion also
+fails the original-input error budgets in 312 of 2156 directional comparisons.
+Wider-coordinate grid controls pass the four EvenOdd gates but fail all four
+NonZero gates. The prototype remains outside the shipping library; an incremental
+double-input scanline is only a proposed next experiment.
+
 The [intersection-only coverage experiment](../examples/RegionCoverage/INTERSECTION-RESULTS.md)
 at `f93cc25` establishes a newer, narrower result: the dedicated
 `WindingArea.IntersectionArea` method takes 26-29% less time than direct reusable
