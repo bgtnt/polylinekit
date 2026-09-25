@@ -55,7 +55,7 @@ internal sealed partial class GuardedDoubleSweep
                 int left = active[i];
                 ref readonly Edge edge = ref EdgeAt(left);
                 if (IsFirstLoop(left, in edge)) a += edge.Delta; else b += edge.Delta;
-                if (Filled(a) && Filled(b))
+                if (Filled(a) && (closedPathMode || Filled(b)))
                     AccumulateFilledGap(left, active[i + 1], start, finish);
             }
             return;

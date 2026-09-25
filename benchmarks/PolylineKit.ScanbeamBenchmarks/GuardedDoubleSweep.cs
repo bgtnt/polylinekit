@@ -48,7 +48,7 @@ internal sealed partial class GuardedDoubleSweep
     private int[] cachedXGeneration = [];
     private int cacheGeneration;
     private int edgeCount, endpointCount, activeCount, crossingCount;
-    private bool nonZero;
+    private bool nonZero, closedPathMode;
     private long work;
     private Interval area;
     private readonly Comparison<Endpoint> endpointComparison;
@@ -97,6 +97,43 @@ internal sealed partial class GuardedDoubleSweep
     internal long ScalarProbeCount => !scalarOrderFilter ? 0 :
         filterBeforeSupport ? endpointComparisonCount : FilterAttemptCount;
 
+    /// <summary>One filled area of a closed binary64 walk, with whole-call ClosedPath fallback.</summary>
+    /// <remarks>
+    /// This experimental single-loop mode shares endpoint ordering, crossing certification and area bounds
+    /// with the intersection sweep. It introduces no enclosing rectangle, coordinate rounding or extra edges.
+    /// The selected fill is returned; it does not provide ClosedPath's other three integrals or statistics.
+    /// </remarks>
+    internal double MeasureClosedPath(Point2[] path, PathFillRule rule = PathFillRule.NonZero)
+    {
+        ResetState();
+        closedPathMode = true;
+        if (rule != PathFillRule.NonZero && rule != PathFillRule.EvenOdd)
+            throw new ArgumentOutOfRangeException(nameof(rule));
+        if (path is null || path.Length < 3)
+            return FallbackClosedPath(path!, rule, "input-contract");
+        if (path.Length > VertexBudget)
+            return FallbackClosedPath(path, rule, "vertex-budget");
+        try
+        {
+            EnsureVertices(path.Length);
+            Bounds bounds = CopyValidated(path, vertices, 0);
+            if (bounds.HasNoArea)
+            {
+                LastErrorBound = 0;
+                return 0;
+            }
+            nonZero = rule == PathFillRule.NonZero;
+            AppendEdges(0, path.Length, 0);
+            Array.Fill(positions, -1, 0, edgeCount);
+            endpoints.AsSpan(0, endpointCount).Sort(endpointComparison);
+            return SweepSortedEndpoints(bounds, bounds);
+        }
+        catch (Exception exception) when (FindReason(exception) is not null)
+        {
+            return FallbackClosedPath(path, rule, FindReason(exception)!);
+        }
+    }
+
     internal double MeasureIntersection(Point2[] first, Point2[] second, PathFillRule rule = PathFillRule.NonZero)
     {
         ResetState();
@@ -134,6 +171,7 @@ internal sealed partial class GuardedDoubleSweep
 
     private void ResetState()
     {
+        closedPathMode = false;
         ClearBorrowedGeometry();
         ResetGapContributions();
         ResetActivePassDiagnostics();
@@ -455,7 +493,7 @@ internal sealed partial class GuardedDoubleSweep
         ref readonly Edge edge = ref EdgeAt(left);
         int a = prefixA[position], b = prefixB[position];
         if (IsFirstLoop(left, in edge)) a += edge.Delta; else b += edge.Delta;
-        if (!Filled(a) || !Filled(b)) return;
+        if (!Filled(a) || (!closedPathMode && !Filled(b))) return;
         AccumulateFilledGap(left, right, start, finish);
     }
 
@@ -557,6 +595,12 @@ internal sealed partial class GuardedDoubleSweep
     {
         LastUsedFallback = true; LastFallbackReason = reason; LastErrorBound = double.NaN;
         return WindingArea.IntersectionArea(first, second, rule);
+    }
+
+    private double FallbackClosedPath(Point2[] path, PathFillRule rule, string reason)
+    {
+        LastUsedFallback = true; LastFallbackReason = reason; LastErrorBound = double.NaN;
+        return HybridClosedArea.SelectedWinding(path, rule);
     }
 
     private void Visit() { ActiveEdgeVisits++; Charge(); }

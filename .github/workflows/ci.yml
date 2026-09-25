@@ -52,6 +52,8 @@ jobs:
         run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-scalar-view artifacts/scanbeam-scalar-view-ci
       - name: Scalar-first endpoint ordering, exact signs and full parity (no timing)
         run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-filter-first artifacts/scanbeam-filter-first-ci
+      - name: Adaptive closed-area selection, fallback and independent areas (no timing)
+        run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-hybrid artifacts/scanbeam-hybrid-ci
       - name: Optional WPF comparison contracts (Windows only, no timing)
         if: runner.os == 'Windows'
         run: |
