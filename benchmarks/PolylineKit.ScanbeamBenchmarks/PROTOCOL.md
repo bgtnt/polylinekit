@@ -79,3 +79,16 @@ must pass, and correctness must pass, to justify developing this bounded
 backend further. Fresh and unfavorable controls remain visible regardless of
 their results. A valid negative result completes this experiment. Passing is
 not permission to silently dispatch general binary64 inputs to this prototype.
+
+## Bounded arithmetic ablation
+
+The first complete three-process run at `4457184` failed all four gates. Those
+raw files and measured binaries are retained separately. Before further timing,
+one bounded follow-up is declared: remove checked-arithmetic overflow handling
+only where the accepted coordinate/vertex limits prove the intermediates fit.
+The input contract, algorithm, numerical formulas, guards, tolerance, fixtures,
+method matrix and four-cell gate remain unchanged. Run three new processes and
+preserve both versions' results; require bit-identical output values between
+versions. This is a post-baseline implementation ablation, not an unseen test
+set or a new performance threshold. Algorithm counts collected outside timing
+are descriptive and do not constitute a stage-by-stage CPU profile.

@@ -40,8 +40,11 @@ internal static class Program
             case "summarize" when args.Length == 2:
                 Summarize(args[1]);
                 return 0;
+            case "inspect" when args.Length == 2:
+                Inspect(args[1]);
+                return 0;
             default:
-                Console.Error.WriteLine("check | benchmark <directory> <run 1..3> <revision> | summarize <directory>");
+                Console.Error.WriteLine("check | benchmark <directory> <run 1..3> <revision> | summarize <directory> | inspect <file.json>");
                 return 2;
         }
     }
@@ -64,6 +67,23 @@ internal static class Program
             }
         }
         Console.WriteLine($"Scanbeam complete benchmark inputs: {count} method/fill checks.");
+    }
+
+    private static void Inspect(string path)
+    {
+        var engine = new IntegerScanbeam();
+        var rows = new List<object>();
+        foreach (Input input in Inputs.Create())
+        foreach (PathFillRule rule in Enum.GetValues<PathFillRule>())
+        {
+            double area = engine.Measure(input.Points, rule);
+            rows.Add(new { input.Name, Vertices = input.Points.Length, input.Hash, Rule = rule, Area = area,
+                engine.BandCount, engine.EventCount, engine.EventGroupCount, engine.PeakActiveCount });
+        }
+        string full = Path.GetFullPath(path);
+        Directory.CreateDirectory(Path.GetDirectoryName(full)!);
+        File.WriteAllText(full, JsonSerializer.Serialize(new { HarnessHash = AssemblyHash(typeof(Program)), Rows = rows }, Json) + "\n");
+        Console.WriteLine($"Algorithm counts for {rows.Count} input/fill pairs written without timings.");
     }
 
     private static Method[] Methods(Point2[] points, PathFillRule rule)

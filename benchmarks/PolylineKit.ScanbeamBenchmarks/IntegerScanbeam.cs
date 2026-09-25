@@ -21,7 +21,10 @@ internal sealed class IntegerScanbeam
 
     private readonly record struct Level(long N, long D)
     {
-        internal static int Compare(Level a, Level b) => ((Int128)a.N * b.D).CompareTo((Int128)b.N * a.D);
+        // Explicit unchecked only for the proven bounded geometric expressions; project-wide checked
+        // arithmetic remains enabled for input conversion, array sizes, indices and counters.
+        internal static int Compare(Level a, Level b) =>
+            unchecked((Int128)a.N * b.D).CompareTo(unchecked((Int128)b.N * a.D));
     }
 
     private readonly record struct Crossing(Level Y, int A, int B);
@@ -189,10 +192,10 @@ internal sealed class IntegerScanbeam
         int left = active[position], right = active[position + 1];
         if (Fill(prefix[position] + edges[left].Delta) == 0) return;
         // Subtract exact rational levels before rounding, including levels closer than one binary64 ULP.
-        Int128 heightNumerator = (Int128)y.N * previous.D - (Int128)previous.N * y.D;
+        Int128 heightNumerator = unchecked((Int128)y.N * previous.D - (Int128)previous.N * y.D);
         if (heightNumerator == 0) return;
         if (heightNumerator < 0) throw new InvalidOperationException("A gap advanced backwards in sweep order.");
-        Int128 heightDenominator = (Int128)y.D * previous.D;
+        Int128 heightDenominator = unchecked((Int128)y.D * previous.D);
         double height = (double)heightNumerator / (double)heightDenominator;
         double lowerWidth = GapWidth(left, right, previous), upperWidth = GapWidth(left, right, y);
         // Widths, including exactly zero coincident-line gaps, are formed before binary64 rounding.
@@ -203,10 +206,10 @@ internal sealed class IntegerScanbeam
     private double GapWidth(int left, int right, Level y)
     {
         Edge a = edges[left], b = edges[right];
-        Int128 numerator = ((Int128)b.Dx * y.N + (Int128)b.B * y.D) * a.Dy -
-            ((Int128)a.Dx * y.N + (Int128)a.B * y.D) * b.Dy;
+        Int128 numerator = unchecked(((Int128)b.Dx * y.N + (Int128)b.B * y.D) * a.Dy -
+            ((Int128)a.Dx * y.N + (Int128)a.B * y.D) * b.Dy);
         if (numerator < 0) throw new InvalidOperationException("A filled gap has negative exact width.");
-        Int128 denominator = (Int128)y.D * a.Dy * b.Dy;
+        Int128 denominator = unchecked((Int128)y.D * a.Dy * b.Dy);
         return (double)numerator / (double)denominator;
     }
 
@@ -238,8 +241,8 @@ internal sealed class IntegerScanbeam
     private int CompareX(int left, int right, Level y)
     {
         Edge a = edges[left], b = edges[right];
-        Int128 lhs = ((Int128)a.Dx * y.N + (Int128)a.B * y.D) * b.Dy;
-        Int128 rhs = ((Int128)b.Dx * y.N + (Int128)b.B * y.D) * a.Dy;
+        Int128 lhs = unchecked(((Int128)a.Dx * y.N + (Int128)a.B * y.D) * b.Dy);
+        Int128 rhs = unchecked(((Int128)b.Dx * y.N + (Int128)b.B * y.D) * a.Dy);
         return lhs.CompareTo(rhs); // Common event denominator cancels.
     }
 
