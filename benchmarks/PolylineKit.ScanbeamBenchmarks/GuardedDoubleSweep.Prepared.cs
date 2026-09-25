@@ -139,9 +139,20 @@ internal sealed partial class GuardedDoubleSweep
                     sweep.borrowedFirstScalarEdges = first.preparedScalarEdges;
                     sweep.borrowedSecondScalarEdges = second.preparedScalarEdges;
                     sweep.borrowedFirstEdgeCount = first.EdgeCount;
+                    if (sweep.scalarOrderFilter)
+                        sweep.PreparedScalarRecordsBorrowed = first.EdgeCount + second.EdgeCount;
                 }
                 else
                 {
+                    if (sweep.borrowPreparedScalars && sweep.scalarOrderFilter)
+                    {
+                        // Geometry remains contiguous and carries the pair's Loop tags. Only filter
+                        // metadata uses the same immutable split-array lookup as the direct variant.
+                        sweep.borrowedFirstScalarEdges = first.preparedScalarEdges;
+                        sweep.borrowedSecondScalarEdges = second.preparedScalarEdges;
+                        sweep.borrowedFirstEdgeCount = first.EdgeCount;
+                        sweep.PreparedScalarRecordsBorrowed = first.EdgeCount + second.EdgeCount;
+                    }
                     first.CopyEdgesTo(sweep, 0, 0);
                     second.CopyEdgesTo(sweep, first.EdgeCount, 1);
                 }
@@ -163,8 +174,11 @@ internal sealed partial class GuardedDoubleSweep
                 Edge edge = preparedEdges[i];
                 sweep.edges[offset + i] = new(edge.Lower, edge.Upper, edge.Delta, loop, edge.Slope);
             }
-            if (sweep.scalarOrderFilter)
+            if (sweep.scalarOrderFilter && !sweep.borrowPreparedScalars)
+            {
                 Array.Copy(preparedScalarEdges, 0, sweep.scalarEdges, offset, preparedScalarEdges.Length);
+                sweep.PreparedScalarRecordsCopied += preparedScalarEdges.Length;
+            }
         }
 
         private static void MergeEndpoints(GuardedDoubleSweep sweep, PreparedPath first, PreparedPath second)

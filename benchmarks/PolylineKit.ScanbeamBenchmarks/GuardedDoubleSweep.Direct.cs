@@ -4,12 +4,17 @@ namespace PolylineKit.ScanbeamBenchmarks;
 
 internal sealed partial class GuardedDoubleSweep
 {
-    private readonly bool directPreparedEdges;
-    // Only the current prepared query can borrow these immutable arrays. Raw queries and the copied
-    // prepared control continue using the original scratch storage, including its allocation policy.
+    private readonly bool directPreparedEdges, borrowPreparedScalars;
+    // Only the current prepared query can borrow these immutable arrays. The scalar-only experiment
+    // keeps copied geometry while borrowing filter records. The original scratch allocation is retained.
     private Edge[]? borrowedFirstEdges, borrowedSecondEdges;
     private ScalarOrderFilter.PreparedEdge[]? borrowedFirstScalarEdges, borrowedSecondScalarEdges;
     private int borrowedFirstEdgeCount;
+
+    /// <summary>Filter records actually copied from prepared snapshots in the current query.</summary>
+    internal int PreparedScalarRecordsCopied { get; private set; }
+    /// <summary>Prepared records bound for filtering without copying; zero when the filter is disabled.</summary>
+    internal int PreparedScalarRecordsBorrowed { get; private set; }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private ref readonly Edge EdgeAt(int edge)

@@ -98,6 +98,13 @@ Commands `check-active-passes`, `benchmark-active-passes` and
 `summarize-active-passes` use the same argument shapes. The seventh option
 defaults off; there are no additional workspace arrays.
 
+The [scalar-view experiment](SCALAR-VIEW-PROTOCOL.md) borrows immutable scalar
+filter metadata while retaining copied geometry and existing scratch arrays.
+It isolates the scalar copy observed in sampled profiles. Commands
+`check-scalar-view`, `benchmark-scalar-view` and `summarize-scalar-view` use the
+same argument shapes. The eighth option defaults off. Profiling accepts an
+optional `warm-table` or `prepare` scope after the duration.
+
 From the repository root, using PowerShell:
 
 ```powershell

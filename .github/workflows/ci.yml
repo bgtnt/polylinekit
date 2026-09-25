@@ -48,6 +48,8 @@ jobs:
         run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-gap-coalescing artifacts/scanbeam-gaps-ci
       - name: Streamed active sweep passes, exact areas and bit parity (no timing)
         run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-active-passes artifacts/scanbeam-active-ci
+      - name: Prepared scalar views, lifecycle and bit parity (no timing)
+        run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-scalar-view artifacts/scanbeam-scalar-view-ci
       - name: Optional WPF comparison contracts (Windows only, no timing)
         if: runner.os == 'Windows'
         run: |

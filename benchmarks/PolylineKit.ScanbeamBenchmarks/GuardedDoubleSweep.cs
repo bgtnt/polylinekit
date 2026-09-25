@@ -57,7 +57,7 @@ internal sealed partial class GuardedDoubleSweep
 
     internal GuardedDoubleSweep(bool restrictToCommonY = false, bool cacheEndpointX = false,
         bool scalarOrderFilter = false, bool directPreparedEdges = false, bool optimizeAreaArithmetic = false,
-        bool coalesceGaps = false, bool optimizeActivePasses = false)
+        bool coalesceGaps = false, bool optimizeActivePasses = false, bool borrowPreparedScalars = false)
     {
         this.restrictToCommonY = restrictToCommonY;
         this.cacheEndpointX = cacheEndpointX;
@@ -66,6 +66,7 @@ internal sealed partial class GuardedDoubleSweep
         this.optimizeAreaArithmetic = optimizeAreaArithmetic;
         this.coalesceGaps = coalesceGaps;
         this.optimizeActivePasses = optimizeActivePasses;
+        this.borrowPreparedScalars = borrowPreparedScalars;
         endpointComparison = CompareEndpoints;
         crossingComparison = CompareCrossings;
     }
@@ -126,6 +127,7 @@ internal sealed partial class GuardedDoubleSweep
         ClearBorrowedGeometry();
         ResetGapContributions();
         ResetActivePassDiagnostics();
+        PreparedScalarRecordsCopied = PreparedScalarRecordsBorrowed = 0;
         LastUsedFallback = false; LastFallbackReason = null; LastErrorBound = double.NaN;
         BandCount = PeakActiveCount = 0; EventCount = ActiveEdgeVisits = work = 0;
         XEvaluationCount = XCacheHitCount = 0;
