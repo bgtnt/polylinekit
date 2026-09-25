@@ -4,6 +4,11 @@ All operations return immutable snapshots; caller input is never mutated. Return
 
 ## Area definitions
 
+`PolylineArea.FilledArea(path, fillRule)` measures one filled region without an input
+grid. `PolylineArea.CompareRegions(first, second, fillRule)` returns both areas,
+intersection, union, XOR, IoU and Jaccard distance. `PolylineArea.IntersectionArea`
+returns only the common area. See the [area-method guide](area.md).
+
 `PolylineArea.BetweenGraphs(p, q)` integrates `|p(x)-q(x)|` over a common x domain. It accepts unequal discretization and crossings, but rejects vertical segments, backtracking and mismatched domains. Its linear merge sweep needs neither resampling nor Clipper. See [design.md](design.md).
 
 `PolylineComparison.EndpointBridgedArea(p, q, fillRule, decimalPrecision, includeContours)` fills the closed walk consisting of `p`, a straight connector to the end of `q`, `q` in reverse order, and a connector to the beginning of `p`. Each path needs at least two points after adjacent duplicate removal. Vertical edges, crossings, loops, retracing and collinear paths are accepted. Input order and endpoint choice matter. For increasing-x graph pairs, this agrees with the graph integral up to clipping quantization.
@@ -42,13 +47,13 @@ Two unit squares translated by (100,100) have XOR area 2, bounds ratio 2/10201
 and Jaccard distance 1. Translation by (.5,.5) gives XOR 1.5, bounds ratio 2/3,
 union 1.75 and Jaccard 6/7. These region scores have no open-stroke interpretation.
 
-## Boundary winding areas
+## Advanced area integrals
 
 `WindingArea` computes the same NonZero/EvenOdd endpoint-bridged and filled-region quantities from boundaries, without the decimal clipping grid, plus the absolute-winding integral that no fill rule provides. It returns areas only. Its contract, exact predicates and evidence are in [winding-area.md](winding-area.md).
 
 ## Clipping precision
 
-General area methods default to six decimal places and accept `decimalPrecision` in `[-8,8]`. They shift the joint bounds center to the origin before clipping, and exchange axes when x extent is larger. Results and contour orientation are converted back afterwards. Signed output areas are summed to retain holes; taking the absolute area of an unresolved walk would be incorrect.
+PolylineComparison methods default to six decimal places and accept `decimalPrecision` in `[-8,8]`. They shift the joint bounds center to the origin before clipping, and exchange axes when x extent is larger. Results and contour orientation are converted back afterwards. Signed output areas are summed to retain holes; taking the absolute area of an unresolved walk would be incorrect.
 
 Clipper quantizes coordinates internally. The implementation conservatively requires `max(width,height) * 10^decimalPrecision <= 1e14`; otherwise it throws and asks the caller to normalize or use coarser precision. Features near/below the grid can disappear. This operating limit is not a formal error bound. See [Clipper robustness](https://www.angusj.com/clipper2/Docs/Robustness.htm). The graph-only integral does not have this grid.
 

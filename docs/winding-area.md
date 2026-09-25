@@ -1,4 +1,8 @@
-# Boundary winding areas
+# Area engine: boundary winding integration
+
+This is the implementation reference. Applications should start with the
+[PolylineArea guide](area.md). Engine-specific APIs below remain available for
+advanced integrals and compatibility.
 
 `WindingArea` computes area integrals directly from closed boundaries, without a decimal grid or polygon clipping. It returns areas, not resolved contours. The independent [PolylineKit.Winding assembly](../src/PolylineKit.Winding/README.md) has no external runtime dependencies; both `netstandard2.0` and `net10.0` expose the same API in namespace `PolylineKit`. Use the broader library's Clipper2-based operations in [comparison-api.md](comparison-api.md) when output boundaries are needed.
 
@@ -189,17 +193,12 @@ alone**. This is a capacity bound, not a measurement of typical input or a total
 workspace bound. Other arrays and object headers add storage. Integer-sweep
 memory is not included in the historical boundary-engine storage figures above.
 
-## Checks and measured scope
+## Correctness checks
 
-Run the maintained correctness executable and five-mode verification script described in the repository README. The recorded Windows run passed **182,653 assertions for the portable target** and **182,567 for each of four modern modes** (normal, forced scalar, no AVX, no hardware intrinsics). Both parent and leaf targets are checked; the count difference comes from the resolved framework dependency closure. Tests include **6,879 exact dyadic area-value checks**, **4,032 sub-edge ratio checks** and **468 public boundary-contract checks**, analytic areas, exact signs, independent slab/rational oracles, 125,628 enumerated small-grid cycles, metamorphic changes, extreme coordinates, nested calls, workspace reuse, certificate budget exhaustion and warm allocations. Test sources and helper oracles live in [tests/PolylineKit.Checks](../tests/PolylineKit.Checks).
+The maintained suite covers analytic areas, exact predicates, independent slab and
+rational oracles, small-grid cycles, subdivision and reversal, extreme coordinates,
+reentrancy, exception recovery, concurrent calls and workspace reuse. Public facade
+results and validation behavior are checked against the existing engine APIs.
 
-The independent fixture checker retains 424 assertions per target. The assembly extraction preserved all public result properties bit for bit on 120 recorded operations per target, compared with the corrected pre-split engine. Standalone and precompiled consumer checks cover the extracted API and forwarders. New `FilledArea` checks cover analytic fill rules, dispatch boundaries, independent slab-oracle areas, fallback bit identity, invalid inputs, nested and concurrent calls, exception recovery and input ownership. The recorded counts include 1,381 selected-fill checks per target. The [performance summary](performance.md) includes improvements and regressions. Commands for current reruns are in [benchmarks/README.md](../benchmarks/README.md); historical reports and raw evidence remain in the [versioned research archive](../research/README.md). A possible multiple-ring API is only a [design note](winding-multiple-rings.md).
-
-The [v3 adaptive experiment](../benchmarks/PolylineKit.ScanbeamBenchmarks/HYBRID-V3-RESULTS.md)
-measured the prototype that motivated the new entry point. Its gates and ratios
-describe that frozen experiment, not the subsequently integrated public method.
-The separate [public API measurements](../benchmarks/PolylineKit.ScanbeamBenchmarks/FILLED-AREA-RESULTS.md)
-pass the target, preservation and integration gates while retaining process
-outliers and remaining losses to Clipper.
-Both compare a requested scalar fill against the existing four-integral engine;
-the difference in requested work remains relevant when interpreting timings.
+See [build and verification](../CONTRIBUTING.md#build-and-check) and
+[consumer compatibility checks](../tests/Consumers/README.md).

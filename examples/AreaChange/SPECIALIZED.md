@@ -6,7 +6,7 @@ establish that it is the cheapest applicable method. This experiment also evalua
 two specialized exact-arithmetic identities and a conservative threshold filter.
 All new code is internal to this example; the library API and dependencies are unchanged.
 
-The [three-process results](SPECIALIZED-RESULTS.md) retain every workload, including
+The [three-process results](https://github.com/bgtnt/polylinekit/blob/5ef33e8e0f11ba955cf8fc078e91dc87a325f7b3/examples/AreaChange/SPECIALIZED-RESULTS.md) retain every workload, including
 filter fallbacks and the cost of checking geometric prerequisites.
 
 The specialized identities are exact in real arithmetic; their computed outputs remain
@@ -104,7 +104,7 @@ detector is introduced: those two benchmark guarantees come from synthetic const
 
 All scopes start with finished contour arrays. They exclude simplification and I/O,
 so they are **not** additional measurements of the complete simplifier consumer in
-[RESULTS.md](RESULTS.md). Warm allocation counts also exclude retained workspace,
+[RESULTS.md](https://github.com/bgtnt/polylinekit/blob/5ef33e8e0f11ba955cf8fc078e91dc87a325f7b3/examples/AreaChange/RESULTS.md). Warm allocation counts also exclude retained workspace,
 input construction, first calls and prepared certificates.
 
 ## Reproduce

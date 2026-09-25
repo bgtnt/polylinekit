@@ -1,131 +1,48 @@
-# Filled-area change after contour simplification
+# Measure change after contour simplification
 
-This example asks how much filled region changes when a closed contour is simplified.
-It uses `WindingArea.FilledRegions(original, simplified)` to obtain XOR area and
-`JaccardDistance = XOR / union`. A smaller Jaccard change means less filled area changed;
-it is not a similarity probability or a bound on the largest local displacement.
-
-The [measured results](RESULTS.md) retain all twelve pairs, numerical disagreements,
-three-process timing ranges and allocations for both implementations.
-
-For consumers with stronger geometric guarantees, also read
-[Choosing a simplification-area operation](SPECIALIZED.md). It compares cheaper
-nested/local-area identities and a conservative threshold filter, including the
-cost of checking prerequisites. The Clipper comparison alone does not establish
-that general winding comparison is the cheapest applicable solution.
+Compare the original and simplified filled regions to measure the area added
+or removed. This does not bound the maximum local boundary displacement.
 
 ```csharp
-var change = WindingArea.FilledRegions(original, simplified);
+var change = PolylineArea.CompareRegions(original, simplified);
 Console.WriteLine($"Changed area: {change.SymmetricDifferenceArea}");
-Console.WriteLine($"Union-normalized change: {change.JaccardDistance}");
+Console.WriteLine($"Changed fraction of union: {change.JaccardDistance}");
 ```
 
-The simplifier and clipping comparison are **example-only** uses of the already pinned
-Clipper2 2.0.0 package. The example references `PolylineKit.Winding`, whose runtime has
-no Clipper dependency. No new simplification algorithm or general SVG/GIS parser is added.
+## Run the example
 
-From the repository root:
-
-```powershell
-dotnet restore examples/AreaChange/AreaChange.csproj --locked-mode
+```sh
 dotnet run --project examples/AreaChange -c Release -- check
-dotnet run --project examples/AreaChange -c Release -- run examples/AreaChange/artifacts
-$env:DOTNET_TieredCompilation = '0'
-1..3 | ForEach-Object {
-    dotnet run --project examples/AreaChange -c Release --no-build -- benchmark examples/AreaChange/artifacts $_ (git rev-parse HEAD)
-}
-dotnet run --project examples/AreaChange -c Release --no-build -- summarize examples/AreaChange/artifacts
+dotnet run --project examples/AreaChange -c Release -- run artifacts/area-change
 ```
 
-`check` performs analytic checks and real-pair comparison without recording time.
-`run` writes the actual original/simplified pairs, numerical results, and twelve SVG
-overlays. `benchmark` records one independent process with five batches per method;
-`summarize` validates matching process identities and writes a readable report. Run
-benchmarks on an otherwise idle machine. A revision argument identifies the source;
-when measuring an uncommitted change, label it explicitly rather than claiming clean HEAD.
-The summarizer also checks its currently loaded assemblies and input-pair hash against
-the measured versions before regenerating accuracy tables and overlays.
+`check` verifies analytic controls and the supplied contours. `run` writes
+numerical results and SVG overlays for twelve original/simplified pairs. The
+example uses Clipper2's simplifier at three tolerances; the area library itself
+does not depend on Clipper. No new simplification algorithm is provided here.
 
-## Frozen inputs and license
+## Data and units
 
-The four complete single-ring features are Bulgaria (178 vertices), Switzerland (186),
-Lesotho (76), and Nepal (201), from Natural Earth's 1:50m Admin 0 Countries at v5.1.2.
-The source geometries are all `Polygon` with exactly one ring. No islands or holes were
-discarded, and no contours were joined by invented bridges. A repeated closing point
-was removed because this API closes paths implicitly.
+The four complete single-ring features are Bulgaria, Switzerland, Lesotho and
+Nepal from Natural Earth v5.1.2, 1:50m country boundaries. No islands or holes
+were discarded. A repeated closing point is removed for implicit closure.
 
-Natural Earth data is **public domain**, as stated in its
-[official terms](https://www.naturalearthdata.com/about/terms-of-use/).
-Made with Natural Earth. The pinned
-[original dataset](https://github.com/nvkelso/natural-earth-vector/blob/v5.1.2/geojson/ne_50m_admin_0_countries.geojson),
-full-source SHA-256, frozen-file hashes, and extraction rules are recorded in
-[data/manifest.json](data/manifest.json). Every run verifies the frozen file hashes.
-The dataset notice applies to the geographic data; the example's source code follows
-the repository MIT license.
+Coordinates are transformed to a local equirectangular plane and uniformly
+scaled so the longest bound is 1000. Areas are **squared normalized map-plane
+units**, not land areas in square kilometres. The supplied manifest records
+source and projected-coordinate hashes; ordinary runs are offline.
 
-[data/freeze.py](data/freeze.py) reproduces the files using Python's standard library.
-It accepts the original GeoJSON as an optional argument; otherwise it downloads the
-pinned source and verifies its hash before extracting the four features. Ordinary
-example and test runs are offline.
+Made with Natural Earth. Its data are [public domain](https://www.naturalearthdata.com/about/terms-of-use/).
+See the [pinned source](https://github.com/nvkelso/natural-earth-vector/blob/v5.1.2/geojson/ne_50m_admin_0_countries.geojson),
+[manifest](data/manifest.json) and [reproduction script](data/freeze.py).
 
-Each geographic outline is mapped into its own local equirectangular plane, with the
-longitude axis multiplied by cosine of its center latitude, then uniformly scaled so
-the longest bound is 1000. The projected points are frozen, so execution does not
-recompute trigonometry. **Areas are squared normalized map-plane units, not land areas
-in square kilometres.** This is a vector-contour simplification example, not geodesy.
+## Further use
 
-## Contracts and interpretation
+The simplifier may change topology; `CompareRegions` measures the resulting
+filled change rather than certifying topology preservation. If your application
+has stronger guarantees, [specialized area identities](SPECIALIZED.md) explain
+when less work is sufficient and how prerequisites are checked.
 
-`Clipper.SimplifyPath` operates on a closed `PathD` at tolerances 1, 4, and 12: respectively
-0.1%, 0.4%, and 1.2% of the original longest bound. Both scorers receive exactly the
-same resulting arrays and apply NonZero fill. The simplifier may change topology;
-this example measures resulting filled area, without claiming to preserve topology.
-
-The clipping baseline uses direct `Clipper64` at a scale of `10^8` (grid spacing
-`10^-8`), executes XOR and union, and sums integer output-contour areas without
-converting the vertices back to doubles. Its conversion-inclusive measurement starts
-from the same ordinary double arrays as Winding. Clipper still constructs contours;
-Winding directly returns all overlap areas. The requested outputs here are XOR and
-union, sufficient for Jaccard change.
-
-Analytic controls cover identical, shifted, nested, and corner-cut squares under both
-fill rules, plus removal of collinear vertices. Real cases are checked at clipping
-precision eight and seven. The acceptance threshold for p8 XOR/union disagreement is
-`max(10^-5, 10^-7 * Winding.XOR)` square map units; the p7–p8 sensitivity threshold is
-ten times that. These are explicit example validation thresholds, **not proved error
-bounds**. A consequential disagreement aborts the run for investigation rather than
-silently treating one library as an oracle. All actual deltas remain in `accuracy.json`.
-
-Two costs are reported separately:
-
-- **Isolated area:** the two arrays are already prepared; conversion and quantization
-  required by the clipping scorer remain inside the call.
-- **Complete consumer:** conversion for simplification, simplification, conversion back
-  to `Point2[]`, and the selected area scorer. File loading, checksum verification,
-  and report/overlay writing are outside this geometry operation.
-
-Both use the repository runner's Stopwatch/current-thread allocation approach, with
-warmup, calibrated batches, fresh processes, rotated method order, and raw sample
-retention. Allocations are read before constructing measurement records. Warm zero
-allocation excludes first use, retained workspace, growth, nested calls, and exceptional
-integer predicates. Process medians and their range are descriptive measurements;
-this modest dataset does not establish market demand or a universal performance lead.
-The timed result consumer computes the Jaccard division as well as consuming XOR/union.
-
-## Three visible examples
-
-Bulgaria at tolerance 4 removes 90 of 178 vertices; 0.6013% of the union changes.
-Nepal at tolerance 12 removes 162 of 201 vertices; 3.3294% changes.
-Lesotho at tolerance 1 removes 12 of 76 vertices; 0.00962% changes.
-Blue is the original contour and orange is the simplified contour. All areas refer
-to the explicitly normalized map plane described above.
-
-![Bulgaria at simplification tolerance 4](overlays/BGR-4.svg)
-
-![Nepal at simplification tolerance 12](overlays/NPL-12.svg)
-
-![Lesotho at simplification tolerance 1](overlays/LSO-1.svg)
-
-These three small overlays are retained for inspection without running the tool.
-The generated raw pairs, numerical matrices, twelve overlays, and timing samples go
-to the ignored `artifacts` directory. The commands above regenerate them locally.
+The executable also exposes benchmark commands for maintainers; see its command
+usage and the [benchmark guide](../../benchmarks/README.md). Prior comparative
+results are retained in the [development snapshot](https://github.com/bgtnt/polylinekit/tree/5ef33e8e0f11ba955cf8fc078e91dc87a325f7b3/examples/AreaChange).

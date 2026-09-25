@@ -13,7 +13,7 @@ in CI). An existing monolithic build can instead be supplied with
   `PolylineKit.Winding`. It demonstrates the portable compile-time surface; it
   is not a claim that CI ran .NET Framework or another .NET Standard runtime.
 * `LegacyApiConsumer` compiles **once against the old monolithic DLL**, using all
-  five extracted public types and passing its old `Point2[]` to the retained
+  six extracted public types and passing its old `Point2[]` to the forwarded
   `PolylineArea.BetweenGraphs` method.
 * `CompatibilityHost` supplies the new dependency graph, then loads and executes
   that unchanged legacy component against the modern and portable parent/leaf

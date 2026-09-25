@@ -7,6 +7,22 @@ public readonly struct PolylineKit.Point2
   public System.Double X { get; }
   public System.Double Y { get; }
 
+public static class PolylineKit.PolylineArea
+  public static PolylineKit.RegionOverlapResult CompareRegions(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> first, System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> second, PolylineKit.PathFillRule fillRule = PolylineKit.PathFillRule.NonZero (0))
+  public static System.Double BetweenGraphs(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> first, System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> second)
+  public static System.Double FilledArea(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> path, PolylineKit.PathFillRule fillRule = PolylineKit.PathFillRule.NonZero (0))
+  public static System.Double IntersectionArea(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> first, System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> second, PolylineKit.PathFillRule fillRule = PolylineKit.PathFillRule.NonZero (0))
+
+public readonly struct PolylineKit.RegionOverlapResult
+  public PolylineKit.PathFillRule FillRule { get; }
+  public System.Double FirstArea { get; }
+  public System.Double IntersectionArea { get; }
+  public System.Double SecondArea { get; }
+  public System.Double SymmetricDifferenceArea { get; }
+  public System.Double UnionArea { get; }
+  public System.Nullable<System.Double> IntersectionOverUnion { get; }
+  public System.Nullable<System.Double> JaccardDistance { get; }
+
 public static class PolylineKit.WindingArea
   public static PolylineKit.WindingAreaResult ClosedPath(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> path)
   public static PolylineKit.WindingAreaResult EndpointBridged(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> first, System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> second)

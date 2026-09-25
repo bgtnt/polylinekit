@@ -9,12 +9,14 @@ public static class PortableApi
     {
         Point2[] square = [new(0, 0), new(2, 0), new(2, 2), new(0, 2)];
         WindingAreaResult closed = WindingArea.ClosedPath(square);
-        WindingOverlapResult self = WindingArea.FilledRegions(square, square, PathFillRule.EvenOdd);
-        if (WindingArea.FilledArea(square) != closed.NonZero
-            || WindingArea.FilledArea(square, PathFillRule.EvenOdd) != closed.EvenOdd)
+        RegionOverlapResult self = PolylineArea.CompareRegions(square, square, PathFillRule.EvenOdd);
+        if (PolylineArea.FilledArea(square) != closed.NonZero
+            || PolylineArea.FilledArea(square, PathFillRule.EvenOdd) != closed.EvenOdd)
             throw new InvalidOperationException("Portable selected-fill contract differs.");
-        if (WindingArea.IntersectionArea(square, square, PathFillRule.EvenOdd) != self.IntersectionArea)
+        if (PolylineArea.IntersectionArea(square, square, PathFillRule.EvenOdd) != self.IntersectionArea)
             throw new InvalidOperationException("Portable intersection-only contract differs.");
+        if (PolylineArea.BetweenGraphs([new(0, 0), new(2, 0)], [new(0, 2), new(2, 2)]) != 4)
+            throw new InvalidOperationException("Portable graph area is incorrect.");
         return closed.NonZero + self.IntersectionArea;
     }
 }

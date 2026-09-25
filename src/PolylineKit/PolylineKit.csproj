@@ -9,7 +9,7 @@
     <RepositoryUrl>https://github.com/bgtnt/polylinekit</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>https://github.com/bgtnt/polylinekit</PackageProjectUrl>
-    <PackageTags>geometry;polyline;area;experimental</PackageTags>
+    <PackageTags>geometry;polyline;area;alignment</PackageTags>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>

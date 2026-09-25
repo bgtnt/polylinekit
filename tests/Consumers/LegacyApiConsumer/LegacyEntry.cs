@@ -27,7 +27,7 @@ public static class LegacyEntry
         }
         Point2[] bottom = [new(0, 0), new(2, 0)], top = [new(0, 2), new(2, 2)];
         Equal(4, WindingArea.EndpointBridged(bottom, top).NonZero);
-        // Point2 crosses the extracted assembly boundary into an API that remains in PolylineKit.
+        // Both old Point2 and PolylineArea identities must resolve through the parent assembly's forwarders.
         Equal(4, PolylineArea.BetweenGraphs(bottom, top));
         return passed;
 

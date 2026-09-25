@@ -24,47 +24,8 @@ jobs:
         run: dotnet run --project examples/RegionCoverage -c Release --no-build -- check
       - name: Verify complete coverage source snapshots offline
         run: python examples/RegionCoverage/data/freeze.py
-      - name: Dynamic segment-index contracts and identical simplification traces (no timing)
-        run: dotnet run --project benchmarks/PolylineKit.DynamicIndexBenchmarks -c Release --no-build -- check
-      - name: Experimental bounded-integer scanbeam and independent area oracle (no timing)
-        run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check
-      - name: Experimental wider-coordinate scanbeam invariance (no timing)
-        run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-wide
-      - name: Experimental scanbeam intersection on real rounded contours (no timing)
-        run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-real artifacts/scanbeam-real-ci
-      - name: Guarded double sweep exact controls and original contours (no timing)
-        run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-double artifacts/scanbeam-double-ci
-      - name: Double sweep common-Y and cache ablations (no timing)
-        run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-double-ablation artifacts/scanbeam-double-ablation-ci
-      - name: Scalar order filter exact-sign and area controls (no timing)
-        run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-scalar-filter artifacts/scanbeam-scalar-filter-ci
-      - name: Prepared sweep snapshots, exact areas and original contour parity (no timing)
-        run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-prepared-sweep artifacts/scanbeam-prepared-ci
-      - name: Direct prepared edge access and mixed-call parity (no timing)
-        run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-direct-sweep artifacts/scanbeam-direct-ci
-      - name: Specialized area arithmetic exact bounds and end-to-end parity (no timing)
-        run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-area-arithmetic artifacts/scanbeam-area-ci
-      - name: Coalesced filled gaps exact areas, lifecycle and real contours (no timing)
-        run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-gap-coalescing artifacts/scanbeam-gaps-ci
-      - name: Streamed active sweep passes, exact areas and bit parity (no timing)
-        run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-active-passes artifacts/scanbeam-active-ci
-      - name: Prepared scalar views, lifecycle and bit parity (no timing)
-        run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-scalar-view artifacts/scanbeam-scalar-view-ci
-      - name: Scalar-first endpoint ordering, exact signs and full parity (no timing)
-        run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-filter-first artifacts/scanbeam-filter-first-ci
-      - name: Adaptive closed-area selection, fallback and independent areas (no timing)
-        run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-hybrid artifacts/scanbeam-hybrid-ci
-      - name: Public filled-area extraction, selector and container parity (no timing)
-        run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-filled-area artifacts/filled-area-ci
-      - name: Optional WPF comparison contracts (Windows only, no timing)
-        if: runner.os == 'Windows'
-        run: |
-          dotnet restore benchmarks/PolylineKit.WpfBenchmarks --locked-mode
-          if ($LASTEXITCODE) { exit $LASTEXITCODE }
-          dotnet build benchmarks/PolylineKit.WpfBenchmarks -c Release --no-restore
-          if ($LASTEXITCODE) { exit $LASTEXITCODE }
-          dotnet run --project benchmarks/PolylineKit.WpfBenchmarks -c Release --no-build -- check
-        shell: pwsh
+      - name: Public area benchmark contracts (no timing)
+        run: dotnet run --project benchmarks/PolylineKit.AreaBenchmarks -c Release --no-build -- check artifacts/area-ci-check
       - name: Standalone and precompiled consumer compatibility
         run: ./scripts/verify-consumers.ps1
         shell: pwsh

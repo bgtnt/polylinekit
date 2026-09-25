@@ -96,7 +96,7 @@ internal static partial class AreaChange
 
     private static Areas Winding(Point2[] first, Point2[] second, PathFillRule rule = PathFillRule.NonZero)
     {
-        var result = WindingArea.FilledRegions(first, second, rule);
+        var result = PolylineArea.CompareRegions(first, second, rule);
         return new(result.SymmetricDifferenceArea, result.UnionArea);
     }
 

@@ -1,3 +1,6 @@
 * text=auto eol=lf
 # Preserve the archived fixture's recorded SHA-256, including line endings.
 benchmarks/fixtures/winding.json -text
+# Frozen upstream responses are byte-hashed, not line-normalized documents.
+benchmarks/PolylineKit.AreaBenchmarks/data/counties-5070.json -text
+benchmarks/PolylineKit.AreaBenchmarks/data/layer.json -text

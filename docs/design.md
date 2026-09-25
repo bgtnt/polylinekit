@@ -55,12 +55,15 @@ The last counts **net winding multiplicity**, not total travel without cancellat
 
 For the supported graph pair, winding magnitude is at most one almost everywhere, so the three integrals agree. Only in this equivalent setting does Clipper serve as an area oracle for the public method. Complex contours compare Clipper NonZero/EvenOdd only with the matching named integrals.
 
-## Dependency and source decisions
+## Dependencies and reference precision
 
-The core targets `netstandard2.0` and `net10.0`. The original graph-only implementation had no external runtime dependency; the current general fill-based API references Clipper2 **2.0.0**, locked with a NuGet content hash. The SDK's NETStandard.Library reference assets are build inputs. No source from Clipper, RtTools, MPR001 or a third-party LIP implementation is embedded. Packaging/publication is not part of the current scope.
+The graph integral is available from the dependency-free area project on both
+.NET Standard 2.0 and .NET 10. The complete PolylineKit project adds Clipper2
+for contour-producing comparisons; it is not called by this graph method.
 
-Clipper's `PathsD` operations quantize internally. The oracle explicitly uses decimal precision 8 and limits fixture coordinate magnitudes to `1e6`. Very small faces can disappear; tolerances account for this, and analytic checks retain authority below that scale. `Abs(Area(unresolvedCombinedPath))` is never used as an unsigned-area oracle.
+The independent Clipper oracle uses decimal precision 8 and limits fixture
+coordinate magnitudes to 1e6. Small faces can disappear under quantization;
+analytic checks retain authority below that scale. Taking the absolute signed
+area of an unresolved crossing walk is not an unsigned-area oracle.
 
-The author's unpublished `RtTools.Geometry`, including its .NET 10 version, was inspected **for ideas only**. Its intersection ordering, graph traversal and per-region accumulation motivated making region diagnostics independently inspectable. No private source, binaries or original fixtures are included. The old MPR001 application did not participate in correctness or speed measurements.
-
-The [archived baseline definitions](https://github.com/bgtnt/polylinekit/blob/00f96248cc404e2d662d9e51c457d811701fa889/docs/baselines.md) document LIP/GenLIP provenance and reconstruction limits. The graph integral is elementary area integration; no scientific novelty or universal similarity claim is made. Historical measurements and inspection notes remain available through the [research archive](../research/README.md).
+[Third-party notices](../THIRD-PARTY-NOTICES.md) record algorithm attribution.

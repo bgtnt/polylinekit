@@ -19,6 +19,6 @@ static int RunChecks()
     AppContext.TryGetSwitch("PolylineKit.DisableSimd", out bool simdDisabled);
     Console.WriteLine($"Core target: {target.FrameworkName}; Vector128={System.Runtime.Intrinsics.Vector128.IsHardwareAccelerated}; Vector256={System.Runtime.Intrinsics.Vector256.IsHardwareAccelerated}; force-scalar={Environment.GetEnvironmentVariable("POLYLINEKIT_FORCE_SCALAR")}; simd-disabled={simdDisabled}; process-arch={System.Runtime.InteropServices.RuntimeInformation.ProcessArchitecture}");
     Console.WriteLine($"Winding target: {windingTarget.FrameworkName}");
-    int total = Checks.Run() + AlignmentChecks.Run() + ComparisonChecks.Run() + NumericReviewChecks.Run() + GenLipReviewChecks.Run() + OptimizationChecks.Run() + WindingAreaChecks.Run() + WindingTermChecks.Run() + WindingFractionChecks.Run() + WindingBoundaryChecks.Run() + WindingIntersectionChecks.Run() + WindingFilledAreaChecks.Run() + WindingAssemblyChecks.Run();
+    int total = Checks.Run() + AlignmentChecks.Run() + ComparisonChecks.Run() + NumericReviewChecks.Run() + GenLipReviewChecks.Run() + OptimizationChecks.Run() + WindingAreaChecks.Run() + WindingTermChecks.Run() + WindingFractionChecks.Run() + WindingBoundaryChecks.Run() + WindingIntersectionChecks.Run() + WindingFilledAreaChecks.Run() + PolylineAreaChecks.Run() + WindingAssemblyChecks.Run();
     Console.WriteLine($"PASS: {total} total checks."); return 0;
 }

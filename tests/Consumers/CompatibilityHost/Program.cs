@@ -8,7 +8,7 @@ if (args.Length != 2)
     Console.Error.WriteLine("Usage: CompatibilityHost <precompiled-legacy-consumer.dll> <expected-framework>");
     return 2;
 }
-Assembly core = typeof(PolylineArea).Assembly, winding = typeof(WindingArea).Assembly;
+Assembly core = typeof(PolylineComparison).Assembly, winding = typeof(PolylineArea).Assembly;
 if (core == winding || core.GetName().Name != "PolylineKit" || winding.GetName().Name != "PolylineKit.Winding")
     throw new InvalidOperationException("The compatibility host must load both extracted assemblies.");
 foreach (Assembly assembly in new[] { core, winding })
