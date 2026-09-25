@@ -11,7 +11,7 @@ namespace PolylineKit.ScanbeamBenchmarks;
 /// </remarks>
 internal sealed class IntegerScanbeam
 {
-    private const int CoordinateLimit = 32768, VertexLimit = 8192;
+    private const int CoordinateLimit = 32768, Int64CoordinateLimit = 2048, VertexLimit = 8192;
 
     private readonly struct Edge(long y0, long y1, long dx, long dy, long intercept, int delta)
     {
@@ -25,6 +25,8 @@ internal sealed class IntegerScanbeam
         // arithmetic remains enabled for input conversion, array sizes, indices and counters.
         internal static int Compare(Level a, Level b) =>
             unchecked((Int128)a.N * b.D).CompareTo(unchecked((Int128)b.N * a.D));
+        internal static int Compare64(Level a, Level b) =>
+            unchecked(a.N * b.D).CompareTo(unchecked(b.N * a.D));
     }
 
     private readonly record struct Crossing(Level Y, int A, int B);
@@ -37,7 +39,7 @@ internal sealed class IntegerScanbeam
     private Crossing[] crossings = [];
     private int edgeCount, crossingCount;
     private long bottom, top;
-    private bool nonZero;
+    private bool nonZero, useInt64;
     private Sum area;
     private readonly Comparison<int> bottomComparison;
     private readonly Comparison<int> slopeComparison;
@@ -64,12 +66,15 @@ internal sealed class IntegerScanbeam
         if (count < 3 || count > VertexLimit)
             throw new ArgumentException("The experimental sweep requires 3..8192 supplied vertices.", nameof(path));
         EnsureVertices(count);
+        useInt64 = true;
         for (int i = 0; i < count; i++)
         {
             Point2 p = path[i];
             if (!double.IsFinite(p.X) || !double.IsFinite(p.Y) || Math.Abs(p.X) > CoordinateLimit ||
                 Math.Abs(p.Y) > CoordinateLimit || p.X != Math.Truncate(p.X) || p.Y != Math.Truncate(p.Y))
                 throw new ArgumentException("Coordinates must be exact integers in [-32768,32768].", nameof(path));
+            if (p.X < -Int64CoordinateLimit || p.X > Int64CoordinateLimit ||
+                p.Y < -Int64CoordinateLimit || p.Y > Int64CoordinateLimit) useInt64 = false;
             vertices[i] = p;
             levels[i] = (long)p.Y;
         }
@@ -192,11 +197,23 @@ internal sealed class IntegerScanbeam
         int left = active[position], right = active[position + 1];
         if (Fill(prefix[position] + edges[left].Delta) == 0) return;
         // Subtract exact rational levels before rounding, including levels closer than one binary64 ULP.
-        Int128 heightNumerator = unchecked((Int128)y.N * previous.D - (Int128)previous.N * y.D);
-        if (heightNumerator == 0) return;
-        if (heightNumerator < 0) throw new InvalidOperationException("A gap advanced backwards in sweep order.");
-        Int128 heightDenominator = unchecked((Int128)y.D * previous.D);
-        double height = (double)heightNumerator / (double)heightDenominator;
+        double height;
+        if (useInt64)
+        {
+            long numerator = unchecked(y.N * previous.D - previous.N * y.D);
+            if (numerator == 0) return;
+            if (numerator < 0) throw new InvalidOperationException("A gap advanced backwards in sweep order.");
+            long denominator = unchecked(y.D * previous.D);
+            height = (double)numerator / (double)denominator;
+        }
+        else
+        {
+            Int128 numerator = unchecked((Int128)y.N * previous.D - (Int128)previous.N * y.D);
+            if (numerator == 0) return;
+            if (numerator < 0) throw new InvalidOperationException("A gap advanced backwards in sweep order.");
+            Int128 denominator = unchecked((Int128)y.D * previous.D);
+            height = (double)numerator / (double)denominator;
+        }
         double lowerWidth = GapWidth(left, right, previous), upperWidth = GapWidth(left, right, y);
         // Widths, including exactly zero coincident-line gaps, are formed before binary64 rounding.
         // Every trapezoid is nonnegative; no subtraction of large boundary integrals is needed.
@@ -206,6 +223,14 @@ internal sealed class IntegerScanbeam
     private double GapWidth(int left, int right, Level y)
     {
         Edge a = edges[left], b = edges[right];
+        if (useInt64)
+        {
+            long n = unchecked((b.Dx * y.N + b.B * y.D) * a.Dy -
+                (a.Dx * y.N + a.B * y.D) * b.Dy);
+            if (n < 0) throw new InvalidOperationException("A filled gap has negative exact width.");
+            long d = unchecked(y.D * a.Dy * b.Dy);
+            return (double)n / (double)d;
+        }
         Int128 numerator = unchecked(((Int128)b.Dx * y.N + (Int128)b.B * y.D) * a.Dy -
             ((Int128)a.Dx * y.N + (Int128)a.B * y.D) * b.Dy);
         if (numerator < 0) throw new InvalidOperationException("A filled gap has negative exact width.");
@@ -238,9 +263,19 @@ internal sealed class IntegerScanbeam
     // Gap-width numerators are below 2^83 and denominators below 2^65; height differences below 2^83 and
     // denominators below 2^66. We convert these local fractions separately rather than multiplying their
     // exact numerators, which would require a wider intermediate.
+    // The Int64 branch uses the tighter B=x0*y1-y0*x1 bound: |B|<=2M^2, |N|<=8M^3, D<=8M^2.
+    // Every comparison, width and height numerator is then <=128M^5, and every denominator <=64M^4.
+    // At M=2048 these are 2^62 and 2^50 respectively, including all intermediate sums/products.
+    // Selection depends on every original coordinate on every call; larger input retains the Int128 path.
     private int CompareX(int left, int right, Level y)
     {
         Edge a = edges[left], b = edges[right];
+        if (useInt64)
+        {
+            long l = unchecked((a.Dx * y.N + a.B * y.D) * b.Dy);
+            long r = unchecked((b.Dx * y.N + b.B * y.D) * a.Dy);
+            return l.CompareTo(r);
+        }
         Int128 lhs = unchecked(((Int128)a.Dx * y.N + (Int128)a.B * y.D) * b.Dy);
         Int128 rhs = unchecked(((Int128)b.Dx * y.N + (Int128)b.B * y.D) * a.Dy);
         return lhs.CompareTo(rhs); // Common event denominator cancels.
@@ -248,7 +283,7 @@ internal sealed class IntegerScanbeam
 
     private int ComparePoint(Crossing a, Crossing b)
     {
-        int comparison = Level.Compare(a.Y, b.Y);
+        int comparison = useInt64 ? Level.Compare64(a.Y, b.Y) : Level.Compare(a.Y, b.Y);
         return comparison != 0 ? comparison : CompareX(a.A, b.A, a.Y);
     }
 

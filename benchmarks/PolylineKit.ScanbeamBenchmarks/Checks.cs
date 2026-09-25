@@ -77,6 +77,39 @@ internal static class Checks
                 i % 4 == 0 ? (seed % 2 == 0 ? 32768 : -32768) : random.Next(-32768, 32769))).ToArray();
             OracleVariants("full-domain n=8 seed=" + seed, boundary);
         }
+        // The optional Int64 arithmetic dispatch changes at max |coordinate| = 2048.
+        // Crossings use non-dyadic event positions, with extents on both sides of that boundary.
+        foreach (int extent in new[] { 2047, 2048, 2049 })
+            OracleVariants("arithmetic dispatch crossings extent=" + extent,
+            [new(-extent, -extent), new(extent, extent - 1), new(1 - extent, extent), new(extent, -extent),
+                new(0, extent), new(0, -extent), new(-extent, 1), new(extent, -1)]);
+        Point2[] narrowDispatch = [new(0, 0), new(2047, 2046), new(2048, 2047)];
+        Point2[] wideDispatch = [new(0, 0), new(2048, 2047), new(2049, 2048)];
+        foreach (var (name, triangle) in new[]
+        {
+            ("at dispatch boundary", narrowDispatch), ("above dispatch boundary", wideDispatch),
+            ("translated across dispatch boundary", narrowDispatch.Select(p => new Point2(p.X + 1, p.Y + 1)).ToArray())
+        })
+        {
+            var exact = ExactAreaOracle.Measure(triangle);
+            Equal(name + " determinant-one NonZero", .5, exact.NonZero);
+            Equal(name + " determinant-one EvenOdd", .5, exact.EvenOdd);
+            OracleVariants(name, triangle);
+        }
+        Point2[] maximumDispatch = [new(-32768, -32768), new(32768, 32767), new(-32768, 32767), new(32767, -32768)];
+        var maximumExact = ExactAreaOracle.Measure(maximumDispatch);
+        foreach (PathFillRule rule in Enum.GetValues<PathFillRule>())
+        {
+            double small = engine.Measure(narrowDispatch, rule), wide = engine.Measure(wideDispatch, rule);
+            for (int repeat = 0; repeat < 3; repeat++)
+            {
+                Equal("small dispatch after wide call", small, engine.Measure(narrowDispatch, rule));
+                Near("maximum dispatch after small call", rule == PathFillRule.NonZero ? maximumExact.NonZero : maximumExact.EvenOdd,
+                    engine.Measure(maximumDispatch, rule));
+                Equal("small dispatch after maximum call", small, engine.Measure(narrowDispatch, rule));
+                Equal("wide dispatch after small call", wide, engine.Measure(wideDispatch, rule));
+            }
+        }
         // Consecutive large integer vectors have determinant one, so each area is exactly 1/2.
         // The slab implementation still performs final integration in binary64, under the protocol budget.
         foreach (Point2[] thin in new Point2[][]

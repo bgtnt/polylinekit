@@ -92,3 +92,14 @@ preserve both versions' results; require bit-identical output values between
 versions. This is a post-baseline implementation ablation, not an unseen test
 set or a new performance threshold. Algorithm counts collected outside timing
 are descriptive and do not constitute a stage-by-stage CPU profile.
+
+The bounded-arithmetic run at `94f5ecd` improves grid throughput by 3.2–3.7x
+but still fails both NonZero gates; both EvenOdd gates pass. One final arithmetic
+ablation is declared before its timings: when all supplied coordinate magnitudes
+are <=2048, use Int64 for the same exact expressions, otherwise retain Int128.
+The largest intermediate is bounded by 128*M^5 = 2^62 at M=2048, below signed
+Int64 capacity. Coordinate validation is still against 32768; this is a proven
+dispatch predicate, not a smaller accepted domain or a quantization step.
+The same matrix, gate and bit-identity requirement apply. Keep both earlier
+versions, add checks on either side of the dispatch boundary, and do not infer
+universal or unseen-input performance from this development sequence.
