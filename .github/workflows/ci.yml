@@ -24,6 +24,8 @@ jobs:
         run: dotnet run --project examples/RegionCoverage -c Release --no-build -- check
       - name: Verify complete coverage source snapshots offline
         run: python examples/RegionCoverage/data/freeze.py
+      - name: Dynamic segment-index contracts and identical simplification traces (no timing)
+        run: dotnet run --project benchmarks/PolylineKit.DynamicIndexBenchmarks -c Release --no-build -- check
       - name: Optional WPF comparison contracts (Windows only, no timing)
         if: runner.os == 'Windows'
         run: |

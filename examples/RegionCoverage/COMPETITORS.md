@@ -26,6 +26,11 @@ describes progressive snapping fallbacks, and
 documents the reusable spatial predicates. NTS agreement is an independent
 implementation comparison, not an exact arithmetic oracle.
 
+The measured Clipper2 NuGet package is its **managed C# implementation**, not a
+C++ DLL called through interop. Clipper2 also maintains C++ and Delphi versions.
+No C# versus C++ performance conclusion follows from this experiment; a native
+comparison must identify its binary and include or separately measure marshaling.
+
 ## Optional Windows graphics comparison
 
 The [WPF host](../../benchmarks/PolylineKit.WpfBenchmarks/README.md) compares direct

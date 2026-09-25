@@ -2,6 +2,7 @@
   <Folder Name="/benchmarks/">
     <Project Path="benchmarks/PolylineKit.Benchmarks/PolylineKit.Benchmarks.csproj" />
     <Project Path="benchmarks/PolylineKit.AssemblyBenchmarks/PolylineKit.AssemblyBenchmarks.csproj" />
+    <Project Path="benchmarks/PolylineKit.DynamicIndexBenchmarks/PolylineKit.DynamicIndexBenchmarks.csproj" />
   </Folder>
   <Folder Name="/examples/">
     <Project Path="examples/Basic/Basic.csproj" />
