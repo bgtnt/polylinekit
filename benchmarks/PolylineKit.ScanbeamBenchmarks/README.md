@@ -78,6 +78,16 @@ Commands `check-area-arithmetic`, `benchmark-area-arithmetic` and
 `summarize-area-arithmetic` use the same argument shapes. The option defaults
 off, and both measured sweep variants use copied prepared geometry.
 
+The [filled-gap coalescer](GAP-COALESCING-RESULTS.md) combines contiguous filled
+intervals between the same ordered edges, provided all boundary Y enclosures
+are point-valued. This cuts integrations by 72% and complete-query time by
+22–25% against its contemporary baseline, with changed but still certified area
+rounding. See the [proof](GAP-COALESCING-NUMERICS.md) and
+[protocol](GAP-COALESCING-PROTOCOL.md). Commands `check-gap-coalescing`,
+`benchmark-gap-coalescing` and `summarize-gap-coalescing` use the same argument
+shapes. The flag defaults off; the shipping engine and original commands remain
+unchanged. The new buffer cost and the failed competitor gates are reported.
+
 From the repository root, using PowerShell:
 
 ```powershell

@@ -32,6 +32,11 @@ The [specialized interval area arithmetic](PolylineKit.ScanbeamBenchmarks/AREA-A
 then saves 2.3–3.4% against the contemporary copied baseline with identical
 result/certificate bits. The gain against the preceding binary is only 0.9–1.7%;
 all competitor gates still fail. The shipping engine remains unchanged.
+The [filled-gap coalescing experiment](PolylineKit.ScanbeamBenchmarks/GAP-COALESCING-RESULTS.md)
+reduces actual trapezoid integrations by 72% and complete-query time by 22–25%
+against its contemporary baseline. Warm tables take 13.7–14.1 ms, with no warm
+allocations and up to 84840 additional retained scratch-array element bytes on
+this workload. All competitor gates still fail; shipping Winding remains faster.
 
 For an area-engine optimization with a predeclared Clipper gate, see the
 [intersection-only protocol](../examples/RegionCoverage/INTERSECTION-PROTOCOL.md),

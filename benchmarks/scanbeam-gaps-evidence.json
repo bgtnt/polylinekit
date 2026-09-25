@@ -1,0 +1,1377 @@
+{
+  "Protocol": "benchmarks/PolylineKit.ScanbeamBenchmarks/GAP-COALESCING-PROTOCOL.md",
+  "Environment": {
+    "Run": 1,
+    "Revision": "4b8a131117264ec950a373bfae5462edd216b2c5",
+    "Utc": "2026-09-25T13:44:03.4477616+00:00",
+    "SourceHash": "c42265beea7590918ecf06107263ad63f1395dc33f592653344c5980bda379b0",
+    "Runtime": ".NET 10.0.12",
+    "OS": "Microsoft Windows 10.0.26200",
+    "Architecture": "X64",
+    "Cpu": "Intel64 Family 6 Model 158 Stepping 12, GenuineIntel",
+    "LogicalProcessors": 16,
+    "TieredCompilation": "0",
+    "HarnessHash": "42600fdd8945629164cfc40335e87012099cb45b44b3a05b885abe9702d9bab2",
+    "WindingHash": "99d97a806576716e7e9f76ea16b2bd35fc6067245bbb7c9abe04f2f7839150de",
+    "ClipperHash": "e9bf01e01f494ef6072cd46c792ed4f3004288a92b1e98c1f44931e558b8a5d0",
+    "NtsHash": "98fa6bae8b75b5f9445236679883fa27750d990aec11e985b85b57a30c37a858",
+    "Rows": []
+  },
+  "SampleCount": 480,
+  "BaselineMethod": "Guarded-area",
+  "SelectedMethod": "Guarded-gaps",
+  "SelectedPass": false,
+  "CombinedPass": false,
+  "RawFiles": [
+    {
+      "File": "run-1.json",
+      "Sha256": "145f754760d2804730ba938d1bab090c52c0d635d73982efefdc8851d87d482b"
+    },
+    {
+      "File": "run-2.json",
+      "Sha256": "e2c6ac1df082d6210a2f1800ed7347769f2cf09495c18bac96c76989c21d279f"
+    },
+    {
+      "File": "run-3.json",
+      "Sha256": "e069ed942c480df2b48bf39848f3ac6f68b871d7d71624f99d94f5e86cfcb11b"
+    }
+  ],
+  "ValidationFileSha256": "cd68be3c5dea66e87a09725bb06929c033283f1e942c081e561b5ffef6272bae",
+  "PreparedMetadataFileSha256": "c0df9532bc502be6c463eeff08caee0f819b8fef4c460fc0c8563dc75259c755",
+  "Validation": {
+    "SourceHash": "c42265beea7590918ecf06107263ad63f1395dc33f592653344c5980bda379b0",
+    "GeometryHash": "3cc5dcac07871507da1187167d32ea11c1124accb652a062ce004e5731bf8f35",
+    "DirectionalPairs": 2156,
+    "Candidates": 422,
+    "Pairs": []
+  },
+  "Diagnostics": [
+    {
+      "Method": "Winding-intersection-only",
+      "Candidates": 422,
+      "Certified": 0,
+      "Fallbacks": 0,
+      "MaxAreaError": 5.3947733249515295e-06,
+      "MaxCoverageError": 6.38378239159465e-15,
+      "MaxCertifiedRadius": null,
+      "Bands": 0,
+      "Events": 0,
+      "Visits": 0,
+      "XEvaluations": 0,
+      "XCacheHits": 0,
+      "FilterAttempts": 0,
+      "FilterAccepted": 0,
+      "FilterInterval": 0,
+      "FallbackReasons": {}
+    },
+    {
+      "Method": "Guarded-area",
+      "Candidates": 422,
+      "Certified": 422,
+      "Fallbacks": 0,
+      "MaxAreaError": 2.6226043701171875e-06,
+      "MaxCoverageError": 2.7755575615628914e-15,
+      "MaxCertifiedRadius": 0.00032496452331542974,
+      "Bands": 65932,
+      "Events": 1504,
+      "Visits": 2230171,
+      "XEvaluations": 25580,
+      "XCacheHits": 0,
+      "FilterAttempts": 540765,
+      "FilterAccepted": 527975,
+      "FilterInterval": 12790,
+      "FallbackReasons": {}
+    },
+    {
+      "Method": "Guarded-gaps",
+      "Candidates": 422,
+      "Certified": 422,
+      "Fallbacks": 0,
+      "MaxAreaError": 2.86102294921875e-06,
+      "MaxCoverageError": 1.887379141862766e-15,
+      "MaxCertifiedRadius": 0.00029373168945312505,
+      "Bands": 65932,
+      "Events": 1504,
+      "Visits": 2230171,
+      "XEvaluations": 25580,
+      "XCacheHits": 0,
+      "FilterAttempts": 540765,
+      "FilterAccepted": 527975,
+      "FilterInterval": 12790,
+      "FallbackReasons": {}
+    },
+    {
+      "Method": "Clipper64-reused-data",
+      "Candidates": 422,
+      "Certified": 0,
+      "Fallbacks": 0,
+      "MaxAreaError": 0.0229949951171875,
+      "MaxCoverageError": 2.8686941710986957e-11,
+      "MaxCertifiedRadius": null,
+      "Bands": 0,
+      "Events": 0,
+      "Visits": 0,
+      "XEvaluations": 0,
+      "XCacheHits": 0,
+      "FilterAttempts": 0,
+      "FilterAccepted": 0,
+      "FilterInterval": 0,
+      "FallbackReasons": {}
+    }
+  ],
+  "Gates": [
+    {
+      "Direction": "county-zones",
+      "Method": "Guarded-area",
+      "Scope": "prepare-plus-one",
+      "BaselineOverVariant": 1,
+      "ClipperOverVariant": 0.6149271462513956,
+      "WindingOverVariant": 0.46461679023654806,
+      "Pass": false
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Guarded-area",
+      "Scope": "warm-table",
+      "BaselineOverVariant": 1,
+      "ClipperOverVariant": 0.6805684589867229,
+      "WindingOverVariant": 0.5142087972990701,
+      "Pass": false
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Guarded-area",
+      "Scope": "warm-zones-fresh-queries",
+      "BaselineOverVariant": 1,
+      "ClipperOverVariant": 0.655805872296973,
+      "WindingOverVariant": 0.4894558764882049,
+      "Pass": false
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Guarded-gaps",
+      "Scope": "prepare-plus-one",
+      "BaselineOverVariant": 1.2774952078235138,
+      "ClipperOverVariant": 0.7855664824967468,
+      "WindingOverVariant": 0.5935457230015329,
+      "Pass": false
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Guarded-gaps",
+      "Scope": "warm-table",
+      "BaselineOverVariant": 1.3255527557937326,
+      "ClipperOverVariant": 0.9021293963161444,
+      "WindingOverVariant": 0.6816108883131632,
+      "Pass": false
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Guarded-gaps",
+      "Scope": "warm-zones-fresh-queries",
+      "BaselineOverVariant": 1.2952992310704146,
+      "ClipperOverVariant": 0.8494648421177314,
+      "WindingOverVariant": 0.6339918204580675,
+      "Pass": false
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Guarded-area",
+      "Scope": "prepare-plus-one",
+      "BaselineOverVariant": 1,
+      "ClipperOverVariant": 0.6085327287692597,
+      "WindingOverVariant": 0.4422354911842428,
+      "Pass": false
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Guarded-area",
+      "Scope": "warm-table",
+      "BaselineOverVariant": 1,
+      "ClipperOverVariant": 0.6701255608557426,
+      "WindingOverVariant": 0.49555129361189737,
+      "Pass": false
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Guarded-area",
+      "Scope": "warm-zones-fresh-queries",
+      "BaselineOverVariant": 1,
+      "ClipperOverVariant": 0.6476975273840206,
+      "WindingOverVariant": 0.46103440117590205,
+      "Pass": false
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Guarded-gaps",
+      "Scope": "prepare-plus-one",
+      "BaselineOverVariant": 1.2888582834702822,
+      "ClipperOverVariant": 0.7843124482370348,
+      "WindingOverVariant": 0.5699788760573603,
+      "Pass": false
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Guarded-gaps",
+      "Scope": "warm-table",
+      "BaselineOverVariant": 1.3353693362678938,
+      "ClipperOverVariant": 0.8948651254160831,
+      "WindingOverVariant": 0.6617440020372156,
+      "Pass": false
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Guarded-gaps",
+      "Scope": "warm-zones-fresh-queries",
+      "BaselineOverVariant": 1.308380561602018,
+      "ClipperOverVariant": 0.8474348546269433,
+      "WindingOverVariant": 0.6032084487283768,
+      "Pass": false
+    }
+  ],
+  "Measurements": [
+    {
+      "Direction": "county-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "prepare",
+      "Value": 225407786180.86548,
+      "MedianNs": 407206.25,
+      "MinNs": 395218.75,
+      "MaxNs": 417150,
+      "MedianBytes": 968888
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "prepare-plus-one",
+      "Value": 99289942172.56465,
+      "MedianNs": 12888750,
+      "MinNs": 12865500,
+      "MaxNs": 13052200,
+      "MedianBytes": 1626168
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "warm-table",
+      "Value": 99289942172.56465,
+      "MedianNs": 12709650,
+      "MinNs": 12533950,
+      "MaxNs": 13170900,
+      "MedianBytes": 625088
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "warm-zones-fresh-queries",
+      "Value": 99289942172.56465,
+      "MedianNs": 12908850,
+      "MinNs": 12882250,
+      "MaxNs": 13095500,
+      "MedianBytes": 975040
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Guarded-area",
+      "Scope": "prepare",
+      "Value": 225407786180.8534,
+      "MedianNs": 2201218.75,
+      "MinNs": 2185000,
+      "MaxNs": 2230593.75,
+      "MedianBytes": 1557456
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Guarded-area",
+      "Scope": "prepare-plus-one",
+      "Value": 99289942172.58379,
+      "MedianNs": 20959800,
+      "MinNs": 20852300,
+      "MaxNs": 21096300,
+      "MedianBytes": 2107648
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Guarded-area",
+      "Scope": "warm-table",
+      "Value": 99289942172.58379,
+      "MedianNs": 18675050,
+      "MinNs": 18467200,
+      "MaxNs": 18700400,
+      "MedianBytes": 0
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Guarded-area",
+      "Scope": "warm-zones-fresh-queries",
+      "Value": 99289942172.58379,
+      "MedianNs": 19683950,
+      "MinNs": 19597350,
+      "MaxNs": 19739500,
+      "MedianBytes": 568952
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Guarded-gaps",
+      "Scope": "prepare",
+      "Value": 225407786180.8534,
+      "MedianNs": 2208931.25,
+      "MinNs": 2176706.25,
+      "MaxNs": 2212587.5,
+      "MedianBytes": 1557456
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Guarded-gaps",
+      "Scope": "prepare-plus-one",
+      "Value": 99289942172.58379,
+      "MedianNs": 16406950,
+      "MinNs": 16316150,
+      "MaxNs": 16446000,
+      "MedianBytes": 2248000
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Guarded-gaps",
+      "Scope": "warm-table",
+      "Value": 99289942172.58379,
+      "MedianNs": 14088500,
+      "MinNs": 14010350,
+      "MaxNs": 14299700,
+      "MedianBytes": 0
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Guarded-gaps",
+      "Scope": "warm-zones-fresh-queries",
+      "Value": 99289942172.58379,
+      "MedianNs": 15196450,
+      "MinNs": 15168050,
+      "MaxNs": 15198150,
+      "MedianBytes": 568952
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "prepare",
+      "Value": 225407786180.8534,
+      "MedianNs": 126251.5625,
+      "MinNs": 125947.265625,
+      "MaxNs": 126364.84375,
+      "MedianBytes": 10544
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "prepare-plus-one",
+      "Value": 99289942172.58374,
+      "MedianNs": 9738275,
+      "MinNs": 9699575,
+      "MaxNs": 9755000,
+      "MedianBytes": 10480
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "warm-table",
+      "Value": 99289942172.58374,
+      "MedianNs": 9602875,
+      "MinNs": 9519875,
+      "MaxNs": 9616475,
+      "MedianBytes": 0
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "warm-zones-fresh-queries",
+      "Value": 99289942172.58374,
+      "MedianNs": 9634425,
+      "MinNs": 9620100,
+      "MaxNs": 9655450,
+      "MedianBytes": 1120
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "prepare",
+      "Value": 225407786180.86548,
+      "MedianNs": 405010.9375,
+      "MinNs": 402828.125,
+      "MaxNs": 408082.8125,
+      "MedianBytes": 968888
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "prepare-plus-one",
+      "Value": 99289942102.12396,
+      "MedianNs": 12642450,
+      "MinNs": 12466700,
+      "MaxNs": 12818300,
+      "MedianBytes": 1624352
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "warm-table",
+      "Value": 99289942102.12396,
+      "MedianNs": 12299250,
+      "MinNs": 12281550,
+      "MaxNs": 12637400,
+      "MedianBytes": 625088
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "warm-zones-fresh-queries",
+      "Value": 99289942102.12396,
+      "MedianNs": 12866900,
+      "MinNs": 12592000,
+      "MaxNs": 12963000,
+      "MedianBytes": 1241472
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Guarded-area",
+      "Scope": "prepare",
+      "Value": 225407786180.8534,
+      "MedianNs": 2208843.75,
+      "MinNs": 2180106.25,
+      "MaxNs": 2214637.5,
+      "MedianBytes": 1557456
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Guarded-area",
+      "Scope": "prepare-plus-one",
+      "Value": 99289942102.14305,
+      "MedianNs": 20775300,
+      "MinNs": 20768200,
+      "MaxNs": 20841700,
+      "MedianBytes": 2089192
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Guarded-area",
+      "Scope": "warm-table",
+      "Value": 99289942102.14305,
+      "MedianNs": 18353650,
+      "MinNs": 18299600,
+      "MaxNs": 20630200,
+      "MedianBytes": 0
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Guarded-area",
+      "Scope": "warm-zones-fresh-queries",
+      "Value": 99289942102.14305,
+      "MedianNs": 19865600,
+      "MinNs": 19689000,
+      "MaxNs": 20833400,
+      "MedianBytes": 986024
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Guarded-gaps",
+      "Scope": "prepare",
+      "Value": 225407786180.8534,
+      "MedianNs": 2184375,
+      "MinNs": 2167681.25,
+      "MaxNs": 2213412.5,
+      "MedianBytes": 1557456
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Guarded-gaps",
+      "Scope": "prepare-plus-one",
+      "Value": 99289942102.14305,
+      "MedianNs": 16119150,
+      "MinNs": 16111450,
+      "MaxNs": 16193850,
+      "MedianBytes": 2224816
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Guarded-gaps",
+      "Scope": "warm-table",
+      "Value": 99289942102.14305,
+      "MedianNs": 13744250,
+      "MinNs": 13693950,
+      "MaxNs": 13902850,
+      "MedianBytes": 0
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Guarded-gaps",
+      "Scope": "warm-zones-fresh-queries",
+      "Value": 99289942102.14305,
+      "MedianNs": 15183350,
+      "MinNs": 15178450,
+      "MaxNs": 15196550,
+      "MedianBytes": 986024
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "prepare",
+      "Value": 225407786180.8534,
+      "MedianNs": 125198.828125,
+      "MinNs": 124813.28125,
+      "MaxNs": 126153.515625,
+      "MedianBytes": 10544
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "prepare-plus-one",
+      "Value": 99289942102.14304,
+      "MedianNs": 9187575,
+      "MinNs": 9168300,
+      "MaxNs": 9207900,
+      "MedianBytes": 10480
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "warm-table",
+      "Value": 99289942102.14304,
+      "MedianNs": 9095175,
+      "MinNs": 9048875,
+      "MaxNs": 9110775,
+      "MedianBytes": 0
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "warm-zones-fresh-queries",
+      "Value": 99289942102.14304,
+      "MedianNs": 9158725,
+      "MinNs": 9098750,
+      "MaxNs": 9176750,
+      "MedianBytes": 7384
+    }
+  ],
+  "HistoricalBinaryEvidence": {
+    "Protocol": "benchmarks/PolylineKit.ScanbeamBenchmarks/AREA-ARITHMETIC-PROTOCOL.md",
+    "Environment": {
+      "Run": 1,
+      "Revision": "5bc86fb238be2ea751aa3429f6eb37045cb2651b",
+      "Utc": "2026-09-25T13:43:53.801754+00:00",
+      "SourceHash": "c42265beea7590918ecf06107263ad63f1395dc33f592653344c5980bda379b0",
+      "Runtime": ".NET 10.0.12",
+      "OS": "Microsoft Windows 10.0.26200",
+      "Architecture": "X64",
+      "Cpu": "Intel64 Family 6 Model 158 Stepping 12, GenuineIntel",
+      "LogicalProcessors": 16,
+      "TieredCompilation": "0",
+      "HarnessHash": "9112e2ac26a37ec77096cdfef3470190d23bba2e86c757800757426da08f48ac",
+      "WindingHash": "4fb5c32ab5fd067196e15c4591dc228166e62bdde942689be70eadf6b8d7dad2",
+      "ClipperHash": "e9bf01e01f494ef6072cd46c792ed4f3004288a92b1e98c1f44931e558b8a5d0",
+      "NtsHash": "98fa6bae8b75b5f9445236679883fa27750d990aec11e985b85b57a30c37a858",
+      "Rows": []
+    },
+    "SampleCount": 480,
+    "BaselineMethod": "Guarded-prepared",
+    "SelectedMethod": "Guarded-area",
+    "SelectedPass": false,
+    "CombinedPass": false,
+    "RawFiles": [
+      {
+        "File": "run-1.json",
+        "Sha256": "5986369cf4b117a28bf0538948a4610d6a386105de1417628026b936e7e6e6a5"
+      },
+      {
+        "File": "run-2.json",
+        "Sha256": "58a80662bb1e1f54799b68426453798b8b969aaf973aeb04f7cfd8a1d3e75712"
+      },
+      {
+        "File": "run-3.json",
+        "Sha256": "52a6a563638d2ef3688526e7b965dc7434ad84781fd24062debe5f9d698d9092"
+      }
+    ],
+    "ValidationFileSha256": "d2f76a362cbbc35a926e33d541a007089ffbaf05b461923776bf5d7c523d31cd",
+    "PreparedMetadataFileSha256": "c0df9532bc502be6c463eeff08caee0f819b8fef4c460fc0c8563dc75259c755",
+    "Validation": {
+      "SourceHash": "c42265beea7590918ecf06107263ad63f1395dc33f592653344c5980bda379b0",
+      "GeometryHash": "3cc5dcac07871507da1187167d32ea11c1124accb652a062ce004e5731bf8f35",
+      "DirectionalPairs": 2156,
+      "Candidates": 422,
+      "Pairs": []
+    },
+    "Diagnostics": [
+      {
+        "Method": "Winding-intersection-only",
+        "Candidates": 422,
+        "Certified": 0,
+        "Fallbacks": 0,
+        "MaxAreaError": 5.3947733249515295e-06,
+        "MaxCoverageError": 6.38378239159465e-15,
+        "MaxCertifiedRadius": null,
+        "Bands": 0,
+        "Events": 0,
+        "Visits": 0,
+        "XEvaluations": 0,
+        "XCacheHits": 0,
+        "FilterAttempts": 0,
+        "FilterAccepted": 0,
+        "FilterInterval": 0,
+        "FallbackReasons": {}
+      },
+      {
+        "Method": "Guarded-prepared",
+        "Candidates": 422,
+        "Certified": 422,
+        "Fallbacks": 0,
+        "MaxAreaError": 2.6226043701171875e-06,
+        "MaxCoverageError": 2.7755575615628914e-15,
+        "MaxCertifiedRadius": 0.00032496452331542974,
+        "Bands": 65932,
+        "Events": 1504,
+        "Visits": 2230171,
+        "XEvaluations": 25580,
+        "XCacheHits": 0,
+        "FilterAttempts": 540765,
+        "FilterAccepted": 527975,
+        "FilterInterval": 12790,
+        "FallbackReasons": {}
+      },
+      {
+        "Method": "Guarded-area",
+        "Candidates": 422,
+        "Certified": 422,
+        "Fallbacks": 0,
+        "MaxAreaError": 2.6226043701171875e-06,
+        "MaxCoverageError": 2.7755575615628914e-15,
+        "MaxCertifiedRadius": 0.00032496452331542974,
+        "Bands": 65932,
+        "Events": 1504,
+        "Visits": 2230171,
+        "XEvaluations": 25580,
+        "XCacheHits": 0,
+        "FilterAttempts": 540765,
+        "FilterAccepted": 527975,
+        "FilterInterval": 12790,
+        "FallbackReasons": {}
+      },
+      {
+        "Method": "Clipper64-reused-data",
+        "Candidates": 422,
+        "Certified": 0,
+        "Fallbacks": 0,
+        "MaxAreaError": 0.0229949951171875,
+        "MaxCoverageError": 2.8686941710986957e-11,
+        "MaxCertifiedRadius": null,
+        "Bands": 0,
+        "Events": 0,
+        "Visits": 0,
+        "XEvaluations": 0,
+        "XCacheHits": 0,
+        "FilterAttempts": 0,
+        "FilterAccepted": 0,
+        "FilterInterval": 0,
+        "FallbackReasons": {}
+      }
+    ],
+    "Gates": [
+      {
+        "Direction": "county-zones",
+        "Method": "Guarded-area",
+        "Scope": "prepare-plus-one",
+        "BaselineOverVariant": 1.0306508594808206,
+        "ClipperOverVariant": 0.5948919888846997,
+        "WindingOverVariant": 0.4534232611397372,
+        "Pass": false
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Guarded-area",
+        "Scope": "warm-table",
+        "BaselineOverVariant": 1.0263225558461526,
+        "ClipperOverVariant": 0.6542642021032072,
+        "WindingOverVariant": 0.5020219151185229,
+        "Pass": false
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Guarded-area",
+        "Scope": "warm-zones-fresh-queries",
+        "BaselineOverVariant": 1.0169658273115878,
+        "ClipperOverVariant": 0.6378393534391587,
+        "WindingOverVariant": 0.4750763683586583,
+        "Pass": false
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Guarded-prepared",
+        "Scope": "prepare-plus-one",
+        "BaselineOverVariant": 1,
+        "ClipperOverVariant": 0.5772003034901366,
+        "WindingOverVariant": 0.43993876002601345,
+        "Pass": false
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Guarded-prepared",
+        "Scope": "warm-table",
+        "BaselineOverVariant": 1,
+        "ClipperOverVariant": 0.6374839940683156,
+        "WindingOverVariant": 0.4891463334396178,
+        "Pass": false
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Guarded-prepared",
+        "Scope": "warm-zones-fresh-queries",
+        "BaselineOverVariant": 1,
+        "ClipperOverVariant": 0.6271984134661894,
+        "WindingOverVariant": 0.46715076908193864,
+        "Pass": false
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Guarded-area",
+        "Scope": "prepare-plus-one",
+        "BaselineOverVariant": 1.0122801257094611,
+        "ClipperOverVariant": 0.5897016745625967,
+        "WindingOverVariant": 0.4272092968713354,
+        "Pass": false
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Guarded-area",
+        "Scope": "warm-table",
+        "BaselineOverVariant": 1.019522037629055,
+        "ClipperOverVariant": 0.6513390283528117,
+        "WindingOverVariant": 0.47132356794717256,
+        "Pass": false
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Guarded-area",
+        "Scope": "warm-zones-fresh-queries",
+        "BaselineOverVariant": 1.0224582224012417,
+        "ClipperOverVariant": 0.6286705832653823,
+        "WindingOverVariant": 0.4459077110493275,
+        "Pass": false
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Guarded-prepared",
+        "Scope": "prepare-plus-one",
+        "BaselineOverVariant": 1,
+        "ClipperOverVariant": 0.5825479129596679,
+        "WindingOverVariant": 0.4220267552639383,
+        "Pass": false
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Guarded-prepared",
+        "Scope": "warm-table",
+        "BaselineOverVariant": 1,
+        "ClipperOverVariant": 0.638867041920477,
+        "WindingOverVariant": 0.4622985581000848,
+        "Pass": false
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Guarded-prepared",
+        "Scope": "warm-zones-fresh-queries",
+        "BaselineOverVariant": 1,
+        "ClipperOverVariant": 0.6148618784530386,
+        "WindingOverVariant": 0.4361133797742013,
+        "Pass": false
+      }
+    ],
+    "Measurements": [
+      {
+        "Direction": "county-zones",
+        "Method": "Clipper64-reused-data",
+        "Scope": "prepare",
+        "Value": 225407786180.86548,
+        "MedianNs": 403964.0625,
+        "MinNs": 401975,
+        "MaxNs": 405426.5625,
+        "MedianBytes": 968888
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Clipper64-reused-data",
+        "Scope": "prepare-plus-one",
+        "Value": 99289942172.56465,
+        "MedianNs": 12780600,
+        "MinNs": 12778700,
+        "MaxNs": 12906550,
+        "MedianBytes": 1626168
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Clipper64-reused-data",
+        "Scope": "warm-table",
+        "Value": 99289942172.56465,
+        "MedianNs": 12595600,
+        "MinNs": 12551100,
+        "MaxNs": 12659700,
+        "MedianBytes": 625088
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Clipper64-reused-data",
+        "Scope": "warm-zones-fresh-queries",
+        "Value": 99289942172.56465,
+        "MedianNs": 12966700,
+        "MinNs": 12815350,
+        "MaxNs": 13044150,
+        "MedianBytes": 975040
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Guarded-area",
+        "Scope": "prepare",
+        "Value": 225407786180.8534,
+        "MedianNs": 2232650,
+        "MinNs": 2179906.25,
+        "MaxNs": 2272737.5,
+        "MedianBytes": 1557408
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Guarded-area",
+        "Scope": "prepare-plus-one",
+        "Value": 99289942172.58379,
+        "MedianNs": 21483900,
+        "MinNs": 21392700,
+        "MaxNs": 21508900,
+        "MedianBytes": 2107600
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Guarded-area",
+        "Scope": "warm-table",
+        "Value": 99289942172.58379,
+        "MedianNs": 19251550,
+        "MinNs": 18964200,
+        "MaxNs": 19747350,
+        "MedianBytes": 0
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Guarded-area",
+        "Scope": "warm-zones-fresh-queries",
+        "Value": 99289942172.58379,
+        "MedianNs": 20329100,
+        "MinNs": 19830500,
+        "MaxNs": 20525000,
+        "MedianBytes": 568952
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Guarded-prepared",
+        "Scope": "prepare",
+        "Value": 225407786180.8534,
+        "MedianNs": 2223162.5,
+        "MinNs": 2187462.5,
+        "MaxNs": 2227806.25,
+        "MedianBytes": 1557408
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Guarded-prepared",
+        "Scope": "prepare-plus-one",
+        "Value": 99289942172.58379,
+        "MedianNs": 22142400,
+        "MinNs": 21867500,
+        "MaxNs": 22990800,
+        "MedianBytes": 2107600
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Guarded-prepared",
+        "Scope": "warm-table",
+        "Value": 99289942172.58379,
+        "MedianNs": 19758300,
+        "MinNs": 19715350,
+        "MaxNs": 19873050,
+        "MedianBytes": 0
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Guarded-prepared",
+        "Scope": "warm-zones-fresh-queries",
+        "Value": 99289942172.58379,
+        "MedianNs": 20674000,
+        "MinNs": 20623700,
+        "MaxNs": 20748500,
+        "MedianBytes": 568952
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Winding-intersection-only",
+        "Scope": "prepare",
+        "Value": 225407786180.8534,
+        "MedianNs": 126323.046875,
+        "MinNs": 125751.5625,
+        "MaxNs": 127698.4375,
+        "MedianBytes": 10544
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Winding-intersection-only",
+        "Scope": "prepare-plus-one",
+        "Value": 99289942172.58374,
+        "MedianNs": 9741300,
+        "MinNs": 9739975,
+        "MaxNs": 9761650,
+        "MedianBytes": 10480
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Winding-intersection-only",
+        "Scope": "warm-table",
+        "Value": 99289942172.58374,
+        "MedianNs": 9664700,
+        "MinNs": 9608675,
+        "MaxNs": 9747275,
+        "MedianBytes": 0
+      },
+      {
+        "Direction": "county-zones",
+        "Method": "Winding-intersection-only",
+        "Scope": "warm-zones-fresh-queries",
+        "Value": 99289942172.58374,
+        "MedianNs": 9657875,
+        "MinNs": 9559900,
+        "MaxNs": 9699225,
+        "MedianBytes": 1120
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Clipper64-reused-data",
+        "Scope": "prepare",
+        "Value": 225407786180.86548,
+        "MedianNs": 406965.625,
+        "MinNs": 405792.1875,
+        "MaxNs": 412043.75,
+        "MedianBytes": 968888
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Clipper64-reused-data",
+        "Scope": "prepare-plus-one",
+        "Value": 99289942102.12396,
+        "MedianNs": 12571850,
+        "MinNs": 12509700,
+        "MaxNs": 12607800,
+        "MedianBytes": 1624352
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Clipper64-reused-data",
+        "Scope": "warm-table",
+        "Value": 99289942102.12396,
+        "MedianNs": 12428200,
+        "MinNs": 12132950,
+        "MaxNs": 12440200,
+        "MedianBytes": 625088
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Clipper64-reused-data",
+        "Scope": "warm-zones-fresh-queries",
+        "Value": 99289942102.12396,
+        "MedianNs": 12798350,
+        "MinNs": 12616450,
+        "MaxNs": 12968400,
+        "MedianBytes": 1241472
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Guarded-area",
+        "Scope": "prepare",
+        "Value": 225407786180.8534,
+        "MedianNs": 2221868.75,
+        "MinNs": 2213406.25,
+        "MaxNs": 2236425,
+        "MedianBytes": 1557408
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Guarded-area",
+        "Scope": "prepare-plus-one",
+        "Value": 99289942102.14305,
+        "MedianNs": 21319000,
+        "MinNs": 21273300,
+        "MaxNs": 21525700,
+        "MedianBytes": 2089144
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Guarded-area",
+        "Scope": "warm-table",
+        "Value": 99289942102.14305,
+        "MedianNs": 19081000,
+        "MinNs": 18757950,
+        "MaxNs": 19238300,
+        "MedianBytes": 0
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Guarded-area",
+        "Scope": "warm-zones-fresh-queries",
+        "Value": 99289942102.14305,
+        "MedianNs": 20357800,
+        "MinNs": 20237700,
+        "MaxNs": 20594100,
+        "MedianBytes": 986024
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Guarded-prepared",
+        "Scope": "prepare",
+        "Value": 225407786180.8534,
+        "MedianNs": 2210612.5,
+        "MinNs": 2209837.5,
+        "MaxNs": 2215500,
+        "MedianBytes": 1557408
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Guarded-prepared",
+        "Scope": "prepare-plus-one",
+        "Value": 99289942102.14305,
+        "MedianNs": 21580800,
+        "MinNs": 21553500,
+        "MaxNs": 21790200,
+        "MedianBytes": 2089144
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Guarded-prepared",
+        "Scope": "warm-table",
+        "Value": 99289942102.14305,
+        "MedianNs": 19453500,
+        "MinNs": 19303950,
+        "MaxNs": 19478550,
+        "MedianBytes": 0
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Guarded-prepared",
+        "Scope": "warm-zones-fresh-queries",
+        "Value": 99289942102.14305,
+        "MedianNs": 20815000,
+        "MinNs": 20792600,
+        "MaxNs": 20944300,
+        "MedianBytes": 986024
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Winding-intersection-only",
+        "Scope": "prepare",
+        "Value": 225407786180.8534,
+        "MedianNs": 125998.4375,
+        "MinNs": 125953.515625,
+        "MaxNs": 126121.875,
+        "MedianBytes": 10544
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Winding-intersection-only",
+        "Scope": "prepare-plus-one",
+        "Value": 99289942102.14304,
+        "MedianNs": 9107675,
+        "MinNs": 9099175,
+        "MaxNs": 9270875,
+        "MedianBytes": 10480
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Winding-intersection-only",
+        "Scope": "warm-table",
+        "Value": 99289942102.14304,
+        "MedianNs": 8993325,
+        "MinNs": 8923000,
+        "MaxNs": 9158975,
+        "MedianBytes": 0
+      },
+      {
+        "Direction": "district-zones",
+        "Method": "Winding-intersection-only",
+        "Scope": "warm-zones-fresh-queries",
+        "Value": 99289942102.14304,
+        "MedianNs": 9077700,
+        "MinNs": 9012875,
+        "MaxNs": 9228075,
+        "MedianBytes": 7384
+      }
+    ]
+  },
+  "ProcessOrder": [
+    {
+      "Kind": "old",
+      "Run": 1,
+      "Revision": "5bc86fb238be2ea751aa3429f6eb37045cb2651b",
+      "StartedUtc": "2026-09-25T13:43:44.3647129+00:00",
+      "FinishedUtc": "2026-09-25T13:43:53.8297294+00:00",
+      "ExitCode": 0
+    },
+    {
+      "Kind": "new",
+      "Run": 1,
+      "Revision": "4b8a131117264ec950a373bfae5462edd216b2c5",
+      "StartedUtc": "2026-09-25T13:43:53.8452051+00:00",
+      "FinishedUtc": "2026-09-25T13:44:03.4783818+00:00",
+      "ExitCode": 0
+    },
+    {
+      "Kind": "new",
+      "Run": 2,
+      "Revision": "4b8a131117264ec950a373bfae5462edd216b2c5",
+      "StartedUtc": "2026-09-25T13:44:03.4818589+00:00",
+      "FinishedUtc": "2026-09-25T13:44:13.0017121+00:00",
+      "ExitCode": 0
+    },
+    {
+      "Kind": "old",
+      "Run": 2,
+      "Revision": "5bc86fb238be2ea751aa3429f6eb37045cb2651b",
+      "StartedUtc": "2026-09-25T13:44:13.0048182+00:00",
+      "FinishedUtc": "2026-09-25T13:44:22.4660449+00:00",
+      "ExitCode": 0
+    },
+    {
+      "Kind": "old",
+      "Run": 3,
+      "Revision": "5bc86fb238be2ea751aa3429f6eb37045cb2651b",
+      "StartedUtc": "2026-09-25T13:44:22.4691083+00:00",
+      "FinishedUtc": "2026-09-25T13:44:31.8898303+00:00",
+      "ExitCode": 0
+    },
+    {
+      "Kind": "new",
+      "Run": 3,
+      "Revision": "4b8a131117264ec950a373bfae5462edd216b2c5",
+      "StartedUtc": "2026-09-25T13:44:31.8925334+00:00",
+      "FinishedUtc": "2026-09-25T13:44:41.6579876+00:00",
+      "ExitCode": 0
+    }
+  ],
+  "Compatibility": {
+    "Pairs": 2156,
+    "CandidatePairs": 422,
+    "BaselineMatchesHistoricalAreaBitsAndDiagnostics": true,
+    "CoalescedCertificatesConsistent": true,
+    "ChangedAreaPairs": 255,
+    "ChangedRadiusPairs": 296,
+    "MaxAreaDifference": 2.86102294921875e-06,
+    "TighterRadiusCandidates": 244,
+    "WiderRadiusCandidates": 52,
+    "LegacyCommandValidationSha256": "d2f76a362cbbc35a926e33d541a007089ffbaf05b461923776bf5d7c523d31cd",
+    "HistoricalValidationUnchanged": true,
+    "HistoricalValidationSha256": "d2f76a362cbbc35a926e33d541a007089ffbaf05b461923776bf5d7c523d31cd",
+    "NormalAndNoIntrinsicsIdentical": true,
+    "PreparedMetadataUnchanged": true
+  },
+  "Sensitivity": [
+    {
+      "Direction": "county-zones",
+      "Scope": "warm-table",
+      "OldAreaNs": 19251550,
+      "NewAreaBaselineNs": 18675050,
+      "NewCoalescedNs": 14088500,
+      "OldAreaOverNewAreaBaseline": 1.030870064604914,
+      "OldAreaOverCoalesced": 1.3664726550023067,
+      "NewAreaBaselineOverCoalesced": 1.3255527557937326,
+      "OldAreaOverCoalescedNormalizedByWinding": 1.3577313415734866,
+      "OldAreaOverCoalescedNormalizedByClipper": 1.3788457222879473
+    },
+    {
+      "Direction": "county-zones",
+      "Scope": "warm-zones-fresh-queries",
+      "OldAreaNs": 20329100,
+      "NewAreaBaselineNs": 19683950,
+      "NewCoalescedNs": 15196450,
+      "OldAreaOverNewAreaBaseline": 1.0327754337925061,
+      "OldAreaOverCoalesced": 1.337753225259847,
+      "NewAreaBaselineOverCoalesced": 1.2952992310704146,
+      "OldAreaOverCoalescedNormalizedByWinding": 1.3345050663084892,
+      "OldAreaOverCoalescedNormalizedByClipper": 1.3317849354034237
+    },
+    {
+      "Direction": "county-zones",
+      "Scope": "prepare-plus-one",
+      "OldAreaNs": 21483900,
+      "NewAreaBaselineNs": 20959800,
+      "NewCoalescedNs": 16406950,
+      "OldAreaOverNewAreaBaseline": 1.0250050095897862,
+      "OldAreaOverCoalesced": 1.3094389877460466,
+      "NewAreaBaselineOverCoalesced": 1.2774952078235138,
+      "OldAreaOverCoalescedNormalizedByWinding": 1.3090323630719343,
+      "OldAreaOverCoalescedNormalizedByClipper": 1.3205195181221427
+    },
+    {
+      "Direction": "district-zones",
+      "Scope": "warm-table",
+      "OldAreaNs": 19081000,
+      "NewAreaBaselineNs": 18353650,
+      "NewCoalescedNs": 13744250,
+      "OldAreaOverNewAreaBaseline": 1.0396297194291053,
+      "OldAreaOverCoalesced": 1.388289648398421,
+      "NewAreaBaselineOverCoalesced": 1.3353693362678938,
+      "OldAreaOverCoalescedNormalizedByWinding": 1.4040121204195455,
+      "OldAreaOverCoalescedNormalizedByClipper": 1.373885313888116
+    },
+    {
+      "Direction": "district-zones",
+      "Scope": "warm-zones-fresh-queries",
+      "OldAreaNs": 20357800,
+      "NewAreaBaselineNs": 19865600,
+      "NewCoalescedNs": 15183350,
+      "OldAreaOverNewAreaBaseline": 1.0247764980670102,
+      "OldAreaOverCoalesced": 1.3407976500574643,
+      "NewAreaBaselineOverCoalesced": 1.308380561602018,
+      "OldAreaOverCoalescedNormalizedByWinding": 1.3527652332113367,
+      "OldAreaOverCoalescedNormalizedByClipper": 1.3479791757159625
+    },
+    {
+      "Direction": "district-zones",
+      "Scope": "prepare-plus-one",
+      "OldAreaNs": 21319000,
+      "NewAreaBaselineNs": 20775300,
+      "NewCoalescedNs": 16119150,
+      "OldAreaOverNewAreaBaseline": 1.0261705005463218,
+      "OldAreaOverCoalesced": 1.3225883498819726,
+      "NewAreaBaselineOverCoalesced": 1.2888582834702822,
+      "OldAreaOverCoalescedNormalizedByWinding": 1.3341911803689597,
+      "OldAreaOverCoalescedNormalizedByClipper": 1.3300156368366902
+    }
+  ],
+  "PreparedPayload": {
+    "Paths": 109,
+    "Vertices": 10588,
+    "ArrayElementBytes": 1524672,
+    "Description": "Retained prepared array element bytes, including cloned coordinates, edges, scalar bounds and sorted endpoints. Excludes array/object headers, shared source catalogue and mutable engine scratch; not peak memory."
+  },
+  "GapWork": [
+    {
+      "Method": "Guarded-area",
+      "Contributions": 62106,
+      "Integrations": 62106,
+      "Merged": 0,
+      "HorizontalDifferences": 125716,
+      "MaxWorkspaceArrayElementBytes": 0
+    },
+    {
+      "Method": "Guarded-gaps",
+      "Contributions": 62106,
+      "Integrations": 17634,
+      "Merged": 44472,
+      "HorizontalDifferences": 36772,
+      "MaxWorkspaceArrayElementBytes": 84840
+    }
+  ],
+  "PreTimingTrial": {
+    "Metadata": {
+      "BaseRevision": "847e2b7956afb1c36a1d721fb8377664ec0aace9",
+      "Note": "Uncommitted unrestricted gap-coalescing working tree, not a measured or committed revision. Read-only reflection probe against its current Release build; evidence precedes point-Y merge guard.",
+      "Files": [
+        {
+          "File": "benchmarks/PolylineKit.ScanbeamBenchmarks/GuardedDoubleSweep.cs",
+          "Sha256": "29e7c7738d3e8f54ece090008d595145f69d4e3f5d12a9e8ba4ea0f78e3d6d75"
+        },
+        {
+          "File": "benchmarks/PolylineKit.ScanbeamBenchmarks/GuardedDoubleSweep.Gaps.cs",
+          "Sha256": "46a2581464f1020795ad0f38446102c7375c69ef17c98514da5efe6888cbd751"
+        },
+        {
+          "File": "benchmarks/PolylineKit.ScanbeamBenchmarks/bin/Release/net10.0/PolylineKit.ScanbeamBenchmarks.dll",
+          "Sha256": "59c811bafc3efc59d4aa48fc221871b51d3eedfcca3d66f380e990769f68535f"
+        }
+      ],
+      "RadiusMeaning": "The probe field Radius is the reconstructed interval half-width (AreaHi-AreaLo)/2, not LastErrorBound. Production CertifiedValue takes max(distance from rounded center to each endpoint), then rounds upward. Raw text is retained unchanged.",
+      "BaselineReturnedCertificate": 2.0334709915914576e-08,
+      "UnrestrictedReturnedCertificate": null,
+      "UnrestrictedReturnedCertificateReason": "area-accuracy fallback; LastErrorBound is NaN rather than a returned certificate."
+    },
+    "RawLogSha256": "c98e780b40baf93545f7054569b8eab459f6a95712a3f746f104b7efd4ae3312",
+    "Note": "Uncommitted preliminary unrestricted trial, before the point-Y guard and before timing. Radius in the raw probe is reconstructed interval half-width, not returned LastErrorBound."
+  },
+  "NegativeControls": [
+    {
+      "Defect": "missing-row",
+      "Rejected": true,
+      "EvidenceUnchanged": true,
+      "EvidenceAbsent": true,
+      "SummaryAbsent": true
+    },
+    {
+      "Defect": "order",
+      "Rejected": true,
+      "EvidenceUnchanged": true,
+      "EvidenceAbsent": true,
+      "SummaryAbsent": true
+    },
+    {
+      "Defect": "median",
+      "Rejected": true,
+      "EvidenceUnchanged": true,
+      "EvidenceAbsent": true,
+      "SummaryAbsent": true
+    },
+    {
+      "Defect": "output",
+      "Rejected": true,
+      "EvidenceUnchanged": true,
+      "EvidenceAbsent": true,
+      "SummaryAbsent": true
+    },
+    {
+      "Defect": "binary",
+      "Rejected": true,
+      "EvidenceUnchanged": true,
+      "EvidenceAbsent": true,
+      "SummaryAbsent": true
+    },
+    {
+      "Defect": "filter-diagnostic",
+      "Rejected": true,
+      "EvidenceUnchanged": true,
+      "EvidenceAbsent": true,
+      "SummaryAbsent": true
+    },
+    {
+      "Defect": "fallback-record",
+      "Rejected": true,
+      "EvidenceUnchanged": true,
+      "EvidenceAbsent": true,
+      "SummaryAbsent": true
+    },
+    {
+      "Defect": "prepared-payload",
+      "Rejected": true,
+      "EvidenceUnchanged": true,
+      "EvidenceAbsent": true,
+      "SummaryAbsent": true
+    },
+    {
+      "Defect": "certificate",
+      "Rejected": true,
+      "EvidenceUnchanged": true,
+      "EvidenceAbsent": true,
+      "SummaryAbsent": true
+    },
+    {
+      "Defect": "gap-counter",
+      "Rejected": true,
+      "EvidenceUnchanged": true,
+      "EvidenceAbsent": true,
+      "SummaryAbsent": true
+    }
+  ],
+  "LocalArchive": {
+    "File": "artifacts/scanbeam-gaps-4b8a131.zip",
+    "Bytes": 338179,
+    "Sha256": "8511bf2bf5b6e7a4d02f135ca631d0ba802f8a830a3bd93c405632cbd286ff56",
+    "Members": 34,
+    "PubliclyHosted": false
+  }
+}
