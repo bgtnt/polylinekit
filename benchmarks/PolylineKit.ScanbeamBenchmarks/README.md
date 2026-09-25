@@ -98,9 +98,11 @@ Commands `check-active-passes`, `benchmark-active-passes` and
 `summarize-active-passes` use the same argument shapes. The seventh option
 defaults off; there are no additional workspace arrays.
 
-The [scalar-view experiment](SCALAR-VIEW-PROTOCOL.md) borrows immutable scalar
+The [scalar-view experiment](SCALAR-VIEW-RESULTS.md) borrows immutable scalar
 filter metadata while retaining copied geometry and existing scratch arrays.
-It isolates the scalar copy observed in sampled profiles. Commands
+It removes the copy seen in sampled profiles but makes complete queries
+2.4–3.7% slower. The [protocol](SCALAR-VIEW-PROTOCOL.md) retains the historical
+binary as a separate control. Copied scalar storage remains preferred. Commands
 `check-scalar-view`, `benchmark-scalar-view` and `summarize-scalar-view` use the
 same argument shapes. The eighth option defaults off. Profiling accepts an
 optional `warm-table` or `prepare` scope after the duration.

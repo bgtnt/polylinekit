@@ -46,6 +46,13 @@ complete-query time, preserving area/certificate bits. Warm tables take
 slower than Winding's 9.0–9.5 ms. Preparation plus one table remains slower than
 Clipper; all predeclared competitor gates still fail. No shipping change follows.
 
+The [scalar-view experiment](PolylineKit.ScanbeamBenchmarks/SCALAR-VIEW-RESULTS.md)
+then removes per-pair scalar metadata copying while retaining copied geometry.
+It is **2.4–3.7% slower** than the active-pass baseline on complete queries,
+with identical area/certificate bits. The copy stack disappears from sampled
+profiles, illustrating why profile shares alone cannot predict a speedup.
+The option stays off; copied storage remains the preferred sweep variant.
+
 For an area-engine optimization with a predeclared Clipper gate, see the
 [intersection-only protocol](../examples/RegionCoverage/INTERSECTION-PROTOCOL.md),
 [results](../examples/RegionCoverage/INTERSECTION-RESULTS.md) and
