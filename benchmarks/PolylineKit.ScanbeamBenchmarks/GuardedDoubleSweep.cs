@@ -56,12 +56,13 @@ internal sealed partial class GuardedDoubleSweep
     private readonly bool restrictToCommonY, cacheEndpointX, scalarOrderFilter;
 
     internal GuardedDoubleSweep(bool restrictToCommonY = false, bool cacheEndpointX = false,
-        bool scalarOrderFilter = false, bool directPreparedEdges = false)
+        bool scalarOrderFilter = false, bool directPreparedEdges = false, bool optimizeAreaArithmetic = false)
     {
         this.restrictToCommonY = restrictToCommonY;
         this.cacheEndpointX = cacheEndpointX;
         this.scalarOrderFilter = scalarOrderFilter;
         this.directPreparedEdges = directPreparedEdges;
+        this.optimizeAreaArithmetic = optimizeAreaArithmetic;
         endpointComparison = CompareEndpoints;
         crossingComparison = CompareCrossings;
     }
@@ -413,7 +414,8 @@ internal sealed partial class GuardedDoubleSweep
         if (height.IsZero) return;
         Interval lower = HorizontalDifference(left, right, start).Nonnegative();
         Interval upper = HorizontalDifference(left, right, finish).Nonnegative();
-        Interval trapezoid = Interval.Multiply(Interval.Multiply(Interval.Add(lower, upper), Interval.Point(.5)), height);
+        Interval trapezoid = optimizeAreaArithmetic ? Interval.NonnegativeTrapezoid(lower, upper, height) :
+            Interval.Multiply(Interval.Multiply(Interval.Add(lower, upper), Interval.Point(.5)), height);
         area = Interval.Add(area, trapezoid);
     }
 
@@ -529,7 +531,7 @@ internal sealed partial class GuardedDoubleSweep
     }
 
     /// <summary>Finite closed enclosures; every arithmetic operation rounds outwards.</summary>
-    private readonly struct Interval
+    private readonly partial struct Interval
     {
         internal readonly double Lo, Hi;
         private Interval(double lo, double hi)

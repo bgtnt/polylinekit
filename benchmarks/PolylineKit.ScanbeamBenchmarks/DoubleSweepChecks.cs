@@ -11,13 +11,13 @@ internal static class DoubleSweepChecks
     private static bool usePreparedPaths;
 
     internal static void Run(bool restrictToCommonY = false, bool cacheEndpointX = false, bool scalarOrderFilter = false,
-        bool preparedPaths = false, bool directPreparedEdges = false)
+        bool preparedPaths = false, bool directPreparedEdges = false, bool optimizeAreaArithmetic = false)
     {
         usePreparedPaths = preparedPaths;
         passed = certified = fallback = 0;
-        var engine = new GuardedDoubleSweep(restrictToCommonY, cacheEndpointX, scalarOrderFilter, directPreparedEdges);
-        GuardedDoubleSweep? uncached = cacheEndpointX ? new GuardedDoubleSweep(restrictToCommonY, false, scalarOrderFilter, directPreparedEdges) : null;
-        GuardedDoubleSweep? unfiltered = scalarOrderFilter ? new GuardedDoubleSweep(restrictToCommonY, cacheEndpointX, false, directPreparedEdges) : null;
+        var engine = new GuardedDoubleSweep(restrictToCommonY, cacheEndpointX, scalarOrderFilter, directPreparedEdges, optimizeAreaArithmetic);
+        GuardedDoubleSweep? uncached = cacheEndpointX ? new GuardedDoubleSweep(restrictToCommonY, false, scalarOrderFilter, directPreparedEdges, optimizeAreaArithmetic) : null;
+        GuardedDoubleSweep? unfiltered = scalarOrderFilter ? new GuardedDoubleSweep(restrictToCommonY, cacheEndpointX, false, directPreparedEdges, optimizeAreaArithmetic) : null;
         Point2[] a = [new(-4, -3), new(5, 1), new(0, 6)];
         Point2[] b = [new(-3, 2), new(4, -4), new(7, 5)];
         Point2[] contained = [new(-.5, .25), new(.75, .75), new(.25, 1.5)];

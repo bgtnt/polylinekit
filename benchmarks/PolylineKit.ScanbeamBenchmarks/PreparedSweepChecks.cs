@@ -8,7 +8,7 @@ internal static class PreparedSweepChecks
     private static int passed;
     private static GuardedDoubleSweep? copiedReference;
 
-    internal static void Run(bool directPreparedEdges = false)
+    internal static void Run(bool directPreparedEdges = false, bool optimizeAreaArithmetic = false)
     {
         passed = 0;
         copiedReference = null;
@@ -78,8 +78,8 @@ internal static class PreparedSweepChecks
         foreach (bool filter in new[] { false, true })
         {
             var raw = new GuardedDoubleSweep(roi, cache, filter);
-            var prepared = new GuardedDoubleSweep(roi, cache, filter, directPreparedEdges);
-            copiedReference = directPreparedEdges ? new GuardedDoubleSweep(roi, cache, filter) : null;
+            var prepared = new GuardedDoubleSweep(roi, cache, filter, directPreparedEdges, optimizeAreaArithmetic);
+            copiedReference = directPreparedEdges || optimizeAreaArithmetic ? new GuardedDoubleSweep(roi, cache, filter) : null;
             foreach (var pair in pairs)
             foreach (PathFillRule rule in Enum.GetValues<PathFillRule>())
             {
@@ -118,7 +118,7 @@ internal static class PreparedSweepChecks
             Compare("disjoint uncertain slopes", raw, prepared, pairs[10].First, pairs[10].Second, PathFillRule.NonZero);
             Require(!prepared.LastUsedFallback && prepared.LastErrorBound == 0,
                 "Slope preparation uncertainty must not override the exact disjoint-bounds result.");
-            if (directPreparedEdges) CheckMixedCalls(roi, cache, filter);
+            if (directPreparedEdges) CheckMixedCalls(roi, cache, filter, optimizeAreaArithmetic);
         }
 
         // Mutate the actual source arrays after preparing, including those needed for whole-call
@@ -130,8 +130,8 @@ internal static class PreparedSweepChecks
             Poison(pair.Second.Source);
         }
         var rawAfterMutation = new GuardedDoubleSweep(true, true, true);
-        var preparedAfterMutation = new GuardedDoubleSweep(true, true, true, directPreparedEdges);
-        copiedReference = directPreparedEdges ? new GuardedDoubleSweep(true, true, true) : null;
+        var preparedAfterMutation = new GuardedDoubleSweep(true, true, true, directPreparedEdges, optimizeAreaArithmetic);
+        copiedReference = directPreparedEdges || optimizeAreaArithmetic ? new GuardedDoubleSweep(true, true, true) : null;
         foreach (var pair in pairs)
         foreach (PathFillRule rule in Enum.GetValues<PathFillRule>())
         {
@@ -149,29 +149,29 @@ internal static class PreparedSweepChecks
             Snapshot a = reverse ? pair.Second : pair.First, b = reverse ? pair.First : pair.Second;
             PathFillRule rule = (i & 2) == 0 ? PathFillRule.NonZero : PathFillRule.EvenOdd;
             var raw = new GuardedDoubleSweep((i & 4) != 0, (i & 8) != 0, (i & 16) != 0);
-            var prepared = new GuardedDoubleSweep((i & 4) != 0, (i & 8) != 0, (i & 16) != 0, directPreparedEdges);
+            var prepared = new GuardedDoubleSweep((i & 4) != 0, (i & 8) != 0, (i & 16) != 0, directPreparedEdges, optimizeAreaArithmetic);
             Outcome expected = Capture(raw, () => raw.MeasureIntersection(a.Original, b.Original, rule));
             Outcome actual = Capture(prepared, () => prepared.MeasureIntersection(a.Prepared, b.Prepared, rule));
             var copied = new GuardedDoubleSweep((i & 4) != 0, (i & 8) != 0, (i & 16) != 0);
-            concurrent[i] = (expected, actual, directPreparedEdges
+            concurrent[i] = (expected, actual, directPreparedEdges || optimizeAreaArithmetic
                 ? Capture(copied, () => copied.MeasureIntersection(a.Prepared, b.Prepared, rule)) : expected);
         });
         for (int i = 0; i < concurrent.Length; i++)
             Require(concurrent[i].Expected == concurrent[i].Actual, "Shared snapshot changed an independent engine's outcome at " + i + ".");
-        if (directPreparedEdges)
+        if (directPreparedEdges || optimizeAreaArithmetic)
             for (int i = 0; i < concurrent.Length; i++)
                 Require(concurrent[i].Copied == concurrent[i].Actual, "Direct shared snapshot differs from copied execution at " + i + ".");
 
-        Console.WriteLine($"{(directPreparedEdges ? "Direct prepared" : "Prepared")} double sweep: {passed} snapshot, reuse, input-contract and all-diagnostics parity controls.");
+        Console.WriteLine($"{(optimizeAreaArithmetic ? "Area-optimized " : "")}{(directPreparedEdges ? "Direct prepared" : "Prepared")} double sweep: {passed} snapshot, reuse, input-contract and all-diagnostics parity controls.");
     }
 
-    private static void CheckMixedCalls(bool roi, bool cache, bool filter)
+    private static void CheckMixedCalls(bool roi, bool cache, bool filter, bool optimizeAreaArithmetic)
     {
         // The same direct-enabled instance alternates both overloads. Its current query must
         // determine geometry and loop membership, regardless of the previous call's backing data.
         var raw = new GuardedDoubleSweep(roi, cache, filter);
         var copied = new GuardedDoubleSweep(roi, cache, filter);
-        var direct = new GuardedDoubleSweep(roi, cache, filter, true);
+        var direct = new GuardedDoubleSweep(roi, cache, filter, true, optimizeAreaArithmetic);
         var a = new Snapshot([new(-4, -3), new(5, 1), new(0, 6)]);
         var b = new Snapshot([new(-3, 2), new(4, -4), new(7, 5)]);
         var horizontalHeavy = new Snapshot([new(-2, -2), new(-1, -2), new(0, -2), new(2, -2),
