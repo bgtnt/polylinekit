@@ -57,7 +57,7 @@ internal sealed partial class GuardedDoubleSweep
 
     internal GuardedDoubleSweep(bool restrictToCommonY = false, bool cacheEndpointX = false,
         bool scalarOrderFilter = false, bool directPreparedEdges = false, bool optimizeAreaArithmetic = false,
-        bool coalesceGaps = false)
+        bool coalesceGaps = false, bool optimizeActivePasses = false)
     {
         this.restrictToCommonY = restrictToCommonY;
         this.cacheEndpointX = cacheEndpointX;
@@ -65,6 +65,7 @@ internal sealed partial class GuardedDoubleSweep
         this.directPreparedEdges = directPreparedEdges;
         this.optimizeAreaArithmetic = optimizeAreaArithmetic;
         this.coalesceGaps = coalesceGaps;
+        this.optimizeActivePasses = optimizeActivePasses;
         endpointComparison = CompareEndpoints;
         crossingComparison = CompareCrossings;
     }
@@ -124,6 +125,7 @@ internal sealed partial class GuardedDoubleSweep
     {
         ClearBorrowedGeometry();
         ResetGapContributions();
+        ResetActivePassDiagnostics();
         LastUsedFallback = false; LastFallbackReason = null; LastErrorBound = double.NaN;
         BandCount = PeakActiveCount = 0; EventCount = ActiveEdgeVisits = work = 0;
         XEvaluationCount = XCacheHitCount = 0;
@@ -262,12 +264,18 @@ internal sealed partial class GuardedDoubleSweep
     private void ProcessBand(double bottom, double top)
     {
         BandCount++;
+        if (optimizeActivePasses)
+        {
+            ProcessBandWithFewerPasses(bottom, top);
+            return;
+        }
         Level start = Level.At(bottom);
         for (int i = 0; i < activeCount; i++)
         {
             Visit(); topOrder[i] = active[i]; gapStarts[i] = start;
+            BandInitializationVisits++; TopOrderWrites++;
         }
-        SetWinding(0, activeCount, 0, 0);
+        SetWinding(0, activeCount, 0, 0, initializingBand: true);
         crossingCount = 0;
         // This sorts a copy only. Each inversion of the certified bottom/top orders is one interior crossing.
         for (int i = 1; i < activeCount; i++)
@@ -282,10 +290,11 @@ internal sealed partial class GuardedDoubleSweep
                 Level level = ConstructCrossing(other, id, bottom, top);
                 crossings[crossingCount] = new(level, crossingCount);
                 crossingCount++; EventCount++;
-                topOrder[j] = other; j--;
+                topOrder[j] = other; TopOrderWrites++; j--;
             }
-            topOrder[j] = id;
+            topOrder[j] = id; TopOrderWrites++;
         }
+        if (crossingCount == 0) NoCrossingBandCount++; else CrossingBandCount++;
         crossings.AsSpan(0, crossingCount).Sort(crossingComparison);
         for (int c = 1; c < crossingCount; c++)
             if (!(crossings[c - 1].Level.Y.Hi < crossings[c].Level.Y.Lo)) throw new Uncertified("event-order");
@@ -304,6 +313,7 @@ internal sealed partial class GuardedDoubleSweep
         for (int i = 0; i < activeCount; i++)
         {
             Visit();
+            TopOrderVerificationVisits++;
             if (active[i] != topOrder[i]) throw new Uncertified("top-order-status");
         }
         Level finish = Level.At(top);
@@ -393,11 +403,12 @@ internal sealed partial class GuardedDoubleSweep
         return order != 0 ? order : a.Edge.CompareTo(b.Edge);
     }
 
-    private void SetWinding(int from, int to, int a, int b)
+    private void SetWinding(int from, int to, int a, int b, bool initializingBand = false)
     {
         for (int i = from; i < to; i++)
         {
             Visit(); prefixA[i] = a; prefixB[i] = b;
+            if (initializingBand) BandInitializationVisits++;
             int edgeId = active[i];
             ref readonly Edge edge = ref EdgeAt(edgeId);
             if (IsFirstLoop(edgeId, in edge)) a += edge.Delta; else b += edge.Delta;
@@ -414,6 +425,11 @@ internal sealed partial class GuardedDoubleSweep
         int a = prefixA[position], b = prefixB[position];
         if (IsFirstLoop(left, in edge)) a += edge.Delta; else b += edge.Delta;
         if (!Filled(a) || !Filled(b)) return;
+        AccumulateFilledGap(left, right, start, finish);
+    }
+
+    private void AccumulateFilledGap(int left, int right, Level start, Level finish)
+    {
         Interval height = Interval.Subtract(finish.Y, start.Y).Nonnegative();
         if (height.IsZero) return;
         GapContributionCount++;

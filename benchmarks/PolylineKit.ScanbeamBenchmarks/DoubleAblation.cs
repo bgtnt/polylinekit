@@ -22,11 +22,15 @@ internal static partial class Program
     private static readonly string[] DirectMethods = ["Winding-intersection-only", "Guarded-prepared", "Guarded-direct", "Clipper64-reused-data"];
     private static readonly string[] AreaMethods = ["Winding-intersection-only", "Guarded-prepared", "Guarded-area", "Clipper64-reused-data"];
     private static readonly string[] GapMethods = ["Winding-intersection-only", "Guarded-area", "Guarded-gaps", "Clipper64-reused-data"];
+    private static readonly string[] ActiveMethods = ["Winding-intersection-only", "Guarded-gaps", "Guarded-active", "Clipper64-reused-data"];
     private static readonly string[] PreparedScopes = ["prepare", "warm-table", "warm-zones-fresh-queries", "prepare-plus-one"];
     private sealed record AblationValue(string Method, double Area, double Coverage, bool Fallback, string? Reason,
         double? ErrorBound, int Bands, long Events, long Visits, int Peak, long Work, long XEvaluations, long XCacheHits,
         long FilterAttempts, long FilterAccepted, long FilterInterval,
-        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] GapCounters? GapDiagnostics = null);
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] GapCounters? GapDiagnostics = null,
+        [property: JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] PassCounters? PassDiagnostics = null);
+    private sealed record PassCounters(long NoCrossingBands, long CrossingBands, long InitializationVisits,
+        long TopOrderWrites, long VerificationVisits);
     private sealed record GapCounters(long Contributions, long Integrations, long Merged, long HorizontalDifferences,
         long WorkspacePayloadBytes);
     private sealed record AblationPair(string Direction, string Zone, string Query, bool Candidate,
@@ -39,9 +43,9 @@ internal static partial class Program
         internal GuardedDoubleSweep.PreparedPath Path { get; } = path;
     }
 
-    private sealed class AblationComparator(string name, bool commonY, bool cache, bool filter = false, bool prepared = false, bool direct = false, bool areaArithmetic = false, bool coalesceGaps = false) : CoverageComparator
+    private sealed class AblationComparator(string name, bool commonY, bool cache, bool filter = false, bool prepared = false, bool direct = false, bool areaArithmetic = false, bool coalesceGaps = false, bool optimizeActivePasses = false) : CoverageComparator
     {
-        internal readonly GuardedDoubleSweep Engine = new(commonY, cache, filter, direct, areaArithmetic, coalesceGaps);
+        internal readonly GuardedDoubleSweep Engine = new(commonY, cache, filter, direct, areaArithmetic, coalesceGaps, optimizeActivePasses);
         internal override string Name => name;
         internal override PreparedRegion Prepare(Point2[] points, bool zone)
         {
@@ -67,6 +71,7 @@ internal static partial class Program
             "Guarded-direct" => new AblationComparator(method, true, true, true, true, true),
             "Guarded-area" => new AblationComparator(method, true, true, true, true, areaArithmetic: true),
             "Guarded-gaps" => new AblationComparator(method, true, true, true, true, areaArithmetic: true, coalesceGaps: true),
+            "Guarded-active" => new AblationComparator(method, true, true, true, true, areaArithmetic: true, coalesceGaps: true, optimizeActivePasses: true),
             _ => Comparators.Create(method, 1e6)!
         };
         Require(comparator is not null, "Unknown ablation comparator.");
@@ -102,9 +107,9 @@ internal static partial class Program
     private static void WritePreparedMetadata(RealSource source, string directory) =>
         File.WriteAllText(Path.Combine(directory, "prepared-paths.json"), PreparedMetadataJson(source));
 
-    private static AblationValidation ValidateAblation(RealSource source, string? directory, bool filterExperiment = false, bool preparedExperiment = false, bool directExperiment = false, bool areaExperiment = false, bool gapExperiment = false)
+    private static AblationValidation ValidateAblation(RealSource source, string? directory, bool filterExperiment = false, bool preparedExperiment = false, bool directExperiment = false, bool areaExperiment = false, bool gapExperiment = false, bool activeExperiment = false)
     {
-        string[] methods = gapExperiment ? GapMethods : areaExperiment ? AreaMethods : directExperiment ? DirectMethods : preparedExperiment ? PreparedMethods : filterExperiment ? FilterMethods : AblationMethods;
+        string[] methods = activeExperiment ? ActiveMethods : gapExperiment ? GapMethods : areaExperiment ? AreaMethods : directExperiment ? DirectMethods : preparedExperiment ? PreparedMethods : filterExperiment ? FilterMethods : AblationMethods;
         string GeometryHash() => Hash(JsonSerializer.SerializeToUtf8Bytes(source.Features));
         string inputHash = GeometryHash();
         var factory = NtsGeometryServices.Instance.CreateGeometryFactory();
@@ -145,11 +150,13 @@ internal static partial class Program
                         engine?.ActiveEdgeVisits ?? 0, engine?.PeakActiveCount ?? 0, engine?.WorkCount ?? 0,
                         engine?.XEvaluationCount ?? 0, engine?.XCacheHitCount ?? 0,
                         engine?.FilterAttemptCount ?? 0, engine?.FilterAcceptedCount ?? 0, engine?.FilterIntervalCount ?? 0,
-                        gapExperiment && engine is not null ? new(engine.GapContributionCount, engine.GapIntegrationCount,
-                            engine.GapMergedCount, engine.HorizontalDifferenceEvaluationCount, engine.GapWorkspacePayloadBytes) : null));
+                        (gapExperiment || activeExperiment) && engine is not null ? new(engine.GapContributionCount, engine.GapIntegrationCount,
+                            engine.GapMergedCount, engine.HorizontalDifferenceEvaluationCount, engine.GapWorkspacePayloadBytes) : null,
+                        activeExperiment && engine is not null ? new(engine.NoCrossingBandCount, engine.CrossingBandCount,
+                            engine.BandInitializationVisits, engine.TopOrderWrites, engine.TopOrderVerificationVisits) : null));
                 }
                 // Caching changes only the number of interval evaluations, not their values or control flow.
-                foreach ((int plain, int cached) in filterExperiment || preparedExperiment || directExperiment || areaExperiment || gapExperiment ? Array.Empty<(int, int)>() : [(1, 3), (2, 4)])
+                foreach ((int plain, int cached) in filterExperiment || preparedExperiment || directExperiment || areaExperiment || gapExperiment || activeExperiment ? Array.Empty<(int, int)>() : [(1, 3), (2, 4)])
                 {
                     AblationValue p = values[plain], c = values[cached];
                     Require((p with { Method = c.Method, XEvaluations = c.XEvaluations, XCacheHits = c.XCacheHits }) == c &&
@@ -183,6 +190,26 @@ internal static partial class Program
                         Bits(plain.Area) == Bits(prepared.Area) && Bits(plain.Coverage) == Bits(prepared.Coverage) &&
                         (!plain.ErrorBound.HasValue || Bits(plain.ErrorBound.Value) == Bits(prepared.ErrorBound!.Value)),
                         "Prepared paths changed a frozen pair, certificate or diagnostic.");
+                }
+                if (activeExperiment && candidate)
+                {
+                    AblationValue plain = values[1], optimized = values[2];
+                    Require(!plain.Fallback && !optimized.Fallback && plain.ErrorBound.HasValue && optimized.ErrorBound.HasValue,
+                        "Every frozen active-pass candidate must certify in both modes.");
+                    Require((plain with { Method = optimized.Method, Visits = optimized.Visits, Work = optimized.Work,
+                        PassDiagnostics = optimized.PassDiagnostics }) == optimized &&
+                        Bits(plain.Area) == Bits(optimized.Area) && Bits(plain.Coverage) == Bits(optimized.Coverage) &&
+                        Bits(plain.ErrorBound!.Value) == Bits(optimized.ErrorBound!.Value),
+                        "Active passes changed geometry, area arithmetic or certificates.");
+                    PassCounters p = plain.PassDiagnostics!, o = optimized.PassDiagnostics!;
+                    Require(p.NoCrossingBands == o.NoCrossingBands && p.CrossingBands == o.CrossingBands &&
+                        p.NoCrossingBands + p.CrossingBands == plain.Bands &&
+                        o.InitializationVisits <= p.InitializationVisits && o.TopOrderWrites <= p.TopOrderWrites &&
+                        o.VerificationVisits <= p.VerificationVisits && optimized.Visits <= plain.Visits &&
+                        plain.Work - optimized.Work == plain.Visits - optimized.Visits &&
+                        plain.Visits - optimized.Visits == p.InitializationVisits - o.InitializationVisits +
+                            p.VerificationVisits - o.VerificationVisits,
+                        "Active-pass work accounting differs.");
                 }
                 if (gapExperiment && candidate)
                 {
@@ -222,20 +249,22 @@ internal static partial class Program
         if (filterExperiment) Require(pairs.Sum(p => p.Values[2].FilterAccepted) > 0, "Filter never certified an order.");
         if (gapExperiment) Require(pairs.Sum(p => p.Values[2].GapDiagnostics?.Merged ?? 0) > 0,
             "No filled intervals were coalesced on the frozen workload.");
+        if (activeExperiment) Require(pairs.Sum(p => p.Values[1].Visits - p.Values[2].Visits) > 0,
+            "No active-edge visits were removed on the frozen workload.");
         return result;
     }
 
     private static long Bits(double value) => BitConverter.DoubleToInt64Bits(value);
 
-    private static void RunAblation(string directory, int run, string revision, bool filterExperiment = false, bool preparedExperiment = false, bool directExperiment = false, bool areaExperiment = false, bool gapExperiment = false)
+    private static void RunAblation(string directory, int run, string revision, bool filterExperiment = false, bool preparedExperiment = false, bool directExperiment = false, bool areaExperiment = false, bool gapExperiment = false, bool activeExperiment = false)
     {
-        string[] methods = gapExperiment ? GapMethods : areaExperiment ? AreaMethods : directExperiment ? DirectMethods : preparedExperiment ? PreparedMethods : filterExperiment ? FilterMethods : AblationMethods;
-        int[][] orders = filterExperiment || preparedExperiment || directExperiment || areaExperiment || gapExperiment ? FilterOrders : AblationOrders;
-        string[] scopes = preparedExperiment || directExperiment || areaExperiment || gapExperiment ? PreparedScopes : RealScopes;
+        string[] methods = activeExperiment ? ActiveMethods : gapExperiment ? GapMethods : areaExperiment ? AreaMethods : directExperiment ? DirectMethods : preparedExperiment ? PreparedMethods : filterExperiment ? FilterMethods : AblationMethods;
+        int[][] orders = filterExperiment || preparedExperiment || directExperiment || areaExperiment || gapExperiment || activeExperiment ? FilterOrders : AblationOrders;
+        string[] scopes = preparedExperiment || directExperiment || areaExperiment || gapExperiment || activeExperiment ? PreparedScopes : RealScopes;
         Require(run is >= 1 and <= 3 && Environment.GetEnvironmentVariable("DOTNET_TieredCompilation") == "0", "Use run1..3 and tiering0.");
         var source = LoadReal();
-        ValidateAblation(source, directory, filterExperiment, preparedExperiment, directExperiment, areaExperiment, gapExperiment);
-        if (preparedExperiment || directExperiment || areaExperiment || gapExperiment) WritePreparedMetadata(source, directory);
+        ValidateAblation(source, directory, filterExperiment, preparedExperiment, directExperiment, areaExperiment, gapExperiment, activeExperiment);
+        if (preparedExperiment || directExperiment || areaExperiment || gapExperiment || activeExperiment) WritePreparedMetadata(source, directory);
         var rows = new List<RealRow>();
         foreach (string direction in RealDirections)
         foreach (int index in orders[run - 1])
@@ -265,13 +294,13 @@ internal static partial class Program
         File.WriteAllText(Path.Combine(directory, $"run-{run}.json"), JsonSerializer.Serialize(record, Json) + "\n");
     }
 
-    private static void SummarizeAblation(string directory, bool filterExperiment = false, bool preparedExperiment = false, bool directExperiment = false, bool areaExperiment = false, bool gapExperiment = false)
+    private static void SummarizeAblation(string directory, bool filterExperiment = false, bool preparedExperiment = false, bool directExperiment = false, bool areaExperiment = false, bool gapExperiment = false, bool activeExperiment = false)
     {
-        string[] methods = gapExperiment ? GapMethods : areaExperiment ? AreaMethods : directExperiment ? DirectMethods : preparedExperiment ? PreparedMethods : filterExperiment ? FilterMethods : AblationMethods;
-        int[][] orders = filterExperiment || preparedExperiment || directExperiment || areaExperiment || gapExperiment ? FilterOrders : AblationOrders;
-        string[] scopes = preparedExperiment || directExperiment || areaExperiment || gapExperiment ? PreparedScopes : RealScopes;
-        string baseline = gapExperiment ? "Guarded-area" : areaExperiment ? "Guarded-prepared" : directExperiment ? "Guarded-prepared" : preparedExperiment ? "Guarded-filtered" : filterExperiment ? "Guarded-combined" : "Guarded-baseline";
-        string selected = gapExperiment ? "Guarded-gaps" : areaExperiment ? "Guarded-area" : directExperiment ? "Guarded-direct" : preparedExperiment ? "Guarded-prepared" : filterExperiment ? "Guarded-filtered" : "Guarded-combined";
+        string[] methods = activeExperiment ? ActiveMethods : gapExperiment ? GapMethods : areaExperiment ? AreaMethods : directExperiment ? DirectMethods : preparedExperiment ? PreparedMethods : filterExperiment ? FilterMethods : AblationMethods;
+        int[][] orders = filterExperiment || preparedExperiment || directExperiment || areaExperiment || gapExperiment || activeExperiment ? FilterOrders : AblationOrders;
+        string[] scopes = preparedExperiment || directExperiment || areaExperiment || gapExperiment || activeExperiment ? PreparedScopes : RealScopes;
+        string baseline = activeExperiment ? "Guarded-gaps" : gapExperiment ? "Guarded-area" : areaExperiment ? "Guarded-prepared" : directExperiment ? "Guarded-prepared" : preparedExperiment ? "Guarded-filtered" : filterExperiment ? "Guarded-combined" : "Guarded-baseline";
+        string selected = activeExperiment ? "Guarded-active" : gapExperiment ? "Guarded-gaps" : areaExperiment ? "Guarded-area" : directExperiment ? "Guarded-direct" : preparedExperiment ? "Guarded-prepared" : filterExperiment ? "Guarded-filtered" : "Guarded-combined";
         var source = LoadReal();
         string[] paths = Enumerable.Range(1, 3).Select(i => Path.Combine(directory, $"run-{i}.json")).ToArray();
         DoubleRun[] runs = paths.Select(p => JsonSerializer.Deserialize<DoubleRun>(File.ReadAllText(p))!).ToArray();
@@ -312,10 +341,10 @@ internal static partial class Program
                     row.MedianBytes == Median(row.Samples.Select(s => s.Bytes)), "Ablation median mismatch.");
             }
         }
-        AblationValidation validation = ValidateAblation(source, null, filterExperiment, preparedExperiment, directExperiment, areaExperiment, gapExperiment);
+        AblationValidation validation = ValidateAblation(source, null, filterExperiment, preparedExperiment, directExperiment, areaExperiment, gapExperiment, activeExperiment);
         Require(File.ReadAllText(Path.Combine(directory, "validation.json")) == JsonSerializer.Serialize(validation, Json) + "\n",
             "Recorded ablation validation differs from recomputed results.");
-        if (preparedExperiment || directExperiment || areaExperiment || gapExperiment)
+        if (preparedExperiment || directExperiment || areaExperiment || gapExperiment || activeExperiment)
             Require(File.ReadAllText(Path.Combine(directory, "prepared-paths.json")) == PreparedMetadataJson(source),
                 "Recorded prepared metadata differs from recomputed paths.");
         RealAggregate[] aggregates = runs.SelectMany(r => r.Rows).GroupBy(Key).OrderBy(g => g.Key).Select(g =>
@@ -345,19 +374,19 @@ internal static partial class Program
                 FallbackReasons = values.Where(v => v.Fallback).GroupBy(v => v.Reason!).ToDictionary(g => g.Key, g => g.Count()) };
         }).ToArray();
         bool selectedPass = gates.Where(g => g.Method == selected).All(g => g.Pass) && diagnostics.Single(d => d.Method == selected).Certified > 0;
-        var evidence = new { Protocol = gapExperiment ? "benchmarks/PolylineKit.ScanbeamBenchmarks/GAP-COALESCING-PROTOCOL.md" : areaExperiment ? "benchmarks/PolylineKit.ScanbeamBenchmarks/AREA-ARITHMETIC-PROTOCOL.md" : directExperiment ? "benchmarks/PolylineKit.ScanbeamBenchmarks/DIRECT-SWEEP-PROTOCOL.md" : preparedExperiment ? "benchmarks/PolylineKit.ScanbeamBenchmarks/PREPARED-SWEEP-PROTOCOL.md" : filterExperiment ? "benchmarks/PolylineKit.ScanbeamBenchmarks/SCALAR-FILTER-PROTOCOL.md" : "benchmarks/PolylineKit.ScanbeamBenchmarks/DOUBLE-ABLATION-PROTOCOL.md",
+        var evidence = new { Protocol = activeExperiment ? "benchmarks/PolylineKit.ScanbeamBenchmarks/ACTIVE-PASSES-PROTOCOL.md" : gapExperiment ? "benchmarks/PolylineKit.ScanbeamBenchmarks/GAP-COALESCING-PROTOCOL.md" : areaExperiment ? "benchmarks/PolylineKit.ScanbeamBenchmarks/AREA-ARITHMETIC-PROTOCOL.md" : directExperiment ? "benchmarks/PolylineKit.ScanbeamBenchmarks/DIRECT-SWEEP-PROTOCOL.md" : preparedExperiment ? "benchmarks/PolylineKit.ScanbeamBenchmarks/PREPARED-SWEEP-PROTOCOL.md" : filterExperiment ? "benchmarks/PolylineKit.ScanbeamBenchmarks/SCALAR-FILTER-PROTOCOL.md" : "benchmarks/PolylineKit.ScanbeamBenchmarks/DOUBLE-ABLATION-PROTOCOL.md",
             Environment = runs[0] with { Rows = [] }, SampleCount = runs.Sum(r => r.Rows.Sum(row => row.Samples.Length)),
             BaselineMethod = baseline, SelectedMethod = selected, SelectedPass = selectedPass,
             CombinedPass = diagnostics.Any(d => d.Method == "Guarded-combined" && d.Certified > 0) &&
                 gates.Where(g => g.Method == "Guarded-combined").All(g => g.Pass),
             RawFiles = paths.Select(p => new { File = Path.GetFileName(p), Sha256 = Hash(File.ReadAllBytes(p)) }),
             ValidationFileSha256 = Hash(File.ReadAllBytes(Path.Combine(directory, "validation.json"))),
-            PreparedMetadataFileSha256 = preparedExperiment || directExperiment || areaExperiment || gapExperiment ? Hash(File.ReadAllBytes(Path.Combine(directory, "prepared-paths.json"))) : null,
+            PreparedMetadataFileSha256 = preparedExperiment || directExperiment || areaExperiment || gapExperiment || activeExperiment ? Hash(File.ReadAllBytes(Path.Combine(directory, "prepared-paths.json"))) : null,
             Validation = validation with { Pairs = [] }, Diagnostics = diagnostics, Gates = gates, Measurements = aggregates };
-        Require(gates.Length == (preparedExperiment || directExperiment || areaExperiment || gapExperiment ? 12 : filterExperiment ? 8 : 16) &&
-            evidence.SampleCount == (preparedExperiment || directExperiment || areaExperiment || gapExperiment ? 480 : filterExperiment ? 360 : 540), "Unexpected ablation sample/gate count.");
+        Require(gates.Length == (preparedExperiment || directExperiment || areaExperiment || gapExperiment || activeExperiment ? 12 : filterExperiment ? 8 : 16) &&
+            evidence.SampleCount == (preparedExperiment || directExperiment || areaExperiment || gapExperiment || activeExperiment ? 480 : filterExperiment ? 360 : 540), "Unexpected ablation sample/gate count.");
         File.WriteAllText(Path.Combine(directory, "evidence.json"), JsonSerializer.Serialize(evidence, Json) + "\n");
-        if (gapExperiment)
+        if (gapExperiment || activeExperiment)
         {
             var counts = methods.Where(m => m.StartsWith("Guarded-", StringComparison.Ordinal)).Select(method =>
             {
@@ -370,6 +399,21 @@ internal static partial class Program
             }).ToArray();
             File.WriteAllText(Path.Combine(directory, "gap-counts.json"), JsonSerializer.Serialize(counts, Json) + "\n");
         }
+        if (activeExperiment)
+        {
+            var counts = methods.Where(m => m.StartsWith("Guarded-", StringComparison.Ordinal)).Select(method =>
+            {
+                AblationValue[] rows = validation.Pairs.Where(p => p.Candidate)
+                    .Select(p => p.Values.Single(v => v.Method == method)).ToArray();
+                return new { Method = method, Visits = rows.Sum(r => r.Visits), Work = rows.Sum(r => r.Work),
+                    NoCrossingBands = rows.Sum(r => r.PassDiagnostics!.NoCrossingBands),
+                    CrossingBands = rows.Sum(r => r.PassDiagnostics!.CrossingBands),
+                    InitializationVisits = rows.Sum(r => r.PassDiagnostics!.InitializationVisits),
+                    TopOrderWrites = rows.Sum(r => r.PassDiagnostics!.TopOrderWrites),
+                    VerificationVisits = rows.Sum(r => r.PassDiagnostics!.VerificationVisits) };
+            }).ToArray();
+            File.WriteAllText(Path.Combine(directory, "pass-counts.json"), JsonSerializer.Serialize(counts, Json) + "\n");
+        }
         var md = new StringBuilder($"# Double sweep experiment results\n\n{selected} gate: **{(selectedPass ? "PASS" : "FAIL")}**.\n\n");
         md.AppendLine("| Direction | Method | Scope | ms | Range ms | B/op |\n|---|---|---|---:|---:|---:|");
         foreach (RealAggregate r in aggregates) md.AppendLine(FormattableString.Invariant($"| {r.Direction} | {r.Method} | {r.Scope} | {r.MedianNs / 1e6:F4} | {r.MinNs / 1e6:F4}–{r.MaxNs / 1e6:F4} | {r.MedianBytes:F0} |"));
@@ -379,7 +423,7 @@ internal static partial class Program
 
     private static void ProfileAblation(string method, int seconds)
     {
-        Require((AblationMethods.Contains(method) || FilterMethods.Contains(method) || PreparedMethods.Contains(method) || DirectMethods.Contains(method) || AreaMethods.Contains(method) || GapMethods.Contains(method)) && seconds is >= 1 and <= 60, "Unknown method or duration outside1..60s.");
+        Require((AblationMethods.Contains(method) || FilterMethods.Contains(method) || PreparedMethods.Contains(method) || DirectMethods.Contains(method) || AreaMethods.Contains(method) || GapMethods.Contains(method) || ActiveMethods.Contains(method)) && seconds is >= 1 and <= 60, "Unknown method or duration outside1..60s.");
         RealSession session = PrepareAblation(LoadReal(), "county-zones", method);
         double expected = TraverseReal(session);
         for (int i = 0; i < 3; i++) Require(Bits(TraverseReal(session)) == Bits(expected), "Unstable profile output.");
