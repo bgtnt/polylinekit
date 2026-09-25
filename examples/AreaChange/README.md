@@ -8,6 +8,12 @@ it is not a similarity probability or a bound on the largest local displacement.
 The [measured results](RESULTS.md) retain all twelve pairs, numerical disagreements,
 three-process timing ranges and allocations for both implementations.
 
+For consumers with stronger geometric guarantees, also read
+[Choosing a simplification-area operation](SPECIALIZED.md). It compares cheaper
+nested/local-area identities and a conservative threshold filter, including the
+cost of checking prerequisites. The Clipper comparison alone does not establish
+that general winding comparison is the cheapest applicable solution.
+
 ```csharp
 var change = WindingArea.FilledRegions(original, simplified);
 Console.WriteLine($"Changed area: {change.SymmetricDifferenceArea}");

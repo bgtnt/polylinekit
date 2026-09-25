@@ -234,6 +234,11 @@ largest workspace capacity it has needed. See the
 
 ## Real-contour area-change consumer
 
+The comparison below measures general area scorers. Consumers with containment or
+edit-history guarantees may use much cheaper specialized operations. The
+[specialized comparison](../examples/AreaChange/SPECIALIZED.md) distinguishes exact
+area results from threshold filtering and charges prerequisite validation separately.
+
 [AreaChange](../examples/AreaChange/README.md) compares four public-domain
 Natural Earth contours with three simplifications each. It uses a pinned
 existing simplifier and measures changed filled area directly. Both scorers

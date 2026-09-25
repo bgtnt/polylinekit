@@ -1,5 +1,9 @@
 # Filled-area change after contour simplification
 
+This is the original general-scorer comparison. For specialized alternatives and
+their geometric prerequisites, see [SPECIALIZED.md](SPECIALIZED.md); beating Clipper
+does not establish a lead over every applicable area calculation.
+
 Source revision: `a50dade89d17cc89212f7338c13bec724749c83d`. Measured 2026-09-24 UTC. .NET 10.0.12; Microsoft Windows 10.0.26200; Intel64 Family 6 Model 158 Stepping 12, GenuineIntel. Three independent processes, five batches each; median of process medians, with min–max process medians. No statistical significance claim.
 
 Four public-domain Natural Earth contours; each source feature has one ring. Longest map-plane bound is 1000. Clipper2 2.0.0 SimplifyPath uses tolerances 1, 4 and 12. The area unit is the squared normalized map-plane unit, not square kilometres.

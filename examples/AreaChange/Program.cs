@@ -10,7 +10,7 @@ using PolylineKit;
 
 return AreaChange.Run(args);
 
-internal static class AreaChange
+internal static partial class AreaChange
 {
     private const double GridScale = 1e8;
     private static readonly JsonSerializerOptions Json = new() { WriteIndented = true };
@@ -42,7 +42,7 @@ internal static class AreaChange
         switch (args[0])
         {
             case "check" when args.Length == 1:
-                var pairs = LoadPairs(); CheckControls(); var rows = CheckPairs(pairs);
+                var pairs = LoadPairs(); CheckControls(); var rows = CheckPairs(pairs); CheckSpecialized(pairs);
                 Console.WriteLine($"AreaChange: analytic controls and {rows.Length} real simplification pairs passed; no timing.");
                 return 0;
             case "run" when args.Length == 2:
@@ -51,8 +51,12 @@ internal static class AreaChange
                 Benchmark(args[1], int.Parse(args[2], CultureInfo.InvariantCulture), args[3]); return 0;
             case "summarize" when args.Length == 2:
                 Summarize(args[1]); return 0;
+            case "specialized-benchmark" when args.Length == 4:
+                BenchmarkSpecialized(args[1], int.Parse(args[2], CultureInfo.InvariantCulture), args[3]); return 0;
+            case "specialized-summarize" when args.Length == 2:
+                SummarizeSpecialized(args[1]); return 0;
             default:
-                Console.Error.WriteLine("Commands: check | run <output> | benchmark <output> <run:1..3> <revision> | summarize <output>");
+                Console.Error.WriteLine("Commands: check | run <output> | benchmark <output> <run:1..3> <revision> | summarize <output> | specialized-benchmark <output> <run:1..3> <revision> | specialized-summarize <output>");
                 return 2;
         }
     }

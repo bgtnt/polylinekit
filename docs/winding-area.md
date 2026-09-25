@@ -10,7 +10,7 @@
 | `WindingArea.EndpointBridged(first, second)` | The walk `first + reverse(second)` with straight endpoint connectors; returns the same four integrals. |
 | `WindingArea.FilledRegions(first, second, fillRule)` | Independently filled closed paths; returns first, second, intersection, union and symmetric-difference areas, plus Jaccard distance and IoU. |
 
-Inputs are not mutated. Coordinates must be finite and have magnitude at most `1e100`. Consecutive duplicates are removed and a repeated closing point is optional. `ClosedPath` and each `FilledRegions` input need at least three vertices after cleanup; each `EndpointBridged` input needs at least two. Self-intersections, loops, retracing and collinear overlap are accepted. Invalid inputs throw rather than produce an invented result.
+Inputs are not mutated. Coordinates must be finite and have magnitude at most `1e100`. Consecutive duplicates are removed. A repeated closing point is optional for `ClosedPath` and `FilledRegions`; both close their input rings implicitly. These methods need at least three vertices per ring after cleanup; each `EndpointBridged` input needs at least two vertices after consecutive duplicate removal. Self-intersections, loops, retracing and collinear overlap are accepted. Invalid inputs throw rather than produce an invented result.
 
 All areas have squared coordinate units. The readonly result structs also expose `CrossingCount`, `ExactPredicateCount` and `SymbolicTieBreakCount`. These diagnose geometric work; predicate counts can change with dispatch and do not define the area.
 
@@ -27,7 +27,47 @@ Signed           = integral w dA
 
 Input order and endpoints matter for `EndpointBridged`; zero area does not imply equal strokes. For independently filled regions, `PathFillRule.NonZero` or `EvenOdd` is applied to each path separately. `JaccardDistance = SymmetricDifferenceArea / UnionArea` and `IntersectionOverUnion = IntersectionArea / UnionArea`; both are null when the union is not positive. No clamp hides rounding errors. Normalization and alignment are separate, explicit operations.
 
+### Empty and degenerate inputs
+
+| Input | Contract |
+|---|---|
+| A null path in any argument | `ArgumentNullException`. |
+| An empty path, one surviving point, or all coincident points | `ArgumentException`; no implicit empty-region result. |
+| Two surviving vertices | Invalid for `ClosedPath` and `FilledRegions`; a valid stroke for `EndpointBridged`. |
+| Three collinear vertices, or an adequately long fully retraced walk | Valid input with zero filled area. Vertex count after cleanup is not a count of distinct positions. |
+| Nonfinite coordinates or magnitude above `1e100` | `ArgumentException`, including nonempty inputs that are also too short. |
+| An undefined `PathFillRule` value | `ArgumentOutOfRangeException`. |
+
+Zero area is a valid result. Two valid coincident segments passed to `EndpointBridged`
+return four zero integrals. With one zero-area fill and one positive-area fill,
+`FilledRegions` returns zero intersection, union and XOR equal to the positive area,
+Jaccard distance 1, and IoU 0. With two zero-area fills, all five areas are zero and
+both ratios are `null`. A positive exact area below binary64's representable range
+can also round to zero. The ratio condition uses the returned union, not an exact
+area hidden from the caller. Default result structs likewise contain zero areas,
+and the default overlap result has null ratios.
+
+A zero **signed** area is different: a bow-tie can have cancelling signed lobes and
+positive NonZero/EvenOdd area. A twice-traversed square has a positive NonZero fill
+and an empty EvenOdd fill. Neither `Signed == 0` nor a fill-independent vertex test
+can replace the chosen area definition.
+
+`EndpointBridged` closes only the combined walk; appending a stroke's first point
+changes that stroke. For example, an implicitly closed square and its retained
+three-vertex triangle have positive region XOR but can produce a fully retraced
+endpoint-bridged walk with zero area. Use `FilledRegions` for independently filled
+rings. To form the oriented difference walk explicitly, close both input rings
+before passing them to `EndpointBridged`; AbsoluteWinding then equals region XOR
+for consistently oriented simple rings.
+
 ## Algorithm
+
+The winding-weighted area definition has prior art. Kronenfeld and Deng (2019)
+describe shift displacement using a difference walk and winding-weighted shoelace
+accumulation after inserting crossings. See the
+[definition and API distinction](../examples/AreaChange/SPECIALIZED.md#related-area-definition)
+before equating AbsoluteWinding with independent filled-region XOR. No mathematical
+novelty is claimed for these area definitions.
 
 Edges are split at crossings and overlap endpoints. Each directed sub-edge contributes an area term weighted by the difference of the desired winding function on its two sides. Winding numbers start at a leftmost vertex and propagate across crossings. One closed walk supplies all four single-path integrals; two independently filled paths supply five boundary chains: each whole path, the two exclusive regions and their intersection. Union and symmetric difference are sums of disjoint parts, avoiding subtraction of nearly equal rounded totals.
 
@@ -84,6 +124,6 @@ calls. Capacity depends on crossings and overlaps as well as vertex count.
 
 ## Checks and measured scope
 
-Run the maintained correctness executable and five-mode verification script described in the repository README. The recorded Windows run passed **177,627 assertions for the portable target** and **177,539 for each of four modern modes** (normal, forced scalar, no AVX, no hardware intrinsics). Both parent and leaf targets are checked; the count difference comes from the resolved framework dependency closure. Tests include **6,087 exact dyadic area-value checks** and **3,584 sub-edge ratio checks**, analytic areas, exact signs, independent slab/rational oracles, 125,628 enumerated small-grid cycles, metamorphic changes, extreme coordinates, nested calls, workspace reuse, certificate budget exhaustion and warm allocations. Test sources and helper oracles live in [tests/PolylineKit.Checks](../tests/PolylineKit.Checks).
+Run the maintained correctness executable and five-mode verification script described in the repository README. The recorded Windows run passed **178,095 assertions for the portable target** and **178,007 for each of four modern modes** (normal, forced scalar, no AVX, no hardware intrinsics). Both parent and leaf targets are checked; the count difference comes from the resolved framework dependency closure. Tests include **6,087 exact dyadic area-value checks**, **3,584 sub-edge ratio checks** and **468 public boundary-contract checks**, analytic areas, exact signs, independent slab/rational oracles, 125,628 enumerated small-grid cycles, metamorphic changes, extreme coordinates, nested calls, workspace reuse, certificate budget exhaustion and warm allocations. Test sources and helper oracles live in [tests/PolylineKit.Checks](../tests/PolylineKit.Checks).
 
 The independent fixture checker retains 424 assertions per target. The assembly extraction preserved all public result properties bit for bit on 120 recorded operations per target, compared with the corrected pre-split engine. Standalone and precompiled consumer checks cover the extracted API and forwarders. The [performance summary](performance.md) includes improvements and regressions. Commands for current reruns are in [benchmarks/README.md](../benchmarks/README.md); historical reports and raw evidence remain in the [versioned research archive](../research/README.md). A possible multiple-ring API is only a [design note](winding-multiple-rings.md).
