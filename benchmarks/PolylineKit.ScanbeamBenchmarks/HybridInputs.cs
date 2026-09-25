@@ -89,6 +89,36 @@ internal static class HybridInputs
             Map(Inputs.Grid(256, 0x7e61811u), p => new Point2(p.X / 16 + .03125, p.Y / 16 - .015625)));
         Add("confirm-wide-grid-256", "wide-grid", "confirmation",
             Map(Inputs.Grid(256, 0x395a2807u), p => new Point2(1e9 + p.X * 64, -1e9 + p.Y * 64)));
+
+        // Third-stage confirmation: generated before optimizing-selector timings. Original 28 inputs
+        // remain unchanged. These include broad overlapping edge boxes without actual crossings.
+        Add("confirm-v3-grid-192", "dense-grid", "confirmation-v3", Inputs.Grid(192, 0x5ad86431u));
+        Add("confirm-v3-parallelogram-384", "retraced", "confirmation-v3",
+            Enumerable.Range(0, 96).SelectMany(_ => new Point2[]
+                { new(-11, -5), new(5, -1), new(11, 9), new(-5, 5) }).ToArray());
+        Add("confirm-v3-star-96", "star", "confirmation-v3", Enumerable.Range(0, 96).Select(i =>
+        {
+            double angle = (i + .125) * (2 * Math.PI / 96);
+            double radius = i % 2 == 0 ? 1400 : 550;
+            return new Point2(Math.Round(radius * Math.Cos(angle)), Math.Round(radius * Math.Sin(angle)));
+        }).ToArray());
+        Point2[] thirdSparse = [.. Enumerable.Range(0, 190).Select(i => new Point2(i, i % 2)), new(189, -1), new(0, -1)];
+        Add("confirm-v3-sparse-few-levels-192", "sparse-few-y-levels", "confirmation-v3", thirdSparse);
+        Add("confirm-v3-simple-192", "simple", "confirmation-v3", Enumerable.Range(0, 192).Select(i =>
+        {
+            // Integer steps avoid introducing fractional rounding while subdividing each straight side.
+            int along = i % 48;
+            return (i / 48) switch
+            {
+                0 => new Point2(4 * along, 0),
+                1 => new Point2(192, 3 * along),
+                2 => new Point2(192 - 4 * along, 144),
+                _ => new Point2(0, 144 - 3 * along)
+            };
+        }).ToArray());
+        Point2[] tallComb = [.. Enumerable.Range(0, 190).Select(i => new Point2(i, (i % 2) * 800)), new(189, -20), new(0, -20)];
+        Add("confirm-v3-broad-boxes-192", "broad-boxes-simple", "confirmation-v3",
+            Map(tallComb, p => new Point2(p.X + p.Y - 400, p.Y - p.X - 200)));
         return result.ToArray();
 
         void Add(string name, string family, string split, Point2[] points) =>

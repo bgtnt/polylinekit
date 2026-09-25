@@ -1,11 +1,8 @@
+// Preserved verbatim from 87858da7cf41e44ad208b262efe8e57b39307b1d except the class name and
+// shared HybridSelection declaration, for same-binary timing and selector equivalence checks.
 using PolylineKit;
 
 namespace PolylineKit.ScanbeamBenchmarks;
-
-/// <summary>Structural selection diagnostics, computed from coordinates without timing or fixture identity.</summary>
-internal readonly record struct HybridSelection(string Backend, string Reason, int SuppliedVertices,
-    int DistinctYLevels, int NonhorizontalEdges, long ActiveBandSpans, int BandCount, int SampleCrossings,
-    int SampleCoincidences = 0);
 
 /// <summary>Experimental scalar-area dispatcher between shipping Winding and a bounded integer sweep.</summary>
 /// <remarks>
@@ -14,7 +11,7 @@ internal readonly record struct HybridSelection(string Backend, string Reason, i
 /// are never rounded, translated or rescaled. Instances retain integer-sweep scratch and are neither
 /// thread-safe nor reentrant; callers must not mutate the input during a call.
 /// </remarks>
-internal sealed class HybridClosedArea
+internal sealed class HybridClosedAreaV2
 {
     private const int MinimumVertices = 64, MaximumVertices = 1024, MaximumLevels = 16;
     private const int CoordinateLimit = 2048, MinimumAverageActive = 16;
@@ -47,35 +44,31 @@ internal sealed class HybridClosedArea
         if (points is null) return Reject("null", count);
         if (count < MinimumVertices || count > MaximumVertices) return Reject("vertex-count", count);
 
-        // Validate the same 16 edges, in the same order, before counting any pairs. Convert each
-        // admitted endpoint once. A compact sample drops only zero edges; they contributed no pairs
-        // in the reference selector. Full admission below still validates every input coordinate.
-        Span<SampleEdge> sampleEdges = stackalloc SampleEdge[SampleEdgeCount];
-        int sampleCount = 0;
+        // Reject sparse samples before scanning the complete walk. The 16 approximately evenly spaced
+        // indices are unique because count >= 64. Sample coordinates must pass exact integer admission
+        // before any Int64 predicate; acceptance later validates every coordinate independently.
+        Span<int> sampleEdges = stackalloc int[SampleEdgeCount];
         for (int sample = 0; sample < SampleEdgeCount; sample++)
         {
             int edge = sample * count / SampleEdgeCount;
-            Point2 a = points[edge], b = points[edge + 1 == count ? 0 : edge + 1];
-            if (!InIntegerDomain(a) || !InIntegerDomain(b))
+            sampleEdges[sample] = edge;
+            if (!InIntegerDomain(points[edge]) || !InIntegerDomain(points[edge + 1 == count ? 0 : edge + 1]))
                 return Reject("integer-domain", count);
-            if (a.X != b.X || a.Y != b.Y)
-                sampleEdges[sampleCount++] = new((int)a.X, (int)a.Y, (int)b.X, (int)b.Y);
         }
         int crossings = 0, coincidences = 0;
-        for (int sampleA = 0; sampleA < sampleCount; sampleA++)
+        for (int sampleA = 0; sampleA < SampleEdgeCount; sampleA++)
         {
-            ref readonly SampleEdge a = ref sampleEdges[sampleA];
-            for (int sampleB = sampleA + 1; sampleB < sampleCount; sampleB++)
+            int a = sampleEdges[sampleA], aNext = a + 1 == count ? 0 : a + 1;
+            Point2 a0 = points[a], a1 = points[aNext];
+            if (Same(a0, a1)) continue;
+            for (int sampleB = sampleA + 1; sampleB < SampleEdgeCount; sampleB++)
             {
-                ref readonly SampleEdge b = ref sampleEdges[sampleB];
-                // The original sample indices are separated by at least floor(count / 16) >= 4,
-                // including across closure, so none are adjacent. Strictly separated closed boxes
-                // cannot contain a crossing or identical segment. Equality must remain eligible:
-                // vertical/horizontal crossings and coincident zero-width bounds are possible.
-                if (a.MaxX < b.MinX || b.MaxX < a.MinX || a.MaxY < b.MinY || b.MaxY < a.MinY) continue;
-                if ((a.X0 == b.X0 && a.Y0 == b.Y0 && a.X1 == b.X1 && a.Y1 == b.Y1) ||
-                    (a.X0 == b.X1 && a.Y0 == b.Y1 && a.X1 == b.X0 && a.Y1 == b.Y0)) coincidences++;
-                else if (ProperCrossing(in a, in b)) crossings++;
+                int b = sampleEdges[sampleB], bNext = b + 1 == count ? 0 : b + 1;
+                if (aNext == b || bNext == a) continue;
+                Point2 b0 = points[b], b1 = points[bNext];
+                if (Same(b0, b1)) continue;
+                if ((Same(a0, b0) && Same(a1, b1)) || (Same(a0, b1) && Same(a1, b0))) coincidences++;
+                else if (ProperCrossing(a0, a1, b0, b1)) crossings++;
             }
         }
         if (crossings < MinimumSampleCrossings && coincidences < MinimumSampleCoincidences)
@@ -134,30 +127,23 @@ internal sealed class HybridClosedArea
         p.X >= -CoordinateLimit && p.X <= CoordinateLimit && p.Y >= -CoordinateLimit && p.Y <= CoordinateLimit &&
         p.X == Math.Truncate(p.X) && p.Y == Math.Truncate(p.Y);
 
-    private static bool ProperCrossing(in SampleEdge a, in SampleEdge b)
+    private static bool Same(Point2 a, Point2 b) => a.X == b.X && a.Y == b.Y;
+
+    private static bool ProperCrossing(Point2 a, Point2 b, Point2 c, Point2 d)
     {
-        // Endpoints lie in +/-2048. Each difference is at most 4096, each product at most
-        // 16,777,216 and each determinant at most 33,554,432: signed Int32 is exact throughout.
-        int abC = a.Dx * (b.Y0 - a.Y0) - a.Dy * (b.X0 - a.X0);
-        int abD = a.Dx * (b.Y1 - a.Y0) - a.Dy * (b.X1 - a.X0);
+        long abC = Orientation(a, b, c), abD = Orientation(a, b, d);
         if (!Opposite(abC, abD)) return false;
-        int cdA = b.Dx * (a.Y0 - b.Y0) - b.Dy * (a.X0 - b.X0);
-        int cdB = b.Dx * (a.Y1 - b.Y0) - b.Dy * (a.X1 - b.X0);
-        return Opposite(cdA, cdB);
+        return Opposite(Orientation(c, d, a), Orientation(c, d, b));
     }
 
-    private static bool Opposite(int a, int b) => (a < 0 && b > 0) || (a > 0 && b < 0);
+    private static bool Opposite(long a, long b) => (a < 0 && b > 0) || (a > 0 && b < 0);
 
-    private readonly struct SampleEdge
+    private static long Orientation(Point2 a, Point2 b, Point2 c)
     {
-        internal readonly int X0, Y0, X1, Y1, Dx, Dy, MinX, MaxX, MinY, MaxY;
-
-        internal SampleEdge(int x0, int y0, int x1, int y1)
-        {
-            X0 = x0; Y0 = y0; X1 = x1; Y1 = y1;
-            Dx = x1 - x0; Dy = y1 - y0;
-            MinX = Math.Min(x0, x1); MaxX = Math.Max(x0, x1);
-            MinY = Math.Min(y0, y1); MaxY = Math.Max(y0, y1);
-        }
+        // Admission proves exact integer coordinates within +/-2048. Differences <=4096 and
+        // determinant magnitude <=2*4096² make each Int64 operation exact and overflow-free.
+        long abX = (long)b.X - (long)a.X, abY = (long)b.Y - (long)a.Y;
+        long acX = (long)c.X - (long)a.X, acY = (long)c.Y - (long)a.Y;
+        return abX * acY - abY * acX;
     }
 }

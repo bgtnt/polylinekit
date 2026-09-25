@@ -34,6 +34,7 @@ internal static partial class Program
         switch (args.FirstOrDefault())
         {
             case "check-hybrid" when args.Length == 2:
+                HybridSelectorChecks.Run();
                 HybridChecks.Run();
                 ValidateHybrid(args[1]);
                 return 0;
