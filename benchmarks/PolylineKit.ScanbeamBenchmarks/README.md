@@ -5,6 +5,8 @@ It tests whether scanbeams and grouped active-edge crossings improve the dense
 integer-grid cases where the general binary64 engine loses to Clipper.
 See the [protocol](PROTOCOL.md) for the fixed inputs, numerical contract,
 comparison baseline and go/no-go threshold.
+The [measured results](RESULTS.md) retain two failed arithmetic variants and
+the final passing grid experiment, including its losses on other shapes.
 
 `IntegerScanbeam` accepts one implicitly closed walk with 3..8192 supplied
 points, integer coordinates in [-32768, 32768], and NonZero or EvenOdd fill.
@@ -12,6 +14,9 @@ It rejects other inputs instead of quantizing or silently falling back.
 The reusable instance owns mutable buffers and is neither thread-safe nor
 reentrant. The shipping `WindingArea` APIs and their broader contracts are
 unchanged. There is no new runtime dependency in either library project.
+Within this accepted domain, coordinates entirely within ±2048 select proven
+Int64 arithmetic; otherwise exact event arithmetic uses Int128. Neither branch
+rounds intersections onto a grid. Final area integration remains binary64.
 
 From the repository root, using PowerShell:
 

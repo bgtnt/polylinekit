@@ -1,5 +1,13 @@
 # Performance: measured scope and tradeoffs
 
+The separate [integer scanbeam prototype](../benchmarks/PolylineKit.ScanbeamBenchmarks/RESULTS.md)
+at `168f5eb` takes 22-24% less time for NonZero and 54-57% less time for EvenOdd
+than the faster direct Clipper64 variant on the two frozen dense integer grids.
+It passes the four fixed 1.25x gates after two documented arithmetic ablations.
+It loses on the star and many-level controls, accepts only bounded integer
+coordinates, and remains outside the shipping library. These are scalar
+Int64/Int128 changes, not SIMD or C++ measurements.
+
 The [intersection-only coverage experiment](../examples/RegionCoverage/INTERSECTION-RESULTS.md)
 at `f93cc25` establishes a newer, narrower result: the dedicated
 `WindingArea.IntersectionArea` method takes 26-29% less time than direct reusable
