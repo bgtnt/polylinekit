@@ -1,0 +1,706 @@
+{
+  "schema": 1,
+  "measured_revision": "0f689424aba5b80dc9e997f77a3e49215f5a5833",
+  "measured_utc": "2026-09-25T03:22:25.6109698+00:00",
+  "sdk": "10.0.401",
+  "runtime": ".NET 10.0.12",
+  "os": "Microsoft Windows 10.0.26200",
+  "architecture": "X64",
+  "cpu": "Intel64 Family 6 Model 158 Stepping 12, GenuineIntel",
+  "tiered_compilation": "0",
+  "processes": 3,
+  "methods_per_process": 135,
+  "batches_per_method": 5,
+  "raw_samples": 2025,
+  "hashes": {
+    "DataSha256": "b2f0a57e59ca5728be16ebd464fb67bf821961dde033d26cb3be143e9a2832e5",
+    "InputSha256": "bb4487b5e94cc83994f9702d70de9cc4f367329eaf20ba80dafcac89bcf6d97e",
+    "WindingSha256": "ae21b15d6991d526753e07f1d1a0ce54c6277ed5785b2d8b77a4ac970705ef62",
+    "ClipperSha256": "e9bf01e01f494ef6072cd46c792ed4f3004288a92b1e98c1f44931e558b8a5d0",
+    "HarnessSha256": "ce71dae1a256812e5dfc87fa8a38aff6c74ed1f3c234df7986b7d4ce0a749e8c"
+  },
+  "raw_files": [
+    {
+      "path": "examples/AreaChange/artifacts/specialized/specialized-1.json",
+      "bytes": 144867,
+      "sha256": "a3755e5167586d5001adb814cafacd4b7b19ae52622fdfbacfe6dbb9880f29dd"
+    },
+    {
+      "path": "examples/AreaChange/artifacts/specialized/specialized-2.json",
+      "bytes": 144780,
+      "sha256": "775ea20cb267526dfb69c9581fe75b44d07b2687410f8f364adf586a5f9cd7d5"
+    },
+    {
+      "path": "examples/AreaChange/artifacts/specialized/specialized-3.json",
+      "bytes": 144850,
+      "sha256": "74e4ce6b361fa2281963e074e975622fcdede518988ac456de9117168ecffa23"
+    },
+    {
+      "path": "examples/AreaChange/artifacts/specialized/specialized-summary.md",
+      "bytes": 13370,
+      "sha256": "0f3b19630acf7ab1f1dfc886d310272c3d59561affe19a5cc138a08dbb221f93"
+    }
+  ],
+  "archive": {
+    "path": "artifacts/simplification-evidence-2026-09-25.zip",
+    "bytes": 170986,
+    "sha256": "1b84fa1bd15f1458e7fc55fc53872de0dc3a2345e5614cb890482d884a2f5c7d",
+    "published": false
+  },
+  "ratio_definition": "median Winding time / median candidate time; larger is faster candidate",
+  "summary": {
+    "nested-shoelace": {
+      "min": 30.03215206511299,
+      "max": 39.75188433219018,
+      "count": 5
+    },
+    "local-pockets": {
+      "min": 26.406332710492503,
+      "max": 46.77251772040506,
+      "count": 4
+    },
+    "compensated-products": {
+      "min": 6.43416555450669,
+      "max": 11.140097101957055,
+      "count": 9
+    },
+    "prepared_fallback_False": {
+      "min": 1.1660545266002058,
+      "max": 2.083385942293158,
+      "count": 24
+    },
+    "prepared_fallback_True": {
+      "min": 0.5163603923081489,
+      "max": 0.6782642242734261,
+      "count": 12
+    },
+    "uncertified": {
+      "min": 0.08483951386724836,
+      "max": 0.12392526814017109,
+      "count": 12
+    },
+    "thresholds": [
+      {
+        "threshold": 0.001,
+        "pairs": 12,
+        "resolved": 9,
+        "winding_total_us": 747.52353515625,
+        "filter_total_us": 688.2244140625,
+        "winding_over_filter": 1.0861624782296155
+      },
+      {
+        "threshold": 0.01,
+        "pairs": 12,
+        "resolved": 6,
+        "winding_total_us": 744.6896484375,
+        "filter_total_us": 828.1876953125,
+        "winding_over_filter": 0.8991798026611665
+      },
+      {
+        "threshold": 0.03,
+        "pairs": 12,
+        "resolved": 9,
+        "winding_total_us": 744.19150390625,
+        "filter_total_us": 635.2068359375,
+        "winding_over_filter": 1.1715735124416597
+      }
+    ]
+  },
+  "ratios": [
+    {
+      "key": "nested-16",
+      "scope": "five-areas-guarantee-supplied",
+      "method": "nested-shoelace",
+      "winding_ns": 4872.75390625,
+      "candidate_ns": 122.57919311523438,
+      "winding_over_candidate": 39.75188433219018,
+      "fallback": false
+    },
+    {
+      "key": "nested-16",
+      "scope": "five-areas-guarantee-supplied",
+      "method": "compensated-products",
+      "winding_ns": 4872.75390625,
+      "candidate_ns": 512.5030517578125,
+      "winding_over_candidate": 9.507755884647219,
+      "fallback": false
+    },
+    {
+      "key": "nested-64",
+      "scope": "five-areas-guarantee-supplied",
+      "method": "nested-shoelace",
+      "winding_ns": 16258.88671875,
+      "candidate_ns": 494.95849609375,
+      "winding_over_candidate": 32.84899006091696,
+      "fallback": false
+    },
+    {
+      "key": "nested-64",
+      "scope": "five-areas-guarantee-supplied",
+      "method": "compensated-products",
+      "winding_ns": 16258.88671875,
+      "candidate_ns": 2212.7197265625,
+      "winding_over_candidate": 7.347919631922148,
+      "fallback": false
+    },
+    {
+      "key": "nested-256",
+      "scope": "five-areas-guarantee-supplied",
+      "method": "nested-shoelace",
+      "winding_ns": 59304.4921875,
+      "candidate_ns": 1956.79931640625,
+      "winding_over_candidate": 30.306885172269666,
+      "fallback": false
+    },
+    {
+      "key": "nested-256",
+      "scope": "five-areas-guarantee-supplied",
+      "method": "compensated-products",
+      "winding_ns": 59304.4921875,
+      "candidate_ns": 8923.681640625,
+      "winding_over_candidate": 6.645742707529671,
+      "fallback": false
+    },
+    {
+      "key": "nested-1024",
+      "scope": "five-areas-guarantee-supplied",
+      "method": "nested-shoelace",
+      "winding_ns": 232057.03125,
+      "candidate_ns": 7726.953125,
+      "winding_over_candidate": 30.03215206511299,
+      "fallback": false
+    },
+    {
+      "key": "nested-1024",
+      "scope": "five-areas-guarantee-supplied",
+      "method": "compensated-products",
+      "winding_ns": 232057.03125,
+      "candidate_ns": 35840.0390625,
+      "winding_over_candidate": 6.474798502460477,
+      "fallback": false
+    },
+    {
+      "key": "nested-4096",
+      "scope": "five-areas-guarantee-supplied",
+      "method": "nested-shoelace",
+      "winding_ns": 926550,
+      "candidate_ns": 30817.7734375,
+      "winding_over_candidate": 30.065442653704043,
+      "fallback": false
+    },
+    {
+      "key": "nested-4096",
+      "scope": "five-areas-guarantee-supplied",
+      "method": "compensated-products",
+      "winding_ns": 926550,
+      "candidate_ns": 144004.6875,
+      "winding_over_candidate": 6.43416555450669,
+      "fallback": false
+    },
+    {
+      "key": "pockets-4",
+      "scope": "five-areas-guarantee-supplied",
+      "method": "local-pockets",
+      "winding_ns": 5947.1435546875,
+      "candidate_ns": 218.280029296875,
+      "winding_over_candidate": 27.245477169141292,
+      "fallback": false
+    },
+    {
+      "key": "pockets-4",
+      "scope": "five-areas-guarantee-supplied",
+      "method": "compensated-products",
+      "winding_ns": 5947.1435546875,
+      "candidate_ns": 857.94677734375,
+      "winding_over_candidate": 6.931832733377915,
+      "fallback": false
+    },
+    {
+      "key": "pockets-16",
+      "scope": "five-areas-guarantee-supplied",
+      "method": "local-pockets",
+      "winding_ns": 19882.03125,
+      "candidate_ns": 752.9266357421875,
+      "winding_over_candidate": 26.406332710492503,
+      "fallback": false
+    },
+    {
+      "key": "pockets-16",
+      "scope": "five-areas-guarantee-supplied",
+      "method": "compensated-products",
+      "winding_ns": 19882.03125,
+      "candidate_ns": 3064.36767578125,
+      "winding_over_candidate": 6.488135026072269,
+      "fallback": false
+    },
+    {
+      "key": "pockets-64",
+      "scope": "five-areas-guarantee-supplied",
+      "method": "local-pockets",
+      "winding_ns": 85116.796875,
+      "candidate_ns": 2856.57958984375,
+      "winding_over_candidate": 29.79675314408297,
+      "fallback": false
+    },
+    {
+      "key": "pockets-64",
+      "scope": "five-areas-guarantee-supplied",
+      "method": "compensated-products",
+      "winding_ns": 85116.796875,
+      "candidate_ns": 11989.599609375,
+      "winding_over_candidate": 7.099219294065902,
+      "fallback": false
+    },
+    {
+      "key": "pockets-256",
+      "scope": "five-areas-guarantee-supplied",
+      "method": "local-pockets",
+      "winding_ns": 521643.75,
+      "candidate_ns": 11152.783203125,
+      "winding_over_candidate": 46.77251772040506,
+      "fallback": false
+    },
+    {
+      "key": "pockets-256",
+      "scope": "five-areas-guarantee-supplied",
+      "method": "compensated-products",
+      "winding_ns": 521643.75,
+      "candidate_ns": 46825.78125,
+      "winding_over_candidate": 11.140097101957055,
+      "fallback": false
+    },
+    {
+      "key": "BGR-1/0.001",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 76407.03125,
+      "candidate_ns": 41449.0234375,
+      "winding_over_candidate": 1.8433976222675632,
+      "fallback": false
+    },
+    {
+      "key": "BGR-1/0.01",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 78675.390625,
+      "candidate_ns": 41680.6640625,
+      "winding_over_candidate": 1.8875752676835125,
+      "fallback": false
+    },
+    {
+      "key": "BGR-1/0.01",
+      "scope": "decision-uncertified-input",
+      "method": "certify-bounds-then-winding",
+      "winding_ns": 74872.265625,
+      "candidate_ns": 799728.125,
+      "winding_over_candidate": 0.09362214893342659,
+      "fallback": false
+    },
+    {
+      "key": "BGR-1/0.03",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 76966.796875,
+      "candidate_ns": 41111.5234375,
+      "winding_over_candidate": 1.872146552584196,
+      "fallback": false
+    },
+    {
+      "key": "BGR-4/0.001",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 79585.9375,
+      "candidate_ns": 124296.875,
+      "winding_over_candidate": 0.640289126335638,
+      "fallback": true
+    },
+    {
+      "key": "BGR-4/0.01",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 78751.953125,
+      "candidate_ns": 41872.65625,
+      "winding_over_candidate": 1.88074892251432,
+      "fallback": false
+    },
+    {
+      "key": "BGR-4/0.01",
+      "scope": "decision-uncertified-input",
+      "method": "certify-bounds-then-winding",
+      "winding_ns": 80265.234375,
+      "candidate_ns": 647690.625,
+      "winding_over_candidate": 0.12392526814017109,
+      "fallback": false
+    },
+    {
+      "key": "BGR-4/0.03",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 82165.625,
+      "candidate_ns": 41811.71875,
+      "winding_over_candidate": 1.9651338776882976,
+      "fallback": false
+    },
+    {
+      "key": "BGR-12/0.001",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 56850.1953125,
+      "candidate_ns": 41430.078125,
+      "winding_over_candidate": 1.3721961889855838,
+      "fallback": false
+    },
+    {
+      "key": "BGR-12/0.01",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 55508.7890625,
+      "candidate_ns": 100827.734375,
+      "winding_over_candidate": 0.5505309566517769,
+      "fallback": true
+    },
+    {
+      "key": "BGR-12/0.01",
+      "scope": "decision-uncertified-input",
+      "method": "certify-bounds-then-winding",
+      "winding_ns": 55165.8203125,
+      "candidate_ns": 584378.125,
+      "winding_over_candidate": 0.0944008989256742,
+      "fallback": true
+    },
+    {
+      "key": "BGR-12/0.03",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 55256.0546875,
+      "candidate_ns": 100420.703125,
+      "winding_over_candidate": 0.5502456462460663,
+      "fallback": true
+    },
+    {
+      "key": "CHE-1/0.001",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 89386.328125,
+      "candidate_ns": 43476.953125,
+      "winding_over_candidate": 2.055947385917467,
+      "fallback": false
+    },
+    {
+      "key": "CHE-1/0.01",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 86508.984375,
+      "candidate_ns": 43040.234375,
+      "winding_over_candidate": 2.0099561638365264,
+      "fallback": false
+    },
+    {
+      "key": "CHE-1/0.01",
+      "scope": "decision-uncertified-input",
+      "method": "certify-bounds-then-winding",
+      "winding_ns": 88113.28125,
+      "candidate_ns": 855503.125,
+      "winding_over_candidate": 0.10299586135351639,
+      "fallback": false
+    },
+    {
+      "key": "CHE-1/0.03",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 87408.984375,
+      "candidate_ns": 42829.296875,
+      "winding_over_candidate": 2.0408690021250786,
+      "fallback": false
+    },
+    {
+      "key": "CHE-4/0.001",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 91526.5625,
+      "candidate_ns": 43931.640625,
+      "winding_over_candidate": 2.083385942293158,
+      "fallback": false
+    },
+    {
+      "key": "CHE-4/0.01",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 92712.890625,
+      "candidate_ns": 136691.40625,
+      "winding_over_candidate": 0.6782642242734261,
+      "fallback": true
+    },
+    {
+      "key": "CHE-4/0.01",
+      "scope": "decision-uncertified-input",
+      "method": "certify-bounds-then-winding",
+      "winding_ns": 89737.890625,
+      "candidate_ns": 800271.875,
+      "winding_over_candidate": 0.11213425515547451,
+      "fallback": true
+    },
+    {
+      "key": "CHE-4/0.03",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 89708.984375,
+      "candidate_ns": 43987.109375,
+      "winding_over_candidate": 2.0394380455921923,
+      "fallback": false
+    },
+    {
+      "key": "CHE-12/0.001",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 71071.875,
+      "candidate_ns": 117002.34375,
+      "winding_over_candidate": 0.6074397548126039,
+      "fallback": true
+    },
+    {
+      "key": "CHE-12/0.01",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 69649.21875,
+      "candidate_ns": 116823.828125,
+      "winding_over_candidate": 0.5961901768488208,
+      "fallback": true
+    },
+    {
+      "key": "CHE-12/0.01",
+      "scope": "decision-uncertified-input",
+      "method": "certify-bounds-then-winding",
+      "winding_ns": 69973.4375,
+      "candidate_ns": 692775,
+      "winding_over_candidate": 0.10100456497419798,
+      "fallback": true
+    },
+    {
+      "key": "CHE-12/0.03",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 71972.265625,
+      "candidate_ns": 115149.609375,
+      "winding_over_candidate": 0.6250326511365988,
+      "fallback": true
+    },
+    {
+      "key": "LSO-1/0.001",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 28221.6796875,
+      "candidate_ns": 17426.26953125,
+      "winding_over_candidate": 1.6194905993443358,
+      "fallback": false
+    },
+    {
+      "key": "LSO-1/0.01",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 28324.609375,
+      "candidate_ns": 17529.1015625,
+      "winding_over_candidate": 1.6158620151756566,
+      "fallback": false
+    },
+    {
+      "key": "LSO-1/0.01",
+      "scope": "decision-uncertified-input",
+      "method": "certify-bounds-then-winding",
+      "winding_ns": 27899.70703125,
+      "candidate_ns": 303003.125,
+      "winding_over_candidate": 0.09207729138519612,
+      "fallback": false
+    },
+    {
+      "key": "LSO-1/0.03",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 28067.87109375,
+      "candidate_ns": 17534.9609375,
+      "winding_over_candidate": 1.6006805600418805,
+      "fallback": false
+    },
+    {
+      "key": "LSO-4/0.001",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 29286.03515625,
+      "candidate_ns": 17480.17578125,
+      "winding_over_candidate": 1.6753856209880613,
+      "fallback": false
+    },
+    {
+      "key": "LSO-4/0.01",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 28704.78515625,
+      "candidate_ns": 17533.0078125,
+      "winding_over_candidate": 1.6371854426360992,
+      "fallback": false
+    },
+    {
+      "key": "LSO-4/0.01",
+      "scope": "decision-uncertified-input",
+      "method": "certify-bounds-then-winding",
+      "winding_ns": 28729.296875,
+      "candidate_ns": 273645.3125,
+      "winding_over_candidate": 0.10498735246926622,
+      "fallback": false
+    },
+    {
+      "key": "LSO-4/0.03",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 28347.65625,
+      "candidate_ns": 17708.30078125,
+      "winding_over_candidate": 1.6008117661980996,
+      "fallback": false
+    },
+    {
+      "key": "LSO-12/0.001",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 21124.609375,
+      "candidate_ns": 17625.78125,
+      "winding_over_candidate": 1.1985062718851114,
+      "fallback": false
+    },
+    {
+      "key": "LSO-12/0.01",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 21809.86328125,
+      "candidate_ns": 39589.84375,
+      "winding_over_candidate": 0.5508954119388259,
+      "fallback": true
+    },
+    {
+      "key": "LSO-12/0.01",
+      "scope": "decision-uncertified-input",
+      "method": "certify-bounds-then-winding",
+      "winding_ns": 21379.296875,
+      "candidate_ns": 246609.375,
+      "winding_over_candidate": 0.0866929607805867,
+      "fallback": true
+    },
+    {
+      "key": "LSO-12/0.03",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 20725.390625,
+      "candidate_ns": 17546.19140625,
+      "winding_over_candidate": 1.1811902734411959,
+      "fallback": false
+    },
+    {
+      "key": "NPL-1/0.001",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 78838.28125,
+      "candidate_ns": 129863.28125,
+      "winding_over_candidate": 0.6070867799669123,
+      "fallback": true
+    },
+    {
+      "key": "NPL-1/0.01",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 78656.640625,
+      "candidate_ns": 46689.84375,
+      "winding_over_candidate": 1.6846627512005756,
+      "fallback": false
+    },
+    {
+      "key": "NPL-1/0.01",
+      "scope": "decision-uncertified-input",
+      "method": "certify-bounds-then-winding",
+      "winding_ns": 78890.234375,
+      "candidate_ns": 839475,
+      "winding_over_candidate": 0.09397568048482682,
+      "fallback": false
+    },
+    {
+      "key": "NPL-1/0.03",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 79032.421875,
+      "candidate_ns": 46346.484375,
+      "winding_over_candidate": 1.7052517130648057,
+      "fallback": false
+    },
+    {
+      "key": "NPL-4/0.001",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 70100,
+      "candidate_ns": 46967.1875,
+      "winding_over_candidate": 1.4925313550018298,
+      "fallback": false
+    },
+    {
+      "key": "NPL-4/0.01",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 71010.546875,
+      "candidate_ns": 120603.125,
+      "winding_over_candidate": 0.5887952478428731,
+      "fallback": true
+    },
+    {
+      "key": "NPL-4/0.01",
+      "scope": "decision-uncertified-input",
+      "method": "certify-bounds-then-winding",
+      "winding_ns": 71142.96875,
+      "candidate_ns": 756643.75,
+      "winding_over_candidate": 0.09402439225857612,
+      "fallback": true
+    },
+    {
+      "key": "NPL-4/0.03",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 69855.46875,
+      "candidate_ns": 46581.25,
+      "winding_over_candidate": 1.4996477928351,
+      "fallback": false
+    },
+    {
+      "key": "NPL-12/0.001",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 55125,
+      "candidate_ns": 47274.8046875,
+      "winding_over_candidate": 1.1660545266002058,
+      "fallback": false
+    },
+    {
+      "key": "NPL-12/0.01",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 54375.9765625,
+      "candidate_ns": 105306.25,
+      "winding_over_candidate": 0.5163603923081489,
+      "fallback": true
+    },
+    {
+      "key": "NPL-12/0.01",
+      "scope": "decision-uncertified-input",
+      "method": "certify-bounds-then-winding",
+      "winding_ns": 56151.5625,
+      "candidate_ns": 661856.25,
+      "winding_over_candidate": 0.08483951386724836,
+      "fallback": true
+    },
+    {
+      "key": "NPL-12/0.03",
+      "scope": "decision-guarantee-supplied",
+      "method": "bounds-then-winding",
+      "winding_ns": 54683.984375,
+      "candidate_ns": 104179.6875,
+      "winding_over_candidate": 0.5249006374203224,
+      "fallback": true
+    }
+  ],
+  "interpretation": "Threshold aggregates sum one request per pair, not a production workload. Prepared guarantees and certification-inclusive inputs are distinct. Specialized formulas are floating-point estimates; certified decisions use interval arithmetic under explicit topology preconditions."
+}

@@ -68,3 +68,39 @@ for AreaChange and is absent from the leaf runtime.
 The [compact manifest](../benchmarks/winding-review-evidence.json) records source,
 assembly and input identities, summaries and a checksum archive of local raw
 evidence. Historical archive tags and recognition evidence are unchanged.
+
+## Follow-up: specialized alternatives and boundary inputs, 2026-09-25
+
+The updated review correctly points out that the Clipper comparison does not
+identify the best applicable method when the caller supplies stronger geometry
+guarantees. At `0f68942`, the [specialized experiment](../examples/AreaChange/SPECIALIZED.md)
+compares ordinary compensated shoelace, a separate implementation retaining
+subtraction/product tails, local pocket areas, and conservative threshold bounds.
+The winding runtime and public API are unchanged.
+
+On the constructed nested cases the ordinary formula is 30.0–39.8 times faster
+than Winding; on constructed disjoint local changes it is 26.4–46.8 times faster.
+These identities rely on supplied guarantees and are not general XOR substitutes.
+The prepared threshold filter resolves 24 of 36 real-pair requests; resolved
+requests are 1.17–2.08 times faster, while fallbacks take 1.47–1.94 times longer.
+At a 1% threshold the aggregate of one request per pair is slower with the filter.
+Charging the example's exact quadratic certifier on each call is 8.07–11.79 times
+slower than direct Winding. This does not prove that all possible certifiers are
+so expensive. All [individual results](../examples/AreaChange/SPECIALIZED-RESULTS.md)
+and [evidence identities](../benchmarks/simplification-evidence.json) are retained.
+
+The conclusion is conditional: use the cheap formula when the consumer already
+has its guarantees; consider bounds for an actual threshold-only workload with
+measured fallback rates; use general filled-area comparison when actual values
+or arbitrary accepted walks are required. No automatic filter is added to the
+library and recognition remains out of scope.
+
+The user's boundary-input audit adds 468 assertions covering null, empty, point,
+segment, repeated/collinear/retraced inputs, zero signed versus filled area,
+undefined rules, invalid coordinates and zero-union ratios. They pass within the
+five-mode gate: 178,095 portable assertions and 178,007 in each modern mode.
+The example adds 559 checks, including 447 independent exact-rational arithmetic
+and argument checks, exact synthetic area controls and real-pair certificates.
+Release solution build and both examples pass. An intentionally corrupted median
+is rejected before producing a benchmark summary. No new runtime dependency,
+package, or public API was introduced.

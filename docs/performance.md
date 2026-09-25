@@ -238,6 +238,11 @@ The comparison below measures general area scorers. Consumers with containment o
 edit-history guarantees may use much cheaper specialized operations. The
 [specialized comparison](../examples/AreaChange/SPECIALIZED.md) distinguishes exact
 area results from threshold filtering and charges prerequisite validation separately.
+Its [three-process results](../examples/AreaChange/SPECIALIZED-RESULTS.md) show ordinary
+formulas 30.0–39.8 times faster on constructed nested contours and 26.4–46.8 times
+faster on constructed disjoint local changes. The real-pair threshold filter helps
+resolved prepared requests but adds cost to fallbacks; at a 1% threshold the aggregate
+of one request per pair is slower. No unconditional filter is enabled in the runtime.
 
 [AreaChange](../examples/AreaChange/README.md) compares four public-domain
 Natural Earth contours with three simplifications each. It uses a pinned

@@ -6,6 +6,9 @@ establish that it is the cheapest applicable method. This experiment also evalua
 two specialized exact-arithmetic identities and a conservative threshold filter.
 All new code is internal to this example; the library API and dependencies are unchanged.
 
+The [three-process results](SPECIALIZED-RESULTS.md) retain every workload, including
+filter fallbacks and the cost of checking geometric prerequisites.
+
 The specialized identities are exact in real arithmetic; their computed outputs remain
 floating-point estimates. The ordinary baseline uses translated compensated shoelace
 sums, with coordinate validation inside timing and supplied correspondence. A separate

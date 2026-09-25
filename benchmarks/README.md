@@ -1,5 +1,12 @@
 # Benchmarks
 
+For specialized simplification identities and conservative threshold filtering,
+see the [AreaChange method](../examples/AreaChange/SPECIALIZED.md),
+[all measured rows](../examples/AreaChange/SPECIALIZED-RESULTS.md) and
+[compact evidence manifest](simplification-evidence.json). These distinguish
+supplied geometric guarantees from their validation cost and do not change the
+general-engine benchmarks below.
+
 These optional .NET 10 tools measure complete operations, including their ordinary
 preparation and allocations. They are separate from the library and correctness
 checks. Generated output belongs under the ignored `artifacts/` directory.
