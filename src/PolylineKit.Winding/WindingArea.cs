@@ -73,6 +73,10 @@ public readonly struct WindingOverlapResult
 /// Area integrals computed directly from boundaries, without polygon clipping, output contours or a decimal grid.
 /// </summary>
 /// <remarks>
+/// <see cref="FilledArea"/> returns one requested fill and can select a bounded integer sweep on .NET 10.
+/// The boundary-engine description below applies to <see cref="ClosedPath"/>, <see cref="EndpointBridged"/>,
+/// <see cref="FilledRegions"/> and <see cref="IntersectionArea"/>, and to FilledArea when it uses that engine.
+///
 /// Edges are split at their crossings and each sub-edge contributes its shoelace term weighted by the change
 /// of the chosen integrand across it. Winding numbers start at a leftmost vertex and are propagated across
 /// crossings, so one wrong crossing decision would shift every later value. Crossing decisions therefore use
@@ -96,12 +100,49 @@ public readonly struct WindingOverlapResult
 /// linear time, not a worst-case bound); m, k and s are O(n^2) in the worst case. Each call uses its own working storage: a per-thread workspace is
 /// reused by consecutive calls, and a call made while another is active on the same thread (for example from
 /// a list indexer) gets a separate one. Warm calls whose predicates are decided by the filter or by expansion
-/// arithmetic allocate no managed memory; first use, buffer growth, nested calls and the integer path do, and
+/// arithmetic allocate no managed memory; first use, buffer growth, nested calls and the BigInteger predicate fallback do, and
 /// the per-thread workspace keeps its largest size. Results differ from the Clipper2-based methods by their
 /// quantization.
 /// </remarks>
 public static class WindingArea
 {
+    /// <summary>One filled area of an implicitly closed path, in squared coordinate units.</summary>
+    /// <remarks>
+    /// NonZero counts points with nonzero winding once; EvenOdd counts points with odd winding once.
+    /// A repeated closing point is optional. At least three vertices after consecutive duplicate removal
+    /// are required. Self intersections, retracing and collinear overlap are accepted. Coordinates must
+    /// be finite with magnitude at most 1e100; the input must remain unchanged during the call.
+    ///
+    /// On .NET 10, suitable arrays of bounded integer points use an exact-topology sweep with floating-point
+    /// area accumulation. Other inputs use the selected value from <see cref="ClosedPath"/>. No grid,
+    /// normalization or input rounding is applied. The implementation strategy can change with input
+    /// representation or runtime; equivalent inputs can differ in their final rounding. No bitwise equality
+    /// with ClosedPath, relative-error bound or universal speed improvement is promised. Values are not clamped.
+    /// Each active call owns its workspace; warm calls reuse per-thread storage. First use and buffer growth
+    /// can allocate, and the largest workspace remains retained on the thread.
+    /// Use ClosedPath when all four integrals or crossing diagnostics are needed.
+    /// </remarks>
+    /// <exception cref="ArgumentNullException">The path is null.</exception>
+    /// <exception cref="ArgumentException">The path is empty, has nonfinite or too large coordinates, or too few vertices.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The fill rule is not defined; checked before the path.</exception>
+    public static double FilledArea(IReadOnlyList<Point2> path, PathFillRule fillRule = PathFillRule.NonZero)
+    {
+        if (fillRule != PathFillRule.NonZero && fillRule != PathFillRule.EvenOdd)
+            throw new ArgumentOutOfRangeException(nameof(fillRule));
+#if NET10_0_OR_GREATER
+        // Arrays have no caller-defined indexers. Other representations retain ClosedPath's existing
+        // validation, exception and nested-call behavior, without an unconditional snapshot allocation.
+        if (path is Point2[] points && FilledAreaSelector.ShouldUseIntegerSweep(points))
+        {
+            var workspace = IntegerFilledAreaSweep.Rent();
+            try { return workspace.Measure(points, fillRule); }
+            finally { IntegerFilledAreaSweep.Return(workspace); }
+        }
+#endif
+        WindingAreaResult result = ClosedPath(path);
+        return fillRule == PathFillRule.NonZero ? result.NonZero : result.EvenOdd;
+    }
+
     /// <summary>Winding integrals of a closed path; closure from last to first is implicit.</summary>
     /// <remarks>
     /// A repeated closing point is optional. At least three vertices after consecutive duplicate removal are

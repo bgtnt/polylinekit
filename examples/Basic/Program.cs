@@ -1,5 +1,14 @@
 using PolylineKit;
 
+// Choose the fill of a single walk. Repeating a loop changes EvenOdd, not NonZero.
+Point2[] closedSquare = [new(0, 0), new(2, 0), new(2, 2), new(0, 2)];
+Point2[] repeatedSquare = [.. closedSquare, .. closedSquare];
+double nonZeroArea = WindingArea.FilledArea(repeatedSquare);
+double evenOddArea = WindingArea.FilledArea(repeatedSquare, PathFillRule.EvenOdd);
+Console.WriteLine($"Repeated-square area: NonZero={nonZeroArea}; EvenOdd={evenOddArea}");
+if (nonZeroArea != 4 || evenOddArea != 0)
+    throw new Exception("Unexpected selected filled area.");
+
 // A filled-area consumer: removing a triangular notch changes one square unit.
 Point2[] originalContour = [new(0, 0), new(2, 0), new(2, 2), new(1, 1), new(0, 2)];
 Point2[] processedContour = [new(0, 0), new(2, 0), new(2, 2), new(0, 2)];

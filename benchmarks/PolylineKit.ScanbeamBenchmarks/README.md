@@ -1,10 +1,17 @@
 # Experimental area sweeps
 
-The latest [adaptive closed-area experiment](HYBRID-V3-RESULTS.md) selects between
+The [public FilledArea integration protocol](FILLED-AREA-PROTOCOL.md) measures the
+new library entry point against the retained hybrid prototype. Commands are
+`check-filled-area <directory>`, `benchmark-filled-area <directory> <run 1..3> <measured-commit>`
+and `summarize-filled-area <directory>`. The public implementation is a separate
+bounded extraction in `src/PolylineKit.Winding`; historical experimental engines
+remain here for comparison.
+
+The historical [adaptive closed-area experiment](HYBRID-V3-RESULTS.md) selects between
 Winding and the integer sweep. Caching sampled integer edges and rejecting
 disjoint boxes preserves every routing decision while passing all 68 measured
 gates. The worst control adds 9.5%, close to the 10% preservation limit; bounded
-success does not establish universal speed or justify a shipping API change.
+success does not establish universal speed. Public integration is measured separately.
 The [third fixed protocol](HYBRID-V3-PROTOCOL.md) and
 [evidence](../scanbeam-hybrid-v3-evidence.json) include the retained v2 selector
 in the same binary, forced backends, preloaded Clipper and all controls. The
@@ -29,8 +36,8 @@ independently closed walks, with at least three supplied points per walk and
 8192 in total, integer coordinates in [-524288, 524288], and NonZero or EvenOdd fill.
 It rejects other inputs instead of quantizing or silently falling back.
 The reusable instance owns mutable buffers and is neither thread-safe nor
-reentrant. The shipping `WindingArea` APIs and their broader contracts are
-unchanged. There is no new runtime dependency in either library project.
+reentrant. That experiment did not change the shipping `WindingArea` APIs.
+The public bounded extraction keeps their broader contracts and adds no runtime dependency.
 Within this accepted domain, coordinates entirely within ±2048 select proven
 Int64 arithmetic; otherwise exact event arithmetic uses Int128. Neither branch
 rounds intersections onto a grid. Final area integration remains binary64.

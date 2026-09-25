@@ -7,6 +7,11 @@ if (closed.NonZero != 4 || closed.EvenOdd != 4 || closed.Signed != 4 || closed.A
     throw new InvalidOperationException("Standalone closed-path values disagree with the analytic square.");
 foreach (PathFillRule rule in new[] { PathFillRule.NonZero, PathFillRule.EvenOdd })
 {
+    if (WindingArea.FilledArea(square, rule) != 4)
+        throw new InvalidOperationException("Standalone selected fill disagrees with the analytic square.");
+    Point2[] repeated = Enumerable.Range(0, 16).SelectMany(_ => square).ToArray();
+    if (WindingArea.FilledArea(repeated, rule) != (rule == PathFillRule.NonZero ? 4 : 0))
+        throw new InvalidOperationException("Standalone selected fill did not preserve traversal multiplicity.");
     var overlap = WindingArea.FilledRegions(square, shifted, rule);
     if (WindingArea.IntersectionArea(square, shifted, rule) != 2)
         throw new InvalidOperationException("Standalone intersection-only value disagrees with analytic squares.");

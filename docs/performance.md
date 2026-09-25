@@ -1,6 +1,11 @@
 # Performance: measured scope and tradeoffs
 
-The latest [adaptive closed-area experiment](../benchmarks/PolylineKit.ScanbeamBenchmarks/HYBRID-V3-RESULTS.md)
+`WindingArea.FilledArea` now exposes a selected NonZero/EvenOdd area. The
+[integration protocol](../benchmarks/PolylineKit.ScanbeamBenchmarks/FILLED-AREA-PROTOCOL.md)
+measures this actual public entry point against its retained prototype. Earlier
+prototype timings below must not be attributed to the public API.
+
+The historical [adaptive closed-area experiment](../benchmarks/PolylineKit.ScanbeamBenchmarks/HYBRID-V3-RESULTS.md)
 at `be96dea` preserves the second-stage routing policy while caching integer
 sampled edges and rejecting disjoint bounding boxes. In the same binary, the
 six previously failing cases spend 0.40–0.48 us in selection versus 3.95–4.06 us
@@ -11,7 +16,7 @@ On that contour the router also misses a faster integer backend, so meeting
 the Winding gate is not the same as always choosing the fastest method.
 The experiment adds six new confirmation inputs to 28 reused controls, preserves
 all previous numeric outputs, and uses scalar safe C#.
-It remains a bounded, single-filled-area experiment outside the library.
+It measured a bounded, single-filled-area prototype outside the library, before integration.
 
 The preceding [adaptive closed-area experiment](../benchmarks/PolylineKit.ScanbeamBenchmarks/HYBRID-V2-RESULTS.md)
 at `87858da` selects a bounded integer sweep for dense/retraced walks and Winding

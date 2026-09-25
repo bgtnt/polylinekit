@@ -4,6 +4,25 @@ Small C# tools for area-based polyline comparison, normalization, resampling and
 alignment. Each operation has an explicit geometric meaning. The API is experimental;
 use a project reference while it is under review. No NuGet release is available yet.
 
+## Measure one filled area
+
+```csharp
+using PolylineKit;
+
+Point2[] square = [new(0, 0), new(2, 0), new(2, 2), new(0, 2)];
+Point2[] twice = [.. square, .. square];
+double filled = WindingArea.FilledArea(twice);                       // 4, NonZero.
+double odd = WindingArea.FilledArea(twice, PathFillRule.EvenOdd);     // 0.
+```
+
+`FilledArea` accepts an implicitly closed walk, including crossings and retracing,
+and returns one area in squared coordinate units. The .NET 10 build chooses a
+bounded integer sweep for suitable arrays and the existing boundary engine for
+other inputs. The .NET Standard build uses the boundary engine. There is no input
+quantization; implementation choices can change the last bits across containers
+or builds. Use `ClosedPath` for all four integrals or crossing diagnostics. See the
+[input, numerical and storage contract](docs/winding-area.md#one-selected-fill).
+
 ## Measure filled-area change
 
 ```csharp
@@ -62,6 +81,7 @@ opt-in; closed-path fitting searches discrete cyclic sample shifts.
 | Operation | Meaning |
 | --- | --- |
 | `PolylineArea.BetweenGraphs(p, q)` | Absolute vertical separation integrated over a shared x interval; strictly increasing-x graphs only. |
+| `WindingArea.FilledArea(p, fillRule)` | One NonZero or EvenOdd filled area of an implicitly closed walk, returned as a `double`; no output contours or diagnostics. |
 | `WindingArea.ClosedPath(p)` / `EndpointBridged(p, q)` | NonZero, EvenOdd, absolute-winding and signed areas; accepts self-intersections and returns areas without constructing contours. |
 | `WindingArea.FilledRegions(p, q)` | Intersection, union and XOR areas of two independently filled paths. |
 | `WindingArea.IntersectionArea(p, q)` | Only the intersection area of two independently filled paths; skips the unused own/union/XOR area accumulation. |
@@ -133,13 +153,15 @@ New benchmark output goes under ignored `artifacts/`. The
 allocation measurements. The [performance assessment](docs/performance.md)
 summarizes measured gains, regressions and hardware-specific limits; there is no
 universal speed guarantee.
-The latest [adaptive closed-area experiment](benchmarks/PolylineKit.ScanbeamBenchmarks/HYBRID-V3-RESULTS.md)
+The historical [adaptive closed-area experiment](benchmarks/PolylineKit.ScanbeamBenchmarks/HYBRID-V3-RESULTS.md)
 combines Winding with a bounded integer sweep. Cheaper selection preserves every
 previous routing decision and passes all 68 measured gates: all 26 dense-grid/
 retraced cases beat Winding and full-input Clipper by at least 20%, while the
 other 42 cases remain within 10% of Winding. The smallest margin is a 9.5%
-overhead on a new simple contour. This bounded result remains experimental and
-returns one fill area, rather than the four integrals of `WindingArea.ClosedPath`.
+overhead on a new simple contour. Those measurements describe the experimental
+prototype before its integration into `FilledArea`; they are not measurements
+of the public entry point. Its operation returns one fill area, whereas
+`WindingArea.ClosedPath` computes four integrals.
 The earlier [double sweep measurements](benchmarks/PolylineKit.ScanbeamBenchmarks/FILTER-FIRST-RESULTS.md)
 measure a different operation: prepared two-region GIS intersection. They do
 not establish whether dispatch improves these closed-path losses.

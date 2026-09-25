@@ -5,7 +5,7 @@ namespace PolylineKit.ScanbeamBenchmarks;
 /// <summary>Full-diagnostic equivalence with the retained, unoptimized stage-two selector.</summary>
 internal static class HybridSelectorChecks
 {
-    internal static void Run()
+    internal static void Run(Func<Point2[]?, bool>? publicSelector = null)
     {
         int checks = 0;
         Compare("null", null);
@@ -149,6 +149,9 @@ internal static class HybridSelectorChecks
             HybridSelection expected = HybridClosedAreaV2.Select(points);
             HybridSelection actual = HybridClosedArea.Select(points);
             Require(actual == expected, name + $": selector differs; expected {expected}; actual {actual}.");
+            if (publicSelector is not null)
+                Require(publicSelector(points) == (expected.Backend == "IntegerScanbeam"),
+                    name + ": public selector differs from the retained reference.");
             checks++;
         }
     }

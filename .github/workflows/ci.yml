@@ -54,6 +54,8 @@ jobs:
         run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-filter-first artifacts/scanbeam-filter-first-ci
       - name: Adaptive closed-area selection, fallback and independent areas (no timing)
         run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-hybrid artifacts/scanbeam-hybrid-ci
+      - name: Public filled-area extraction, selector and container parity (no timing)
+        run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-filled-area artifacts/filled-area-ci
       - name: Optional WPF comparison contracts (Windows only, no timing)
         if: runner.os == 'Windows'
         run: |

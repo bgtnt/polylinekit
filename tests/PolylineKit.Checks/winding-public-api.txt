@@ -11,6 +11,7 @@ public static class PolylineKit.WindingArea
   public static PolylineKit.WindingAreaResult ClosedPath(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> path)
   public static PolylineKit.WindingAreaResult EndpointBridged(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> first, System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> second)
   public static PolylineKit.WindingOverlapResult FilledRegions(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> first, System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> second, PolylineKit.PathFillRule fillRule = PolylineKit.PathFillRule.NonZero (0))
+  public static System.Double FilledArea(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> path, PolylineKit.PathFillRule fillRule = PolylineKit.PathFillRule.NonZero (0))
   public static System.Double IntersectionArea(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> first, System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> second, PolylineKit.PathFillRule fillRule = PolylineKit.PathFillRule.NonZero (0))
 
 public readonly struct PolylineKit.WindingAreaResult

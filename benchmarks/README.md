@@ -1,7 +1,12 @@
 # Benchmarks
 
-Start with the [adaptive closed-area results](PolylineKit.ScanbeamBenchmarks/HYBRID-V3-RESULTS.md)
-for the current combination of complementary algorithms. Cheaper selection
+The [public FilledArea protocol](PolylineKit.ScanbeamBenchmarks/FILLED-AREA-PROTOCOL.md)
+checks the integration of the bounded hybrid into `WindingArea.FilledArea`,
+including its actual public array and read-only-wrapper calls. Its results must
+be measured separately from the earlier prototype.
+
+The historical [adaptive closed-area results](PolylineKit.ScanbeamBenchmarks/HYBRID-V3-RESULTS.md)
+measure the combination of complementary algorithms before integration. Cheaper selection
 preserves the preceding policy and passes all 68 gates, including all 26
 dense-grid/retraced targets. The six previously failing controls now add
 1.5–4.4% over Winding; the worst new control adds 9.5%, close to the 10% limit.
@@ -10,7 +15,7 @@ old-selector controls, every forced backend, allocations and numerical findings.
 The [first](PolylineKit.ScanbeamBenchmarks/HYBRID-V1-RESULTS.md) and
 [second failed selectors](PolylineKit.ScanbeamBenchmarks/HYBRID-V2-RESULTS.md)
 remain separate evidence. This scalar closed-area result has a bounded integer
-route and does not change the library. The GIS intersection experiments below
+route; its reported timings predate the public API. The GIS intersection experiments below
 measure a different operation.
 
 For the isolated active-edge experiment on dense integer grids, see the
