@@ -8,9 +8,11 @@ namespace PolylineKit.ScanbeamBenchmarks;
 internal static class DoubleSweepChecks
 {
     private static int passed, certified, fallback;
+    private static bool usePreparedPaths;
 
-    internal static void Run(bool restrictToCommonY = false, bool cacheEndpointX = false, bool scalarOrderFilter = false)
+    internal static void Run(bool restrictToCommonY = false, bool cacheEndpointX = false, bool scalarOrderFilter = false, bool preparedPaths = false)
     {
+        usePreparedPaths = preparedPaths;
         passed = certified = fallback = 0;
         var engine = new GuardedDoubleSweep(restrictToCommonY, cacheEndpointX, scalarOrderFilter);
         GuardedDoubleSweep? uncached = cacheEndpointX ? new GuardedDoubleSweep(restrictToCommonY, false, scalarOrderFilter) : null;
@@ -230,11 +232,11 @@ internal static class DoubleSweepChecks
         void CheckExact(string name, Point2[] first, Point2[] second, PathFillRule rule, R exact, bool mustCertify = false, bool checkFallbackAccuracy = true)
         {
             long[] beforeFirst = Bits(first), beforeSecond = Bits(second);
-            double actual = engine.MeasureIntersection(first, second, rule);
+            double actual = Measure(engine, first, second, rule);
             if (uncached is not null)
-                CacheParity(name, engine, actual, uncached, uncached.MeasureIntersection(first, second, rule));
+                CacheParity(name, engine, actual, uncached, Measure(uncached, first, second, rule));
             if (unfiltered is not null)
-                FilterParity(name, engine, actual, unfiltered, unfiltered.MeasureIntersection(first, second, rule));
+                FilterParity(name, engine, actual, unfiltered, Measure(unfiltered, first, second, rule));
             CheckDiagnostics(name, first, second, rule, actual, mustCertify);
             Require(double.IsFinite(actual) && actual >= 0, name + ": invalid area.");
             Require(beforeFirst.SequenceEqual(Bits(first)) && beforeSecond.SequenceEqual(Bits(second)), name + ": mutated input.");
@@ -248,11 +250,11 @@ internal static class DoubleSweepChecks
 
         void CheckRoundedOracle(string name, Point2[] first, Point2[] second, PathFillRule rule, double expected)
         {
-            double actual = engine.MeasureIntersection(first, second, rule);
+            double actual = Measure(engine, first, second, rule);
             if (uncached is not null)
-                CacheParity(name, engine, actual, uncached, uncached.MeasureIntersection(first, second, rule));
+                CacheParity(name, engine, actual, uncached, Measure(uncached, first, second, rule));
             if (unfiltered is not null)
-                FilterParity(name, engine, actual, unfiltered, unfiltered.MeasureIntersection(first, second, rule));
+                FilterParity(name, engine, actual, unfiltered, Measure(unfiltered, first, second, rule));
             CheckDiagnostics(name, first, second, rule, actual, false);
             RoundedNear(name, expected, actual);
             // ExactAreaOracle returned the correctly rounded area. Do not pretend it
@@ -283,6 +285,14 @@ internal static class DoubleSweepChecks
             }
         }
     }
+
+    // Run the same rational, analytic and fallback controls through an immutable snapshot.
+    // Existing commands keep their original array path unless the extra switch is enabled.
+    private static double Measure(GuardedDoubleSweep engine, Point2[]? first, Point2[]? second, PathFillRule rule) =>
+        usePreparedPaths
+            ? engine.MeasureIntersection(first is null ? null! : GuardedDoubleSweep.PreparePath(first),
+                second is null ? null! : GuardedDoubleSweep.PreparePath(second), rule)
+            : engine.MeasureIntersection(first!, second!, rule);
 
     private static void CheckContract(GuardedDoubleSweep engine, Point2[] square, GuardedDoubleSweep? uncached)
     {
@@ -324,14 +334,14 @@ internal static class DoubleSweepChecks
             try { return (operation(), null); } catch (Exception error) { return (0, error); }
         }
         var expected = Capture(() => WindingArea.IntersectionArea(first!, second!, rule));
-        var actual = Capture(() => engine.MeasureIntersection(first!, second!, rule));
+        var actual = Capture(() => Measure(engine, first!, second!, rule));
         Require(actual.Error?.GetType() == expected.Error?.GetType(), "Guarded sweep changed the shipping exception type.");
         if (expected.Error is ArgumentException a && actual.Error is ArgumentException b)
             Require(a.ParamName == b.ParamName, "Guarded sweep changed the shipping exception parameter.");
         if (expected.Error is null) RoundedNear("shipping result contract", expected.Value, actual.Value);
         if (uncached is not null)
         {
-            var reference = Capture(() => uncached.MeasureIntersection(first!, second!, rule));
+            var reference = Capture(() => Measure(uncached, first!, second!, rule));
             Require(reference.Error?.GetType() == actual.Error?.GetType(), "Caching changed the exception type.");
             if (reference.Error is ArgumentException c && actual.Error is ArgumentException d)
                 Require(c.ParamName == d.ParamName, "Caching changed the exception parameter.");

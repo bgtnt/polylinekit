@@ -9,7 +9,7 @@ namespace PolylineKit.ScanbeamBenchmarks;
 /// accuracy abandons the whole operation and calls WindingArea.IntersectionArea on the original inputs.
 /// Instances retain scratch arrays and are neither thread-safe nor reentrant. No input array is modified.
 /// </remarks>
-internal sealed class GuardedDoubleSweep
+internal sealed partial class GuardedDoubleSweep
 {
     private const int VertexBudget = 8192, BandEventBudget = 65536;
     private const long WorkBudget = 2_000_000;
@@ -82,17 +82,7 @@ internal sealed class GuardedDoubleSweep
 
     internal double MeasureIntersection(Point2[] first, Point2[] second, PathFillRule rule = PathFillRule.NonZero)
     {
-        LastUsedFallback = false; LastFallbackReason = null; LastErrorBound = double.NaN;
-        BandCount = PeakActiveCount = 0; EventCount = ActiveEdgeVisits = work = 0;
-        XEvaluationCount = XCacheHitCount = 0;
-        FilterAttemptCount = FilterAcceptedCount = FilterIntervalCount = 0;
-        if (cacheEndpointX)
-        {
-            if (cacheGeneration == int.MaxValue) { Array.Clear(cachedXGeneration); cacheGeneration = 1; }
-            else cacheGeneration++;
-        }
-        activeCount = edgeCount = endpointCount = crossingCount = 0;
-        area = Interval.Zero;
+        ResetState();
         if (rule != PathFillRule.NonZero && rule != PathFillRule.EvenOdd)
             return Fallback(first, second, rule, "input-contract");
         if (first is null || second is null)
@@ -106,7 +96,7 @@ internal sealed class GuardedDoubleSweep
             int count = first.Length + second.Length;
             EnsureVertices(count);
             // Both entire inputs, including their effective vertex counts, are checked before an AABB result.
-            Bounds a = CopyValidated(first, 0), b = CopyValidated(second, first.Length);
+            Bounds a = CopyValidated(first, vertices, 0), b = CopyValidated(second, vertices, first.Length);
             if (a.HasNoArea || b.HasNoArea || a.NoAreaOverlap(b))
             {
                 LastErrorBound = 0;
@@ -117,31 +107,51 @@ internal sealed class GuardedDoubleSweep
             AppendEdges(first.Length, count, 1);
             Array.Fill(positions, -1, 0, edgeCount);
             endpoints.AsSpan(0, endpointCount).Sort(endpointComparison);
-            if (restrictToCommonY)
-                SweepCommonY(Math.Max(a.MinY, b.MinY), Math.Min(a.MaxY, b.MaxY));
-            else
-            {
-                int at = 0;
-                while (at < endpointCount)
-                {
-                    double y = endpoints[at].Y;
-                    int end = at + 1;
-                    while (end < endpointCount && endpoints[end].Y == y) end++;
-                    // The preceding band has already closed every gap at y. Ended edges leave before new edges
-                    // are inserted, so every edge in the next band spans its whole open height interval.
-                    for (int i = at; i < end; i++) if (!endpoints[i].Starts) Remove(endpoints[i].Edge);
-                    for (int i = at; i < end; i++) if (endpoints[i].Starts) Insert(endpoints[i].Edge, y);
-                    if (end < endpointCount && activeCount > 0) ProcessBand(y, endpoints[end].Y);
-                    at = end;
-                }
-                if (activeCount != 0) throw new Uncertified("unclosed-status");
-            }
-            return CertifiedValue();
+            return SweepSortedEndpoints(a, b);
         }
         catch (Exception ex) when (FindReason(ex) is not null)
         {
             return Fallback(first, second, rule, FindReason(ex)!);
         }
+    }
+
+    private void ResetState()
+    {
+        LastUsedFallback = false; LastFallbackReason = null; LastErrorBound = double.NaN;
+        BandCount = PeakActiveCount = 0; EventCount = ActiveEdgeVisits = work = 0;
+        XEvaluationCount = XCacheHitCount = 0;
+        FilterAttemptCount = FilterAcceptedCount = FilterIntervalCount = 0;
+        if (cacheEndpointX)
+        {
+            if (cacheGeneration == int.MaxValue) { Array.Clear(cachedXGeneration); cacheGeneration = 1; }
+            else cacheGeneration++;
+        }
+        activeCount = edgeCount = endpointCount = crossingCount = 0;
+        area = Interval.Zero;
+    }
+
+    private double SweepSortedEndpoints(Bounds a, Bounds b)
+    {
+        if (restrictToCommonY)
+            SweepCommonY(Math.Max(a.MinY, b.MinY), Math.Min(a.MaxY, b.MaxY));
+        else
+        {
+            int at = 0;
+            while (at < endpointCount)
+            {
+                double y = endpoints[at].Y;
+                int end = at + 1;
+                while (end < endpointCount && endpoints[end].Y == y) end++;
+                // The preceding band has already closed every gap at y. Ended edges leave before new edges
+                // are inserted, so every edge in the next band spans its whole open height interval.
+                for (int i = at; i < end; i++) if (!endpoints[i].Starts) Remove(endpoints[i].Edge);
+                for (int i = at; i < end; i++) if (endpoints[i].Starts) Insert(endpoints[i].Edge, y);
+                if (end < endpointCount && activeCount > 0) ProcessBand(y, endpoints[end].Y);
+                at = end;
+            }
+            if (activeCount != 0) throw new Uncertified("unclosed-status");
+        }
+        return CertifiedValue();
     }
 
     private void SweepCommonY(double lo, double hi)
@@ -174,7 +184,7 @@ internal sealed class GuardedDoubleSweep
         // The next MeasureIntersection resets activeCount and every live position before using this storage.
     }
 
-    private Bounds CopyValidated(Point2[] path, int offset)
+    private static Bounds CopyValidated(Point2[] path, Point2[] destination, int offset)
     {
         double minX = double.PositiveInfinity, minY = minX, maxX = double.NegativeInfinity, maxY = maxX;
         int distinct = 0;
@@ -184,12 +194,12 @@ internal sealed class GuardedDoubleSweep
             Point2 p = path[i];
             if (!double.IsFinite(p.X) || !double.IsFinite(p.Y) || Math.Abs(p.X) > CoordinateLimit || Math.Abs(p.Y) > CoordinateLimit)
                 throw new Uncertified("input-contract");
-            vertices[offset + i] = p;
+            destination[offset + i] = p;
             if (distinct == 0 || !Same(previous, p)) { distinct++; previous = p; }
             minX = Math.Min(minX, p.X); maxX = Math.Max(maxX, p.X);
             minY = Math.Min(minY, p.Y); maxY = Math.Max(maxY, p.Y);
         }
-        if (distinct > 1 && Same(vertices[offset], previous)) distinct--;
+        if (distinct > 1 && Same(destination[offset], previous)) distinct--;
         if (distinct < 3) throw new Uncertified("input-contract");
         return new(minX, minY, maxX, maxY);
     }
