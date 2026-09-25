@@ -3,7 +3,9 @@
 For dynamic segment indexing during vertex removal, see the
 [bounded index experiment](PolylineKit.DynamicIndexBenchmarks/README.md).
 It compares linear scans and an independent fixed-slot hierarchy with identical
-query/update traces; an optional private baseline is local only.
+query/update traces; an optional private baseline is local only. Its
+[measured results](PolylineKit.DynamicIndexBenchmarks/RESULTS.md) and
+[evidence manifest](dynamic-index-evidence.json) preserve both gains and losses.
 
 For specialized simplification identities and conservative threshold filtering,
 see the [AreaChange method](../examples/AreaChange/SPECIALIZED.md),

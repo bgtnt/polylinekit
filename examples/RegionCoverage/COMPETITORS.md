@@ -103,6 +103,12 @@ envelopes, condenses underfilled pages through reinsertion and collapses the roo
 when appropriate. It has not been benchmarked here; static catalogue results
 provide no evidence against that implementation.
 
+The subsequent [dynamic experiment](../../benchmarks/PolylineKit.DynamicIndexBenchmarks/RESULTS.md)
+now compares it locally with two linear scans and an independently written
+fixed-slot hierarchy. That custom design helps the measured larger rings, while
+small-ring batches can favor scanning. RtTools remains a private adapter baseline;
+its source and binaries are not distributed.
+
 A proposed shortcut should be queried before modifying the index, excluding the
 two replaced edge IDs and explicitly handling allowed adjacent endpoint contacts.
 After acceptance, verify both old removals before inserting AC. Preserve unique

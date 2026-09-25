@@ -143,6 +143,10 @@ flattening tolerance does not remove the native scanner's coordinate grid.
   edge identities, old bounds and contact semantics. See the
   [dynamic-index discussion](COMPETITORS.md#dynamic-simplification).
 
+Follow-up: the [separate dynamic experiment](../../benchmarks/PolylineKit.DynamicIndexBenchmarks/RESULTS.md)
+has now measured that proposal against active-only scanning and the private
+RtTools baseline. Its results do not change these static coverage measurements.
+
 This bounded, related Census population does not represent arbitrary polygons,
 holes, multipart GIS features, dynamic indexes, or surveyed area accuracy.
 No new runtime dependency, public API, package publication or recognition work

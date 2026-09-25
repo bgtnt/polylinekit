@@ -7,6 +7,9 @@ same robust intersection checks. It tests whether specializing index storage for
 this update pattern is worthwhile. It is not a production simplifier or an area
 engine rewrite.
 
+The [measured results](RESULTS.md) include the large-ring gains, small-ring losses,
+all timing scopes, allocations and private-baseline limitations.
+
 The [protocol](PROTOCOL.md) was fixed before computing removal outcomes or timing.
 All 109 previously frozen Census rings and six synthetic rings participate.
 Eligibility is a fixed local distance test, with three passes in original vertex
