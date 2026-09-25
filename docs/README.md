@@ -8,6 +8,7 @@
 | Generate contours or use quantized comparisons | [Optional Clipper adapter](clipper.md) |
 | Integrate vertical separation between graphs | [Graph-area formula](design.md) |
 | Understand speed, allocations and memory | [Performance](performance.md) |
+| Evaluate predicted polygons against reference annotations | [Polygon overlap example](../examples/PolygonOverlapEvaluation/README.md) |
 | Build or contribute a change | [Contributor guide](../CONTRIBUTING.md) |
 | Inspect the alpha candidate and evidence | [Release notes](releases/0.1.0-alpha.1.md) |
 | Verify packages or prepare publication | [Package verification and release guide](releasing.md) |

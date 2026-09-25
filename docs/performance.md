@@ -68,6 +68,17 @@ The earlier EvenOdd batch discrepancy did not recur. This is not evidence that
 the cache change fixed it: the unchanged Clipper binary also ran faster in the
 new session. The earlier failed measurement remains documented below.
 
+## Polygon annotation evaluation
+
+The [Solaris building-evaluation example](../examples/PolygonOverlapEvaluation/RESULTS.md)
+reproduces all 172 supplied reference scores. At revision `2019112`, its 205-pair
+prepared geometry batch took 2.308 ms with Core versus 2.062 ms with Clipper2;
+complete evaluator times were effectively tied (8.185 versus 8.222 ms). Core
+allocated 15.8% fewer bytes in the complete evaluator and ran 3.05× faster than
+the configured NTS backend. A simple convex method was faster on its eligible
+49-pair subset. These are different inputs and work from the single-area figures
+above; the report includes preparation, fallback, process ranges and limitations.
+
 ## First use and retained workspace
 
 Each active call owns its working storage; nested calls receive separate

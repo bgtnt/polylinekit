@@ -7,7 +7,7 @@ per-image TP/FP/FN and pair diagnostics. It trains no model.
 
 ## Run
 
-From the repository root, with .NET 10 and Python 3 (standard library only):
+From the repository root, with .NET 10 and Python 3.9+ (standard library only):
 
 ```sh
 python examples/PolygonOverlapEvaluation/data/prepare-data.py
