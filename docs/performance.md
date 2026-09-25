@@ -1,6 +1,19 @@
 # Performance: measured scope and tradeoffs
 
-The latest [adaptive closed-area experiment](../benchmarks/PolylineKit.ScanbeamBenchmarks/HYBRID-V2-RESULTS.md)
+The latest [adaptive closed-area experiment](../benchmarks/PolylineKit.ScanbeamBenchmarks/HYBRID-V3-RESULTS.md)
+at `be96dea` preserves the second-stage routing policy while caching integer
+sampled edges and rejecting disjoint bounding boxes. In the same binary, the
+six previously failing cases spend 0.40–0.48 us in selection versus 3.95–4.06 us
+for the retained old selector. Complete-call overhead over Winding is now
+1.5–4.4% there. All 26 difficult targets and 42 preservation controls pass the
+fixed gates; a new simple contour is close to the limit at 9.47% overhead.
+On that contour the router also misses a faster integer backend, so meeting
+the Winding gate is not the same as always choosing the fastest method.
+The experiment adds six new confirmation inputs to 28 reused controls, preserves
+all previous numeric outputs, and uses scalar safe C#.
+It remains a bounded, single-filled-area experiment outside the library.
+
+The preceding [adaptive closed-area experiment](../benchmarks/PolylineKit.ScanbeamBenchmarks/HYBRID-V2-RESULTS.md)
 at `87858da` selects a bounded integer sweep for dense/retraced walks and Winding
 otherwise. All 22 targeted input/fill cases beat both current Winding and
 full-input Clipper by at least 20%, including dispatch. However, roughly 4 us

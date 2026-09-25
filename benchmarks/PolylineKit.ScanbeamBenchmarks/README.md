@@ -1,12 +1,15 @@
 # Experimental area sweeps
 
-The latest [adaptive closed-area experiment](HYBRID-V2-RESULTS.md) actually selects
-between Winding and the integer sweep. It passes all 22 dense-grid/retraced
-target gates but fails preservation on six easy cases because selection itself
-costs too much. The [second fixed protocol](HYBRID-V2-PROTOCOL.md) and
-[evidence](../scanbeam-hybrid-v2-evidence.json) retain all comparisons, including
-forced double sweep, preloaded Clipper and unfavorable controls. The
-[first selector's failure](HYBRID-V1-RESULTS.md) remains separate evidence.
+The latest [adaptive closed-area experiment](HYBRID-V3-RESULTS.md) selects between
+Winding and the integer sweep. Caching sampled integer edges and rejecting
+disjoint boxes preserves every routing decision while passing all 68 measured
+gates. The worst control adds 9.5%, close to the 10% preservation limit; bounded
+success does not establish universal speed or justify a shipping API change.
+The [third fixed protocol](HYBRID-V3-PROTOCOL.md) and
+[evidence](../scanbeam-hybrid-v3-evidence.json) include the retained v2 selector
+in the same binary, forced backends, preloaded Clipper and all controls. The
+[first](HYBRID-V1-RESULTS.md) and [second failed policies](HYBRID-V2-RESULTS.md)
+remain separate evidence.
 Commands are `check-hybrid <directory>`,
 `benchmark-hybrid <directory> <run 1..3> <measured-commit>` and
 `summarize-hybrid <directory>`; run timings in three sequential Release processes

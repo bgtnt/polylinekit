@@ -133,12 +133,13 @@ New benchmark output goes under ignored `artifacts/`. The
 allocation measurements. The [performance assessment](docs/performance.md)
 summarizes measured gains, regressions and hardware-specific limits; there is no
 universal speed guarantee.
-The latest [adaptive closed-area experiment](benchmarks/PolylineKit.ScanbeamBenchmarks/HYBRID-V2-RESULTS.md)
-combines Winding with a bounded integer sweep. Including selection, it beats
-both Winding and full-input Clipper by at least 20% on all 22 dense-grid/retraced
-input/fill cases. However, selection adds 14–30% on six easy control cases,
-so the overall adoption gate fails. It remains outside the library and returns
-one fill area, rather than the four integrals of `WindingArea.ClosedPath`.
+The latest [adaptive closed-area experiment](benchmarks/PolylineKit.ScanbeamBenchmarks/HYBRID-V3-RESULTS.md)
+combines Winding with a bounded integer sweep. Cheaper selection preserves every
+previous routing decision and passes all 68 measured gates: all 26 dense-grid/
+retraced cases beat Winding and full-input Clipper by at least 20%, while the
+other 42 cases remain within 10% of Winding. The smallest margin is a 9.5%
+overhead on a new simple contour. This bounded result remains experimental and
+returns one fill area, rather than the four integrals of `WindingArea.ClosedPath`.
 The earlier [double sweep measurements](benchmarks/PolylineKit.ScanbeamBenchmarks/FILTER-FIRST-RESULTS.md)
 measure a different operation: prepared two-region GIS intersection. They do
 not establish whether dispatch improves these closed-path losses.

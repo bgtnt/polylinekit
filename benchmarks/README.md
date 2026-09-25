@@ -1,14 +1,17 @@
 # Benchmarks
 
-Start with the [adaptive closed-area results](PolylineKit.ScanbeamBenchmarks/HYBRID-V2-RESULTS.md)
-for the current attempt to combine complementary algorithms. All 22 dense-grid
-and retraced target cases pass the gates against Winding and full-input Clipper,
-including selection. Six control cases still regress by 14–30%, so automatic
-dispatch is not ready for the library. The [compact evidence](scanbeam-hybrid-v2-evidence.json)
-includes every forced backend, allocations, routing cost and numerical findings.
-The [first failed selector](PolylineKit.ScanbeamBenchmarks/HYBRID-V1-RESULTS.md)
-is preserved separately. These are scalar closed-area tests; the GIS intersection
-experiments below measure a different operation.
+Start with the [adaptive closed-area results](PolylineKit.ScanbeamBenchmarks/HYBRID-V3-RESULTS.md)
+for the current combination of complementary algorithms. Cheaper selection
+preserves the preceding policy and passes all 68 gates, including all 26
+dense-grid/retraced targets. The six previously failing controls now add
+1.5–4.4% over Winding; the worst new control adds 9.5%, close to the 10% limit.
+The [compact evidence](scanbeam-hybrid-v3-evidence.json) includes same-binary
+old-selector controls, every forced backend, allocations and numerical findings.
+The [first](PolylineKit.ScanbeamBenchmarks/HYBRID-V1-RESULTS.md) and
+[second failed selectors](PolylineKit.ScanbeamBenchmarks/HYBRID-V2-RESULTS.md)
+remain separate evidence. This scalar closed-area result has a bounded integer
+route and does not change the library. The GIS intersection experiments below
+measure a different operation.
 
 For the isolated active-edge experiment on dense integer grids, see the
 [bounded-integer scanbeam prototype](PolylineKit.ScanbeamBenchmarks/README.md).
