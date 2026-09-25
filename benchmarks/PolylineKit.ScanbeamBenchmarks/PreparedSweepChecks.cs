@@ -6,10 +6,12 @@ namespace PolylineKit.ScanbeamBenchmarks;
 internal static class PreparedSweepChecks
 {
     private static int passed;
+    private static GuardedDoubleSweep? copiedReference;
 
-    internal static void Run()
+    internal static void Run(bool directPreparedEdges = false)
     {
         passed = 0;
+        copiedReference = null;
         Exception? preparationError = null;
         try { GuardedDoubleSweep.PreparePath(null!); }
         catch (Exception error) { preparationError = error; }
@@ -76,7 +78,8 @@ internal static class PreparedSweepChecks
         foreach (bool filter in new[] { false, true })
         {
             var raw = new GuardedDoubleSweep(roi, cache, filter);
-            var prepared = new GuardedDoubleSweep(roi, cache, filter);
+            var prepared = new GuardedDoubleSweep(roi, cache, filter, directPreparedEdges);
+            copiedReference = directPreparedEdges ? new GuardedDoubleSweep(roi, cache, filter) : null;
             foreach (var pair in pairs)
             foreach (PathFillRule rule in Enum.GetValues<PathFillRule>())
             {
@@ -115,6 +118,7 @@ internal static class PreparedSweepChecks
             Compare("disjoint uncertain slopes", raw, prepared, pairs[10].First, pairs[10].Second, PathFillRule.NonZero);
             Require(!prepared.LastUsedFallback && prepared.LastErrorBound == 0,
                 "Slope preparation uncertainty must not override the exact disjoint-bounds result.");
+            if (directPreparedEdges) CheckMixedCalls(roi, cache, filter);
         }
 
         // Mutate the actual source arrays after preparing, including those needed for whole-call
@@ -126,7 +130,8 @@ internal static class PreparedSweepChecks
             Poison(pair.Second.Source);
         }
         var rawAfterMutation = new GuardedDoubleSweep(true, true, true);
-        var preparedAfterMutation = new GuardedDoubleSweep(true, true, true);
+        var preparedAfterMutation = new GuardedDoubleSweep(true, true, true, directPreparedEdges);
+        copiedReference = directPreparedEdges ? new GuardedDoubleSweep(true, true, true) : null;
         foreach (var pair in pairs)
         foreach (PathFillRule rule in Enum.GetValues<PathFillRule>())
         {
@@ -136,7 +141,7 @@ internal static class PreparedSweepChecks
 
         // Engines own their scratch buffers; snapshots alone may be shared concurrently.
         // Compare after the parallel loop so the assertion counter itself stays single-threaded.
-        var concurrent = new (Outcome Expected, Outcome Actual)[32];
+        var concurrent = new (Outcome Expected, Outcome Actual, Outcome Copied)[32];
         Parallel.For(0, concurrent.Length, i =>
         {
             bool reverse = (i & 1) != 0;
@@ -144,15 +149,109 @@ internal static class PreparedSweepChecks
             Snapshot a = reverse ? pair.Second : pair.First, b = reverse ? pair.First : pair.Second;
             PathFillRule rule = (i & 2) == 0 ? PathFillRule.NonZero : PathFillRule.EvenOdd;
             var raw = new GuardedDoubleSweep((i & 4) != 0, (i & 8) != 0, (i & 16) != 0);
-            var prepared = new GuardedDoubleSweep((i & 4) != 0, (i & 8) != 0, (i & 16) != 0);
-            concurrent[i] = (Capture(raw, () => raw.MeasureIntersection(a.Original, b.Original, rule)),
-                Capture(prepared, () => prepared.MeasureIntersection(a.Prepared, b.Prepared, rule)));
+            var prepared = new GuardedDoubleSweep((i & 4) != 0, (i & 8) != 0, (i & 16) != 0, directPreparedEdges);
+            Outcome expected = Capture(raw, () => raw.MeasureIntersection(a.Original, b.Original, rule));
+            Outcome actual = Capture(prepared, () => prepared.MeasureIntersection(a.Prepared, b.Prepared, rule));
+            var copied = new GuardedDoubleSweep((i & 4) != 0, (i & 8) != 0, (i & 16) != 0);
+            concurrent[i] = (expected, actual, directPreparedEdges
+                ? Capture(copied, () => copied.MeasureIntersection(a.Prepared, b.Prepared, rule)) : expected);
         });
         for (int i = 0; i < concurrent.Length; i++)
             Require(concurrent[i].Expected == concurrent[i].Actual, "Shared snapshot changed an independent engine's outcome at " + i + ".");
+        if (directPreparedEdges)
+            for (int i = 0; i < concurrent.Length; i++)
+                Require(concurrent[i].Copied == concurrent[i].Actual, "Direct shared snapshot differs from copied execution at " + i + ".");
 
-        Console.WriteLine($"Prepared double sweep: {passed} snapshot, reuse, input-contract and all-diagnostics parity controls.");
+        Console.WriteLine($"{(directPreparedEdges ? "Direct prepared" : "Prepared")} double sweep: {passed} snapshot, reuse, input-contract and all-diagnostics parity controls.");
     }
+
+    private static void CheckMixedCalls(bool roi, bool cache, bool filter)
+    {
+        // The same direct-enabled instance alternates both overloads. Its current query must
+        // determine geometry and loop membership, regardless of the previous call's backing data.
+        var raw = new GuardedDoubleSweep(roi, cache, filter);
+        var copied = new GuardedDoubleSweep(roi, cache, filter);
+        var direct = new GuardedDoubleSweep(roi, cache, filter, true);
+        var a = new Snapshot([new(-4, -3), new(5, 1), new(0, 6)]);
+        var b = new Snapshot([new(-3, 2), new(4, -4), new(7, 5)]);
+        var horizontalHeavy = new Snapshot([new(-2, -2), new(-1, -2), new(0, -2), new(2, -2),
+            new(2, -2), new(2, 3), new(1, 3), new(0, 3), new(-2, 3), new(-2, -2)]);
+        var horizontalOnly = new Snapshot([new(-5, 1), new(0, 1), new(3, 1), new(5, 1)]);
+        var malformed = new Snapshot([new(0, 0), new(double.NaN, 1), new(0, 2)]);
+        var steep = new Snapshot([new(0, 0), new(1, double.Epsilon), new(0, 1)]);
+        var containing = new Snapshot([new(-20, -10), new(20, -10), new(20, 10), new(-20, 10)]);
+        var simultaneousCrossings = new Snapshot([new(-14, -4), new(-6, 4), new(-6, -4), new(-14, 4), new(-14, -4),
+            new(6, -4), new(14, 4), new(14, -4), new(6, 4), new(6, -4)]);
+        var large = new Snapshot(Subdivide(a.Original, 256));
+        var medium = new Snapshot(Subdivide(b.Original, 32));
+
+        Require(horizontalHeavy.Prepared.EdgeCount == 2 && horizontalHeavy.Prepared.VertexCount == 10 &&
+            horizontalOnly.Prepared.EdgeCount == 0 && large.Prepared.EdgeCount == 768,
+            "The binding controls must actually exercise unequal nonhorizontal-edge and vertex ranges.");
+
+        foreach (PathFillRule rule in Enum.GetValues<PathFillRule>())
+        {
+            Query("raw call before first binding", false, a, b, rule);
+            Query("initial direct call", true, a, b, rule);
+            Require(!direct.LastUsedFallback, "Initial direct binding control must certify.");
+            Query("raw growth after direct", false, large, medium, rule);
+            Query("different direct ranges after raw growth", true, horizontalHeavy, b, rule);
+            Query("raw small after direct ranges", false, b, a, rule);
+            Require(!direct.LastUsedFallback, "Raw call after direct binding must recover certified execution.");
+            Query("reverse unequal direct ranges", true, b, horizontalHeavy, rule);
+            Query("large first borrowed range", true, large, horizontalHeavy, rule);
+            Query("large second borrowed range", true, horizontalHeavy, large, rule);
+            Query("raw new range after large borrowed range", false, medium, a, rule);
+            Query("same snapshot in both ranges", true, horizontalHeavy, horizontalHeavy, rule);
+            Query("raw after shared borrowed arrays", false, a, b, rule);
+
+            Query("fallback after bound edge traversal", true, simultaneousCrossings, containing, rule);
+            Require(direct.LastUsedFallback && direct.EventCount > 0,
+                "The binding recovery control must abandon an actual sweep after constructing crossing events.");
+            Query("raw after bound sweep fallback", false, b, a, rule);
+            Require(!direct.LastUsedFallback, "Raw recovery after bound sweep fallback must certify.");
+            Query("direct reuse after bound fallback", true, horizontalHeavy, b, rule);
+
+            Query("throwing prepared call", true, malformed, a, rule);
+            Query("raw after throwing prepared call", false, large, medium, rule);
+            Query("direct after exception and scratch growth", true, b, a, rule);
+            Query("throwing raw call after direct", false, a, malformed, rule);
+            Query("direct after throwing raw call", true, a, b, rule);
+            Require(!direct.LastUsedFallback, "Direct recovery after a throwing raw call must certify.");
+            Query("slope failure before binding", true, steep, horizontalHeavy, rule);
+            Query("raw after preparation uncertainty", false, b, a, rule);
+
+            Query("empty first edge range", true, horizontalOnly, b, rule);
+            Require(!direct.LastUsedFallback && direct.LastErrorBound == 0, "Horizontal-only prepared path must yield certified zero.");
+            Query("raw after empty first range", false, a, b, rule);
+            Query("empty second edge range", true, b, horizontalOnly, rule);
+            Query("raw after empty second range", false, b, a, rule);
+            Query("both edge ranges empty", true, horizontalOnly, horizontalOnly, rule);
+            Query("raw after two empty ranges", false, a, b, rule);
+            Query("null prepared first", true, null, a, rule);
+            Query("raw after null prepared first", false, b, a, rule);
+            Query("direct final recovery", true, a, b, rule);
+            Require(!direct.LastUsedFallback, "The mixed-call sequence must end in certified execution.");
+        }
+
+        void Query(string name, bool usePrepared, Snapshot? first, Snapshot? second, PathFillRule rule)
+        {
+            Outcome expected = Capture(raw, () => raw.MeasureIntersection(first?.Original!, second?.Original!, rule));
+            Outcome copiedOutcome = Capture(copied, () => usePrepared
+                ? copied.MeasureIntersection(first?.Prepared!, second?.Prepared!, rule)
+                : copied.MeasureIntersection(first?.Original!, second?.Original!, rule));
+            Outcome actual = Capture(direct, () => usePrepared
+                ? direct.MeasureIntersection(first?.Prepared!, second?.Prepared!, rule)
+                : direct.MeasureIntersection(first?.Original!, second?.Original!, rule));
+            Require(actual == expected, name + ": direct mixed-call sequence changed raw outcome.\nRaw: " + expected + "\nDirect: " + actual);
+            Require(actual == copiedOutcome, name + ": direct mixed-call sequence changed copied outcome.\nCopied: " + copiedOutcome + "\nDirect: " + actual);
+        }
+    }
+
+    private static Point2[] Subdivide(Point2[] path, int parts) => Enumerable.Range(0, path.Length)
+        .SelectMany(i => Enumerable.Range(0, parts).Select(j => new Point2(
+            path[i].X + (path[(i + 1) % path.Length].X - path[i].X) * j / parts,
+            path[i].Y + (path[(i + 1) % path.Length].Y - path[i].Y) * j / parts))).ToArray();
 
     private static (string Name, Snapshot First, Snapshot Second) Pair(string name, Point2[] first, Point2[] second) =>
         (name, new Snapshot(first), new Snapshot(second));
@@ -180,6 +279,11 @@ internal static class PreparedSweepChecks
         Outcome expected = Capture(raw, () => raw.MeasureIntersection(first?.Original!, second?.Original!, rule));
         Outcome actual = Capture(prepared, () => prepared.MeasureIntersection(first?.Prepared!, second?.Prepared!, rule));
         Require(actual == expected, name + ": preparation changed outcome or diagnostics.\nExpected: " + expected + "\nActual: " + actual);
+        if (copiedReference is not null)
+        {
+            Outcome copied = Capture(copiedReference, () => copiedReference.MeasureIntersection(first?.Prepared!, second?.Prepared!, rule));
+            Require(actual == copied, name + ": direct access differs from copied prepared execution.\nCopied: " + copied + "\nDirect: " + actual);
+        }
     }
 
     private readonly record struct Outcome(long ValueBits, Type? ExceptionType, string? ExceptionParameter,

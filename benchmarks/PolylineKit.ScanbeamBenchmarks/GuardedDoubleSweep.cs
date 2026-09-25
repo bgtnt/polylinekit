@@ -55,11 +55,13 @@ internal sealed partial class GuardedDoubleSweep
     private readonly Comparison<Crossing> crossingComparison;
     private readonly bool restrictToCommonY, cacheEndpointX, scalarOrderFilter;
 
-    internal GuardedDoubleSweep(bool restrictToCommonY = false, bool cacheEndpointX = false, bool scalarOrderFilter = false)
+    internal GuardedDoubleSweep(bool restrictToCommonY = false, bool cacheEndpointX = false,
+        bool scalarOrderFilter = false, bool directPreparedEdges = false)
     {
         this.restrictToCommonY = restrictToCommonY;
         this.cacheEndpointX = cacheEndpointX;
         this.scalarOrderFilter = scalarOrderFilter;
+        this.directPreparedEdges = directPreparedEdges;
         endpointComparison = CompareEndpoints;
         crossingComparison = CompareCrossings;
     }
@@ -117,6 +119,7 @@ internal sealed partial class GuardedDoubleSweep
 
     private void ResetState()
     {
+        ClearBorrowedGeometry();
         LastUsedFallback = false; LastFallbackReason = null; LastErrorBound = double.NaN;
         BandCount = PeakActiveCount = 0; EventCount = ActiveEdgeVisits = work = 0;
         XEvaluationCount = XCacheHitCount = 0;
@@ -162,7 +165,8 @@ internal sealed partial class GuardedDoubleSweep
         for (int e = 0; e < edgeCount; e++)
         {
             Charge();
-            if (edges[e].Lower.Y <= lo && edges[e].Upper.Y > lo) Insert(e, lo);
+            ref readonly Edge edge = ref EdgeAt(e);
+            if (edge.Lower.Y <= lo && edge.Upper.Y > lo) Insert(e, lo);
         }
         int at = 0;
         while (at < endpointCount && endpoints[at].Y <= lo) at++;
@@ -304,7 +308,7 @@ internal sealed partial class GuardedDoubleSweep
     private Level ConstructCrossing(int left, int right, double bottom, double top)
     {
         Interval separation = HorizontalDifference(left, right, Level.At(bottom));
-        Interval relativeSlope = Interval.Subtract(edges[left].Slope, edges[right].Slope);
+        Interval relativeSlope = Interval.Subtract(EdgeAt(left).Slope, EdgeAt(right).Slope);
         if (!(relativeSlope.Lo > 0)) throw new Uncertified("crossing-slope");
         Interval y = Interval.Add(Interval.Point(bottom), Interval.Divide(separation, relativeSlope));
         if (!(y.Lo > bottom && y.Hi < top)) throw new Uncertified("crossing-endpoint");
@@ -319,7 +323,7 @@ internal sealed partial class GuardedDoubleSweep
         if (scalarOrderFilter)
         {
             FilterAttemptCount++;
-            if (ScalarOrderFilter.TryOrder(in scalarEdges[left], in scalarEdges[right], y, out int certifiedOrder))
+            if (ScalarOrderFilter.TryOrder(in ScalarEdgeAt(left), in ScalarEdgeAt(right), y, out int certifiedOrder))
             {
                 FilterAcceptedCount++;
                 return certifiedOrder;
@@ -331,13 +335,14 @@ internal sealed partial class GuardedDoubleSweep
         if (b.Hi < a.Lo) return 1;
         // A true exact source/evaluation equality is different from overlapping rounded enclosures.
         if (!a.IsPoint || !b.IsPoint || a.Lo != b.Lo) throw new Uncertified("endpoint-order");
-        Interval sa = edges[left].Slope, sb = edges[right].Slope;
+        Interval sa = EdgeAt(left).Slope, sb = EdgeAt(right).Slope;
         int order;
         if (sa.Hi < sb.Lo) order = -1;
         else if (sb.Hi < sa.Lo) order = 1;
         else if (sa.IsPoint && sb.IsPoint && sa.Lo == sb.Lo) return left.CompareTo(right);
         else throw new Uncertified("endpoint-slope");
-        Edge ea = edges[left], eb = edges[right];
+        ref readonly Edge ea = ref EdgeAt(left);
+        ref readonly Edge eb = ref EdgeAt(right);
         if (!((y == ea.Lower.Y || y == ea.Upper.Y) && (y == eb.Lower.Y || y == eb.Upper.Y)))
             throw new Uncertified("endpoint-on-edge");
         return below ? -order : order;
@@ -388,8 +393,9 @@ internal sealed partial class GuardedDoubleSweep
         for (int i = from; i < to; i++)
         {
             Visit(); prefixA[i] = a; prefixB[i] = b;
-            Edge edge = edges[active[i]];
-            if (edge.Loop == 0) a += edge.Delta; else b += edge.Delta;
+            int edgeId = active[i];
+            ref readonly Edge edge = ref EdgeAt(edgeId);
+            if (IsFirstLoop(edgeId, in edge)) a += edge.Delta; else b += edge.Delta;
         }
     }
 
@@ -399,9 +405,9 @@ internal sealed partial class GuardedDoubleSweep
         Level start = gapStarts[position];
         gapStarts[position] = finish;
         int left = active[position], right = active[position + 1];
-        Edge edge = edges[left];
+        ref readonly Edge edge = ref EdgeAt(left);
         int a = prefixA[position], b = prefixB[position];
-        if (edge.Loop == 0) a += edge.Delta; else b += edge.Delta;
+        if (IsFirstLoop(left, in edge)) a += edge.Delta; else b += edge.Delta;
         if (!Filled(a) || !Filled(b)) return;
         Interval height = Interval.Subtract(finish.Y, start.Y).Nonnegative();
         if (height.IsZero) return;
@@ -416,7 +422,8 @@ internal sealed partial class GuardedDoubleSweep
     private Interval HorizontalDifference(int left, int right, Level level)
     {
         if (level.IsCrossingOf(left, right) || SameSupport(left, right)) return Interval.Zero;
-        Edge a = edges[left], b = edges[right];
+        ref readonly Edge a = ref EdgeAt(left);
+        ref readonly Edge b = ref EdgeAt(right);
         if (TryKnownX(a, level.Y, out double ax) && TryKnownX(b, level.Y, out double bx))
             return Interval.Difference(bx, ax);
         // Subtract a common reference before evaluation. Original coordinate differences keep their exact
@@ -440,7 +447,7 @@ internal sealed partial class GuardedDoubleSweep
             }
         }
         XEvaluationCount++;
-        Edge e = edges[edge];
+        ref readonly Edge e = ref EdgeAt(edge);
         Interval result = TryKnownX(e, y, out double x) ? Interval.Point(x) :
             Interval.Add(Interval.Point(e.Lower.X), Interval.Multiply(e.Slope, Interval.Subtract(y, Interval.Point(e.Lower.Y))));
         // Cache only successful, requested evaluations. No eager computation can introduce a new fallback;
@@ -462,7 +469,8 @@ internal sealed partial class GuardedDoubleSweep
 
     private bool SameSupport(int first, int second)
     {
-        Edge a = edges[first], b = edges[second];
+        ref readonly Edge a = ref EdgeAt(first);
+        ref readonly Edge b = ref EdgeAt(second);
         return (Same(a.Lower, b.Lower) && Same(a.Upper, b.Upper)) ||
             (a.Lower.X == a.Upper.X && b.Lower.X == b.Upper.X && a.Lower.X == b.Lower.X);
     }

@@ -114,8 +114,21 @@ internal static partial class Program
             case "summarize-prepared-sweep" when args.Length == 2:
                 SummarizeAblation(args[1], preparedExperiment: true);
                 return 0;
+            case "check-direct-sweep" when args.Length == 2:
+                PreparedSweepChecks.Run(directPreparedEdges: true);
+                foreach (bool commonY in new[] { false, true })
+                foreach (bool cache in new[] { false, true }) DoubleSweepChecks.Run(commonY, cache, true, preparedPaths: true, directPreparedEdges: true);
+                ValidateAblation(LoadReal(), args[1], directExperiment: true);
+                WritePreparedMetadata(LoadReal(), args[1]);
+                return 0;
+            case "benchmark-direct-sweep" when args.Length == 4:
+                RunAblation(args[1], int.Parse(args[2]), args[3], directExperiment: true);
+                return 0;
+            case "summarize-direct-sweep" when args.Length == 2:
+                SummarizeAblation(args[1], directExperiment: true);
+                return 0;
             default:
-                Console.Error.WriteLine("check | check-wide | check-real|check-double|check-double-ablation|check-scalar-filter|check-prepared-sweep <directory> | benchmark[-real|-wide|-double|-double-ablation|-scalar-filter|-prepared-sweep] <directory> <run 1..3> <revision> | summarize[-real|-wide|-double|-double-ablation|-scalar-filter|-prepared-sweep] <directory> | profile-double-ablation <method> <seconds1..60> | inspect <file.json>");
+                Console.Error.WriteLine("check | check-wide | check-real|check-double|check-double-ablation|check-scalar-filter|check-prepared-sweep|check-direct-sweep <directory> | benchmark[-real|-wide|-double|-double-ablation|-scalar-filter|-prepared-sweep|-direct-sweep] <directory> <run 1..3> <revision> | summarize[-real|-wide|-double|-double-ablation|-scalar-filter|-prepared-sweep|-direct-sweep] <directory> | profile-double-ablation <method> <seconds1..60> | inspect <file.json>");
                 return 2;
         }
     }

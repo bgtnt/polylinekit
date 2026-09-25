@@ -95,6 +95,13 @@ internal sealed partial class GuardedDoubleSweep
         internal static double Measure(GuardedDoubleSweep sweep, PreparedPath first, PreparedPath second,
             PathFillRule rule)
         {
+            try { return MeasureCore(sweep, first, second, rule); }
+            finally { sweep.ClearBorrowedGeometry(); }
+        }
+
+        private static double MeasureCore(GuardedDoubleSweep sweep, PreparedPath first, PreparedPath second,
+            PathFillRule rule)
+        {
             sweep.ResetState();
             if (rule != PathFillRule.NonZero && rule != PathFillRule.EvenOdd)
                 return sweep.Fallback(first?.snapshot!, second?.snapshot!, rule, "input-contract");
@@ -123,8 +130,21 @@ internal sealed partial class GuardedDoubleSweep
             {
                 sweep.EnsureVertices(first.VertexCount + second.VertexCount);
                 sweep.nonZero = rule == PathFillRule.NonZero;
-                first.CopyEdgesTo(sweep, 0, 0);
-                second.CopyEdgesTo(sweep, first.EdgeCount, 1);
+                if (sweep.directPreparedEdges)
+                {
+                    // Global IDs retain the same first-then-second edge enumeration. Stored Loop values
+                    // belong to a standalone snapshot; winding roles instead follow this pair's split.
+                    sweep.borrowedFirstEdges = first.preparedEdges;
+                    sweep.borrowedSecondEdges = second.preparedEdges;
+                    sweep.borrowedFirstScalarEdges = first.preparedScalarEdges;
+                    sweep.borrowedSecondScalarEdges = second.preparedScalarEdges;
+                    sweep.borrowedFirstEdgeCount = first.EdgeCount;
+                }
+                else
+                {
+                    first.CopyEdgesTo(sweep, 0, 0);
+                    second.CopyEdgesTo(sweep, first.EdgeCount, 1);
+                }
                 sweep.edgeCount = first.EdgeCount + second.EdgeCount;
                 Array.Fill(sweep.positions, -1, 0, sweep.edgeCount);
                 MergeEndpoints(sweep, first, second);
