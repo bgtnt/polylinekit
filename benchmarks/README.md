@@ -40,18 +40,26 @@ this workload. All competitor gates still fail; shipping Winding remains faster.
 
 The [active-pass experiment](PolylineKit.ScanbeamBenchmarks/ACTIVE-PASSES-RESULTS.md)
 then streams bands without crossings instead of initializing and rechecking
-all active edges. It saves 57% of counted active visits and 18–22% of
+all active edges. It saves 57% of counted active visits and 18â€“22% of
 complete-query time, preserving area/certificate bits. Warm tables take
-11.1–11.3 ms, now faster than Clipper's 12.4–12.5 ms on this workload, but still
-slower than Winding's 9.0–9.5 ms. Preparation plus one table remains slower than
+11.1â€“11.3 ms, now faster than Clipper's 12.4â€“12.5 ms on this workload, but still
+slower than Winding's 9.0â€“9.5 ms. Preparation plus one table remains slower than
 Clipper; all predeclared competitor gates still fail. No shipping change follows.
 
 The [scalar-view experiment](PolylineKit.ScanbeamBenchmarks/SCALAR-VIEW-RESULTS.md)
 then removes per-pair scalar metadata copying while retaining copied geometry.
-It is **2.4–3.7% slower** than the active-pass baseline on complete queries,
+It is **2.4â€“3.7% slower** than the active-pass baseline on complete queries,
 with identical area/certificate bits. The copy stack disappears from sampled
 profiles, illustrating why profile shares alone cannot predict a speedup.
 The option stays off; copied storage remains the preferred sweep variant.
+
+The [filter-first experiment](PolylineKit.ScanbeamBenchmarks/FILTER-FIRST-RESULTS.md)
+then moves certified scalar ordering ahead of common-support detection. It
+removes 527975 support tests and saves 6.6â€“9.5% of complete-query time against
+the same-binary copied baseline. Warm tables take about 10.24 ms with 0 B/op;
+Winding still takes 8.93â€“9.56 ms. The six adoption gates fail. This workload has
+no common-support matches; correctness controls cover them but do not measure
+their additional filter-probe cost. Shipping Winding remains unchanged.
 
 For an area-engine optimization with a predeclared Clipper gate, see the
 [intersection-only protocol](../examples/RegionCoverage/INTERSECTION-PROTOCOL.md),

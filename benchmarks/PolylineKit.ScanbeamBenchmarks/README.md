@@ -90,7 +90,7 @@ unchanged. The new buffer cost and the failed competitor gates are reported.
 
 The [active-pass experiment](ACTIVE-PASSES-RESULTS.md) streams winding values
 through bands without crossings and builds the sorted copy incrementally.
-It removes 57% of counted active visits and saves 18–22% of complete-query
+It removes 57% of counted active visits and saves 18â€“22% of complete-query
 time, retaining area/certificate bits. Warm tables now beat Clipper on this
 workload but still lose to Winding, and the original competitor gates fail.
 The [protocol](ACTIVE-PASSES-PROTOCOL.md) includes a historical-binary control.
@@ -101,11 +101,22 @@ defaults off; there are no additional workspace arrays.
 The [scalar-view experiment](SCALAR-VIEW-RESULTS.md) borrows immutable scalar
 filter metadata while retaining copied geometry and existing scratch arrays.
 It removes the copy seen in sampled profiles but makes complete queries
-2.4–3.7% slower. The [protocol](SCALAR-VIEW-PROTOCOL.md) retains the historical
+2.4â€“3.7% slower. The [protocol](SCALAR-VIEW-PROTOCOL.md) retains the historical
 binary as a separate control. Copied scalar storage remains preferred. Commands
 `check-scalar-view`, `benchmark-scalar-view` and `summarize-scalar-view` use the
 same argument shapes. The eighth option defaults off. Profiling accepts an
 optional `warm-table` or `prepare` scope after the duration.
+
+The [filter-first experiment](FILTER-FIRST-RESULTS.md) tries certified scalar
+order before testing common support. It saves 6.6â€“9.5% of complete-query time
+against the current copied baseline, preserving all previous diagnostics and
+area/certificate bits. Warm tables take about 10.24 ms with no allocations.
+The measured real pairs contain no common-support matches, so the cost of extra
+probes on matching supports remains unmeasured. Winding is still faster and all
+adoption gates fail. See the [proof](FILTER-FIRST-NUMERICS.md) and
+[protocol](FILTER-FIRST-PROTOCOL.md). Commands `check-filter-first`,
+`benchmark-filter-first` and `summarize-filter-first` use the same argument
+shapes. The ninth option defaults off; no shipping code changes.
 
 From the repository root, using PowerShell:
 

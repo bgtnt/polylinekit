@@ -133,11 +133,11 @@ New benchmark output goes under ignored `artifacts/`. The
 allocation measurements. The [performance assessment](docs/performance.md)
 summarizes measured gains, regressions and hardware-specific limits; there is no
 universal speed guarantee.
-The [prepared-sweep experiment](benchmarks/PolylineKit.ScanbeamBenchmarks/PREPARED-SWEEP-RESULTS.md)
-reduces that prototype to about 20 ms per warm table, with another 2.2 ms for
-catalogue preparation. [Direct access to prepared arrays](benchmarks/PolylineKit.ScanbeamBenchmarks/DIRECT-SWEEP-RESULTS.md)
-did not improve it. Current Winding takes 9–10 ms and Clipper 12–13 ms in these
-comparisons; the sweep remains outside the library.
+The latest [experimental double sweep measurements](benchmarks/PolylineKit.ScanbeamBenchmarks/FILTER-FIRST-RESULTS.md)
+take about 10.24 ms per prepared table, with another 2.2 ms for catalogue
+preparation. Current Winding takes 8.93–9.56 ms and Clipper 12.31–12.50 ms on
+that workload. The sweep remains outside the library; its performance on
+common-support-heavy inputs is not established by these measurements.
 
 Historical recognition experiments did not justify developing area-based
 recognition further. Their code, protocols and negative results remain available
