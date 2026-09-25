@@ -9,10 +9,11 @@ internal static class DoubleSweepChecks
 {
     private static int passed, certified, fallback;
 
-    internal static void Run()
+    internal static void Run(bool restrictToCommonY = false, bool cacheEndpointX = false)
     {
         passed = certified = fallback = 0;
-        var engine = new GuardedDoubleSweep();
+        var engine = new GuardedDoubleSweep(restrictToCommonY, cacheEndpointX);
+        GuardedDoubleSweep? uncached = cacheEndpointX ? new GuardedDoubleSweep(restrictToCommonY, false) : null;
         Point2[] a = [new(-4, -3), new(5, 1), new(0, 6)];
         Point2[] b = [new(-3, 2), new(4, -4), new(7, 5)];
         Point2[] contained = [new(-.5, .25), new(.75, .75), new(.25, 1.5)];
@@ -139,7 +140,8 @@ internal static class DoubleSweepChecks
             }
         }
 
-        CheckContract(engine, square);
+        CheckContract(engine, square, uncached);
+        CheckOptimizationControls();
         long[] beforeA = Bits(a), beforeB = Bits(b);
         for (int repeat = 0; repeat < 3; repeat++)
         {
@@ -152,11 +154,75 @@ internal static class DoubleSweepChecks
         Require(fallback > 0, "The controls must also exercise whole-call fallback.");
         Console.WriteLine($"Guarded double sweep: {passed} assertions; {certified} certified and {fallback} fallback calls.");
 
+        void CheckOptimizationControls()
+        {
+            // At common-Y start both sides of the tall contour already span the scanline;
+            // neither starts there. At common-Y end they remain active beyond the query.
+            Point2[] tall = [new(-6, -20), new(8, 0), new(4, 24), new(-8, 4)];
+            Point2[] thin = [new(-2, 1), new(3, 3), new(0, 6)];
+            foreach (PathFillRule rule in Enum.GetValues<PathFillRule>())
+                CheckExact("common-Y spanning-edge initialization", tall, thin, rule, ExactConvex(tall, thin), true);
+            PairVariants("common-Y clipped start and end", tall, thin, ExactConvex(tall, thin));
+
+            Point2[] horizontalBowtie = [new(-4, -4), new(4, 4), new(4, -4), new(-4, 4)];
+            Point2[] upper = [new(-5, 0), new(5, 0), new(5, 2), new(-5, 2)];
+            Point2[] lower = Shift(upper, 0, -2);
+            Point2[] above = [new(-5, 1), new(5, 1), new(5, 3), new(-5, 3)];
+            // The bowtie's two filled widths total 8-2*abs(y). Integrating the
+            // strips gives 12, 12 and 8, including a crossing exactly at each ROI boundary.
+            PairVariants("crossing at common-Y lower boundary", horizontalBowtie, upper, R.From(12));
+            PairVariants("crossing at common-Y upper boundary", horizontalBowtie, lower, R.From(12));
+            PairVariants("crossing below common-Y range", horizontalBowtie, above, R.From(8));
+
+            Point2[] highSquare = Shift(square, 0, 20), highInner = Shift(inner, 0, 20);
+            foreach (int offset in new[] { 0, 40 })
+            {
+                Point2[] outside = Shift(multiway, 0, offset);
+                // Two disjoint closed loops joined by a retraced connector. The multiway
+                // crossing is entirely below/above the other input's Y extent. It contributes
+                // no intersection and need not be processed by the restricted sweep.
+                Point2[] joined = [.. highSquare, highSquare[0], .. outside, outside[0]];
+                PairVariants("multiway outside common-Y range " + offset, joined, highInner, R.From(4));
+            }
+
+            foreach (double bad in new[] { double.PositiveInfinity, double.NaN, Math.BitIncrement(1e100) })
+            {
+                // This final vertex lies outside the overlap's bands. Validation must still
+                // inspect it before either clipped initialization or an empty-range shortcut.
+                Point2[] invalid = [.. tall, new(bad, 1000)];
+                SameOutcome(engine, invalid, thin, PathFillRule.NonZero, uncached);
+                SameOutcome(engine, thin, invalid, PathFillRule.NonZero, uncached);
+                SameOutcome(engine, Shift(square, 100, -100), invalid, PathFillRule.EvenOdd, uncached);
+            }
+
+            Point2[] mutableFirst = (Point2[])a.Clone(), mutableSecond = (Point2[])b.Clone();
+            for (int iteration = 0; iteration < 4; iteration++)
+            {
+                // Keep endpoint Y values, array identities and edge indices unchanged while
+                // changing X between calls. A cache keyed only by edge/Y would be stale here.
+                double moveA = iteration % 2 == 0 ? 0 : 2;
+                double moveB = iteration % 2 == 0 ? .25 : -1.5;
+                for (int i = 0; i < a.Length; i++) mutableFirst[i] = new(a[i].X + moveA, a[i].Y);
+                for (int i = 0; i < b.Length; i++) mutableSecond[i] = new(b[i].X + moveB, b[i].Y);
+                R exact = ExactConvex(mutableFirst, mutableSecond);
+                foreach (PathFillRule rule in Enum.GetValues<PathFillRule>())
+                {
+                    CheckExact("cache generation changed coordinates", mutableFirst, mutableSecond, rule, exact);
+                    long evaluations = engine.XEvaluationCount;
+                    CheckExact("cache generation repeated coordinates", mutableFirst, mutableSecond, rule, exact);
+                    Require(evaluations == engine.XEvaluationCount, "X evaluation diagnostics must reset on each call.");
+                    CheckExact("cache larger edge indexing", Subdivide(mutableFirst), Subdivide(mutableSecond), rule, exact);
+                    CheckExact("cache shorter edge indexing", mutableFirst, mutableSecond, rule, exact);
+                }
+                CheckExact("cache after provisional fallback", huge, narrow, PathFillRule.NonZero, R.From(1e-250) * R.From(2));
+            }
+        }
+
         void PairVariants(string name, Point2[] first, Point2[] second, R exact, bool expectShippingError = false, bool checkFallbackAccuracy = true)
         {
             foreach (var pair in Variants(first, second))
             foreach (PathFillRule rule in Enum.GetValues<PathFillRule>())
-                if (expectShippingError) SameOutcome(engine, pair.A, pair.B, rule);
+                if (expectShippingError) SameOutcome(engine, pair.A, pair.B, rule, uncached);
                 else CheckExact(name, pair.A, pair.B, rule, exact, checkFallbackAccuracy: checkFallbackAccuracy);
         }
 
@@ -164,6 +230,8 @@ internal static class DoubleSweepChecks
         {
             long[] beforeFirst = Bits(first), beforeSecond = Bits(second);
             double actual = engine.MeasureIntersection(first, second, rule);
+            if (uncached is not null)
+                CacheParity(name, engine, actual, uncached, uncached.MeasureIntersection(first, second, rule));
             CheckDiagnostics(name, first, second, rule, actual, mustCertify);
             Require(double.IsFinite(actual) && actual >= 0, name + ": invalid area.");
             Require(beforeFirst.SequenceEqual(Bits(first)) && beforeSecond.SequenceEqual(Bits(second)), name + ": mutated input.");
@@ -178,6 +246,8 @@ internal static class DoubleSweepChecks
         void CheckRoundedOracle(string name, Point2[] first, Point2[] second, PathFillRule rule, double expected)
         {
             double actual = engine.MeasureIntersection(first, second, rule);
+            if (uncached is not null)
+                CacheParity(name, engine, actual, uncached, uncached.MeasureIntersection(first, second, rule));
             CheckDiagnostics(name, first, second, rule, actual, false);
             RoundedNear(name, expected, actual);
             // ExactAreaOracle returned the correctly rounded area. Do not pretend it
@@ -206,15 +276,15 @@ internal static class DoubleSweepChecks
         }
     }
 
-    private static void CheckContract(GuardedDoubleSweep engine, Point2[] square)
+    private static void CheckContract(GuardedDoubleSweep engine, Point2[] square, GuardedDoubleSweep? uncached)
     {
         Point2[]?[] invalid = [null, [], [new(0, 0)], [new(0, 0), new(1, 0)],
             [new(0, 0), new(0, 0), new(0, 0)], [new(0, 0), new(1, 0), new(0, 0)]];
         foreach (PathFillRule rule in Enum.GetValues<PathFillRule>())
         foreach (Point2[]? path in invalid)
         {
-            SameOutcome(engine, path, square, rule);
-            SameOutcome(engine, square, path, rule);
+            SameOutcome(engine, path, square, rule, uncached);
+            SameOutcome(engine, square, path, rule, uncached);
         }
         foreach (double bad in new[] { double.NaN, double.PositiveInfinity, double.NegativeInfinity,
             Math.BitIncrement(1e100), -Math.BitIncrement(1e100) })
@@ -223,22 +293,23 @@ internal static class DoubleSweepChecks
             Point2 p = y ? new(0, bad) : new(bad, 0);
             foreach (Point2[] path in new[] { new[] { p }, new[] { new Point2(0, 0), new Point2(1, 0), p } })
             {
-                SameOutcome(engine, path, square, PathFillRule.NonZero);
-                SameOutcome(engine, square, path, PathFillRule.NonZero);
-                SameOutcome(engine, [new(-1e100, 0), new(0, 0), new(1e100, 0)], path, PathFillRule.NonZero);
+                SameOutcome(engine, path, square, PathFillRule.NonZero, uncached);
+                SameOutcome(engine, square, path, PathFillRule.NonZero, uncached);
+                SameOutcome(engine, [new(-1e100, 0), new(0, 0), new(1e100, 0)], path, PathFillRule.NonZero, uncached);
             }
         }
         foreach (int invalidRule in new[] { -1, 2, int.MaxValue })
         {
-            SameOutcome(engine, square, square, (PathFillRule)invalidRule);
-            SameOutcome(engine, null, null, (PathFillRule)invalidRule);
+            SameOutcome(engine, square, square, (PathFillRule)invalidRule, uncached);
+            SameOutcome(engine, null, null, (PathFillRule)invalidRule, uncached);
         }
-        SameOutcome(engine, [new(-1e100, 0), new(0, 0), new(1e100, 0)], square, PathFillRule.NonZero);
-        SameOutcome(engine, [.. square, .. square], square, PathFillRule.NonZero);
-        SameOutcome(engine, [.. square, .. square], square, PathFillRule.EvenOdd);
+        SameOutcome(engine, [new(-1e100, 0), new(0, 0), new(1e100, 0)], square, PathFillRule.NonZero, uncached);
+        SameOutcome(engine, [.. square, .. square], square, PathFillRule.NonZero, uncached);
+        SameOutcome(engine, [.. square, .. square], square, PathFillRule.EvenOdd, uncached);
     }
 
-    private static void SameOutcome(GuardedDoubleSweep engine, Point2[]? first, Point2[]? second, PathFillRule rule)
+    private static void SameOutcome(GuardedDoubleSweep engine, Point2[]? first, Point2[]? second, PathFillRule rule,
+        GuardedDoubleSweep? uncached = null)
     {
         (double Value, Exception? Error) Capture(Func<double> operation)
         {
@@ -250,6 +321,27 @@ internal static class DoubleSweepChecks
         if (expected.Error is ArgumentException a && actual.Error is ArgumentException b)
             Require(a.ParamName == b.ParamName, "Guarded sweep changed the shipping exception parameter.");
         if (expected.Error is null) RoundedNear("shipping result contract", expected.Value, actual.Value);
+        if (uncached is not null)
+        {
+            var reference = Capture(() => uncached.MeasureIntersection(first!, second!, rule));
+            Require(reference.Error?.GetType() == actual.Error?.GetType(), "Caching changed the exception type.");
+            if (reference.Error is ArgumentException c && actual.Error is ArgumentException d)
+                Require(c.ParamName == d.ParamName, "Caching changed the exception parameter.");
+            CacheParity("input contract cache parity", engine, actual.Value, uncached, reference.Value);
+        }
+    }
+
+    private static void CacheParity(string name, GuardedDoubleSweep cached, double actual, GuardedDoubleSweep uncached, double expected)
+    {
+        Require(BitConverter.DoubleToInt64Bits(actual) == BitConverter.DoubleToInt64Bits(expected), name + ": caching changed the result bits.");
+        Require(BitConverter.DoubleToInt64Bits(cached.LastErrorBound) == BitConverter.DoubleToInt64Bits(uncached.LastErrorBound), name + ": caching changed the certified radius bits.");
+        Require(cached.LastUsedFallback == uncached.LastUsedFallback && cached.LastFallbackReason == uncached.LastFallbackReason,
+            name + ": caching changed the fallback decision or reason.");
+        Require(cached.BandCount == uncached.BandCount && cached.EventCount == uncached.EventCount &&
+            cached.ActiveEdgeVisits == uncached.ActiveEdgeVisits && cached.PeakActiveCount == uncached.PeakActiveCount &&
+            cached.WorkCount == uncached.WorkCount, name + ": caching changed logical sweep diagnostics.");
+        Require(cached.XEvaluationCount + cached.XCacheHitCount == uncached.XEvaluationCount && uncached.XCacheHitCount == 0,
+            name + ": cached X evaluation accounting differs from the uncached operation.");
     }
 
     private static IEnumerable<(Point2[] A, Point2[] B)> Variants(Point2[] first, Point2[] second)

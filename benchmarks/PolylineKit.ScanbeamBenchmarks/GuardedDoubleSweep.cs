@@ -42,15 +42,22 @@ internal sealed class GuardedDoubleSweep
     private Crossing[] crossings = [];
     private int[] active = [], topOrder = [], positions = [], prefixA = [], prefixB = [];
     private Level[] gapStarts = [];
+    private Interval[] cachedX = [];
+    private long[] cachedXLevelBits = [];
+    private int[] cachedXGeneration = [];
+    private int cacheGeneration;
     private int edgeCount, endpointCount, activeCount, crossingCount;
     private bool nonZero;
     private long work;
     private Interval area;
     private readonly Comparison<Endpoint> endpointComparison;
     private readonly Comparison<Crossing> crossingComparison;
+    private readonly bool restrictToCommonY, cacheEndpointX;
 
-    internal GuardedDoubleSweep()
+    internal GuardedDoubleSweep(bool restrictToCommonY = false, bool cacheEndpointX = false)
     {
+        this.restrictToCommonY = restrictToCommonY;
+        this.cacheEndpointX = cacheEndpointX;
         endpointComparison = CompareEndpoints;
         crossingComparison = CompareCrossings;
     }
@@ -64,11 +71,20 @@ internal sealed class GuardedDoubleSweep
     /// <summary>Active entries visited by status maintenance, copying, prefix walks and gap integration.</summary>
     internal long ActiveEdgeVisits { get; private set; }
     internal long WorkCount => work;
+    /// <summary>Actual XAt evaluations, including known endpoints and excluding cache hits.</summary>
+    internal long XEvaluationCount { get; private set; }
+    internal long XCacheHitCount { get; private set; }
 
     internal double MeasureIntersection(Point2[] first, Point2[] second, PathFillRule rule = PathFillRule.NonZero)
     {
         LastUsedFallback = false; LastFallbackReason = null; LastErrorBound = double.NaN;
         BandCount = PeakActiveCount = 0; EventCount = ActiveEdgeVisits = work = 0;
+        XEvaluationCount = XCacheHitCount = 0;
+        if (cacheEndpointX)
+        {
+            if (cacheGeneration == int.MaxValue) { Array.Clear(cachedXGeneration); cacheGeneration = 1; }
+            else cacheGeneration++;
+        }
         activeCount = edgeCount = endpointCount = crossingCount = 0;
         area = Interval.Zero;
         if (rule != PathFillRule.NonZero && rule != PathFillRule.EvenOdd)
@@ -95,26 +111,61 @@ internal sealed class GuardedDoubleSweep
             AppendEdges(first.Length, count, 1);
             Array.Fill(positions, -1, 0, edgeCount);
             endpoints.AsSpan(0, endpointCount).Sort(endpointComparison);
-            int at = 0;
-            while (at < endpointCount)
+            if (restrictToCommonY)
+                SweepCommonY(Math.Max(a.MinY, b.MinY), Math.Min(a.MaxY, b.MaxY));
+            else
             {
-                double y = endpoints[at].Y;
-                int end = at + 1;
-                while (end < endpointCount && endpoints[end].Y == y) end++;
-                // The preceding band has already closed every gap at y. Ended edges leave before new edges
-                // are inserted, so every edge in the next band spans its whole open height interval.
-                for (int i = at; i < end; i++) if (!endpoints[i].Starts) Remove(endpoints[i].Edge);
-                for (int i = at; i < end; i++) if (endpoints[i].Starts) Insert(endpoints[i].Edge, y);
-                if (end < endpointCount && activeCount > 0) ProcessBand(y, endpoints[end].Y);
-                at = end;
+                int at = 0;
+                while (at < endpointCount)
+                {
+                    double y = endpoints[at].Y;
+                    int end = at + 1;
+                    while (end < endpointCount && endpoints[end].Y == y) end++;
+                    // The preceding band has already closed every gap at y. Ended edges leave before new edges
+                    // are inserted, so every edge in the next band spans its whole open height interval.
+                    for (int i = at; i < end; i++) if (!endpoints[i].Starts) Remove(endpoints[i].Edge);
+                    for (int i = at; i < end; i++) if (endpoints[i].Starts) Insert(endpoints[i].Edge, y);
+                    if (end < endpointCount && activeCount > 0) ProcessBand(y, endpoints[end].Y);
+                    at = end;
+                }
+                if (activeCount != 0) throw new Uncertified("unclosed-status");
             }
-            if (activeCount != 0) throw new Uncertified("unclosed-status");
             return CertifiedValue();
         }
         catch (Exception ex) when (FindReason(ex) is not null)
         {
             return Fallback(first, second, rule, FindReason(ex)!);
         }
+    }
+
+    private void SweepCommonY(double lo, double hi)
+    {
+        // A filled closed loop has zero winding outside its Y bounds. Only their shared range can
+        // contribute to intersection, but every edge spanning its lower boundary must be initialized.
+        // Certified insertion orders those edges just above lo; histories/crossings below lo are irrelevant.
+        for (int e = 0; e < edgeCount; e++)
+        {
+            Charge();
+            if (edges[e].Lower.Y <= lo && edges[e].Upper.Y > lo) Insert(e, lo);
+        }
+        int at = 0;
+        while (at < endpointCount && endpoints[at].Y <= lo) at++;
+        double y = lo;
+        while (y < hi)
+        {
+            double next = at < endpointCount ? Math.Min(hi, endpoints[at].Y) : hi;
+            // ProcessBand initializes both winding prefixes from the unbounded left side, where each is zero.
+            if (activeCount > 0) ProcessBand(y, next);
+            if (next == hi) break;
+            int end = at + 1;
+            while (end < endpointCount && endpoints[end].Y == next) end++;
+            for (int i = at; i < end; i++) if (!endpoints[i].Starts) Remove(endpoints[i].Edge);
+            for (int i = at; i < end; i++) if (endpoints[i].Starts) Insert(endpoints[i].Edge, next);
+            at = end;
+            y = next;
+        }
+        // Edges may still span hi. Their winding above hi cannot contribute, so they need not be removed.
+        // The next MeasureIntersection resets activeCount and every live position before using this storage.
     }
 
     private Bounds CopyValidated(Point2[] path, int offset)
@@ -327,9 +378,27 @@ internal sealed class GuardedDoubleSweep
 
     private Interval XAt(int edge, Interval y)
     {
+        long bits = 0;
+        if (cacheEndpointX && y.IsPoint)
+        {
+            bits = BitConverter.DoubleToInt64Bits(y.Lo);
+            if (cachedXGeneration[edge] == cacheGeneration && cachedXLevelBits[edge] == bits)
+            {
+                XCacheHitCount++;
+                return cachedX[edge];
+            }
+        }
+        XEvaluationCount++;
         Edge e = edges[edge];
-        if (TryKnownX(e, y, out double x)) return Interval.Point(x);
-        return Interval.Add(Interval.Point(e.Lower.X), Interval.Multiply(e.Slope, Interval.Subtract(y, Interval.Point(e.Lower.Y))));
+        Interval result = TryKnownX(e, y, out double x) ? Interval.Point(x) :
+            Interval.Add(Interval.Point(e.Lower.X), Interval.Multiply(e.Slope, Interval.Subtract(y, Interval.Point(e.Lower.Y))));
+        // Cache only successful, requested evaluations. No eager computation can introduce a new fallback;
+        // the exact level bits and call generation prevent reuse across changed input or endpoint levels.
+        if (cacheEndpointX && y.IsPoint)
+        {
+            cachedX[edge] = result; cachedXLevelBits[edge] = bits; cachedXGeneration[edge] = cacheGeneration;
+        }
+        return result;
     }
 
     private static bool TryKnownX(Edge edge, Interval y, out double x)
@@ -380,6 +449,10 @@ internal sealed class GuardedDoubleSweep
         vertices = new Point2[capacity]; edges = new Edge[capacity]; endpoints = new Endpoint[2 * capacity];
         active = new int[capacity]; topOrder = new int[capacity]; positions = new int[capacity];
         prefixA = new int[capacity]; prefixB = new int[capacity]; gapStarts = new Level[capacity];
+        if (cacheEndpointX)
+        {
+            cachedX = new Interval[capacity]; cachedXLevelBits = new long[capacity]; cachedXGeneration = new int[capacity];
+        }
     }
 
     private sealed class Uncertified(string reason) : Exception(reason)

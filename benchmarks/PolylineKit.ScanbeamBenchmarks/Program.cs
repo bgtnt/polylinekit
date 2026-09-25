@@ -75,8 +75,22 @@ internal static partial class Program
             case "summarize-double" when args.Length == 2:
                 SummarizeDouble(args[1]);
                 return 0;
+            case "check-double-ablation" when args.Length == 2:
+                foreach (bool commonY in new[] { false, true })
+                foreach (bool cache in new[] { false, true }) DoubleSweepChecks.Run(commonY, cache);
+                ValidateAblation(LoadReal(), args[1]);
+                return 0;
+            case "benchmark-double-ablation" when args.Length == 4:
+                RunAblation(args[1], int.Parse(args[2]), args[3]);
+                return 0;
+            case "summarize-double-ablation" when args.Length == 2:
+                SummarizeAblation(args[1]);
+                return 0;
+            case "profile-double-ablation" when args.Length == 3:
+                ProfileAblation(args[1], int.Parse(args[2]));
+                return 0;
             default:
-                Console.Error.WriteLine("check | check-wide | check-real|check-double <directory> | benchmark[-real|-wide|-double] <directory> <run 1..3> <revision> | summarize[-real|-wide|-double] <directory> | inspect <file.json>");
+                Console.Error.WriteLine("check | check-wide | check-real|check-double|check-double-ablation <directory> | benchmark[-real|-wide|-double|-double-ablation] <directory> <run 1..3> <revision> | summarize[-real|-wide|-double|-double-ablation] <directory> | profile-double-ablation <method> <seconds1..60> | inspect <file.json>");
                 return 2;
         }
     }
