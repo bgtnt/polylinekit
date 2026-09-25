@@ -8,7 +8,7 @@ internal static class PreparedSweepChecks
     private static int passed;
     private static GuardedDoubleSweep? copiedReference;
 
-    internal static void Run(bool directPreparedEdges = false, bool optimizeAreaArithmetic = false, bool coalesceGaps = false, bool optimizeActivePasses = false, bool borrowPreparedScalars = false)
+    internal static void Run(bool directPreparedEdges = false, bool optimizeAreaArithmetic = false, bool coalesceGaps = false, bool optimizeActivePasses = false, bool borrowPreparedScalars = false, bool filterBeforeSupport = false)
     {
         passed = 0;
         copiedReference = null;
@@ -77,9 +77,9 @@ internal static class PreparedSweepChecks
         foreach (bool cache in new[] { false, true })
         foreach (bool filter in new[] { false, true })
         {
-            var raw = new GuardedDoubleSweep(roi, cache, filter, coalesceGaps: coalesceGaps, optimizeActivePasses: optimizeActivePasses, borrowPreparedScalars: borrowPreparedScalars);
-            var prepared = new GuardedDoubleSweep(roi, cache, filter, directPreparedEdges, optimizeAreaArithmetic, coalesceGaps, optimizeActivePasses, borrowPreparedScalars);
-            copiedReference = directPreparedEdges || optimizeAreaArithmetic ? new GuardedDoubleSweep(roi, cache, filter, coalesceGaps: coalesceGaps, optimizeActivePasses: optimizeActivePasses, borrowPreparedScalars: borrowPreparedScalars) : null;
+            var raw = new GuardedDoubleSweep(roi, cache, filter, coalesceGaps: coalesceGaps, optimizeActivePasses: optimizeActivePasses, borrowPreparedScalars: borrowPreparedScalars, filterBeforeSupport: filterBeforeSupport);
+            var prepared = new GuardedDoubleSweep(roi, cache, filter, directPreparedEdges, optimizeAreaArithmetic, coalesceGaps, optimizeActivePasses, borrowPreparedScalars, filterBeforeSupport);
+            copiedReference = directPreparedEdges || optimizeAreaArithmetic ? new GuardedDoubleSweep(roi, cache, filter, coalesceGaps: coalesceGaps, optimizeActivePasses: optimizeActivePasses, borrowPreparedScalars: borrowPreparedScalars, filterBeforeSupport: filterBeforeSupport) : null;
             foreach (var pair in pairs)
             foreach (PathFillRule rule in Enum.GetValues<PathFillRule>())
             {
@@ -118,7 +118,7 @@ internal static class PreparedSweepChecks
             Compare("disjoint uncertain slopes", raw, prepared, pairs[10].First, pairs[10].Second, PathFillRule.NonZero);
             Require(!prepared.LastUsedFallback && prepared.LastErrorBound == 0,
                 "Slope preparation uncertainty must not override the exact disjoint-bounds result.");
-            if (directPreparedEdges) CheckMixedCalls(roi, cache, filter, optimizeAreaArithmetic, coalesceGaps, optimizeActivePasses, borrowPreparedScalars);
+            if (directPreparedEdges) CheckMixedCalls(roi, cache, filter, optimizeAreaArithmetic, coalesceGaps, optimizeActivePasses, borrowPreparedScalars, filterBeforeSupport);
         }
 
         // Mutate the actual source arrays after preparing, including those needed for whole-call
@@ -129,9 +129,9 @@ internal static class PreparedSweepChecks
             Poison(pair.First.Source);
             Poison(pair.Second.Source);
         }
-        var rawAfterMutation = new GuardedDoubleSweep(true, true, true, coalesceGaps: coalesceGaps, optimizeActivePasses: optimizeActivePasses, borrowPreparedScalars: borrowPreparedScalars);
-        var preparedAfterMutation = new GuardedDoubleSweep(true, true, true, directPreparedEdges, optimizeAreaArithmetic, coalesceGaps, optimizeActivePasses, borrowPreparedScalars);
-        copiedReference = directPreparedEdges || optimizeAreaArithmetic ? new GuardedDoubleSweep(true, true, true, coalesceGaps: coalesceGaps, optimizeActivePasses: optimizeActivePasses, borrowPreparedScalars: borrowPreparedScalars) : null;
+        var rawAfterMutation = new GuardedDoubleSweep(true, true, true, coalesceGaps: coalesceGaps, optimizeActivePasses: optimizeActivePasses, borrowPreparedScalars: borrowPreparedScalars, filterBeforeSupport: filterBeforeSupport);
+        var preparedAfterMutation = new GuardedDoubleSweep(true, true, true, directPreparedEdges, optimizeAreaArithmetic, coalesceGaps, optimizeActivePasses, borrowPreparedScalars, filterBeforeSupport);
+        copiedReference = directPreparedEdges || optimizeAreaArithmetic ? new GuardedDoubleSweep(true, true, true, coalesceGaps: coalesceGaps, optimizeActivePasses: optimizeActivePasses, borrowPreparedScalars: borrowPreparedScalars, filterBeforeSupport: filterBeforeSupport) : null;
         foreach (var pair in pairs)
         foreach (PathFillRule rule in Enum.GetValues<PathFillRule>())
         {
@@ -148,11 +148,11 @@ internal static class PreparedSweepChecks
             var pair = pairs[(i / 2) % 8];
             Snapshot a = reverse ? pair.Second : pair.First, b = reverse ? pair.First : pair.Second;
             PathFillRule rule = (i & 2) == 0 ? PathFillRule.NonZero : PathFillRule.EvenOdd;
-            var raw = new GuardedDoubleSweep((i & 4) != 0, (i & 8) != 0, (i & 16) != 0, coalesceGaps: coalesceGaps, optimizeActivePasses: optimizeActivePasses, borrowPreparedScalars: borrowPreparedScalars);
-            var prepared = new GuardedDoubleSweep((i & 4) != 0, (i & 8) != 0, (i & 16) != 0, directPreparedEdges, optimizeAreaArithmetic, coalesceGaps, optimizeActivePasses, borrowPreparedScalars);
+            var raw = new GuardedDoubleSweep((i & 4) != 0, (i & 8) != 0, (i & 16) != 0, coalesceGaps: coalesceGaps, optimizeActivePasses: optimizeActivePasses, borrowPreparedScalars: borrowPreparedScalars, filterBeforeSupport: filterBeforeSupport);
+            var prepared = new GuardedDoubleSweep((i & 4) != 0, (i & 8) != 0, (i & 16) != 0, directPreparedEdges, optimizeAreaArithmetic, coalesceGaps, optimizeActivePasses, borrowPreparedScalars, filterBeforeSupport);
             Outcome expected = Capture(raw, () => raw.MeasureIntersection(a.Original, b.Original, rule));
             Outcome actual = Capture(prepared, () => prepared.MeasureIntersection(a.Prepared, b.Prepared, rule));
-            var copied = new GuardedDoubleSweep((i & 4) != 0, (i & 8) != 0, (i & 16) != 0, coalesceGaps: coalesceGaps, optimizeActivePasses: optimizeActivePasses, borrowPreparedScalars: borrowPreparedScalars);
+            var copied = new GuardedDoubleSweep((i & 4) != 0, (i & 8) != 0, (i & 16) != 0, coalesceGaps: coalesceGaps, optimizeActivePasses: optimizeActivePasses, borrowPreparedScalars: borrowPreparedScalars, filterBeforeSupport: filterBeforeSupport);
             concurrent[i] = (expected, actual, directPreparedEdges || optimizeAreaArithmetic
                 ? Capture(copied, () => copied.MeasureIntersection(a.Prepared, b.Prepared, rule)) : expected);
         });
@@ -162,16 +162,16 @@ internal static class PreparedSweepChecks
             for (int i = 0; i < concurrent.Length; i++)
                 Require(concurrent[i].Copied == concurrent[i].Actual, "Direct shared snapshot differs from copied execution at " + i + ".");
 
-        Console.WriteLine($"{(borrowPreparedScalars ? "Scalar-view " : "")}{(optimizeActivePasses ? "Active-optimized " : "")}{(coalesceGaps ? "Coalesced " : "")}{(optimizeAreaArithmetic ? "Area-optimized " : "")}{(directPreparedEdges ? "Direct prepared" : "Prepared")} double sweep: {passed} snapshot, reuse, input-contract and all-diagnostics parity controls.");
+        Console.WriteLine($"{(filterBeforeSupport ? "Filter-first " : "")}{(borrowPreparedScalars ? "Scalar-view " : "")}{(optimizeActivePasses ? "Active-optimized " : "")}{(coalesceGaps ? "Coalesced " : "")}{(optimizeAreaArithmetic ? "Area-optimized " : "")}{(directPreparedEdges ? "Direct prepared" : "Prepared")} double sweep: {passed} snapshot, reuse, input-contract and all-diagnostics parity controls.");
     }
 
-    private static void CheckMixedCalls(bool roi, bool cache, bool filter, bool optimizeAreaArithmetic, bool coalesceGaps, bool optimizeActivePasses, bool borrowPreparedScalars)
+    private static void CheckMixedCalls(bool roi, bool cache, bool filter, bool optimizeAreaArithmetic, bool coalesceGaps, bool optimizeActivePasses, bool borrowPreparedScalars, bool filterBeforeSupport)
     {
         // The same direct-enabled instance alternates both overloads. Its current query must
         // determine geometry and loop membership, regardless of the previous call's backing data.
-        var raw = new GuardedDoubleSweep(roi, cache, filter, coalesceGaps: coalesceGaps, optimizeActivePasses: optimizeActivePasses, borrowPreparedScalars: borrowPreparedScalars);
-        var copied = new GuardedDoubleSweep(roi, cache, filter, coalesceGaps: coalesceGaps, optimizeActivePasses: optimizeActivePasses, borrowPreparedScalars: borrowPreparedScalars);
-        var direct = new GuardedDoubleSweep(roi, cache, filter, true, optimizeAreaArithmetic, coalesceGaps, optimizeActivePasses, borrowPreparedScalars);
+        var raw = new GuardedDoubleSweep(roi, cache, filter, coalesceGaps: coalesceGaps, optimizeActivePasses: optimizeActivePasses, borrowPreparedScalars: borrowPreparedScalars, filterBeforeSupport: filterBeforeSupport);
+        var copied = new GuardedDoubleSweep(roi, cache, filter, coalesceGaps: coalesceGaps, optimizeActivePasses: optimizeActivePasses, borrowPreparedScalars: borrowPreparedScalars, filterBeforeSupport: filterBeforeSupport);
+        var direct = new GuardedDoubleSweep(roi, cache, filter, true, optimizeAreaArithmetic, coalesceGaps, optimizeActivePasses, borrowPreparedScalars, filterBeforeSupport);
         var a = new Snapshot([new(-4, -3), new(5, 1), new(0, 6)]);
         var b = new Snapshot([new(-3, 2), new(4, -4), new(7, 5)]);
         var horizontalHeavy = new Snapshot([new(-2, -2), new(-1, -2), new(0, -2), new(2, -2),
@@ -290,7 +290,8 @@ internal static class PreparedSweepChecks
         bool Fallback, string? FallbackReason, long RadiusBits, int Bands, long Events, int PeakActive,
         long ActiveVisits, long Work, long XEvaluations, long XCacheHits, long FilterAttempts, long FilterAccepted, long FilterInterval,
         long GapContributions, long GapIntegrations, long GapMerged, long HorizontalDifferences,
-        long NoCrossingBands, long CrossingBands, long InitializationVisits, long TopOrderWrites, long VerificationVisits);
+        long NoCrossingBands, long CrossingBands, long InitializationVisits, long TopOrderWrites, long VerificationVisits,
+        long EndpointSupportTests, long EndpointSupportMatches, long ScalarProbes);
 
     private static Outcome Capture(GuardedDoubleSweep engine, Func<double> operation)
     {
@@ -303,7 +304,8 @@ internal static class PreparedSweepChecks
             engine.BandCount, engine.EventCount, engine.PeakActiveCount, engine.ActiveEdgeVisits, engine.WorkCount,
             engine.XEvaluationCount, engine.XCacheHitCount, engine.FilterAttemptCount, engine.FilterAcceptedCount, engine.FilterIntervalCount,
             engine.GapContributionCount, engine.GapIntegrationCount, engine.GapMergedCount, engine.HorizontalDifferenceEvaluationCount,
-            engine.NoCrossingBandCount, engine.CrossingBandCount, engine.BandInitializationVisits, engine.TopOrderWrites, engine.TopOrderVerificationVisits);
+            engine.NoCrossingBandCount, engine.CrossingBandCount, engine.BandInitializationVisits, engine.TopOrderWrites, engine.TopOrderVerificationVisits,
+            engine.EndpointSupportTestCount, engine.EndpointSupportMatchCount, engine.ScalarProbeCount);
     }
 
     private static void Require(bool condition, string message)

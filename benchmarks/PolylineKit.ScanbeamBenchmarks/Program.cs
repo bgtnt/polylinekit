@@ -194,8 +194,25 @@ internal static partial class Program
             case "summarize-scalar-view" when args.Length == 2:
                 SummarizeAblation(args[1], scalarViewExperiment: true);
                 return 0;
+            case "check-filter-first" when args.Length == 2:
+                ScalarOrderFilterChecks.Run();
+                FilterFirstChecks.Run();
+                PreparedSweepChecks.Run(optimizeAreaArithmetic: true, coalesceGaps: true, optimizeActivePasses: true, filterBeforeSupport: true);
+                PreparedSweepChecks.Run(directPreparedEdges: true, optimizeAreaArithmetic: true, coalesceGaps: true, optimizeActivePasses: true, filterBeforeSupport: true);
+                foreach (bool commonY in new[] { false, true })
+                foreach (bool cache in new[] { false, true }) DoubleSweepChecks.Run(commonY, cache, true,
+                    preparedPaths: true, optimizeAreaArithmetic: true, coalesceGaps: true, optimizeActivePasses: true, filterBeforeSupport: true);
+                ValidateAblation(LoadReal(), args[1], filterFirstExperiment: true);
+                WritePreparedMetadata(LoadReal(), args[1]);
+                return 0;
+            case "benchmark-filter-first" when args.Length == 4:
+                RunAblation(args[1], int.Parse(args[2]), args[3], filterFirstExperiment: true);
+                return 0;
+            case "summarize-filter-first" when args.Length == 2:
+                SummarizeAblation(args[1], filterFirstExperiment: true);
+                return 0;
             default:
-                Console.Error.WriteLine("check | check-wide | check-real|check-double|check-double-ablation|check-scalar-filter|check-prepared-sweep|check-direct-sweep|check-area-arithmetic|check-gap-coalescing|check-active-passes|check-scalar-view <directory> | benchmark[-real|-wide|-double|-double-ablation|-scalar-filter|-prepared-sweep|-direct-sweep|-area-arithmetic|-gap-coalescing|-active-passes|-scalar-view] <directory> <run 1..3> <revision> | summarize[-real|-wide|-double|-double-ablation|-scalar-filter|-prepared-sweep|-direct-sweep|-area-arithmetic|-gap-coalescing|-active-passes|-scalar-view] <directory> | profile-double-ablation <method> <seconds1..60> [warm-table|prepare] | inspect <file.json>");
+                Console.Error.WriteLine("check | check-wide | check-real|check-double|check-double-ablation|check-scalar-filter|check-prepared-sweep|check-direct-sweep|check-area-arithmetic|check-gap-coalescing|check-active-passes|check-scalar-view|check-filter-first <directory> | benchmark[-real|-wide|-double|-double-ablation|-scalar-filter|-prepared-sweep|-direct-sweep|-area-arithmetic|-gap-coalescing|-active-passes|-scalar-view|-filter-first] <directory> <run 1..3> <revision> | summarize[-real|-wide|-double|-double-ablation|-scalar-filter|-prepared-sweep|-direct-sweep|-area-arithmetic|-gap-coalescing|-active-passes|-scalar-view|-filter-first] <directory> | profile-double-ablation <method> <seconds1..60> [warm-table|prepare] | inspect <file.json>");
                 return 2;
         }
     }

@@ -53,11 +53,12 @@ internal sealed partial class GuardedDoubleSweep
     private Interval area;
     private readonly Comparison<Endpoint> endpointComparison;
     private readonly Comparison<Crossing> crossingComparison;
-    private readonly bool restrictToCommonY, cacheEndpointX, scalarOrderFilter;
+    private readonly bool restrictToCommonY, cacheEndpointX, scalarOrderFilter, filterBeforeSupport;
 
     internal GuardedDoubleSweep(bool restrictToCommonY = false, bool cacheEndpointX = false,
         bool scalarOrderFilter = false, bool directPreparedEdges = false, bool optimizeAreaArithmetic = false,
-        bool coalesceGaps = false, bool optimizeActivePasses = false, bool borrowPreparedScalars = false)
+        bool coalesceGaps = false, bool optimizeActivePasses = false, bool borrowPreparedScalars = false,
+        bool filterBeforeSupport = false)
     {
         this.restrictToCommonY = restrictToCommonY;
         this.cacheEndpointX = cacheEndpointX;
@@ -67,6 +68,7 @@ internal sealed partial class GuardedDoubleSweep
         this.coalesceGaps = coalesceGaps;
         this.optimizeActivePasses = optimizeActivePasses;
         this.borrowPreparedScalars = borrowPreparedScalars;
+        this.filterBeforeSupport = filterBeforeSupport;
         endpointComparison = CompareEndpoints;
         crossingComparison = CompareCrossings;
     }
@@ -86,6 +88,14 @@ internal sealed partial class GuardedDoubleSweep
     internal long FilterAttemptCount { get; private set; }
     internal long FilterAcceptedCount { get; private set; }
     internal long FilterIntervalCount { get; private set; }
+    private long endpointComparisonCount;
+    /// <summary>Actual support tests, derived without a differential hot-path counter increment.</summary>
+    internal long EndpointSupportTestCount => endpointComparisonCount -
+        (scalarOrderFilter && filterBeforeSupport ? FilterAcceptedCount : 0);
+    internal long EndpointSupportMatchCount { get; private set; }
+    /// <summary>Actual filter calls, including inconclusive probes before a support shortcut.</summary>
+    internal long ScalarProbeCount => !scalarOrderFilter ? 0 :
+        filterBeforeSupport ? endpointComparisonCount : FilterAttemptCount;
 
     internal double MeasureIntersection(Point2[] first, Point2[] second, PathFillRule rule = PathFillRule.NonZero)
     {
@@ -132,6 +142,7 @@ internal sealed partial class GuardedDoubleSweep
         BandCount = PeakActiveCount = 0; EventCount = ActiveEdgeVisits = work = 0;
         XEvaluationCount = XCacheHitCount = 0;
         FilterAttemptCount = FilterAcceptedCount = FilterIntervalCount = 0;
+        endpointComparisonCount = EndpointSupportMatchCount = 0;
         if (cacheEndpointX)
         {
             if (cacheGeneration == int.MaxValue) { Array.Clear(cachedXGeneration); cacheGeneration = 1; }
@@ -336,16 +347,34 @@ internal sealed partial class GuardedDoubleSweep
     {
         Charge();
         if (left == right) return 0;
-        if (SameSupport(left, right)) return left.CompareTo(right);
-        if (scalarOrderFilter)
+        // The same comparison and support-match streams increment in both variants. Derive
+        // operation totals from them so the optimization cannot save new counter increments.
+        endpointComparisonCount++;
+        if (scalarOrderFilter && filterBeforeSupport)
         {
-            FilterAttemptCount++;
             if (ScalarOrderFilter.TryOrder(in ScalarEdgeAt(left), in ScalarEdgeAt(right), y, out int certifiedOrder))
             {
-                FilterAcceptedCount++;
+                // Strict exact order excludes common support. Preserve the original logical counters,
+                // which count only comparisons that would pass the common-support shortcut.
+                FilterAttemptCount++; FilterAcceptedCount++;
                 return certifiedOrder;
             }
-            FilterIntervalCount++;
+            if (SameSupport(left, right)) { EndpointSupportMatchCount++; return left.CompareTo(right); }
+            FilterAttemptCount++; FilterIntervalCount++;
+        }
+        else
+        {
+            if (SameSupport(left, right)) { EndpointSupportMatchCount++; return left.CompareTo(right); }
+            if (scalarOrderFilter)
+            {
+                FilterAttemptCount++;
+                if (ScalarOrderFilter.TryOrder(in ScalarEdgeAt(left), in ScalarEdgeAt(right), y, out int certifiedOrder))
+                {
+                    FilterAcceptedCount++;
+                    return certifiedOrder;
+                }
+                FilterIntervalCount++;
+            }
         }
         Interval a = XAt(left, Interval.Point(y)), b = XAt(right, Interval.Point(y));
         if (a.Hi < b.Lo) return -1;
