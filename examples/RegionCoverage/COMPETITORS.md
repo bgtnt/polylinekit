@@ -88,3 +88,26 @@ cross-language timing evidence. Dynamic
 are inserted, removed or moved. Those capabilities do not automatically benefit
 this immutable catalogue. All tested indexes must return the same complete
 candidate set, including boundary contacts, and charge construction separately.
+
+## Dynamic simplification
+
+Replacing adjacent segments AB and BC by AC changes the index after each accepted
+proposal. Dynamic deletion/insertion can then avoid rebuilding a static index.
+The private RtTools implementation was reviewed for ideas: deletion shrinks
+envelopes, condenses underfilled pages through reinsertion and collapses the root
+when appropriate. It has not been benchmarked here; static catalogue results
+provide no evidence against that implementation.
+
+A proposed shortcut should be queried before modifying the index, excluding the
+two replaced edge IDs and explicitly handling allowed adjacent endpoint contacts.
+After acceptance, verify both old removals before inserting AC. Preserve unique
+edge identities and old bounds; changing coordinates before removing their old
+entry can leave stale candidates. Broad-phase queries must retain contacts and
+zero-extent segment boxes, followed by the same exact intersection decisions.
+
+A focused dynamic AABB/BVH or a static packed index with tombstones, a delta set
+and periodic rebuilding could fit this narrower task. None is automatically
+faster. Compare the entire identical proposal/update sequence: accepted removals,
+candidate counts, exact predicates, build/update/query costs and allocations.
+RtTools can remain a local private baseline without becoming a public dependency.
+That experiment is separate from the prepared region coverage measured here.

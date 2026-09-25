@@ -18,6 +18,9 @@ preparation. The current library still computes all
 FilledRegions areas per comparison; this example does not pretend it has a
 prepared intersection-only core. No public library API changes are required.
 
+The [measured result](RESULTS.md) reports three independent processes on the
+frozen population, with all-row values and binary/input hashes in its evidence manifest.
+
 ## Fixed workload
 
 The [data protocol](data/PROTOCOL.md) specifies all North Carolina counties and
@@ -152,3 +155,11 @@ Reports use the median of process medians and their range. Managed allocation
 counts exclude retained memory, native WPF allocations and output matrices.
 They must not be described as total-memory measurements. No statistical
 significance or universal speed claim follows from this bounded experiment.
+
+## A different workload: changing polylines
+
+Successive simplification changes the indexed segments. A dynamic R-tree with
+deletion/insertion, including the author's private RtTools implementation, is a
+serious candidate there. The present static region-catalogue measurements do
+not assess it. See the [dynamic-index distinction](COMPETITORS.md#dynamic-simplification)
+before extrapolating these results to a simplifier.
