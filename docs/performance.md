@@ -42,6 +42,30 @@ implementations. Clipper uses quantized coordinates and produces contours;
 an area-only result is not interchangeable with that output. Warm measurements
 exclude initialization and retained storage.
 
+## Measured real contours
+
+On the [nine-ring Census workload](../benchmarks/PolylineKit.AreaBenchmarks/README.md#current-real-contour-result-primary-gate-passed),
+revision `eea1671c6288ea444e98cddcca9ee6d18669124b` passed the unchanged
+Public/ClosedPath ≤1.10 criterion for both complete-batch fills. Every individual
+ring/fill ratio also passed (0.9954–1.0152). The run used .NET 10.0.12 on Windows
+x64, with three sequential processes and 1,200 samples.
+
+| Complete nine-ring batch | Public | ClosedPath | Clipper incl. preparation | Clipper preloaded |
+|---|---:|---:|---:|---:|
+| NonZero | 1.471 ms | 1.468 ms | 2.206 ms | 1.915 ms |
+| EvenOdd | 1.466 ms | 1.467 ms | 2.170 ms | 1.891 ms |
+
+These are medians of three process medians. Public and ClosedPath allocated
+**0 B/op in every warm sample** under the current cache policy. Public took about
+the same time as ClosedPath; Clipper-full took 1.48–1.50× as long on this
+workload. Clipper's output/grid contract differs, and this population exercises
+the general engine, not the integer specialization. The detailed report includes
+process ranges, all ring ratios, allocation counts and hashes.
+
+The earlier EvenOdd batch discrepancy did not recur. This is not evidence that
+the cache change fixed it: the unchanged Clipper binary also ran faster in the
+new session. The earlier failed measurement remains documented below.
+
 ## First use and retained workspace
 
 Each active call owns its working storage; nested calls receive separate
@@ -80,7 +104,7 @@ the cache limit prevents idle retention, not the large working set itself.
 
 ## Supporting measurements
 
-The [fresh real-contour benchmark](../benchmarks/PolylineKit.AreaBenchmarks/README.md#recorded-real-contour-result-primary-gate-failed)
+The [earlier real-contour measurement](../benchmarks/PolylineKit.AreaBenchmarks/README.md#recorded-real-contour-result-primary-gate-failed)
 at `0e53b0713b2d0c6ebd0b7603125010defccb81ed` **failed its primary preservation gate**:
 the EvenOdd complete batch was 23.19% slower than ClosedPath, although all 18 individual
 ring/fill ratios stayed within 10%. The recorded ranges, allocations, correctness checks
