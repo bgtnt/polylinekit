@@ -24,7 +24,8 @@ internal static class HybridChecks
 
         Require(HybridClosedArea.Select(grid).Backend == "IntegerScanbeam", "Dense control must exercise integer selection.");
         Require(HybridClosedArea.Select(fewLevelSparse).Backend == "Winding", "Few Y levels must not alone select the integer sweep.");
-        Require(HybridClosedArea.Select(repeated).Backend == "Winding", "Repeated support must not count as proper sampled crossings.");
+        Require(HybridClosedArea.Select(repeated).Backend == "IntegerScanbeam",
+            "Repeated nonzero sample segments must select the integer sweep when full admission constraints hold.");
         Require(HybridClosedArea.Select(manyLevels).Backend == "Winding", "Many Y levels must stay with Winding.");
         Require(HybridClosedArea.Select(Inputs.Grid(63, 17)).Backend == "Winding" &&
             HybridClosedArea.Select(Inputs.Grid(1025, 17)).Backend == "Winding", "Vertex dispatch bounds are exclusive outside 64..1024.");
@@ -34,6 +35,36 @@ internal static class HybridChecks
             HybridClosedArea.Select(negativeBoundary).Backend == "IntegerScanbeam", "Exact +/-2048 limits must be eligible.");
         Require(HybridClosedArea.Select(grid.Select(p => new Point2(p.X + 2042, p.Y)).ToArray()).Backend == "Winding",
             "A coordinate beyond 2048 must not enter the Int64 dispatch domain.");
+        (string Name, Point2[] Points)[] unsampledInvalid = new[]
+            { double.NaN, double.PositiveInfinity, 2049, .125 }.Select(value =>
+            {
+                Point2[] points = grid.ToArray();
+                // With 128 vertices, sampled edges are 0..1, 8..9, ... . Index 2 is unseen by the
+                // cheap preliminary classifier, so only full admission can catch this coordinate.
+                points[2] = new Point2(value, points[2].Y);
+                return ($"unsampled coordinate {value:R}", points);
+            }).ToArray();
+        foreach (var item in unsampledInvalid)
+        {
+            HybridSelection selection = HybridClosedArea.Select(item.Points);
+            Require(selection.Backend == "Winding" && selection.Reason == "integer-domain" &&
+                selection.SampleCrossings == HybridClosedArea.Select(grid).SampleCrossings,
+                item.Name + ": a positive preliminary sample bypassed full coordinate admission.");
+        }
+        Point2[] unsampledLevels = grid.ToArray();
+        foreach (int index in Enumerable.Range(0, 128).Where(i => i % 8 >= 2).Take(20))
+            unsampledLevels[index] = new Point2(unsampledLevels[index].X, 100 + index);
+        HybridSelection manyUnsampled = HybridClosedArea.Select(unsampledLevels);
+        Require(manyUnsampled.Backend == "Winding" && manyUnsampled.Reason == "y-levels" &&
+            manyUnsampled.SampleCrossings == HybridClosedArea.Select(grid).SampleCrossings,
+            "Positive sampled crossings bypassed the full Y-level limit.");
+        Point2[] sparseAfterSample = Enumerable.Repeat(new Point2(0, 0), 128).ToArray();
+        for (int sample = 0; sample < 16; sample++) sparseAfterSample[sample * 8 + 1] = new Point2(2, 0);
+        sparseAfterSample[2] = new Point2(0, 1);
+        HybridSelection sparseAdmission = HybridClosedArea.Select(sparseAfterSample);
+        Require(sparseAdmission.Backend == "Winding" && sparseAdmission.Reason == "sparse-active" &&
+            sparseAdmission.SampleCoincidences >= 8,
+            "Repeated horizontal sampled segments bypassed the full active-span admission.");
 
         // Selected paths compare against the identical forced backend, including every output bit.
         // Rejected paths compare against the public Winding contract, including its exception parameter.
@@ -50,7 +81,9 @@ internal static class HybridChecks
             ("NaN", [new(0, 0), new(double.NaN, 1), new(1, 0)]),
             ("infinite", [new(0, 0), new(1, double.PositiveInfinity), new(1, 0)]),
             ("too large", [new(0, 0), new(Math.BitIncrement(1e100), 1), new(1, 0)]),
-            ("maximum magnitude", Rectangle(-1e100, -1, 1e100, 1))
+            ("maximum magnitude", Rectangle(-1e100, -1, 1e100, 1)),
+            ("unsampled Y levels", unsampledLevels), ("sparse after positive sample", sparseAfterSample),
+            .. unsampledInvalid.Select(item => (item.Name, (Point2[]?)item.Points))
         ];
         foreach (PathFillRule rule in Enum.GetValues<PathFillRule>())
         {
@@ -73,6 +106,24 @@ internal static class HybridChecks
                 Outcome actual = Capture(() => hybrid.Measure(path!, rule));
                 Outcome fresh = Capture(() => new HybridClosedArea().Measure(path!, rule));
                 Require(actual == fresh, "Alternating hybrid routes retained previous state.");
+                checks++;
+            }
+            // Edge sampling can choose another route after changing the start vertex. The area contract
+            // must survive that change; no claim is made that route choice is invariant under rotation.
+            foreach (Point2[] variant in new[]
+            {
+                grid.Reverse().ToArray(), grid.Skip(3).Concat(grid.Take(3)).ToArray(),
+                grid.Select(p => new Point2(-p.Y, p.X)).ToArray(),
+                grid.Select(p => new Point2(p.Y, p.X)).ToArray()
+            })
+            {
+                HybridSelection route = HybridClosedArea.Select(variant);
+                double actual = hybrid.Measure(variant, rule);
+                double forced = route.Backend == "IntegerScanbeam" ? integer.Measure(variant, rule) : Winding(variant, rule);
+                double original = Winding(grid, rule);
+                Require(BitConverter.DoubleToInt64Bits(actual) == BitConverter.DoubleToInt64Bits(forced) &&
+                    Math.Abs(actual - original) <= 1e-10 * Math.Max(1, Math.Abs(original)),
+                    "Rotation, reversal or cyclic start changed the filled-area result.");
                 checks++;
             }
         }

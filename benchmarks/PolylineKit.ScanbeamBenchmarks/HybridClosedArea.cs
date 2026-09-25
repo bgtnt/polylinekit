@@ -4,7 +4,8 @@ namespace PolylineKit.ScanbeamBenchmarks;
 
 /// <summary>Structural selection diagnostics, computed from coordinates without timing or fixture identity.</summary>
 internal readonly record struct HybridSelection(string Backend, string Reason, int SuppliedVertices,
-    int DistinctYLevels, int NonhorizontalEdges, long ActiveBandSpans, int BandCount, int SampleCrossings);
+    int DistinctYLevels, int NonhorizontalEdges, long ActiveBandSpans, int BandCount, int SampleCrossings,
+    int SampleCoincidences = 0);
 
 /// <summary>Experimental scalar-area dispatcher between shipping Winding and a bounded integer sweep.</summary>
 /// <remarks>
@@ -17,7 +18,7 @@ internal sealed class HybridClosedArea
 {
     private const int MinimumVertices = 64, MaximumVertices = 1024, MaximumLevels = 16;
     private const int CoordinateLimit = 2048, MinimumAverageActive = 16;
-    private const int SampleEdgeCount = 16, MinimumSampleCrossings = 8;
+    private const int SampleEdgeCount = 16, MinimumSampleCrossings = 8, MinimumSampleCoincidences = 8;
     private readonly IntegerScanbeam integer = new();
 
     internal HybridSelection LastSelection { get; private set; }
@@ -46,16 +47,44 @@ internal sealed class HybridClosedArea
         if (points is null) return Reject("null", count);
         if (count < MinimumVertices || count > MaximumVertices) return Reject("vertex-count", count);
 
+        // Reject sparse samples before scanning the complete walk. The 16 approximately evenly spaced
+        // indices are unique because count >= 64. Sample coordinates must pass exact integer admission
+        // before any Int64 predicate; acceptance later validates every coordinate independently.
+        Span<int> sampleEdges = stackalloc int[SampleEdgeCount];
+        for (int sample = 0; sample < SampleEdgeCount; sample++)
+        {
+            int edge = sample * count / SampleEdgeCount;
+            sampleEdges[sample] = edge;
+            if (!InIntegerDomain(points[edge]) || !InIntegerDomain(points[edge + 1 == count ? 0 : edge + 1]))
+                return Reject("integer-domain", count);
+        }
+        int crossings = 0, coincidences = 0;
+        for (int sampleA = 0; sampleA < SampleEdgeCount; sampleA++)
+        {
+            int a = sampleEdges[sampleA], aNext = a + 1 == count ? 0 : a + 1;
+            Point2 a0 = points[a], a1 = points[aNext];
+            if (Same(a0, a1)) continue;
+            for (int sampleB = sampleA + 1; sampleB < SampleEdgeCount; sampleB++)
+            {
+                int b = sampleEdges[sampleB], bNext = b + 1 == count ? 0 : b + 1;
+                if (aNext == b || bNext == a) continue;
+                Point2 b0 = points[b], b1 = points[bNext];
+                if (Same(b0, b1)) continue;
+                if ((Same(a0, b0) && Same(a1, b1)) || (Same(a0, b1) && Same(a1, b0))) coincidences++;
+                else if (ProperCrossing(a0, a1, b0, b1)) crossings++;
+            }
+        }
+        if (crossings < MinimumSampleCrossings && coincidences < MinimumSampleCoincidences)
+            return Reject("sample-structure", count, crossings: crossings, coincidences: coincidences);
+
         Span<int> levels = stackalloc int[MaximumLevels];
         int levelCount = 0, effectiveCount = 0;
         Point2 previous = default;
         for (int i = 0; i < count; i++)
         {
             Point2 p = points[i];
-            if (!double.IsFinite(p.X) || !double.IsFinite(p.Y) ||
-                p.X < -CoordinateLimit || p.X > CoordinateLimit || p.Y < -CoordinateLimit || p.Y > CoordinateLimit ||
-                p.X != Math.Truncate(p.X) || p.Y != Math.Truncate(p.Y))
-                return Reject("integer-domain", count, levelCount);
+            if (!InIntegerDomain(p))
+                return Reject("integer-domain", count, levelCount, crossings, coincidences);
             if (effectiveCount == 0 || p.X != previous.X || p.Y != previous.Y)
             {
                 effectiveCount++;
@@ -65,13 +94,13 @@ internal sealed class HybridClosedArea
             while (at < levelCount && levels[at] != y) at++;
             if (at == levelCount)
             {
-                if (levelCount == MaximumLevels) return Reject("y-levels", count, levelCount + 1);
+                if (levelCount == MaximumLevels) return Reject("y-levels", count, levelCount + 1, crossings, coincidences);
                 levels[levelCount++] = y;
             }
         }
         if (effectiveCount > 1 && previous.X == points[0].X && previous.Y == points[0].Y) effectiveCount--;
-        if (effectiveCount < 3) return Reject("effective-vertices", count, levelCount);
-        if (levelCount < 2) return Reject("y-levels", count, levelCount);
+        if (effectiveCount < 3) return Reject("effective-vertices", count, levelCount, crossings, coincidences);
+        if (levelCount < 2) return Reject("y-levels", count, levelCount, crossings, coincidences);
         levels[..levelCount].Sort();
 
         long spans = 0;
@@ -88,29 +117,20 @@ internal sealed class HybridClosedArea
         }
         int bands = levelCount - 1;
         if (spans < (long)MinimumAverageActive * bands)
-            return new("Winding", "sparse-active", count, levelCount, nonhorizontal, spans, bands, 0);
-
-        // Deterministic approximately evenly spaced edge indices, unique because count >= 64.
-        // Only strict crossings count: shared endpoints, collinearity and retracing do not imply
-        // the proper-crossing workload for which the specialized sweep is being investigated.
-        int crossings = 0;
-        for (int sampleA = 0; sampleA < SampleEdgeCount; sampleA++)
-        {
-            int a = sampleA * count / SampleEdgeCount, aNext = a + 1 == count ? 0 : a + 1;
-            for (int sampleB = sampleA + 1; sampleB < SampleEdgeCount; sampleB++)
-            {
-                int b = sampleB * count / SampleEdgeCount, bNext = b + 1 == count ? 0 : b + 1;
-                if (aNext == b || bNext == a) continue;
-                if (ProperCrossing(points[a], points[aNext], points[b], points[bNext])) crossings++;
-            }
-        }
-        return crossings >= MinimumSampleCrossings
-            ? new("IntegerScanbeam", "dense-integer-few-levels", count, levelCount, nonhorizontal, spans, bands, crossings)
-            : new("Winding", "sample-crossings", count, levelCount, nonhorizontal, spans, bands, crossings);
+            return new("Winding", "sparse-active", count, levelCount, nonhorizontal, spans, bands, crossings, coincidences);
+        return new("IntegerScanbeam", "dense-integer-few-levels", count, levelCount, nonhorizontal, spans, bands,
+            crossings, coincidences);
     }
 
-    private static HybridSelection Reject(string reason, int count, int levels = 0) =>
-        new("Winding", reason, count, levels, 0, 0, Math.Max(0, levels - 1), 0);
+    private static HybridSelection Reject(string reason, int count, int levels = 0, int crossings = 0, int coincidences = 0) =>
+        new("Winding", reason, count, levels, 0, 0, Math.Max(0, levels - 1), crossings, coincidences);
+
+    private static bool InIntegerDomain(Point2 p) =>
+        double.IsFinite(p.X) && double.IsFinite(p.Y) &&
+        p.X >= -CoordinateLimit && p.X <= CoordinateLimit && p.Y >= -CoordinateLimit && p.Y <= CoordinateLimit &&
+        p.X == Math.Truncate(p.X) && p.Y == Math.Truncate(p.Y);
+
+    private static bool Same(Point2 a, Point2 b) => a.X == b.X && a.Y == b.Y;
 
     private static bool ProperCrossing(Point2 a, Point2 b, Point2 c, Point2 d)
     {

@@ -66,6 +66,29 @@ internal static class HybridInputs
             NearRetrace(512, 0x33f8ab11u));
         Add("held-wide-grid-128", "wide-grid", "held-out",
             Map(Inputs.Grid(128, 0x728111d3u), p => new Point2(1e9 + p.X * 64, -1e9 + p.Y * 64)));
+
+        // Added before the second selector's timings. These six cases were not inspected in stage one;
+        // the original development and held-out coordinates above stay unchanged.
+        Point2[] confirmationGrid = Inputs.Grid(256, 0x2ea9d613u).Reverse().ToArray();
+        Add("confirm-grid-256", "dense-grid", "confirmation", Enumerable.Range(0, 256).Select(i =>
+        {
+            Point2 p = confirmationGrid[(i + 37) % confirmationGrid.Length];
+            return new Point2(p.Y, p.X);
+        }).ToArray());
+        Add("confirm-diamond-256", "retraced", "confirmation",
+            Enumerable.Range(0, 64).SelectMany(_ => new Point2[]
+                { new(0, -8), new(12, 0), new(0, 8), new(-12, 0) }).ToArray());
+        Add("confirm-opposite-retrace-256", "retraced", "confirmation",
+            Enumerable.Range(0, 32).SelectMany(_ => new Point2[]
+                { new(-4, -3), new(9, -3), new(9, 5), new(-4, 5),
+                  new(-4, -3), new(-4, 5), new(9, 5), new(9, -3) }).ToArray());
+        Point2[] confirmationSparse = [.. Enumerable.Range(0, 254).Select(i => new Point2(i, i % 2)), new(253, -1), new(0, -1)];
+        Add("confirm-sparse-few-levels-256", "sparse-few-y-levels", "confirmation",
+            confirmationSparse.Reverse().Select(p => new Point2(p.X - 128, p.Y + 9)).ToArray());
+        Add("confirm-binary-grid-256", "fractional-binary-grid", "confirmation",
+            Map(Inputs.Grid(256, 0x7e61811u), p => new Point2(p.X / 16 + .03125, p.Y / 16 - .015625)));
+        Add("confirm-wide-grid-256", "wide-grid", "confirmation",
+            Map(Inputs.Grid(256, 0x395a2807u), p => new Point2(1e9 + p.X * 64, -1e9 + p.Y * 64)));
         return result.ToArray();
 
         void Add(string name, string family, string split, Point2[] points) =>

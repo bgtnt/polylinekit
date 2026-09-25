@@ -67,7 +67,8 @@ internal static partial class Program
     private static HybridValidationRow[] ValidateHybrid(string? directory)
     {
         HybridInput[] inputs = HybridInputs.Create();
-        Require(inputs.Length == 22 && inputs.Count(p => p.Split == "development") == 9 &&
+        Require(inputs.Length == 28 && inputs.Count(p => p.Split == "development") == 9 &&
+            inputs.Count(p => p.Split == "held-out") == 13 && inputs.Count(p => p.Split == "confirmation") == 6 &&
             inputs.Select(p => p.Name).Distinct().Count() == inputs.Length, "Hybrid fixture matrix changed.");
         var rows = new List<HybridValidationRow>();
         foreach (HybridInput input in inputs)
@@ -214,7 +215,7 @@ internal static partial class Program
             string backendMethod = reference.Selection.Backend == "IntegerScanbeam" ? "Integer-sweep" : "Winding";
             double chosen = Get(backendMethod).MedianNs;
             double bestAvailable = group.Where(r => r.Method is "Winding" or "Double-sweep" or "Integer-sweep").Min(r => r.MedianNs);
-            bool target = reference.Family == "dense-grid";
+            bool target = reference.Family is "dense-grid" or "retraced";
             return new { group.Key.Input, group.Key.Rule, reference.Family, reference.Split, reference.Selection,
                 Target = target, WindingNs = winding, HybridNs = hybrid, ClipperNs = clipper, PreloadedClipperNs = preloaded,
                 SelectorNs = selector, ChosenBackendNs = chosen, BestAvailableBackendNs = bestAvailable,
@@ -226,7 +227,7 @@ internal static partial class Program
         }).ToArray();
         var evidence = new
         {
-            Protocol = "benchmarks/PolylineKit.ScanbeamBenchmarks/HYBRID-PROTOCOL.md",
+            Protocol = "benchmarks/PolylineKit.ScanbeamBenchmarks/HYBRID-V2-PROTOCOL.md",
             Environment = runs[0] with { Rows = [] }, RowsPerProcess = runs[0].Rows.Length,
             SampleCount = runs.Sum(r => r.Rows.Sum(row => row.Samples.Length)),
             Pass = decisions.All(d => d.TargetPass && d.PreservationPass),
