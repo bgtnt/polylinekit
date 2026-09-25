@@ -1,9 +1,13 @@
 # Benchmarks
 
-The [public FilledArea protocol](PolylineKit.ScanbeamBenchmarks/FILLED-AREA-PROTOCOL.md)
-checks the integration of the bounded hybrid into `WindingArea.FilledArea`,
-including its actual public array and read-only-wrapper calls. Its results must
-be measured separately from the earlier prototype.
+Start with the [public FilledArea results](PolylineKit.ScanbeamBenchmarks/FILLED-AREA-RESULTS.md)
+for the integrated bounded hybrid. All 26 target, 42 preservation and 68
+integration gates pass. Dense integer grids take 40–48% of Winding's time;
+the worst preservation control adds 4.75%. The report retains process outliers,
+remaining Clipper wins and read-only-wrapper measurements. The
+[protocol](PolylineKit.ScanbeamBenchmarks/FILLED-AREA-PROTOCOL.md) and
+[evidence](filled-area-evidence.json) distinguish this public API measurement
+from the earlier prototype.
 
 The historical [adaptive closed-area results](PolylineKit.ScanbeamBenchmarks/HYBRID-V3-RESULTS.md)
 measure the combination of complementary algorithms before integration. Cheaper selection

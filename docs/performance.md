@@ -1,9 +1,16 @@
 # Performance: measured scope and tradeoffs
 
-`WindingArea.FilledArea` now exposes a selected NonZero/EvenOdd area. The
-[integration protocol](../benchmarks/PolylineKit.ScanbeamBenchmarks/FILLED-AREA-PROTOCOL.md)
-measures this actual public entry point against its retained prototype. Earlier
-prototype timings below must not be attributed to the public API.
+The [public FilledArea integration](../benchmarks/PolylineKit.ScanbeamBenchmarks/FILLED-AREA-RESULTS.md)
+at `dce7250` passes all 26 target, 42 preservation and 68 integration gates.
+On dense integer grids the public array method takes 40.5–47.6% of Winding's
+time and 28.2–62.9% of full-input Clipper's time. Worst aggregate preservation
+overhead is 4.75%; worst integration overhead over retained hybrid v3 is 2.36%.
+Four process-1 cells exceed individual limits, although the predeclared
+three-process medians pass. Simple contours still lose to Clipper; no universal
+speed claim follows. Array and read-only-wrapper calls allocate zero warm B/op,
+excluding first use, growth and retained storage. The sweep accelerates suitable
+.NET 10 arrays of exact bounded integers; other inputs and the portable target
+retain Winding. Earlier prototype timings below are separate historical results.
 
 The historical [adaptive closed-area experiment](../benchmarks/PolylineKit.ScanbeamBenchmarks/HYBRID-V3-RESULTS.md)
 at `be96dea` preserves the second-stage routing policy while caching integer

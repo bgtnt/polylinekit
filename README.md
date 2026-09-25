@@ -22,6 +22,10 @@ other inputs. The .NET Standard build uses the boundary engine. There is no inpu
 quantization; implementation choices can change the last bits across containers
 or builds. Use `ClosedPath` for all four integrals or crossing diagnostics. See the
 [input, numerical and storage contract](docs/winding-area.md#one-selected-fill).
+The [public API measurements](benchmarks/PolylineKit.ScanbeamBenchmarks/FILLED-AREA-RESULTS.md)
+pass all fixed integration gates: dense integer grids take 40–48% of Winding's
+time, while the worst preservation control adds 4.75%. Some shapes remain
+slower than Clipper; the report includes those losses and process variation.
 
 ## Measure filled-area change
 

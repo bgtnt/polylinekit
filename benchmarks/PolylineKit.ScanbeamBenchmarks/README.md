@@ -1,7 +1,9 @@
 # Experimental area sweeps
 
-The [public FilledArea integration protocol](FILLED-AREA-PROTOCOL.md) measures the
-new library entry point against the retained hybrid prototype. Commands are
+The [public FilledArea results](FILLED-AREA-RESULTS.md) pass all integration,
+target and preservation gates under the [fixed protocol](FILLED-AREA-PROTOCOL.md).
+They measure the new library entry point against the retained hybrid prototype.
+Process outliers and remaining Clipper wins stay visible. Commands are
 `check-filled-area <directory>`, `benchmark-filled-area <directory> <run 1..3> <measured-commit>`
 and `summarize-filled-area <directory>`. The public implementation is a separate
 bounded extraction in `src/PolylineKit.Winding`; historical experimental engines

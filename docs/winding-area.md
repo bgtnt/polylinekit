@@ -198,5 +198,8 @@ The independent fixture checker retains 424 assertions per target. The assembly 
 The [v3 adaptive experiment](../benchmarks/PolylineKit.ScanbeamBenchmarks/HYBRID-V3-RESULTS.md)
 measured the prototype that motivated the new entry point. Its gates and ratios
 describe that frozen experiment, not the subsequently integrated public method.
+The separate [public API measurements](../benchmarks/PolylineKit.ScanbeamBenchmarks/FILLED-AREA-RESULTS.md)
+pass the target, preservation and integration gates while retaining process
+outliers and remaining losses to Clipper.
 Both compare a requested scalar fill against the existing four-integral engine;
 the difference in requested work remains relevant when interpreting timings.
