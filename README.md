@@ -111,6 +111,7 @@ Read the [area guide](docs/area.md) for fill rules, examples and contracts, or t
 - [Optional contour output](examples/ClipperContours/Program.cs)
 - [Measure change after contour simplification](examples/AreaChange/README.md)
 - [Measure how much of a region is covered](examples/RegionCoverage/README.md)
+- [Evaluate predicted building polygons against reference annotations](examples/PolygonOverlapEvaluation/README.md)
 - [Documentation index](docs/README.md)
 - [Performance and memory](docs/performance.md)
 - [Build, tests and contributing](CONTRIBUTING.md)

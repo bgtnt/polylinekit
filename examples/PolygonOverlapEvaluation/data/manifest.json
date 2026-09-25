@@ -1,0 +1,59 @@
+{
+  "SchemaVersion": 1,
+  "SourceRepository": "https://github.com/CosmiQ/solaris",
+  "SourceCommit": "5315390942e05e919555088361bd3df42d4f5a18",
+  "RetrievedUtcDate": "2026-09-26",
+  "Redistribution": "Downloader only: original CSV and converted fixture are ignored; code license is Apache-2.0, separate sample-data redistribution scope not established.",
+  "Files": [
+    {
+      "Path": "solaris/data/SN2_sample_preds.csv",
+      "Url": "https://raw.githubusercontent.com/CosmiQ/solaris/5315390942e05e919555088361bd3df42d4f5a18/solaris/data/SN2_sample_preds.csv",
+      "Bytes": 49330,
+      "Sha256": "a92a09e1234443355f458694c58b700338547611da67bcee3f1db99ce4a6aebf"
+    },
+    {
+      "Path": "solaris/data/SN2_sample_truth.csv",
+      "Url": "https://raw.githubusercontent.com/CosmiQ/solaris/5315390942e05e919555088361bd3df42d4f5a18/solaris/data/SN2_sample_truth.csv",
+      "Bytes": 98640,
+      "Sha256": "bfe2fb7141eb53cf63e3936843f4e5062b4c1461103bc1678e0ad033422ede4a"
+    },
+    {
+      "Path": "solaris/data/SN2_sample_iou_by_building.csv",
+      "Url": "https://raw.githubusercontent.com/CosmiQ/solaris/5315390942e05e919555088361bd3df42d4f5a18/solaris/data/SN2_sample_iou_by_building.csv",
+      "Bytes": 132240,
+      "Sha256": "bd767acc66c598115a827f80d61dcd2914e478b3a4a429cf70535fed23ff85f7"
+    },
+    {
+      "Path": "tests/test_eval/evaluator_test.py",
+      "Url": "https://raw.githubusercontent.com/CosmiQ/solaris/5315390942e05e919555088361bd3df42d4f5a18/tests/test_eval/evaluator_test.py",
+      "Bytes": 4708,
+      "Sha256": "2d6a985dbbac8c6265c6e66c846b74cf97f0c8a5b24a178fa4d04f52863841ba"
+    },
+    {
+      "Path": "solaris/eval/base.py",
+      "Url": "https://raw.githubusercontent.com/CosmiQ/solaris/5315390942e05e919555088361bd3df42d4f5a18/solaris/eval/base.py",
+      "Bytes": 26166,
+      "Sha256": "c39b8acafec5686b1458e3c85fb75e3ff29ae4751a8acd49617449a8ccb27cbb"
+    },
+    {
+      "Path": "solaris/eval/iou.py",
+      "Url": "https://raw.githubusercontent.com/CosmiQ/solaris/5315390942e05e919555088361bd3df42d4f5a18/solaris/eval/iou.py",
+      "Bytes": 2738,
+      "Sha256": "0c76fb27efa3905bcb3e5216fa894065e0b10c9e0432bdcc5b46a2506cb60845"
+    },
+    {
+      "Path": "README.md",
+      "Url": "https://raw.githubusercontent.com/CosmiQ/solaris/5315390942e05e919555088361bd3df42d4f5a18/README.md",
+      "Bytes": 4378,
+      "Sha256": "1fedf52c8f92c56179479ad5bf764c04e08b8671a7237f35f4731a95718e7f3d"
+    },
+    {
+      "Path": "LICENSE.txt",
+      "Url": "https://raw.githubusercontent.com/CosmiQ/solaris/5315390942e05e919555088361bd3df42d4f5a18/LICENSE.txt",
+      "Bytes": 10252,
+      "Sha256": "1c5326f3cdcce216c5847ddb80fef67d4de7799632f26c3b4b2a91d102c4f96d"
+    }
+  ],
+  "ConvertedFixtureSha256": "883b7d327f1e082a8a34bbe065a40d8fb5a89bddd5d5c1014be5fbcf62fd4b20",
+  "ConvertedInventorySha256": "bef37c246c7b1a0e4a44b832820c31e904ab4d8331cae1aacf69d11365038ed3"
+}

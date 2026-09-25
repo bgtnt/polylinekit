@@ -53,5 +53,17 @@ in the United States; see the source terms and provenance in the
 [area benchmark fixture](benchmarks/PolylineKit.AreaBenchmarks/data/README.md).
 The project's MIT license does not replace source-data attribution or terms.
 
+## Polygon evaluation sample
+
+The [polygon-overlap example](examples/PolygonOverlapEvaluation/README.md) follows
+the evaluator semantics and supplied SpaceNet 2 sample of **CosmiQ Works Solaris**,
+fixed at commit `5315390942e05e919555088361bd3df42d4f5a18`. Solaris source is
+[Apache-2.0 licensed](https://github.com/CosmiQ/solaris/blob/5315390942e05e919555088361bd3df42d4f5a18/LICENSE.txt).
+The sample CSVs do not separately clarify redistribution terms for their derived
+data; this repository includes a pinned downloader and hashes, not those CSVs or
+the converted coordinates. See [source attribution and terms](examples/PolygonOverlapEvaluation/data/README.md).
+The C# evaluation example is a separate implementation of the documented rules,
+not an execution of the historic Solaris Python environment.
+
 Archived studies retain their original notices alongside their source in the
 [historical snapshots](CONTRIBUTING.md#historical-studies).

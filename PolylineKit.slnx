@@ -9,6 +9,7 @@
     <Project Path="examples/ClipperContours/ClipperContours.csproj" />
     <Project Path="examples/AreaChange/AreaChange.csproj" />
     <Project Path="examples/RegionCoverage/RegionCoverage.csproj" />
+    <Project Path="examples/PolygonOverlapEvaluation/PolygonOverlapEvaluation.csproj" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/PolylineKit.Clipper/PolylineKit.Clipper.csproj" />

@@ -27,6 +27,15 @@ jobs:
         run: dotnet run --project examples/RegionCoverage -c Release --no-build -- check
       - name: Verify complete coverage source snapshots offline
         run: python examples/RegionCoverage/data/freeze.py
+      - name: Prepare pinned Solaris evaluation sample
+        run: python examples/PolygonOverlapEvaluation/data/prepare-data.py
+      - name: Polygon evaluation reference and geometry contracts
+        run: dotnet run --project examples/PolygonOverlapEvaluation -c Release --no-build -- verify-reference
+      - name: Polygon evaluation benchmark startup (no timing threshold)
+        shell: pwsh
+        run: |
+          $revision = git rev-parse HEAD
+          dotnet run --project examples/PolygonOverlapEvaluation -c Release --no-build -- benchmark-smoke examples/PolygonOverlapEvaluation/data/generated/solaris.json artifacts/polygon-overlap-ci-smoke.json 1 $revision
       - name: Public area benchmark contracts (no timing)
         run: dotnet run --project benchmarks/PolylineKit.AreaBenchmarks -c Release --no-build -- check artifacts/area-ci-check
       - name: Standalone and precompiled consumer compatibility
