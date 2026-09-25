@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework Condition="'$(TargetFramework)' == ''">net10.0</TargetFramework>
+    <PolylineKitVersion Condition="'$(PolylineKitVersion)' == ''">0.1.0-alpha.1</PolylineKitVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>false</IsPackable>
+    <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
+    <RestoreFallbackFolders></RestoreFallbackFolders>
+    <DefineConstants Condition="'$(UseClipper)' == 'true'">$(DefineConstants);PACKAGE_ADAPTER</DefineConstants>
+    <DefineConstants Condition="'$(VerifyPackages)' == 'true'">$(DefineConstants);PACKAGE_VERIFICATION</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(UseClipper)' != 'true'">
+    <PackageReference Include="PolylineKit.Core" Version="$(PolylineKitVersion)" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(UseClipper)' == 'true'">
+    <PackageReference Include="PolylineKit.Clipper" Version="$(PolylineKitVersion)" />
+  </ItemGroup>
+</Project>

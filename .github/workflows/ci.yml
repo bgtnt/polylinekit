@@ -12,7 +12,9 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '10.0.x'
+          dotnet-version: |
+            8.0.x
+            10.0.x
       - run: dotnet restore PolylineKit.slnx --locked-mode
       - run: dotnet build PolylineKit.slnx -c Release --no-restore
       - run: ./scripts/verify-implementations.ps1
@@ -29,6 +31,9 @@ jobs:
         run: dotnet run --project benchmarks/PolylineKit.AreaBenchmarks -c Release --no-build -- check artifacts/area-ci-check
       - name: Standalone and precompiled consumer compatibility
         run: ./scripts/verify-consumers.ps1
+        shell: pwsh
+      - name: Real NuGet packages and external net10/net8 consumers
+        run: ./scripts/verify-packages.ps1
         shell: pwsh
       - name: Benchmark workload smoke checks (no timing)
         run: dotnet benchmarks/PolylineKit.Benchmarks/bin/Release/net10.0/PolylineKit.Benchmarks.dll smoke

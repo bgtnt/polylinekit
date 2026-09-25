@@ -44,7 +44,7 @@ exclude initialization and retained storage.
 
 ## Measured real contours
 
-On the [nine-ring Census workload](../benchmarks/PolylineKit.AreaBenchmarks/README.md#current-real-contour-result-primary-gate-passed),
+On the [nine-ring Census workload](../benchmarks/PolylineKit.AreaBenchmarks/README.md#recorded-real-contour-result-primary-gate-passed),
 revision `eea1671c6288ea444e98cddcca9ee6d18669124b` passed the unchanged
 Public/ClosedPath ≤1.10 criterion for both complete-batch fills. Every individual
 ring/fill ratio also passed (0.9954–1.0152). The run used .NET 10.0.12 on Windows
@@ -56,11 +56,13 @@ x64, with three sequential processes and 1,200 samples.
 | EvenOdd | 1.466 ms | 1.467 ms | 2.170 ms | 1.891 ms |
 
 These are medians of three process medians. Public and ClosedPath allocated
-**0 B/op in every warm sample** under the current cache policy. Public took about
+**0 B/op in every warm sample** under that revision's cache policy. Public took about
 the same time as ClosedPath; Clipper-full took 1.48–1.50× as long on this
 workload. Clipper's output/grid contract differs, and this population exercises
 the general engine, not the integer specialization. The detailed report includes
-process ranges, all ring ratios, allocation counts and hashes.
+process ranges, all ring ratios, allocation counts and hashes. These are recorded
+measurements of `eea1671`, not timings of the alpha package. They do not establish
+an advantage over a shoelace sum for a trusted simple ring.
 
 The earlier EvenOdd batch discrepancy did not recur. This is not evidence that
 the cache change fixed it: the unchanged Clipper binary also ran faster in the
@@ -91,14 +93,17 @@ cache policy; they are not promises for oversized inputs under the current polic
 
 The [retention regression](../tests/PolylineKit.Checks/WorkspaceRetentionChecks.cs)
 includes a deterministic 1024-vertex walk alternating between two Y levels.
-Compared with `0e53b07`, its retained workspace payload changes as follows:
+A separate historical probe compared `0e53b07` with the uncommitted cache-policy
+implementation before it was included in `eea1671`:
 
-| Engine | Earlier retained payload | Current retained payload | Approximate repeated-call allocations now |
+| Engine | Earlier retained payload | Probe with cache limit | Approximate repeated-call allocations with limit |
 |---|---:|---:|---:|
 | General boundary engine | 65.12 MiB | 0 | 97.14 MiB |
 | Integer sweep | 12.15 MiB | 0 | 24.15 MiB |
 
-These are stress-case allocation checks, not typical-input costs or timings.
+These are historical stress-case allocation checks, not measurements of the
+alpha packages, typical-input costs or timings. The probe used reflection to
+invoke the engines; its allocations include that invocation's overhead.
 Each engine's result bits were unchanged. First-call allocations did not decrease;
 the cache limit prevents idle retention, not the large working set itself.
 
@@ -119,3 +124,8 @@ Detailed prior measurements remain in an immutable
 and [first-use/storage data](https://github.com/bgtnt/polylinekit/blob/5ef33e8e0f11ba955cf8fc078e91dc87a325f7b3/benchmarks/winding-review-evidence.json).
 Each applies to its recorded code revision, hardware, inputs and requested work.
 They preserve slower cases and are not new timings of subsequent API changes.
+
+The original raw measurements, frozen summarizers and data have been assembled
+into a verified local archive; see [the alpha evidence inventory](releases/0.1.0-alpha.1.md#measurement-evidence).
+The archive is not yet uploaded publicly. Its planned release location is not
+an available raw-data URL until publication is explicitly completed.

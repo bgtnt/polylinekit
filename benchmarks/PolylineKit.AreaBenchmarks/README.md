@@ -38,7 +38,7 @@ The original calibration and reusable Clipper adapter structure were adapted fro
 MIT-licensed area experiments archived at commit `5ef33e8`; this runner has no source link or
 runtime reference to those projects.
 
-## Current real-contour result: primary gate passed
+## Recorded real-contour result: primary gate passed
 
 Measured source: [`eea1671c6288ea444e98cddcca9ee6d18669124b`](https://github.com/bgtnt/polylinekit/commit/eea1671c6288ea444e98cddcca9ee6d18669124b),
 2026-09-25, after the dependency-free Core split and 4 MiB retained-workspace policy.
@@ -47,6 +47,12 @@ Stepping 12, 16 logical processors; tiered compilation disabled. The same 9 ring
 oracle, timing code, rotations and 10% criterion were used in three sequential
 processes (80 rows/process; 1,200 raw samples). No implementation or threshold was
 changed in response to the timings.
+
+This is a historical measurement of the identified binaries, not a measurement
+of a subsequently packed alpha release. It does not compare against a shoelace
+sum for a trusted simple ring. The original raw data and frozen summarizers are
+included in the locally prepared [alpha evidence bundle](../../docs/releases/0.1.0-alpha.1.md#measurement-evidence),
+pending a public release upload.
 
 **PASS:** complete-batch Public/ClosedPath is **1.0021× for NonZero** and
 **0.9992× for EvenOdd**. Every individual ring/fill median also remains within 10%.

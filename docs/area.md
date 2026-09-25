@@ -48,13 +48,35 @@ deviation: an arbitrarily thin spike can have a very small area.
 
 If you only need the common area, use
 `PolylineArea.IntersectionArea(first, second, fillRule)` to avoid calculating
-the unused areas. For coverage of a positive-area zone:
+the unused areas. For coverage of a fixed L-shaped zone:
 
 ```csharp
-double zoneArea = PolylineArea.FilledArea(zone);
-double coveredArea = PolylineArea.IntersectionArea(zone, footprint);
-double? coverage = zoneArea > 0 ? coveredArea / zoneArea : null;
+Point2[] zone = [new(0, 0), new(6, 0), new(6, 2),
+                new(2, 2), new(2, 6), new(0, 6)];
+Point2[] footprint = [new(1, 1), new(5, 1), new(5, 5), new(1, 5)];
+const PathFillRule rule = PathFillRule.NonZero;
+double zoneArea = PolylineArea.FilledArea(zone, rule); // 20; calculate once
+double coveredArea = PolylineArea.IntersectionArea(zone, footprint, rule); // 7
+double? coverage = zoneArea > 0 ? coveredArea / zoneArea : null; // 35%
 ```
+
+The footprint's area is 16. The intersection comprises rectangles of areas
+`4 * 1` and `1 * 3`, so its area is 7; the union is `20 + 16 - 7 = 29`.
+Coverage is `7/20`; IoU is `7/29`. The two ratios answer different questions.
+Both fill rules give the same areas here. If coordinates are metres, areas are
+square metres and the ratios are dimensionless. For a valid zero-area zone,
+coverage is undefined (`null`); empty and too-short paths still throw.
+
+Cache the area of a fixed zone across queries. Summing individual intersections
+with overlapping footprints can count shared area more than once; it does not
+compute their union's coverage. For a trusted simple ring's own area alone,
+shoelace is the appropriate inexpensive formula. General fill-aware processing
+adds work to support self-intersections, repeated edges and fill rules.
+
+The [package-based coverage example](../examples/PackageCoverage) checks these
+values using the actual NuGet package. The larger
+[RegionCoverage example](../examples/RegionCoverage/README.md) handles attributed
+real planar Census contours. The small analytic example makes no speed claim.
 
 ## Increasing-x graphs
 

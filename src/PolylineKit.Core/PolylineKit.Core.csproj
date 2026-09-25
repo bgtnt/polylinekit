@@ -6,15 +6,19 @@
     <PackageId>PolylineKit.Core</PackageId>
     <Version>0.1.0-alpha.1</Version>
     <Authors>PolylineKit contributors</Authors>
-    <Description>Dependency-free polyline areas, region overlap, transforms, normalization, sampling and alignment.</Description>
+    <Description>.NET methods for numeric area and region overlap, with no external runtime dependencies. Includes self-intersecting paths with explicit fill rules.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/bgtnt/polylinekit</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <PackageProjectUrl>https://github.com/bgtnt/polylinekit</PackageProjectUrl>
+    <PackageTags>geometry;polygon;polyline;area;intersection;coverage</PackageTags>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <None Update="README.md" Pack="true" PackagePath="/" />
+    <None Remove="README.md" />
+    <None Include="README.md" Pack="true" PackagePath="/" />
+    <None Include="../../LICENSE" Pack="true" PackagePath="/" />
     <InternalsVisibleTo Include="PolylineKit.Experiments" />
     <!-- The optional compatibility adapter reuses input validation without a reverse runtime dependency. -->
     <InternalsVisibleTo Include="PolylineKit" />

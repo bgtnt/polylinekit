@@ -1,5 +1,10 @@
 # Measure region coverage
 
+Start with the [minimal package-based example](../PackageCoverage) for an
+L-shaped zone: area 20, intersection 7 and coverage 35%. This larger example
+uses frozen real Census contours and demonstrates candidate selection as well
+as intersection. It is built from source, with benchmark-only dependencies.
+
 Coverage is the intersection area divided by a positive-area zone:
 
 ```csharp
@@ -41,6 +46,11 @@ helpers, not additions to the area library's runtime or public API.
 Each operand here is one ring. Do not treat a collection of islands or holes
 as a single concatenated walk. Coverage ratios are not clamped; inspect numeric
 error when a result lies just outside its expected range.
+
+Adding the intersections of overlapping footprints may count an area more than
+once. This does not measure coverage by their union. For the own area of a
+trusted simple ring, shoelace is the inexpensive option; general fill-aware
+methods address more complicated walks.
 
 Benchmark commands remain available in the executable for maintainers. Prior
 competitor results and protocols are in the

@@ -6,7 +6,7 @@
     <PackageId>PolylineKit.Clipper</PackageId>
     <Version>0.1.0-alpha.1</Version>
     <Authors>PolylineKit contributors</Authors>
-    <Description>Optional Clipper2 contour output and decimal-grid compatibility operations for PolylineKit.Core.</Description>
+    <Description>Optional Clipper2 integration for quantized area comparisons and operations that also need resulting contours.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/bgtnt/polylinekit</RepositoryUrl>
@@ -18,7 +18,9 @@
   <ItemGroup>
     <ProjectReference Include="../PolylineKit.Core/PolylineKit.Core.csproj" />
     <PackageReference Include="Clipper2" Version="2.0.0" />
-    <None Update="README.md" Pack="true" PackagePath="/" />
+    <None Remove="README.md" />
+    <None Include="README.md" Pack="true" PackagePath="/" />
+    <None Include="../../LICENSE" Pack="true" PackagePath="/" />
     <InternalsVisibleTo Include="PolylineKit.Experiments" />
   </ItemGroup>
 </Project>

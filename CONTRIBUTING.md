@@ -9,6 +9,7 @@ dotnet restore PolylineKit.slnx --locked-mode
 dotnet build PolylineKit.slnx -c Release --no-restore
 pwsh -File scripts/verify-implementations.ps1
 pwsh -File scripts/verify-consumers.ps1
+pwsh -File scripts/verify-packages.ps1
 dotnet run --project examples/Basic -c Release --no-build
 dotnet run --project examples/ClipperContours -c Release --no-build
 ```
@@ -18,6 +19,11 @@ project. Verification checks the portable target, modern target, forced scalar,
 no AVX and no hardware intrinsics. CI runs on Windows and Linux. Consumer checks
 exercise an unchanged component built against a historical assembly; keep full
 Git history available for that check.
+
+Package verification additionally requires the .NET 8 SDK/runtime. It packs
+both libraries and runs external PackageReference-only consumers on .NET 8
+(selecting .NET Standard 2.0 assets) and .NET 10. See the
+[package guide](docs/releasing.md). This does not test .NET Framework.
 
 ## Repository layout
 
