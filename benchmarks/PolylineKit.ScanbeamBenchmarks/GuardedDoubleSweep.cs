@@ -56,13 +56,15 @@ internal sealed partial class GuardedDoubleSweep
     private readonly bool restrictToCommonY, cacheEndpointX, scalarOrderFilter;
 
     internal GuardedDoubleSweep(bool restrictToCommonY = false, bool cacheEndpointX = false,
-        bool scalarOrderFilter = false, bool directPreparedEdges = false, bool optimizeAreaArithmetic = false)
+        bool scalarOrderFilter = false, bool directPreparedEdges = false, bool optimizeAreaArithmetic = false,
+        bool coalesceGaps = false)
     {
         this.restrictToCommonY = restrictToCommonY;
         this.cacheEndpointX = cacheEndpointX;
         this.scalarOrderFilter = scalarOrderFilter;
         this.directPreparedEdges = directPreparedEdges;
         this.optimizeAreaArithmetic = optimizeAreaArithmetic;
+        this.coalesceGaps = coalesceGaps;
         endpointComparison = CompareEndpoints;
         crossingComparison = CompareCrossings;
     }
@@ -121,6 +123,7 @@ internal sealed partial class GuardedDoubleSweep
     private void ResetState()
     {
         ClearBorrowedGeometry();
+        ResetGapContributions();
         LastUsedFallback = false; LastFallbackReason = null; LastErrorBound = double.NaN;
         BandCount = PeakActiveCount = 0; EventCount = ActiveEdgeVisits = work = 0;
         XEvaluationCount = XCacheHitCount = 0;
@@ -146,7 +149,7 @@ internal sealed partial class GuardedDoubleSweep
                 double y = endpoints[at].Y;
                 int end = at + 1;
                 while (end < endpointCount && endpoints[end].Y == y) end++;
-                // The preceding band has already closed every gap at y. Ended edges leave before new edges
+                // The preceding band has already emitted every gap through y. Ended edges leave before new edges
                 // are inserted, so every edge in the next band spans its whole open height interval.
                 for (int i = at; i < end; i++) if (!endpoints[i].Starts) Remove(endpoints[i].Edge);
                 for (int i = at; i < end; i++) if (endpoints[i].Starts) Insert(endpoints[i].Edge, y);
@@ -155,6 +158,7 @@ internal sealed partial class GuardedDoubleSweep
             }
             if (activeCount != 0) throw new Uncertified("unclosed-status");
         }
+        if (coalesceGaps) FlushPendingGaps();
         return CertifiedValue();
     }
 
@@ -412,6 +416,14 @@ internal sealed partial class GuardedDoubleSweep
         if (!Filled(a) || !Filled(b)) return;
         Interval height = Interval.Subtract(finish.Y, start.Y).Nonnegative();
         if (height.IsZero) return;
+        GapContributionCount++;
+        if (coalesceGaps) EmitGapContribution(left, right, start, finish);
+        else IntegrateGap(left, right, start, finish, height);
+    }
+
+    private void IntegrateGap(int left, int right, Level start, Level finish, Interval height)
+    {
+        GapIntegrationCount++;
         Interval lower = HorizontalDifference(left, right, start).Nonnegative();
         Interval upper = HorizontalDifference(left, right, finish).Nonnegative();
         Interval trapezoid = optimizeAreaArithmetic ? Interval.NonnegativeTrapezoid(lower, upper, height) :
@@ -423,6 +435,7 @@ internal sealed partial class GuardedDoubleSweep
 
     private Interval HorizontalDifference(int left, int right, Level level)
     {
+        HorizontalDifferenceEvaluationCount++;
         if (level.IsCrossingOf(left, right) || SameSupport(left, right)) return Interval.Zero;
         ref readonly Edge a = ref EdgeAt(left);
         ref readonly Edge b = ref EdgeAt(right);
@@ -510,6 +523,7 @@ internal sealed partial class GuardedDoubleSweep
         vertices = new Point2[capacity]; edges = new Edge[capacity]; endpoints = new Endpoint[2 * capacity];
         active = new int[capacity]; topOrder = new int[capacity]; positions = new int[capacity];
         prefixA = new int[capacity]; prefixB = new int[capacity]; gapStarts = new Level[capacity];
+        if (coalesceGaps) pendingGaps = new PendingGap[capacity];
         if (scalarOrderFilter) scalarEdges = new ScalarOrderFilter.PreparedEdge[capacity];
         if (cacheEndpointX)
         {

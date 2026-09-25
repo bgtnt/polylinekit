@@ -44,6 +44,8 @@ jobs:
         run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-direct-sweep artifacts/scanbeam-direct-ci
       - name: Specialized area arithmetic exact bounds and end-to-end parity (no timing)
         run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-area-arithmetic artifacts/scanbeam-area-ci
+      - name: Coalesced filled gaps exact areas, lifecycle and real contours (no timing)
+        run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-gap-coalescing artifacts/scanbeam-gaps-ci
       - name: Optional WPF comparison contracts (Windows only, no timing)
         if: runner.os == 'Windows'
         run: |

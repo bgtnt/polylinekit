@@ -143,8 +143,24 @@ internal static partial class Program
             case "summarize-area-arithmetic" when args.Length == 2:
                 SummarizeAblation(args[1], areaExperiment: true);
                 return 0;
+            case "check-gap-coalescing" when args.Length == 2:
+                GapCoalescingChecks.Run();
+                PreparedSweepChecks.Run(optimizeAreaArithmetic: true, coalesceGaps: true);
+                PreparedSweepChecks.Run(directPreparedEdges: true, optimizeAreaArithmetic: true, coalesceGaps: true);
+                foreach (bool commonY in new[] { false, true })
+                foreach (bool cache in new[] { false, true }) DoubleSweepChecks.Run(commonY, cache, true,
+                    preparedPaths: true, optimizeAreaArithmetic: true, coalesceGaps: true);
+                ValidateAblation(LoadReal(), args[1], gapExperiment: true);
+                WritePreparedMetadata(LoadReal(), args[1]);
+                return 0;
+            case "benchmark-gap-coalescing" when args.Length == 4:
+                RunAblation(args[1], int.Parse(args[2]), args[3], gapExperiment: true);
+                return 0;
+            case "summarize-gap-coalescing" when args.Length == 2:
+                SummarizeAblation(args[1], gapExperiment: true);
+                return 0;
             default:
-                Console.Error.WriteLine("check | check-wide | check-real|check-double|check-double-ablation|check-scalar-filter|check-prepared-sweep|check-direct-sweep|check-area-arithmetic <directory> | benchmark[-real|-wide|-double|-double-ablation|-scalar-filter|-prepared-sweep|-direct-sweep|-area-arithmetic] <directory> <run 1..3> <revision> | summarize[-real|-wide|-double|-double-ablation|-scalar-filter|-prepared-sweep|-direct-sweep|-area-arithmetic] <directory> | profile-double-ablation <method> <seconds1..60> | inspect <file.json>");
+                Console.Error.WriteLine("check | check-wide | check-real|check-double|check-double-ablation|check-scalar-filter|check-prepared-sweep|check-direct-sweep|check-area-arithmetic|check-gap-coalescing <directory> | benchmark[-real|-wide|-double|-double-ablation|-scalar-filter|-prepared-sweep|-direct-sweep|-area-arithmetic|-gap-coalescing] <directory> <run 1..3> <revision> | summarize[-real|-wide|-double|-double-ablation|-scalar-filter|-prepared-sweep|-direct-sweep|-area-arithmetic|-gap-coalescing] <directory> | profile-double-ablation <method> <seconds1..60> | inspect <file.json>");
                 return 2;
         }
     }
