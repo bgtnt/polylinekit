@@ -9,7 +9,7 @@ using PolylineKit;
 
 namespace PolylineKit.ScanbeamBenchmarks;
 
-internal static class Program
+internal static partial class Program
 {
     private const double Scale = 1e6;
     private static double sink;
@@ -25,6 +25,9 @@ internal static class Program
     private sealed record Aggregate(string Input, int Vertices, string InputHash, bool Gate,
         PathFillRule Rule, string Method, double Area, double WindingArea, double UnscaledClipperArea,
         double MedianNs, double MinNs, double MaxNs, double MedianBytes);
+    private sealed record WideValidation(string Source, string SourceHash, string Input, string InputHash,
+        int CoordinateScale, int Offset, PathFillRule Rule, double BaseArea, double ExpectedArea,
+        double Area, double AreaMinusExpected, bool BitIdentical);
 
     internal static int Main(string[] args)
     {
@@ -40,19 +43,38 @@ internal static class Program
             case "summarize" when args.Length == 2:
                 Summarize(args[1]);
                 return 0;
+            case "check-wide" when args.Length == 1:
+                CheckWideTransforms();
+                CheckInputs(true);
+                return 0;
+            case "benchmark-wide" when args.Length == 4:
+                Run(args[1], int.Parse(args[2]), args[3], true);
+                return 0;
+            case "summarize-wide" when args.Length == 2:
+                Summarize(args[1], true);
+                return 0;
             case "inspect" when args.Length == 2:
                 Inspect(args[1]);
                 return 0;
+            case "check-real" when args.Length == 2:
+                ValidateReal(LoadReal(), args[1]);
+                return 0;
+            case "benchmark-real" when args.Length == 4:
+                RunReal(args[1], int.Parse(args[2]), args[3]);
+                return 0;
+            case "summarize-real" when args.Length == 2:
+                SummarizeReal(args[1]);
+                return 0;
             default:
-                Console.Error.WriteLine("check | benchmark <directory> <run 1..3> <revision> | summarize <directory> | inspect <file.json>");
+                Console.Error.WriteLine("check | check-wide | check-real <directory> | benchmark[-real|-wide] <directory> <run 1..3> <revision> | summarize[-real|-wide] <directory> | inspect <file.json>");
                 return 2;
         }
     }
 
-    private static void CheckInputs()
+    private static void CheckInputs(bool wide = false)
     {
         int count = 0;
-        foreach (Input input in Inputs.Create())
+        foreach (Input input in wide ? Inputs.CreateWide() : Inputs.Create())
         foreach (PathFillRule rule in Enum.GetValues<PathFillRule>())
         {
             var methods = Methods(input.Points, rule);
@@ -66,7 +88,27 @@ internal static class Program
                 count++;
             }
         }
-        Console.WriteLine($"Scanbeam complete benchmark inputs: {count} method/fill checks.");
+        Console.WriteLine($"Scanbeam {(wide ? "wide " : "")}complete benchmark inputs: {count} method/fill checks.");
+    }
+
+    private static WideValidation[] CheckWideTransforms()
+    {
+        var rows = new List<WideValidation>();
+        var engine = new IntegerScanbeam();
+        foreach (WideTransform transform in Inputs.CreateWideTransforms())
+        foreach (PathFillRule rule in Enum.GetValues<PathFillRule>())
+        {
+            double baseArea = engine.Measure(transform.Source.Points, rule);
+            double expected = baseArea * transform.CoordinateScale * transform.CoordinateScale;
+            double actual = engine.Measure(transform.Result.Points, rule);
+            Near(expected, actual, $"Transformation {transform.Result.Name}/{rule}");
+            rows.Add(new(transform.Source.Name, transform.Source.Hash, transform.Result.Name, transform.Result.Hash,
+                transform.CoordinateScale, transform.Offset, rule, baseArea, expected, actual, actual - expected,
+                BitConverter.DoubleToInt64Bits(expected) == BitConverter.DoubleToInt64Bits(actual)));
+        }
+        Require(rows.Count == 8, "Expected eight wider-coordinate transformation checks.");
+        Console.WriteLine("Scanbeam wider-coordinate invariance: 8 input/fill checks.");
+        return rows.ToArray();
     }
 
     private static void Inspect(string path)
@@ -118,13 +160,15 @@ internal static class Program
     private static double Unscaled(Point2[] points, PathFillRule rule) => Clipper.Area(Clipper.Union(
         Convert(points, 1), rule == PathFillRule.NonZero ? FillRule.NonZero : FillRule.EvenOdd));
 
-    private static void Run(string directory, int run, string revision)
+    private static void Run(string directory, int run, string revision, bool wide = false)
     {
         Require(run is >= 1 and <= 3, "Run must be 1..3.");
         Require(Environment.GetEnvironmentVariable("DOTNET_TieredCompilation") == "0", "Set DOTNET_TieredCompilation=0.");
+        WideValidation[]? validation = wide ? CheckWideTransforms() : null;
+        Input[] inputs = wide ? Inputs.CreateWide() : Inputs.Create();
         Directory.CreateDirectory(directory);
         var rows = new List<Row>();
-        foreach (Input input in Inputs.Create())
+        foreach (Input input in inputs)
         foreach (PathFillRule rule in Enum.GetValues<PathFillRule>())
         {
             Method[] methods = Methods(input.Points, rule);
@@ -148,7 +192,9 @@ internal static class Program
             Environment.GetEnvironmentVariable("DOTNET_TieredCompilation"), AssemblyHash(typeof(Program)),
             AssemblyHash(typeof(WindingArea)), AssemblyHash(typeof(Clipper64)), rows.ToArray());
         File.WriteAllText(Path.Combine(directory, $"run-{run}.json"), JsonSerializer.Serialize(data, Json) + "\n");
-        File.WriteAllText(Path.Combine(directory, "inputs.json"), JsonSerializer.Serialize(Inputs.Create(), Json) + "\n");
+        File.WriteAllText(Path.Combine(directory, "inputs.json"), JsonSerializer.Serialize(inputs, Json) + "\n");
+        if (validation is not null)
+            File.WriteAllText(Path.Combine(directory, "wide-validation.json"), JsonSerializer.Serialize(validation, Json) + "\n");
         GC.KeepAlive(sink);
     }
 
@@ -175,16 +221,17 @@ internal static class Program
         return samples;
     }
 
-    private static void Summarize(string directory)
+    private static void Summarize(string directory, bool wide = false)
     {
         var paths = Enumerable.Range(1, 3).Select(i => Path.Combine(directory, $"run-{i}.json")).ToArray();
         RunFile[] runs = paths.Select(p => JsonSerializer.Deserialize<RunFile>(File.ReadAllText(p))!).ToArray();
         string Identity(RunFile r) => JsonSerializer.Serialize(r with { Run = 0, Utc = default, Rows = [] });
-        var expected = Inputs.Create().SelectMany(input => Enum.GetValues<PathFillRule>().SelectMany(rule =>
+        Input[] selectedInputs = wide ? Inputs.CreateWide() : Inputs.Create();
+        var expected = selectedInputs.SelectMany(input => Enum.GetValues<PathFillRule>().SelectMany(rule =>
             new[] { "WindingArea", "IntegerScanbeam", "Clipper64-reused-p6", "Clipper64-preloaded-p6" }
             .Select(method => $"{input.Name}|{rule}|{method}"))).Order().ToArray();
         string Key(Row r) => $"{r.Input}|{r.Rule}|{r.Method}";
-        var inputs = Inputs.Create().ToDictionary(i => i.Name);
+        var inputs = selectedInputs.ToDictionary(i => i.Name);
         var outputs = inputs.Values.SelectMany(input => Enum.GetValues<PathFillRule>().SelectMany(rule =>
         {
             Method[] methods = Methods(input.Points, rule);
@@ -211,6 +258,12 @@ internal static class Program
                 if (row.Method == "IntegerScanbeam") Near(row.WindingArea, row.Area, "Recorded prototype accuracy.");
             }
         }
+        if (wide)
+        {
+            WideValidation[] actual = CheckWideTransforms();
+            var recorded = JsonSerializer.Deserialize<WideValidation[]>(File.ReadAllText(Path.Combine(directory, "wide-validation.json")));
+            Require(recorded is not null && recorded.SequenceEqual(actual), "Recorded transformation validation differs.");
+        }
         var aggregates = new List<Aggregate>();
         foreach (var group in runs.SelectMany(r => r.Rows).GroupBy(Key).OrderBy(g => g.Key))
         {
@@ -225,12 +278,15 @@ internal static class Program
             double clipper = g.Where(r => r.Method.StartsWith("Clipper", StringComparison.Ordinal)).Min(r => r.MedianNs);
             return new { g.Key.Input, g.Key.Rule, ClipperOverPrototype = clipper / candidate, Pass = clipper / candidate >= 1.25 };
         }).ToArray();
-        Require(gates.Length == 4, "Expected four gates.");
-        var evidence = new { Protocol = "benchmarks/PolylineKit.ScanbeamBenchmarks/PROTOCOL.md", Environment = runs[0] with { Rows = [] },
+        Require(gates.Length == (wide ? 8 : 4), "Unexpected number of gates.");
+        string protocol = wide ? "WIDE-PROTOCOL.md" : "PROTOCOL.md";
+        var evidence = new { Protocol = "benchmarks/PolylineKit.ScanbeamBenchmarks/" + protocol, Environment = runs[0] with { Rows = [] },
             RawFiles = paths.Select(p => new { File = Path.GetFileName(p), Sha256 = Hash(File.ReadAllBytes(p)) }),
             SampleCount = runs.Sum(r => r.Rows.Sum(row => row.Samples.Length)), Pass = gates.All(g => g.Pass), Gates = gates, Measurements = aggregates };
         File.WriteAllText(Path.Combine(directory, "evidence.json"), JsonSerializer.Serialize(evidence, Json) + "\n");
-        var report = new StringBuilder("# Integer scanbeam timing summary\n\nMedian of three process medians; range is their minimum–maximum. Warm complete calls, managed allocations only. See PROTOCOL.md for different preparation and numerical contracts.\n\n");
+        var report = new StringBuilder($"# Integer scanbeam {(wide ? "wider-coordinate " : "")}timing summary\n\nMedian of three process medians; range is their minimum–maximum. Warm complete calls, managed allocations only. See {protocol} for different preparation and numerical contracts.\n\n");
+        if (wide)
+            report.AppendLine("All four exact transformations force this implementation's Int128 path. Translation alone does not make that arithmetic cost unavoidable. Eight area-invariance checks passed; they are metamorphic checks, not an independent exact-area oracle for the full walks.\n");
         report.AppendLine($"Predeclared gate: **{(gates.All(g => g.Pass) ? "PASS" : "FAIL")}**.\n");
         report.AppendLine("| Input | Fill | Method | us | Range us | B/op | Area minus Winding |\n|---|---|---|---:|---:|---:|---:|");
         foreach (Aggregate r in aggregates)

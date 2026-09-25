@@ -9,8 +9,23 @@ internal sealed record Input(string Name, Point2[] Points, bool Gate)
     internal string Hash => Convert.ToHexStringLower(SHA256.HashData(JsonSerializer.SerializeToUtf8Bytes(Points)));
 }
 
+internal sealed record WideTransform(Input Source, Input Result, int CoordinateScale, int Offset);
+
 internal static class Inputs
 {
+    internal static WideTransform[] CreateWideTransforms()
+    {
+        return Create().Where(input => input.Gate).SelectMany(input => new[]
+        {
+            new WideTransform(input, new Input(input.Name + "-scaled-65536",
+                input.Points.Select(p => new Point2(p.X * 65536, p.Y * 65536)).ToArray(), true), 65536, 0),
+            new WideTransform(input, new Input(input.Name + "-translated-400000",
+                input.Points.Select(p => new Point2(p.X + 400000, p.Y + 400000)).ToArray(), true), 1, 400000)
+        }).ToArray();
+    }
+
+    internal static Input[] CreateWide() => CreateWideTransforms().Select(t => t.Result).ToArray();
+
     internal static Input[] Create()
     {
         var result = new List<Input>();

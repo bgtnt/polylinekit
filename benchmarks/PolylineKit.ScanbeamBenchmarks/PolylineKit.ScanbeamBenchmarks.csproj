@@ -8,7 +8,12 @@
   <ItemGroup>
     <ProjectReference Include="../../src/PolylineKit.Winding/PolylineKit.Winding.csproj" />
     <PackageReference Include="Clipper2" Version="2.0.0" />
+    <!-- Reuse the repository's independent GIS validation and strongest direct Clipper adapter. -->
+    <PackageReference Include="NetTopologySuite" Version="2.6.0" />
+    <Compile Include="../../examples/RegionCoverage/Comparators.cs" Link="RegionComparators.cs" />
     <Compile Include="../Shared/ExactAreaOracle.cs" Link="ExactAreaOracle.cs" />
     <None Include="../fixtures/winding.json" Link="winding.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../examples/RegionCoverage/data/zones.json" Link="data/zones.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../examples/RegionCoverage/data/queries.json" Link="data/queries.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

@@ -4,19 +4,20 @@ namespace PolylineKit.ScanbeamBenchmarks;
 
 /// <summary>Experimental area-only sweep of bounded integer closed walks.</summary>
 /// <remarks>
-/// No input rounding: coordinates must be integers in [-32768,32768], with 3..8192 supplied vertices.
+/// No input rounding: coordinates must be integers in [-524288,524288], with at most 8192 supplied vertices
+/// across the operation and at least three per loop. Loops close independently; no connector edges are added.
 /// Topology and event ordering use exact integer/rational arithmetic; the final integrals use binary64.
 /// This mutable reusable instance is neither thread-safe nor reentrant. Its endpoint-band rebuild and
 /// insertion-sort inversion enumeration deliberately target few-level degenerate grids, not arbitrary paths.
 /// </remarks>
 internal sealed class IntegerScanbeam
 {
-    private const int CoordinateLimit = 32768, Int64CoordinateLimit = 2048, VertexLimit = 8192;
+    private const int CoordinateLimit = 524288, Int64CoordinateLimit = 2048, VertexLimit = 8192;
 
-    private readonly struct Edge(long y0, long y1, long dx, long dy, long intercept, int delta)
+    private readonly struct Edge(long y0, long y1, long dx, long dy, long intercept, int delta, int loop)
     {
         internal readonly long Y0 = y0, Y1 = y1, Dx = dx, Dy = dy, B = intercept;
-        internal readonly int Delta = delta;
+        internal readonly int Delta = delta, Loop = loop;
     }
 
     private readonly record struct Level(long N, long D)
@@ -34,12 +35,12 @@ internal sealed class IntegerScanbeam
     private Point2[] vertices = [];
     private Edge[] edges = [];
     private long[] levels = [];
-    private int[] active = [], topOrder = [], positions = [], prefix = [];
+    private int[] active = [], topOrder = [], positions = [], prefix = [], prefixB = [];
     private Level[] lastLevel = [];
     private Crossing[] crossings = [];
     private int edgeCount, crossingCount;
     private long bottom, top;
-    private bool nonZero, useInt64;
+    private bool nonZero, useInt64, intersectTwoLoops;
     private Sum area;
     private readonly Comparison<int> bottomComparison;
     private readonly Comparison<int> slopeComparison;
@@ -67,32 +68,78 @@ internal sealed class IntegerScanbeam
             throw new ArgumentException("The experimental sweep requires 3..8192 supplied vertices.", nameof(path));
         EnsureVertices(count);
         useInt64 = true;
+        CopyLoop(path, count, 0, nameof(path));
+        edgeCount = 0;
+        AppendEdges(0, count, 0);
+        return Sweep(count, fillRule, false);
+    }
+
+    /// <summary>Intersection area of two independently filled, implicitly closed integer loops.</summary>
+    /// <remarks>
+    /// Each loop requires at least three supplied vertices; at most 8192 are accepted in total. Repeated
+    /// vertices, optional repeated closure, self intersections and retracing are accepted. Coordinates are
+    /// validated exactly against [-524288,524288], without rounding. The fill rule applies to each loop
+    /// separately. The same mutable-instance and approximate area-value contract as Measure applies.
+    /// </remarks>
+    internal double MeasureIntersection(IReadOnlyList<Point2> first, IReadOnlyList<Point2> second,
+        PathFillRule fillRule = PathFillRule.NonZero)
+    {
+        if (fillRule != PathFillRule.NonZero && fillRule != PathFillRule.EvenOdd)
+            throw new ArgumentOutOfRangeException(nameof(fillRule));
+        ArgumentNullException.ThrowIfNull(first);
+        ArgumentNullException.ThrowIfNull(second);
+        int firstCount = first.Count, secondCount = second.Count;
+        if (firstCount < 3) throw new ArgumentException("Each loop requires at least three supplied vertices.", nameof(first));
+        if (secondCount < 3) throw new ArgumentException("Each loop requires at least three supplied vertices.", nameof(second));
+        if (firstCount > VertexLimit || secondCount > VertexLimit - firstCount)
+            throw new ArgumentException("The experimental sweep accepts at most 8192 supplied vertices in total.");
+        int count = firstCount + secondCount;
+        EnsureVertices(count);
+        useInt64 = true;
+        CopyLoop(first, firstCount, 0, nameof(first));
+        CopyLoop(second, secondCount, firstCount, nameof(second));
+        edgeCount = 0;
+        AppendEdges(0, firstCount, 0);
+        AppendEdges(firstCount, count, 1);
+        return Sweep(count, fillRule, true);
+    }
+
+    private void CopyLoop(IReadOnlyList<Point2> path, int count, int offset, string name)
+    {
         for (int i = 0; i < count; i++)
         {
             Point2 p = path[i];
             if (!double.IsFinite(p.X) || !double.IsFinite(p.Y) || Math.Abs(p.X) > CoordinateLimit ||
                 Math.Abs(p.Y) > CoordinateLimit || p.X != Math.Truncate(p.X) || p.Y != Math.Truncate(p.Y))
-                throw new ArgumentException("Coordinates must be exact integers in [-32768,32768].", nameof(path));
+                throw new ArgumentException("Coordinates must be exact integers in [-524288,524288].", name);
             if (p.X < -Int64CoordinateLimit || p.X > Int64CoordinateLimit ||
                 p.Y < -Int64CoordinateLimit || p.Y > Int64CoordinateLimit) useInt64 = false;
-            vertices[i] = p;
-            levels[i] = (long)p.Y;
+            vertices[offset + i] = p;
+            levels[offset + i] = (long)p.Y;
         }
-        edgeCount = 0;
-        for (int i = 0; i < count; i++)
+    }
+
+    private void AppendEdges(int from, int to, int loop)
+    {
+        for (int i = from; i < to; i++)
         {
-            Point2 a = vertices[i], b = vertices[(i + 1) % count];
+            Point2 a = vertices[i], b = vertices[i + 1 == to ? from : i + 1];
             if (a.Y == b.Y) continue; // Horizontal edges have zero vertical-sweep measure.
             int delta = a.Y < b.Y ? 1 : -1;
             if (delta < 0) (a, b) = (b, a);
             long x = (long)a.X, y = (long)a.Y, dx = (long)b.X - x, dy = (long)b.Y - y;
-            edges[edgeCount++] = new(y, (long)b.Y, dx, dy, x * dy - y * dx, delta);
+            edges[edgeCount++] = new(y, (long)b.Y, dx, dy, x * dy - y * dx, delta, loop);
         }
+    }
+
+    private double Sweep(int count, PathFillRule fillRule, bool intersection)
+    {
         Array.Sort(levels, 0, count);
         int levelCount = 0;
         for (int i = 0; i < count; i++)
             if (levelCount == 0 || levels[i] != levels[levelCount - 1]) levels[levelCount++] = levels[i];
         nonZero = fillRule == PathFillRule.NonZero;
+        intersectTwoLoops = intersection;
         area = default;
         EventCount = EventGroupCount = 0;
         BandCount = PeakActiveCount = 0;
@@ -112,7 +159,7 @@ internal sealed class IntegerScanbeam
                 int id = active[i];
                 topOrder[i] = id; positions[id] = i; lastLevel[i] = start;
             }
-            SetWinding(0, n, 0);
+            SetWinding(0, n, 0, 0);
             FindCrossings(n);
             crossings.AsSpan(0, crossingCount).Sort(crossingComparison);
             for (int c = 0; c < crossingCount;)
@@ -128,7 +175,7 @@ internal sealed class IntegerScanbeam
                 }
                 // All edges through an interior multiway crossing form one contiguous block. Coincident
                 // support-line cohorts are included in full because every member crosses the other slopes.
-                int w = prefix[lo];
+                int w = prefix[lo], wB = intersectTwoLoops ? prefixB[lo] : 0;
                 for (int i = lo; i <= hi; i++)
                 {
                     int id = active[i];
@@ -140,7 +187,7 @@ internal sealed class IntegerScanbeam
                 for (int i = Math.Max(0, lo - 1); i <= Math.Min(n - 2, hi); i++) AccumulateGap(i, first.Y);
                 active.AsSpan(lo, hi - lo + 1).Sort(slopeComparison);
                 for (int i = lo; i <= hi; i++) positions[active[i]] = i;
-                SetWinding(lo, hi + 1, w);
+                SetWinding(lo, hi + 1, w, wB);
                 EventGroupCount++;
                 c = end;
             }
@@ -179,12 +226,24 @@ internal sealed class IntegerScanbeam
         EventCount += crossingCount;
     }
 
-    private void SetWinding(int from, int to, int winding)
+    private void SetWinding(int from, int to, int winding, int windingB)
     {
-        for (int i = from; i < to; i++)
+        if (!intersectTwoLoops)
         {
-            prefix[i] = winding;
-            winding += edges[active[i]].Delta;
+            for (int i = from; i < to; i++)
+            {
+                prefix[i] = winding;
+                winding += edges[active[i]].Delta;
+            }
+        }
+        else
+        {
+            for (int i = from; i < to; i++)
+            {
+                prefix[i] = winding; prefixB[i] = windingB;
+                Edge e = edges[active[i]];
+                if (e.Loop == 0) winding += e.Delta; else windingB += e.Delta;
+            }
         }
     }
 
@@ -195,7 +254,17 @@ internal sealed class IntegerScanbeam
         Level previous = lastLevel[position];
         lastLevel[position] = y;
         int left = active[position], right = active[position + 1];
-        if (Fill(prefix[position] + edges[left].Delta) == 0) return;
+        Edge boundary = edges[left];
+        if (!intersectTwoLoops)
+        {
+            if (Fill(prefix[position] + boundary.Delta) == 0) return;
+        }
+        else
+        {
+            int w = prefix[position], wB = prefixB[position];
+            if (boundary.Loop == 0) w += boundary.Delta; else wB += boundary.Delta;
+            if (Fill(w) == 0 || Fill(wB) == 0) return;
+        }
         // Subtract exact rational levels before rounding, including levels closer than one binary64 ULP.
         double height;
         if (useInt64)
@@ -258,14 +327,12 @@ internal sealed class IntegerScanbeam
         return comparison != 0 ? comparison : left.CompareTo(right);
     }
 
-    // With M=2^15, |dx|,dy<=2^16 and |B|<=2^32. Event |N|<=2^49,D<=2^33.
-    // Evaluating x gives |numerator|<=2^66, denominator<=2^49; comparison products fit below 2^116.
-    // Gap-width numerators are below 2^83 and denominators below 2^65; height differences below 2^83 and
-    // denominators below 2^66. We convert these local fractions separately rather than multiplying their
-    // exact numerators, which would require a wider intermediate.
-    // The Int64 branch uses the tighter B=x0*y1-y0*x1 bound: |B|<=2M^2, |N|<=8M^3, D<=8M^2.
-    // Every comparison, width and height numerator is then <=128M^5, and every denominator <=64M^4.
-    // At M=2048 these are 2^62 and 2^50 respectively, including all intermediate sums/products.
+    // For coordinates bounded by M, |dx|,dy<=2M and B=x0*y1-y0*x1 gives |B|<=2M^2. Event |N|<=8M^3,
+    // D<=8M^2; each integer-level comparator operand is <=8M^3. With M=2^19 these fit in Int64 (<=2^60).
+    // Every rational comparison, width and height numerator is <=128M^5, and every denominator <=64M^4.
+    // At M=524288 these are 2^102 and 2^82, within Int128; at M=2048 they are 2^62 and 2^50, within Int64.
+    // These bounds include all intermediate sums/products. Local fractions are converted separately before
+    // multiplying width by height; multiplying their exact numerators could exceed Int128.
     // Selection depends on every original coordinate on every call; larger input retains the Int128 path.
     private int CompareX(int left, int right, Level y)
     {
@@ -293,7 +360,7 @@ internal sealed class IntegerScanbeam
         int capacity = Math.Max(256, count + count / 2);
         vertices = new Point2[capacity]; edges = new Edge[capacity]; levels = new long[capacity];
         active = new int[capacity]; topOrder = new int[capacity]; positions = new int[capacity];
-        prefix = new int[capacity]; lastLevel = new Level[capacity];
+        prefix = new int[capacity]; prefixB = new int[capacity]; lastLevel = new Level[capacity];
     }
 
     private struct Sum

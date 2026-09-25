@@ -8,8 +8,9 @@ comparison baseline and go/no-go threshold.
 The [measured results](RESULTS.md) retain two failed arithmetic variants and
 the final passing grid experiment, including its losses on other shapes.
 
-`IntegerScanbeam` accepts one implicitly closed walk with 3..8192 supplied
-points, integer coordinates in [-32768, 32768], and NonZero or EvenOdd fill.
+`IntegerScanbeam` accepts one implicitly closed walk, or the intersection of two
+independently closed walks, with at least three supplied points per walk and
+8192 in total, integer coordinates in [-524288, 524288], and NonZero or EvenOdd fill.
 It rejects other inputs instead of quantizing or silently falling back.
 The reusable instance owns mutable buffers and is neither thread-safe nor
 reentrant. The shipping `WindingArea` APIs and their broader contracts are
@@ -17,6 +18,13 @@ unchanged. There is no new runtime dependency in either library project.
 Within this accepted domain, coordinates entirely within ±2048 select proven
 Int64 arithmetic; otherwise exact event arithmetic uses Int128. Neither branch
 rounds intersections onto a grid. Final area integration remains binary64.
+
+The extension adds a [real-contour intersection protocol](REAL-PROTOCOL.md) and
+[wider-coordinate controls](WIDE-PROTOCOL.md). Run `check-real <directory>` and
+`check-wide` for their untimed validation. Use `benchmark-real`/`summarize-real`
+or `benchmark-wide`/`summarize-wide` with the same arguments as the original
+runner below, in distinct artifact directories. The original results remain
+historical measurements of their explicitly identified commits.
 
 From the repository root, using PowerShell:
 
