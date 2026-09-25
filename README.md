@@ -23,6 +23,11 @@ library also supplies normalization, alignment and Clipper-generated contours.
 The [area-change example](examples/AreaChange/README.md) uses licensed real contours,
 records simplification settings, and produces measurements and overlays.
 
+For independent regions, the [coverage example](examples/RegionCoverage/README.md)
+measures intersection and the fraction of a prepared zone covered by another
+region. It compares complete county/district populations with Clipper2, NTS and
+optional WPF, with separate accuracy, preparation and repeated-query costs.
+
 ## Compare, normalize, align
 
 ```csharp

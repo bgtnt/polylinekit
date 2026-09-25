@@ -6,6 +6,7 @@
   <Folder Name="/examples/">
     <Project Path="examples/Basic/Basic.csproj" />
     <Project Path="examples/AreaChange/AreaChange.csproj" />
+    <Project Path="examples/RegionCoverage/RegionCoverage.csproj" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/PolylineKit/PolylineKit.csproj" />

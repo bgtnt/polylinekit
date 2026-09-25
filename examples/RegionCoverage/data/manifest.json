@@ -1,0 +1,3233 @@
+{
+  "SchemaVersion": 1,
+  "SelectionProtocol": "PROTOCOL.md",
+  "ProtocolSha256": "8e0afea0ee6cc22cad0f75e32ba7fc7f35965c025fc70662a180ca9f5e6689fa",
+  "FrozenUtc": "2026-09-25T03:39:53.388515+00:00",
+  "Source": "U.S. Census Bureau, TIGERweb Generalized ACS2024; January 1, 2024 vintage",
+  "License": "U.S. Census Bureau public data; U.S. government work, public domain in the United States",
+  "LicenseUrl": "https://www2.census.gov/foia/ds_policies/ds027.pdf",
+  "LicenseReference": "Page 9; Census employee works generally are not subject to U.S. copyright.",
+  "CitationUrl": "https://www.census.gov/about/policies/citation.html",
+  "Where": "STATE='37'",
+  "SpatialReference": "EPSG:5070 / NAD83 Conus Albers",
+  "CoordinateUnit": "metre",
+  "CoordinateChanges": "Remove one duplicate closing vertex only; no translation, scaling, rounding, repair or simplification.",
+  "Relationship": "Different administrative layers from the same Census source; not independent observations or land-cover classes.",
+  "SourceFiles": [
+    {
+      "File": "source/nc-counties.geojson",
+      "Url": "https://tigerweb.geo.census.gov/arcgis/rest/services/Generalized_ACS2024/State_County/MapServer/12/query?where=STATE%3D%2737%27&outFields=%2A&outSR=5070&orderByFields=GEOID&f=geojson&returnGeometry=true",
+      "RetrievedUtc": "2026-09-25T03:39:49.968975+00:00",
+      "ResponseDate": "Fri, 25 Sep 2026 03:39:49 GMT",
+      "Bytes": 328072,
+      "Sha256": "4e114c8d8168e782ac185cd1f1f7bc7c4a1772e218e9502d00b204837bc5441b"
+    },
+    {
+      "File": "source/nc-counties-layer.json",
+      "Url": "https://tigerweb.geo.census.gov/arcgis/rest/services/Generalized_ACS2024/State_County/MapServer/12?f=json",
+      "RetrievedUtc": "2026-09-25T03:39:50.512052+00:00",
+      "ResponseDate": "Fri, 25 Sep 2026 03:39:50 GMT",
+      "Bytes": 6085,
+      "Sha256": "f672fa9e279602697fb0a575ba6409acbd378bfc0dbe941481cf67499ca18967"
+    },
+    {
+      "File": "source/nc-counties-count.json",
+      "Url": "https://tigerweb.geo.census.gov/arcgis/rest/services/Generalized_ACS2024/State_County/MapServer/12/query?where=STATE%3D%2737%27&returnCountOnly=true&f=json",
+      "RetrievedUtc": "2026-09-25T03:39:51.107194+00:00",
+      "ResponseDate": "Fri, 25 Sep 2026 03:39:51 GMT",
+      "Bytes": 13,
+      "Sha256": "f65a04fc8ad700ad00260653617fd76ad37f1a0791d867746dc8a6cca68188bf"
+    },
+    {
+      "File": "source/nc-districts.geojson",
+      "Url": "https://tigerweb.geo.census.gov/arcgis/rest/services/Generalized_ACS2024/Legislative/MapServer/6/query?where=STATE%3D%2737%27&outFields=%2A&outSR=5070&orderByFields=GEOID&f=geojson&returnGeometry=true",
+      "RetrievedUtc": "2026-09-25T03:39:52.246891+00:00",
+      "ResponseDate": "Fri, 25 Sep 2026 03:39:51 GMT",
+      "Bytes": 212335,
+      "Sha256": "237b71fa2dd7cc73e4e46a0b624ab0256051bf4200e4920ecc805720f6a0886f"
+    },
+    {
+      "File": "source/nc-districts-layer.json",
+      "Url": "https://tigerweb.geo.census.gov/arcgis/rest/services/Generalized_ACS2024/Legislative/MapServer/6?f=json",
+      "RetrievedUtc": "2026-09-25T03:39:52.812088+00:00",
+      "ResponseDate": "Fri, 25 Sep 2026 03:39:52 GMT",
+      "Bytes": 5934,
+      "Sha256": "e7d323ea7a6a46252343738b10d1c199a0dd592d9c7e0b9f00e0e8ee3484ccdf"
+    },
+    {
+      "File": "source/nc-districts-count.json",
+      "Url": "https://tigerweb.geo.census.gov/arcgis/rest/services/Generalized_ACS2024/Legislative/MapServer/6/query?where=STATE%3D%2737%27&returnCountOnly=true&f=json",
+      "RetrievedUtc": "2026-09-25T03:39:53.388515+00:00",
+      "ResponseDate": "Fri, 25 Sep 2026 03:39:53 GMT",
+      "Bytes": 12,
+      "Sha256": "d086d346fbb21cce7fd033131dbc339e86fd2416ddc29c726c6708825c13f382"
+    }
+  ],
+  "Layers": [
+    {
+      "Role": "zones",
+      "LayerUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/Generalized_ACS2024/State_County/MapServer/12",
+      "LayerName": "Counties 5M",
+      "Description": "Counties (or statistically equivalent entities); January 1, 2024 vintage; Generalized",
+      "SourceFeatures": 100,
+      "EligibleSingleRingFeatures": 98,
+      "ExcludedFeatures": 2,
+      "GeometryTypes": {
+        "MultiPolygon": 2,
+        "Polygon": 98
+      },
+      "SourceFeaturesWithHoles": 0,
+      "TotalEligibleVertices": 6660,
+      "MinimumEligibleVertices": 25,
+      "MaximumEligibleVertices": 208,
+      "GeometryValidity": "Not inferred; runner independently validates every admitted ring before timing.",
+      "DerivedFile": "zones.json",
+      "DerivedBytes": 594286,
+      "DerivedSha256": "072435edead13272c0ccb85166d5c34d13d9805db6497db43e74ede59c920aa3",
+      "Features": [
+        {
+          "Id": "37001",
+          "Name": "Alamance County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "bc10ffaee6be9971fedd7eb44f36188b8c40b2a34d8acbae618a69fb1dad0871",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 36,
+          "Bounds": [
+            1459078.1574590427,
+            1548447.6126966737,
+            1492873.35992234,
+            1596990.3255431177
+          ]
+        },
+        {
+          "Id": "37003",
+          "Name": "Alexander County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "bcf0d5ccb640adc6d4561895e18dee458634980cdf6f53b3e4ab6bd3a8a1304d",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 37,
+          "Bounds": [
+            1305591.4279039314,
+            1517095.305812033,
+            1334777.1333097008,
+            1548922.2594445357
+          ]
+        },
+        {
+          "Id": "37005",
+          "Name": "Alleghany County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "391cfa91a4188db75d4578958937f7cef17bb9fc67dc45b49dee270a713aa3ec",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 47,
+          "Bounds": [
+            1293473.4036428272,
+            1581314.314951594,
+            1333253.242469485,
+            1607788.9680576436
+          ]
+        },
+        {
+          "Id": "37007",
+          "Name": "Anson County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "a21f89335c07027cc8c1dafc59cf145be39827575de75bdba72a1a57f77ee6ca",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 59,
+          "Bounds": [
+            1413125.8170122087,
+            1423095.672538383,
+            1456771.3827513542,
+            1468136.42631164
+          ]
+        },
+        {
+          "Id": "37009",
+          "Name": "Ashe County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "f24032f17b6abd962e6f3ae5331bfc2e52f5e40616979807b4a3a4303f625b7f",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 103,
+          "Bounds": [
+            1262424.8889024416,
+            1564266.5197199732,
+            1306308.290425894,
+            1602983.6491562696
+          ]
+        },
+        {
+          "Id": "37011",
+          "Name": "Avery County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "7357aa070ebf6202c8a80c479c65d92704ebb9ff141aac43efb20cb811bb116e",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 54,
+          "Bounds": [
+            1237348.8500792172,
+            1521118.2669755854,
+            1268453.470284312,
+            1563579.035607581
+          ]
+        },
+        {
+          "Id": "37013",
+          "Name": "Beaufort County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "b8cad76c7d3b2af82135f8082e4fe5c4382484e38cc4b5a19f930d3ab4a1f577",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 81,
+          "Bounds": [
+            1675623.7826590748,
+            1524633.3583546989,
+            1742886.3294242574,
+            1582026.071633068
+          ]
+        },
+        {
+          "Id": "37015",
+          "Name": "Bertie County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "9558963558d4fec8d6e135b4f0986ab6902475e68fa3ea4d86733e660e840567",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 108,
+          "Bounds": [
+            1655489.7314279152,
+            1589306.8453142215,
+            1714382.3374048802,
+            1639603.3878974747
+          ]
+        },
+        {
+          "Id": "37017",
+          "Name": "Bladen County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "372a12dbccdf8d51a5ad37b2a3346779626fd6107cbbb48be0d77b9df0ab78b1",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 66,
+          "Bounds": [
+            1542624.5640127885,
+            1404692.9974863827,
+            1615041.3569052087,
+            1456507.531485917
+          ]
+        },
+        {
+          "Id": "37019",
+          "Name": "Brunswick County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "8b3300c4f26366aae739a5f67dd3200fe47b76626165d83d9e41ea35761278e0",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 97,
+          "Bounds": [
+            1582729.9607436825,
+            1345363.2538212184,
+            1647692.8461743277,
+            1409275.3053098973
+          ]
+        },
+        {
+          "Id": "37021",
+          "Name": "Buncombe County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "4aed33251602e1499f4f02896b9b4c45472467495b14bdbf99ef72e9c4dfda52",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 84,
+          "Bounds": [
+            1172742.9897797247,
+            1457210.355467083,
+            1238957.056396476,
+            1506247.704900233
+          ]
+        },
+        {
+          "Id": "37023",
+          "Name": "Burke County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "0da2dcd258c48b4ad37e1f5cc5c7adf47d886ecbfbde167c5b7334dbd4f2e370",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 65,
+          "Bounds": [
+            1250564.0948965205,
+            1485961.8010522109,
+            1306413.57242006,
+            1531885.5565240737
+          ]
+        },
+        {
+          "Id": "37025",
+          "Name": "Cabarrus County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "810baa6c1770ac7a805eb37cebbc3594c3b526db4f3ce2b14ee509c40ea0e1e9",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 46,
+          "Bounds": [
+            1362327.2358768051,
+            1461316.658035215,
+            1405814.096717479,
+            1499506.856539514
+          ]
+        },
+        {
+          "Id": "37027",
+          "Name": "Caldwell County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "9f9e7b47be8ac99d2f912e4ea6041fe289a1d844281ff394d86cd1f94b500187",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 51,
+          "Bounds": [
+            1261115.9377035657,
+            1511990.8904986847,
+            1308537.7988288088,
+            1549759.6039167074
+          ]
+        },
+        {
+          "Id": "37029",
+          "Name": "Camden County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "3a1e3a8cb3587a5a76069f54e9a73325e7fd025b3481f297f0c2dd18e3484f11",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 66,
+          "Bounds": [
+            1713751.512396364,
+            1645325.7684338912,
+            1778065.6209558484,
+            1680605.032755958
+          ]
+        },
+        {
+          "Id": "37031",
+          "Name": "Carteret County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "c4ef960ceb38642097c17261c3007c42bf06c5af27a2dadf0695b023f8f95c65",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 173,
+          "Bounds": [
+            1698108.590670135,
+            1457060.0697675664,
+            1792357.7691271342,
+            1523808.6522562895
+          ]
+        },
+        {
+          "Id": "37033",
+          "Name": "Caswell County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "3ebfb2275e0e2d3719415bf565681ae3a28428dd0cb57ec49a22263d764549c0",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 27,
+          "Bounds": [
+            1455048.032985457,
+            1593436.977566517,
+            1492363.8991274643,
+            1631751.89898198
+          ]
+        },
+        {
+          "Id": "37035",
+          "Name": "Catawba County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "f1b031907a7ff3802637559724d611c82a1266d7e325ff94f5d93cc52f231066",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 53,
+          "Bounds": [
+            1294604.4491963498,
+            1489098.1000660155,
+            1347846.3055911139,
+            1523268.0244401935
+          ]
+        },
+        {
+          "Id": "37037",
+          "Name": "Chatham County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "3dc8a35c58dbb8ffeeaed0cab2dcce8202836208a42cfdf103c41d3471155aa0",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 60,
+          "Bounds": [
+            1465993.2504568927,
+            1512039.4230521377,
+            1526385.3170066539,
+            1561183.2424419746
+          ]
+        },
+        {
+          "Id": "37039",
+          "Name": "Cherokee County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "a97af420a00222f97241e7bdadaa0611fc00c42996424050562672a53acbde48",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 116,
+          "Bounds": [
+            1054151.9920206822,
+            1390380.891500866,
+            1107694.701224974,
+            1427394.3602788225
+          ]
+        },
+        {
+          "Id": "37041",
+          "Name": "Chowan County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "124e511baec2eb4db12fcabb5279b09375ef2e1dcc77a89c081a964b9d0ec530",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 46,
+          "Bounds": [
+            1706029.8436354713,
+            1616141.6063449997,
+            1735898.9996615825,
+            1654258.2121356316
+          ]
+        },
+        {
+          "Id": "37043",
+          "Name": "Clay County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "b7dd815f9fb865f9f41567cbf50147a087247e9a76890d2aa9a807a80f3b28b6",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 43,
+          "Bounds": [
+            1082991.8516832641,
+            1393834.2580003273,
+            1129830.3719312206,
+            1416970.5891586412
+          ]
+        },
+        {
+          "Id": "37045",
+          "Name": "Cleveland County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "7a6181cc1462f01a5493c2596d22f86b04e67727a93a44484a7f15f8acbed8de",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 62,
+          "Bounds": [
+            1280409.1766412014,
+            1443040.178301951,
+            1319983.1058617332,
+            1488806.5853612367
+          ]
+        },
+        {
+          "Id": "37047",
+          "Name": "Columbus County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "e6e86d01982eef7f5f1345c814305f5ca02fa69c73618a5c3c16ecddb9c083cf",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 80,
+          "Bounds": [
+            1538138.315289835,
+            1353672.9372377228,
+            1618569.1702118681,
+            1411134.442152204
+          ]
+        },
+        {
+          "Id": "37049",
+          "Name": "Craven County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "b6b2ed7408d9820383e0be8aff1ad7e0f9bae3233e45ce3124772cd170586552",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 76,
+          "Bounds": [
+            1661383.858707029,
+            1476056.08364751,
+            1740613.590454814,
+            1540672.392173645
+          ]
+        },
+        {
+          "Id": "37051",
+          "Name": "Cumberland County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "3cdc4deb7c777f8c530d4942e81235f089e9be34be54919329b0b61a133bbf44",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 69,
+          "Bounds": [
+            1518053.7066473651,
+            1447518.2586826328,
+            1578531.3974213912,
+            1497896.8947746716
+          ]
+        },
+        {
+          "Id": "37053",
+          "Name": "Currituck County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "6cf3a24cb5a5fc8630cc6ec6c7e7db276ebf2c893c4730ea9d7915af063a271d",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 146,
+          "Bounds": [
+            1733560.4240363,
+            1637768.42999548,
+            1789926.8968695544,
+            1688795.7911274126
+          ]
+        },
+        {
+          "Id": "37055",
+          "Name": "Dare County",
+          "GeometryType": "MultiPolygon",
+          "Components": 4,
+          "RingsPerComponent": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "bac6d07cbadf7d4f9a57924a963f2d1505f510a87037b9b99f965a8ab333802b",
+          "EligibleSingleRing": false,
+          "ExclusionReason": "MultiPolygon; no component removed or flattened"
+        },
+        {
+          "Id": "37057",
+          "Name": "Davidson County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "c2006ffb03968c598975313dd7b6f917846bd5aff72cbb9580fe0fcc0c9c52af",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 67,
+          "Bounds": [
+            1382764.7859311502,
+            1501306.6390521955,
+            1426033.7316380732,
+            1559514.134095165
+          ]
+        },
+        {
+          "Id": "37059",
+          "Name": "Davie County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "9a12d3d46c5054fb88ac56a2ca51bcac4af1d66f20278826120fea27fb481778",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 55,
+          "Bounds": [
+            1360673.3037049517,
+            1523592.2363272477,
+            1392309.1559320812,
+            1558854.2387585118
+          ]
+        },
+        {
+          "Id": "37061",
+          "Name": "Duplin County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "35b7ebe4b4e576d63c13fef487a8e5fad2dcce476fcf0d73a884953e1bdc5233",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 52,
+          "Bounds": [
+            1601093.4006729529,
+            1446498.9056769386,
+            1653999.7323450258,
+            1503017.030276319
+          ]
+        },
+        {
+          "Id": "37063",
+          "Name": "Durham County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "4e91e6e6a49ca0ab7d6a7b960964a8d1015a2799aca11969e3d3b8a7203733ee",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 55,
+          "Bounds": [
+            1510241.3230125357,
+            1558885.5314361993,
+            1536829.2974473042,
+            1603354.1121328333
+          ]
+        },
+        {
+          "Id": "37065",
+          "Name": "Edgecombe County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "2fdfcd5fa105ce7bc820bc69d50546905d371baf935afd415dc8a360011eeb65",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 46,
+          "Bounds": [
+            1616385.3704488927,
+            1560539.1154614445,
+            1659418.162620813,
+            1613004.7260826733
+          ]
+        },
+        {
+          "Id": "37067",
+          "Name": "Forsyth County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "a5952b616b546982a9948ab81eabc0b6f16212be431be88ffdaf55d0dd28516a",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 61,
+          "Bounds": [
+            1375630.437276118,
+            1549944.4867010918,
+            1418675.5714525233,
+            1586656.6627431978
+          ]
+        },
+        {
+          "Id": "37069",
+          "Name": "Franklin County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "bcafc8eb2c7df7037c0497adcd25dddcbae6a43062e20ad4334870926b00c876",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 47,
+          "Bounds": [
+            1549030.2682491774,
+            1566289.156044145,
+            1593663.5675822364,
+            1615779.7469850928
+          ]
+        },
+        {
+          "Id": "37071",
+          "Name": "Gaston County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "c9cae1801b81420a5dcdcede3cdae5025202e368188e2a35568d28083796f231",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 74,
+          "Bounds": [
+            1304222.387052929,
+            1447182.443403421,
+            1352642.7408813564,
+            1478587.3929236848
+          ]
+        },
+        {
+          "Id": "37073",
+          "Name": "Gates County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "8b554becd78d872909474b010b7f7af3e8120dad22342ef2537a39dc2e2685b4",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 52,
+          "Bounds": [
+            1679986.6682025227,
+            1645768.5595185459,
+            1725317.3629472184,
+            1676439.3705338296
+          ]
+        },
+        {
+          "Id": "37075",
+          "Name": "Graham County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "c488cf8e23e6dfe3aa01548f6b17d6bbb560b50f593d95a35628732031d53f22",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 106,
+          "Bounds": [
+            1075008.258848753,
+            1419846.2780239824,
+            1114810.827838614,
+            1448591.9625270609
+          ]
+        },
+        {
+          "Id": "37077",
+          "Name": "Granville County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "705a95479ac5e107e5c66a5afb3986de5b26f30ff1b039e9fa442680ec1dee51",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 48,
+          "Bounds": [
+            1517664.2684724932,
+            1583926.552117655,
+            1551320.7568379638,
+            1642713.3273135806
+          ]
+        },
+        {
+          "Id": "37079",
+          "Name": "Greene County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "631dc64724e841ce8973c3171b50213c9b51a208d55754670a6857112e3c07f5",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 38,
+          "Bounds": [
+            1622905.2194396083,
+            1524323.6830196679,
+            1656937.2795358775,
+            1557440.1601282274
+          ]
+        },
+        {
+          "Id": "37081",
+          "Name": "Guilford County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "d3367310b4d0aff81e05a375879c5cda5db702be5570a1e3a8bf218381d57fa5",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 43,
+          "Bounds": [
+            1414776.105611278,
+            1549327.9231056664,
+            1464963.8841118952,
+            1592522.8439409072
+          ]
+        },
+        {
+          "Id": "37083",
+          "Name": "Halifax County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "7060b55c5833452191ba84eb2369fe4145260f70c2ee1ecb586fbceb46f0002d",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 77,
+          "Bounds": [
+            1593663.5675822364,
+            1600864.438285389,
+            1663685.7833223864,
+            1649443.3263324862
+          ]
+        },
+        {
+          "Id": "37085",
+          "Name": "Harnett County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "5dcac49e647adb2b127b7773ae3aaed4ec7eabf5c806b85548c3cde07d11b4bf",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 58,
+          "Bounds": [
+            1505459.45443941,
+            1483681.2388542444,
+            1565605.3441669988,
+            1529739.89183308
+          ]
+        },
+        {
+          "Id": "37087",
+          "Name": "Haywood County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "a76425e8f1ba1e8a65d2009cd4b24b2824cdb9583e8e993e89a3e48afd44ee44",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 140,
+          "Bounds": [
+            1139436.5263204204,
+            1440509.8370745052,
+            1189525.9136854578,
+            1495402.39279549
+          ]
+        },
+        {
+          "Id": "37089",
+          "Name": "Henderson County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "459ec1e2c3e76851f2dc40305ddede427bf7a08d87be67fe8951fe6c75ca32a3",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 126,
+          "Bounds": [
+            1189325.7080898788,
+            1428416.8578486685,
+            1232983.9684723462,
+            1470751.7429912407
+          ]
+        },
+        {
+          "Id": "37091",
+          "Name": "Hertford County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "0cab4e640d890007ce23f1807df9c4d050f6018aeb4ee3db0b966f5aafb83e5c",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 62,
+          "Bounds": [
+            1659717.849378622,
+            1631256.4774991255,
+            1706885.006902188,
+            1669038.6594109815
+          ]
+        },
+        {
+          "Id": "37093",
+          "Name": "Hoke County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "57b32960a619287558fb42c57e0eb24d0b5a0e9ead57ef05a701680f993b7be3",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 53,
+          "Bounds": [
+            1488872.6767120562,
+            1440735.9121450856,
+            1528233.2740710948,
+            1483705.2292873915
+          ]
+        },
+        {
+          "Id": "37095",
+          "Name": "Hyde County",
+          "GeometryType": "MultiPolygon",
+          "Components": 2,
+          "RingsPerComponent": [
+            1,
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "25fa9efbe880aa5a8d2a6e24755bfd6a878be4e607a3baef28350ef89ce12c03",
+          "EligibleSingleRing": false,
+          "ExclusionReason": "MultiPolygon; no component removed or flattened"
+        },
+        {
+          "Id": "37097",
+          "Name": "Iredell County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "3187bc6ea857e52274c33c0555353b0258412e63240b8952b691214406c5129b",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 58,
+          "Bounds": [
+            1328773.108605869,
+            1488464.5379319005,
+            1366557.3976992853,
+            1554295.8580919076
+          ]
+        },
+        {
+          "Id": "37099",
+          "Name": "Jackson County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "d64f6a6c27852e0f840156516d4575feecdb52e2a6f1089e3996c6aaf4b59e60",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 62,
+          "Bounds": [
+            1134280.7027759906,
+            1405906.7466214187,
+            1176135.297607476,
+            1462848.0375159085
+          ]
+        },
+        {
+          "Id": "37101",
+          "Name": "Johnston County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "9f6169e2ce7c1b241eaaebabd0c0682b5f672a606f7cf42bf58558d796a6c792",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 73,
+          "Bounds": [
+            1546000.6774387409,
+            1501340.6169075817,
+            1601536.5390562005,
+            1566289.156044145
+          ]
+        },
+        {
+          "Id": "37103",
+          "Name": "Jones County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "3d369e99e51c0fa77f37cca6b9165e1ee838beb940d99b66cb2960da1bbbdb82",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 47,
+          "Bounds": [
+            1643315.3980359486,
+            1470983.0023292005,
+            1707825.4270249233,
+            1515483.604164008
+          ]
+        },
+        {
+          "Id": "37105",
+          "Name": "Lee County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "9857871bacb4de5d622afe0f0515fff44ac010507002937912b27a38d875aeba",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 39,
+          "Bounds": [
+            1489220.2351312337,
+            1494962.2004229426,
+            1522895.957643858,
+            1531375.81290547
+          ]
+        },
+        {
+          "Id": "37107",
+          "Name": "Lenoir County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "496afcc77a668c382609d56c0ded1fc322a2c88203741919f7ceb2e43a2d2541",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 48,
+          "Bounds": [
+            1628107.115017246,
+            1486153.239839211,
+            1666295.1186285927,
+            1536550.9176863544
+          ]
+        },
+        {
+          "Id": "37109",
+          "Name": "Lincoln County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "4c08e7870a0b6f93ea1a5d7ca177fc7c6d79647202edcd062ec409b330246804",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 44,
+          "Bounds": [
+            1294475.7604232635,
+            1473779.0433706343,
+            1349117.0768778424,
+            1494756.5456395857
+          ]
+        },
+        {
+          "Id": "37111",
+          "Name": "McDowell County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "7b334bdbb77ce2ad67915d4bffbf5c861e68109f2d62c2bf5db4ef757147d3b3",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 54,
+          "Bounds": [
+            1225250.9657387042,
+            1475549.0514961332,
+            1268843.665936729,
+            1527021.116703555
+          ]
+        },
+        {
+          "Id": "37113",
+          "Name": "Macon County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "6a3e7de255990405326412e24a411284f6dc2c9f0c30b1fc39bf2d60ac7ad7e8",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 62,
+          "Bounds": [
+            1104587.5031480144,
+            1400483.9261408746,
+            1163325.0535192832,
+            1439733.4034693036
+          ]
+        },
+        {
+          "Id": "37115",
+          "Name": "Madison County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "1d72a112bcf4b8626b055a421f41dc4644052cefb3985f4e8a361f0082307250",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 202,
+          "Bounds": [
+            1164217.9076313665,
+            1483786.4022870902,
+            1213012.6937663301,
+            1529879.3759967908
+          ]
+        },
+        {
+          "Id": "37117",
+          "Name": "Martin County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "c603d16e6b91b9957e2870989f56827afd13fa1cc8d3a8ea62b774ad014930da",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 94,
+          "Bounds": [
+            1650784.9265195287,
+            1570673.559995369,
+            1710159.5357124659,
+            1609933.5421109041
+          ]
+        },
+        {
+          "Id": "37119",
+          "Name": "Mecklenburg County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "87997000547476f901aa023d2df3f0524c25bf13c6be5c1c911af648109467b8",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 134,
+          "Bounds": [
+            1345213.9909677794,
+            1436194.2190615013,
+            1388532.148373106,
+            1492730.646498736
+          ]
+        },
+        {
+          "Id": "37121",
+          "Name": "Mitchell County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "9cb0606e63ed8fd63acce34221ca17a6b1a04a37ede1265d219b70c7b235f45e",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 127,
+          "Bounds": [
+            1208237.366849923,
+            1509158.2089834101,
+            1249755.6640954206,
+            1545570.4083696064
+          ]
+        },
+        {
+          "Id": "37123",
+          "Name": "Montgomery County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "a9de609c2c0cc97c04a17d1a96c5de44cd852473879a2810265b09d8010c6842",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 52,
+          "Bounds": [
+            1415801.1157319,
+            1463075.5797760505,
+            1472706.5742992254,
+            1508384.056261208
+          ]
+        },
+        {
+          "Id": "37125",
+          "Name": "Moore County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "c1e3f2e7738975a48f5194ba136f4f882c0b53a94fc589d56b70b671e8781cf5",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 66,
+          "Bounds": [
+            1452415.2329817503,
+            1461586.3926577605,
+            1518458.9661593866,
+            1515570.5180431213
+          ]
+        },
+        {
+          "Id": "37127",
+          "Name": "Nash County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "929c525581fdec71636c523175784387cf28fb62dd1d57dc0bdb0ee40e8d9251",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 54,
+          "Bounds": [
+            1579822.893905491,
+            1557719.0140854036,
+            1621720.421674196,
+            1612753.94284953
+          ]
+        },
+        {
+          "Id": "37129",
+          "Name": "New Hanover County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "476ebf4eb7b1bca1bb5124b37f020f2171422ea3c3024eccd5dd2b183b0b584d",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 57,
+          "Bounds": [
+            1630972.93832485,
+            1364355.8544238135,
+            1660155.9625410088,
+            1416618.7011784464
+          ]
+        },
+        {
+          "Id": "37131",
+          "Name": "Northampton County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "fa8edceb9ff253581bb6e1e744578e09aea1b8c0d335f93b1722929aff50c6b8",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 65,
+          "Bounds": [
+            1595753.8902387863,
+            1620684.6154706143,
+            1669638.0329802593,
+            1664963.3386578113
+          ]
+        },
+        {
+          "Id": "37133",
+          "Name": "Onslow County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "ae80a0d797c545d64bf918b683929b08b2e85114a16066148392a9ea4fe92486",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 63,
+          "Bounds": [
+            1648634.1662733797,
+            1427605.2284971252,
+            1707107.9212967856,
+            1485897.8922843747
+          ]
+        },
+        {
+          "Id": "37135",
+          "Name": "Orange County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "e985e28ef4d7801b4c3094f8ea717cea0163b724830cabf31d1c3391a2986a30",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 44,
+          "Bounds": [
+            1483219.6234991062,
+            1556699.2497571055,
+            1511970.3958892743,
+            1601376.3083625278
+          ]
+        },
+        {
+          "Id": "37137",
+          "Name": "Pamlico County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "bdc62b0c53281644e5e52195c0cc4267af01ed6941919f187f355ac2fae9d8e7",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 48,
+          "Bounds": [
+            1706066.8326510945,
+            1497834.0974325947,
+            1749528.6593715176,
+            1542160.1348649338
+          ]
+        },
+        {
+          "Id": "37139",
+          "Name": "Pasquotank County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "36332e491d20ca7eb013a6f9269595240f861ce341fd2102cf11e9a7b114a0e6",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 54,
+          "Bounds": [
+            1719015.6770399502,
+            1636259.1164399907,
+            1764964.6348811341,
+            1672998.893373035
+          ]
+        },
+        {
+          "Id": "37141",
+          "Name": "Pender County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "c4e4773f3334241ead89bb26423510a26fa6feffc13a537650598e45e6cd2bc4",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 66,
+          "Bounds": [
+            1604962.8702602559,
+            1406143.1684915815,
+            1674455.4059289135,
+            1455463.0391130112
+          ]
+        },
+        {
+          "Id": "37143",
+          "Name": "Perquimans County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "8780e944a5590e59a819a65194a15e1a36173071ef2d1fa00477ff29b1fce2aa",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 52,
+          "Bounds": [
+            1716609.4123663008,
+            1626157.5617774809,
+            1754388.0744069815,
+            1659141.4914111104
+          ]
+        },
+        {
+          "Id": "37145",
+          "Name": "Person County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "44b0a876fd7ff53380387527a7c05b797e5dd4ce7e5f4e9beadef977b68c1d82",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 25,
+          "Bounds": [
+            1487808.779445181,
+            1598444.6883041272,
+            1523302.445721969,
+            1637158.0570309106
+          ]
+        },
+        {
+          "Id": "37147",
+          "Name": "Pitt County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "d2156b86bfb8ee0d97649e7e73d8d788ad314c1ca031b05fd49b0f3a8b30e055",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 71,
+          "Bounds": [
+            1632213.5468235197,
+            1527842.7477729805,
+            1688653.5199859142,
+            1582670.3864579787
+          ]
+        },
+        {
+          "Id": "37149",
+          "Name": "Polk County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "80549cc601e5db3eab66808f4da473020f15266813123bed1df23df479935248",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 74,
+          "Bounds": [
+            1226581.98485213,
+            1436174.8836060986,
+            1262324.432581338,
+            1463100.5374938063
+          ]
+        },
+        {
+          "Id": "37151",
+          "Name": "Randolph County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "3b9098824f7bf34132b330807814b6374c49bb99a307a4e1677e7a735f72829f",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 36,
+          "Bounds": [
+            1420040.8866217653,
+            1503215.0977218002,
+            1471141.2032717664,
+            1554695.492380742
+          ]
+        },
+        {
+          "Id": "37153",
+          "Name": "Richmond County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "14aa20ad6e97697629ff2ca3fbb2bc219765fa88a6e45a0445923f3ad40a59cd",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 65,
+          "Bounds": [
+            1432046.2582477545,
+            1428200.6223668791,
+            1488872.6767120562,
+            1472916.0754956845
+          ]
+        },
+        {
+          "Id": "37155",
+          "Name": "Robeson County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "7315cfb88b57f919f702d3ad50f60daf78ccbd443630b5e750d3c3368de065b6",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 76,
+          "Bounds": [
+            1496628.4716154705,
+            1385793.9572583735,
+            1554317.4422717406,
+            1458237.7488183286
+          ]
+        },
+        {
+          "Id": "37157",
+          "Name": "Rockingham County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "6720f97d630cb0529674f6104fdac27f90ce6fb691fb6482aa4dabdb21a30367",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 34,
+          "Bounds": [
+            1410112.8860659327,
+            1586656.6627431978,
+            1459188.8980925824,
+            1625832.6409029132
+          ]
+        },
+        {
+          "Id": "37159",
+          "Name": "Rowan County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "5299885808c560ba7ad098026f2c1d03428236db6121fef7a2a5f1f484a69322",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 60,
+          "Bounds": [
+            1360538.2065824002,
+            1493380.4199062996,
+            1415738.7812117536,
+            1533562.5663621407
+          ]
+        },
+        {
+          "Id": "37161",
+          "Name": "Rutherford County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "f9ae26681126d743376fcc72ec1588d557c7038bbe019771d1ef6b4c5c44fdd8",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 63,
+          "Bounds": [
+            1230400.0309907384,
+            1441105.0331537258,
+            1283268.3288008056,
+            1491181.5414198693
+          ]
+        },
+        {
+          "Id": "37163",
+          "Name": "Sampson County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "02dfd50298c3ec6fe9ed8fa5c424e03b5a34431298cd11bc142e9d0457d71585",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 77,
+          "Bounds": [
+            1558039.5368776994,
+            1427269.170503065,
+            1615624.1321811774,
+            1507087.9373902474
+          ]
+        },
+        {
+          "Id": "37165",
+          "Name": "Scotland County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "58bd11fbe3cc14e59ec2646c2f145779cef1fb98723b2314db1910601806e8d8",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 42,
+          "Bounds": [
+            1472560.9186855182,
+            1416001.7264995296,
+            1505475.2749612115,
+            1461586.3926577605
+          ]
+        },
+        {
+          "Id": "37167",
+          "Name": "Stanly County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "b339d4074420f46b76b35452354b6b238c878e6c04603e7668d5ea9b2af17de2",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 54,
+          "Bounds": [
+            1392757.4319698827,
+            1459672.9834902938,
+            1433480.6935494787,
+            1501318.245764846
+          ]
+        },
+        {
+          "Id": "37169",
+          "Name": "Stokes County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "e2e1d43d34608735f1201b7fce3ef403eb90fe5f5bfc67874fecd2ed55c9fbda",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 37,
+          "Bounds": [
+            1373833.905750405,
+            1581010.461853628,
+            1414776.105611278,
+            1618280.7407955537
+          ]
+        },
+        {
+          "Id": "37171",
+          "Name": "Surry County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "c2f2a091f6c5017d58b6e6cf440d289ddb864d1c7471d433e5c0eaa00cf254c8",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 61,
+          "Bounds": [
+            1328860.229137492,
+            1572195.5566667197,
+            1378393.3524235182,
+            1613131.2987669911
+          ]
+        },
+        {
+          "Id": "37173",
+          "Name": "Swain County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "5c321f81d313c75db70aa27973ac3e27bd831f48f676632cdd95905fa803908e",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 208,
+          "Bounds": [
+            1081035.3603267423,
+            1429982.6490363367,
+            1150690.7366101705,
+            1481291.5991770066
+          ]
+        },
+        {
+          "Id": "37175",
+          "Name": "Transylvania County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "8823f641676ec254444f0beec9bec46c7b9fda71e6e07844e8ae806a2ec7955c",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 126,
+          "Bounds": [
+            1167137.4260182949,
+            1410109.9706748426,
+            1208966.349568429,
+            1457210.355467083
+          ]
+        },
+        {
+          "Id": "37177",
+          "Name": "Tyrrell County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "3753622b01529fa475c983fc0d0dfd5b10474b25edd6f006a05552e9bc137817",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 45,
+          "Bounds": [
+            1742369.6234389578,
+            1577427.5074062664,
+            1777675.9712558328,
+            1624138.7372396206
+          ]
+        },
+        {
+          "Id": "37179",
+          "Name": "Union County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "94a1cda7f0b65ffec66250cac7bfaa0fcb8b511499b4cab8294992c9557195fb",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 79,
+          "Bounds": [
+            1366366.1583445927,
+            1416728.2131449338,
+            1416222.262772012,
+            1465869.0693692658
+          ]
+        },
+        {
+          "Id": "37181",
+          "Name": "Vance County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "e0bdb0da9a6f21af1f157ec557be6e8ff3b630173b2d1ed492cad7317b99e787",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 30,
+          "Bounds": [
+            1544258.9680808985,
+            1601524.5430241348,
+            1567826.8722187858,
+            1645033.3571418608
+          ]
+        },
+        {
+          "Id": "37183",
+          "Name": "Wake County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "203aa301118cb62c1a97a770f99b35d44cadcfb49aed163a8be09d6e19551a97",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 85,
+          "Bounds": [
+            1518884.994621438,
+            1525970.253512483,
+            1579826.7765955834,
+            1587503.052814112
+          ]
+        },
+        {
+          "Id": "37185",
+          "Name": "Warren County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "e4d4ed7c5a6c4b4c6a06dcc8557260ed95e9d3a40e6b688267604e3078455dd6",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 38,
+          "Bounds": [
+            1558809.2741300114,
+            1611845.070302615,
+            1598127.7861743823,
+            1652168.2365376316
+          ]
+        },
+        {
+          "Id": "37187",
+          "Name": "Washington County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "dde99809528d8e7fee6ad3febd776702305a5ea4e139b7bcda5298e37891e524",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 44,
+          "Bounds": [
+            1705808.4732231938,
+            1578342.8118896112,
+            1745900.4375292677,
+            1616983.1170070125
+          ]
+        },
+        {
+          "Id": "37189",
+          "Name": "Watauga County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "4fca57a33f68ce1d4bf41f41e88d9c8771dd4952689f501a48d47602b57ed015",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 95,
+          "Bounds": [
+            1248719.9730385817,
+            1545549.8061848795,
+            1290880.8527576576,
+            1577598.56313241
+          ]
+        },
+        {
+          "Id": "37191",
+          "Name": "Wayne County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "e94620f2a887d978014ff269ca49d6b12d7681d96c0f4b796e0164b9972736cf",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 56,
+          "Bounds": [
+            1586364.3237812782,
+            1498587.4175904542,
+            1630536.2304927364,
+            1548058.6063263752
+          ]
+        },
+        {
+          "Id": "37193",
+          "Name": "Wilkes County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "4fe19a43fe7cbc2628167336a6e8e403578df0c4c4e1ea5f0214408b0ea060e8",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 60,
+          "Bounds": [
+            1284389.3424743826,
+            1539339.1152737793,
+            1343989.6489081036,
+            1591496.1358681386
+          ]
+        },
+        {
+          "Id": "37195",
+          "Name": "Wilson County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "381cf3026136e6ea28659f31b516e7e3db8562ee5418749c378eff12d50685a1",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 40,
+          "Bounds": [
+            1587270.157308543,
+            1543877.316860837,
+            1634860.028394474,
+            1578877.1557789398
+          ]
+        },
+        {
+          "Id": "37197",
+          "Name": "Yadkin County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "4343c24978f0ae077f9a679b566a08751761d4ac1aa091ea5fea12c9aeae395f",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 42,
+          "Bounds": [
+            1341523.1660176176,
+            1552107.8491970804,
+            1381115.761642226,
+            1582263.501424374
+          ]
+        },
+        {
+          "Id": "37199",
+          "Name": "Yancey County",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "7803bc99504db5dbcb6984febe5101aeacee6b572949fbc00f4be2ca92aaa103",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 61,
+          "Bounds": [
+            1201899.7078770173,
+            1493981.4366220124,
+            1237310.294568233,
+            1535492.2411715984
+          ]
+        }
+      ]
+    },
+    {
+      "Role": "queries",
+      "LayerUrl": "https://tigerweb.geo.census.gov/arcgis/rest/services/Generalized_ACS2024/Legislative/MapServer/6",
+      "LayerName": "119th Congressional Districts 5M",
+      "Description": "119th Congressional Districts; January 1, 2024 vintage; Generalized",
+      "SourceFeatures": 14,
+      "EligibleSingleRingFeatures": 11,
+      "ExcludedFeatures": 3,
+      "GeometryTypes": {
+        "MultiPolygon": 2,
+        "Polygon": 12
+      },
+      "SourceFeaturesWithHoles": 1,
+      "TotalEligibleVertices": 3928,
+      "MinimumEligibleVertices": 151,
+      "MaximumEligibleVertices": 956,
+      "GeometryValidity": "Not inferred; runner independently validates every admitted ring before timing.",
+      "DerivedFile": "queries.json",
+      "DerivedBytes": 319414,
+      "DerivedSha256": "677a8b54de744e20cf80046f45c865a1e750e62ac2612e95371530ffa249a648",
+      "Features": [
+        {
+          "Id": "3701",
+          "Name": "Congressional District 1",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "4a609100c1a07b9b5455fd6b2c3e8a0125383aee1279e07a563c1b0fa42cd70d",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 523,
+          "Bounds": [
+            1538239.0321081136,
+            1486152.51692136,
+            1789927.2209882357,
+            1688795.02088553
+          ]
+        },
+        {
+          "Id": "3702",
+          "Name": "Congressional District 2",
+          "GeometryType": "MultiPolygon",
+          "Components": 2,
+          "RingsPerComponent": [
+            1,
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "a10dc936ff01b11b750fc96642ede93cbf8c7835c79e6337c3cab4976e28b04f",
+          "EligibleSingleRing": false,
+          "ExclusionReason": "MultiPolygon; no component removed or flattened"
+        },
+        {
+          "Id": "3703",
+          "Name": "Congressional District 3",
+          "GeometryType": "MultiPolygon",
+          "Components": 4,
+          "RingsPerComponent": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "1011de6c5be3dad802be1f309cba542d672ec2242a89d45a5ff8d61d4f5e8278",
+          "EligibleSingleRing": false,
+          "ExclusionReason": "MultiPolygon; no component removed or flattened"
+        },
+        {
+          "Id": "3704",
+          "Name": "Congressional District 4",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "df37bb590e8fb46be25b097c314e01c330ac451c9091d1d63a298f50053bc074",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 168,
+          "Bounds": [
+            1482397.2096928612,
+            1527186.9815913215,
+            1539603.7183921146,
+            1603353.365101681
+          ]
+        },
+        {
+          "Id": "3705",
+          "Name": "Congressional District 5",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "6fb0567fb2e40fa069e1991cebd4f6baadd87213bf34fe15c42315f44c72bca4",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 420,
+          "Bounds": [
+            1248720.4087276368,
+            1511990.1661424227,
+            1459189.2908603312,
+            1625831.8900773432
+          ]
+        },
+        {
+          "Id": "3706",
+          "Name": "Congressional District 6",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "b4f5dc66d438a20c095dda91575bbd05953c6509caedf3973978e2c43ed451c3",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 205,
+          "Bounds": [
+            1360538.6186882802,
+            1477831.8555434085,
+            1437662.7382686979,
+            1586655.9208860602
+          ]
+        },
+        {
+          "Id": "3707",
+          "Name": "Congressional District 7",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "85ca9d2b0473da81505c406100bfddf34db5da5a3f8624ccb49714d886b5fd4a",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 317,
+          "Bounds": [
+            1518644.9528201637,
+            1345362.5636860766,
+            1674455.750428582,
+            1506413.0468921345
+          ]
+        },
+        {
+          "Id": "3708",
+          "Name": "Congressional District 8",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "a430bd8ffd8f661a4cbe2e418d2b21b1efe14677766e9207cb62b605f1c67ac7",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 330,
+          "Bounds": [
+            1363586.310593936,
+            1388660.3182024471,
+            1542797.9612437459,
+            1508383.3309386726
+          ]
+        },
+        {
+          "Id": "3709",
+          "Name": "Congressional District 9",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "4cb3698d0e7f7a18865c3ce4db4771edb235cadcfe768cfaec2e76b3b52c956c",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 328,
+          "Bounds": [
+            1420041.2868815544,
+            1440735.2012677286,
+            1537562.008369881,
+            1596989.5804964472
+          ]
+        },
+        {
+          "Id": "3710",
+          "Name": "Congressional District 10",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "4202fd0f0202c6cd19d82ce9f0958a947f458f9a865c57a42ff72d74bde2c9f6",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 170,
+          "Bounds": [
+            1294476.1859364647,
+            1473778.327159023,
+            1410047.4609877004,
+            1585167.7470097179
+          ]
+        },
+        {
+          "Id": "3711",
+          "Name": "Congressional District 11",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "2639a624d5b1f2158719c3851406cf192d83c1e09f45d4fbbb4135648271e59a",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 956,
+          "Bounds": [
+            1054152.4661754991,
+            1390380.1947411112,
+            1268844.0967068796,
+            1563578.3006239068
+          ]
+        },
+        {
+          "Id": "3712",
+          "Name": "Congressional District 12",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "525bc73523dea07f35af8640ba2826ea19dea618e60a582b1ce753e1fcd6e9ae",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 151,
+          "Bounds": [
+            1347994.4685782196,
+            1442121.5871213824,
+            1383669.2585772183,
+            1481322.7587591838
+          ]
+        },
+        {
+          "Id": "3713",
+          "Name": "Congressional District 13",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            2
+          ],
+          "Holes": 1,
+          "SourceGeometrySha256": "fa731a0c5f5012b53961e5cddd1810b66cb31bb16945b3cb07fb8f5cebd8684c",
+          "EligibleSingleRing": false,
+          "ExclusionReason": "Polygon contains holes/multiple rings"
+        },
+        {
+          "Id": "3714",
+          "Name": "Congressional District 14",
+          "GeometryType": "Polygon",
+          "Components": 1,
+          "RingsPerComponent": [
+            1
+          ],
+          "Holes": 0,
+          "SourceGeometrySha256": "0112990b88d12b630a6707cb7116347feebc5ebf338d76ba0ea36282e074971b",
+          "EligibleSingleRing": true,
+          "ExclusionReason": null,
+          "Vertices": 360,
+          "Bounds": [
+            1230400.4694780696,
+            1436193.5105604045,
+            1369947.0096586114,
+            1531884.8282206245
+          ]
+        }
+      ]
+    }
+  ],
+  "Pairs": {
+    "TotalPairsPerDirection": 1078,
+    "BoundingBoxCandidatesPerDirection": 211,
+    "BoundingBoxRejectsPerDirection": 867,
+    "CandidateIdsCountyThenDistrict": [
+      [
+        "37001",
+        "3704"
+      ],
+      [
+        "37001",
+        "3705"
+      ],
+      [
+        "37001",
+        "3709"
+      ],
+      [
+        "37003",
+        "3705"
+      ],
+      [
+        "37003",
+        "3710"
+      ],
+      [
+        "37003",
+        "3714"
+      ],
+      [
+        "37005",
+        "3705"
+      ],
+      [
+        "37005",
+        "3710"
+      ],
+      [
+        "37007",
+        "3708"
+      ],
+      [
+        "37007",
+        "3709"
+      ],
+      [
+        "37009",
+        "3705"
+      ],
+      [
+        "37009",
+        "3710"
+      ],
+      [
+        "37011",
+        "3705"
+      ],
+      [
+        "37011",
+        "3711"
+      ],
+      [
+        "37011",
+        "3714"
+      ],
+      [
+        "37013",
+        "3701"
+      ],
+      [
+        "37015",
+        "3701"
+      ],
+      [
+        "37017",
+        "3707"
+      ],
+      [
+        "37017",
+        "3708"
+      ],
+      [
+        "37019",
+        "3707"
+      ],
+      [
+        "37021",
+        "3711"
+      ],
+      [
+        "37021",
+        "3714"
+      ],
+      [
+        "37023",
+        "3705"
+      ],
+      [
+        "37023",
+        "3710"
+      ],
+      [
+        "37023",
+        "3711"
+      ],
+      [
+        "37023",
+        "3714"
+      ],
+      [
+        "37025",
+        "3706"
+      ],
+      [
+        "37025",
+        "3708"
+      ],
+      [
+        "37025",
+        "3710"
+      ],
+      [
+        "37025",
+        "3712"
+      ],
+      [
+        "37025",
+        "3714"
+      ],
+      [
+        "37027",
+        "3705"
+      ],
+      [
+        "37027",
+        "3710"
+      ],
+      [
+        "37027",
+        "3711"
+      ],
+      [
+        "37027",
+        "3714"
+      ],
+      [
+        "37029",
+        "3701"
+      ],
+      [
+        "37031",
+        "3701"
+      ],
+      [
+        "37033",
+        "3704"
+      ],
+      [
+        "37033",
+        "3705"
+      ],
+      [
+        "37033",
+        "3709"
+      ],
+      [
+        "37035",
+        "3705"
+      ],
+      [
+        "37035",
+        "3710"
+      ],
+      [
+        "37035",
+        "3714"
+      ],
+      [
+        "37037",
+        "3704"
+      ],
+      [
+        "37037",
+        "3709"
+      ],
+      [
+        "37039",
+        "3711"
+      ],
+      [
+        "37041",
+        "3701"
+      ],
+      [
+        "37043",
+        "3711"
+      ],
+      [
+        "37045",
+        "3710"
+      ],
+      [
+        "37045",
+        "3714"
+      ],
+      [
+        "37047",
+        "3707"
+      ],
+      [
+        "37047",
+        "3708"
+      ],
+      [
+        "37049",
+        "3701"
+      ],
+      [
+        "37049",
+        "3707"
+      ],
+      [
+        "37051",
+        "3701"
+      ],
+      [
+        "37051",
+        "3707"
+      ],
+      [
+        "37051",
+        "3708"
+      ],
+      [
+        "37051",
+        "3709"
+      ],
+      [
+        "37053",
+        "3701"
+      ],
+      [
+        "37057",
+        "3705"
+      ],
+      [
+        "37057",
+        "3706"
+      ],
+      [
+        "37057",
+        "3708"
+      ],
+      [
+        "37057",
+        "3709"
+      ],
+      [
+        "37057",
+        "3710"
+      ],
+      [
+        "37059",
+        "3705"
+      ],
+      [
+        "37059",
+        "3706"
+      ],
+      [
+        "37059",
+        "3710"
+      ],
+      [
+        "37059",
+        "3714"
+      ],
+      [
+        "37061",
+        "3701"
+      ],
+      [
+        "37061",
+        "3707"
+      ],
+      [
+        "37063",
+        "3704"
+      ],
+      [
+        "37063",
+        "3709"
+      ],
+      [
+        "37065",
+        "3701"
+      ],
+      [
+        "37067",
+        "3705"
+      ],
+      [
+        "37067",
+        "3706"
+      ],
+      [
+        "37067",
+        "3710"
+      ],
+      [
+        "37069",
+        "3701"
+      ],
+      [
+        "37071",
+        "3710"
+      ],
+      [
+        "37071",
+        "3712"
+      ],
+      [
+        "37071",
+        "3714"
+      ],
+      [
+        "37073",
+        "3701"
+      ],
+      [
+        "37075",
+        "3711"
+      ],
+      [
+        "37077",
+        "3701"
+      ],
+      [
+        "37077",
+        "3704"
+      ],
+      [
+        "37077",
+        "3709"
+      ],
+      [
+        "37079",
+        "3701"
+      ],
+      [
+        "37081",
+        "3705"
+      ],
+      [
+        "37081",
+        "3706"
+      ],
+      [
+        "37081",
+        "3709"
+      ],
+      [
+        "37083",
+        "3701"
+      ],
+      [
+        "37085",
+        "3701"
+      ],
+      [
+        "37085",
+        "3704"
+      ],
+      [
+        "37085",
+        "3707"
+      ],
+      [
+        "37085",
+        "3708"
+      ],
+      [
+        "37085",
+        "3709"
+      ],
+      [
+        "37087",
+        "3711"
+      ],
+      [
+        "37089",
+        "3711"
+      ],
+      [
+        "37089",
+        "3714"
+      ],
+      [
+        "37091",
+        "3701"
+      ],
+      [
+        "37093",
+        "3707"
+      ],
+      [
+        "37093",
+        "3708"
+      ],
+      [
+        "37093",
+        "3709"
+      ],
+      [
+        "37097",
+        "3705"
+      ],
+      [
+        "37097",
+        "3706"
+      ],
+      [
+        "37097",
+        "3708"
+      ],
+      [
+        "37097",
+        "3710"
+      ],
+      [
+        "37097",
+        "3714"
+      ],
+      [
+        "37099",
+        "3711"
+      ],
+      [
+        "37101",
+        "3701"
+      ],
+      [
+        "37101",
+        "3707"
+      ],
+      [
+        "37103",
+        "3701"
+      ],
+      [
+        "37103",
+        "3707"
+      ],
+      [
+        "37105",
+        "3704"
+      ],
+      [
+        "37105",
+        "3707"
+      ],
+      [
+        "37105",
+        "3708"
+      ],
+      [
+        "37105",
+        "3709"
+      ],
+      [
+        "37107",
+        "3701"
+      ],
+      [
+        "37107",
+        "3707"
+      ],
+      [
+        "37109",
+        "3710"
+      ],
+      [
+        "37109",
+        "3712"
+      ],
+      [
+        "37109",
+        "3714"
+      ],
+      [
+        "37111",
+        "3705"
+      ],
+      [
+        "37111",
+        "3711"
+      ],
+      [
+        "37111",
+        "3714"
+      ],
+      [
+        "37113",
+        "3711"
+      ],
+      [
+        "37115",
+        "3711"
+      ],
+      [
+        "37117",
+        "3701"
+      ],
+      [
+        "37119",
+        "3706"
+      ],
+      [
+        "37119",
+        "3708"
+      ],
+      [
+        "37119",
+        "3710"
+      ],
+      [
+        "37119",
+        "3712"
+      ],
+      [
+        "37119",
+        "3714"
+      ],
+      [
+        "37121",
+        "3705"
+      ],
+      [
+        "37121",
+        "3711"
+      ],
+      [
+        "37121",
+        "3714"
+      ],
+      [
+        "37123",
+        "3706"
+      ],
+      [
+        "37123",
+        "3708"
+      ],
+      [
+        "37123",
+        "3709"
+      ],
+      [
+        "37125",
+        "3705"
+      ],
+      [
+        "37125",
+        "3708"
+      ],
+      [
+        "37125",
+        "3709"
+      ],
+      [
+        "37127",
+        "3701"
+      ],
+      [
+        "37129",
+        "3707"
+      ],
+      [
+        "37131",
+        "3701"
+      ],
+      [
+        "37133",
+        "3707"
+      ],
+      [
+        "37135",
+        "3704"
+      ],
+      [
+        "37135",
+        "3709"
+      ],
+      [
+        "37137",
+        "3701"
+      ],
+      [
+        "37139",
+        "3701"
+      ],
+      [
+        "37141",
+        "3707"
+      ],
+      [
+        "37143",
+        "3701"
+      ],
+      [
+        "37145",
+        "3704"
+      ],
+      [
+        "37147",
+        "3701"
+      ],
+      [
+        "37149",
+        "3711"
+      ],
+      [
+        "37149",
+        "3714"
+      ],
+      [
+        "37151",
+        "3705"
+      ],
+      [
+        "37151",
+        "3706"
+      ],
+      [
+        "37151",
+        "3708"
+      ],
+      [
+        "37151",
+        "3709"
+      ],
+      [
+        "37153",
+        "3708"
+      ],
+      [
+        "37153",
+        "3709"
+      ],
+      [
+        "37155",
+        "3707"
+      ],
+      [
+        "37155",
+        "3708"
+      ],
+      [
+        "37155",
+        "3709"
+      ],
+      [
+        "37157",
+        "3705"
+      ],
+      [
+        "37157",
+        "3709"
+      ],
+      [
+        "37159",
+        "3705"
+      ],
+      [
+        "37159",
+        "3706"
+      ],
+      [
+        "37159",
+        "3708"
+      ],
+      [
+        "37159",
+        "3710"
+      ],
+      [
+        "37159",
+        "3714"
+      ],
+      [
+        "37161",
+        "3711"
+      ],
+      [
+        "37161",
+        "3714"
+      ],
+      [
+        "37163",
+        "3701"
+      ],
+      [
+        "37163",
+        "3707"
+      ],
+      [
+        "37165",
+        "3708"
+      ],
+      [
+        "37165",
+        "3709"
+      ],
+      [
+        "37167",
+        "3706"
+      ],
+      [
+        "37167",
+        "3708"
+      ],
+      [
+        "37167",
+        "3709"
+      ],
+      [
+        "37167",
+        "3710"
+      ],
+      [
+        "37169",
+        "3705"
+      ],
+      [
+        "37169",
+        "3706"
+      ],
+      [
+        "37169",
+        "3710"
+      ],
+      [
+        "37171",
+        "3705"
+      ],
+      [
+        "37171",
+        "3706"
+      ],
+      [
+        "37171",
+        "3710"
+      ],
+      [
+        "37173",
+        "3711"
+      ],
+      [
+        "37175",
+        "3711"
+      ],
+      [
+        "37177",
+        "3701"
+      ],
+      [
+        "37179",
+        "3708"
+      ],
+      [
+        "37179",
+        "3712"
+      ],
+      [
+        "37179",
+        "3714"
+      ],
+      [
+        "37181",
+        "3701"
+      ],
+      [
+        "37183",
+        "3701"
+      ],
+      [
+        "37183",
+        "3704"
+      ],
+      [
+        "37183",
+        "3709"
+      ],
+      [
+        "37185",
+        "3701"
+      ],
+      [
+        "37187",
+        "3701"
+      ],
+      [
+        "37189",
+        "3705"
+      ],
+      [
+        "37189",
+        "3711"
+      ],
+      [
+        "37191",
+        "3701"
+      ],
+      [
+        "37191",
+        "3707"
+      ],
+      [
+        "37193",
+        "3705"
+      ],
+      [
+        "37193",
+        "3710"
+      ],
+      [
+        "37195",
+        "3701"
+      ],
+      [
+        "37197",
+        "3705"
+      ],
+      [
+        "37197",
+        "3706"
+      ],
+      [
+        "37197",
+        "3710"
+      ],
+      [
+        "37199",
+        "3711"
+      ],
+      [
+        "37199",
+        "3714"
+      ]
+    ],
+    "Directions": [
+      "county zones / district queries",
+      "district zones / county queries"
+    ],
+    "Filter": "Closed AABBs overlap; no area, convexity, containment or timing selection."
+  },
+  "Files": {
+    "zones.json": {
+      "Sha256": "072435edead13272c0ccb85166d5c34d13d9805db6497db43e74ede59c920aa3",
+      "Bytes": 594286
+    },
+    "queries.json": {
+      "Sha256": "677a8b54de744e20cf80046f45c865a1e750e62ac2612e95371530ffa249a648",
+      "Bytes": 319414
+    }
+  }
+}

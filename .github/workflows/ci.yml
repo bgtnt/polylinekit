@@ -20,6 +20,19 @@ jobs:
       - run: dotnet run --project examples/Basic -c Release --no-build
       - name: Area-change example contracts and frozen contour hashes (no timing)
         run: dotnet run --project examples/AreaChange -c Release --no-build -- check
+      - name: Region coverage contracts and frozen GIS pairs (no timing)
+        run: dotnet run --project examples/RegionCoverage -c Release --no-build -- check
+      - name: Verify complete coverage source snapshots offline
+        run: python examples/RegionCoverage/data/freeze.py
+      - name: Optional WPF comparison contracts (Windows only, no timing)
+        if: runner.os == 'Windows'
+        run: |
+          dotnet restore benchmarks/PolylineKit.WpfBenchmarks --locked-mode
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          dotnet build benchmarks/PolylineKit.WpfBenchmarks -c Release --no-restore
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          dotnet run --project benchmarks/PolylineKit.WpfBenchmarks -c Release --no-build -- check
+        shell: pwsh
       - name: Standalone and precompiled consumer compatibility
         run: ./scripts/verify-consumers.ps1
         shell: pwsh
