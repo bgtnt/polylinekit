@@ -1,4 +1,4 @@
-# Experimental bounded-integer scanbeam
+# Experimental area sweeps
 
 This is a research executable, not a library backend or supported public API.
 It tests whether scanbeams and grouped active-edge crossings improve the dense
@@ -28,6 +28,9 @@ historical measurements of their explicitly identified commits.
 The [expanded results](EXPANDED-RESULTS.md) show that neither extension passes its
 full gate. The separate [guarded double sweep protocol](DOUBLE-PROTOCOL.md)
 tests the [double-input design](DOUBLE-SCANLINE.md) on original coordinates.
+Its [measured results](DOUBLE-RESULTS.md) pass the numerical checks but fail all
+four speed gates: about 101 ms per table versus 12–13 ms for Clipper and 9–10 ms
+for existing Winding. There are no fallbacks or warm allocations on that set.
 Use `check-double <directory>`, `benchmark-double <directory> <run> <revision>`
 and `summarize-double <directory>`. This additional prototype does not change
 the integer engine or the shipping APIs.

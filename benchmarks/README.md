@@ -9,6 +9,10 @@ the final grid gains and the unfavorable controls.
 The [expanded results](PolylineKit.ScanbeamBenchmarks/EXPANDED-RESULTS.md) test
 real-contour intersections and larger coordinates: both full gates fail, and
 the original-input effects of metre-grid rounding are reported separately.
+The [guarded double sweep](PolylineKit.ScanbeamBenchmarks/DOUBLE-RESULTS.md)
+preserves original coordinates and passes its numerical checks. All four speed
+gates fail: roughly 8x slower than Clipper and 10–11x slower than existing Winding
+on the frozen real-contour workload. It remains an experiment outside the library.
 
 For an area-engine optimization with a predeclared Clipper gate, see the
 [intersection-only protocol](../examples/RegionCoverage/INTERSECTION-PROTOCOL.md),

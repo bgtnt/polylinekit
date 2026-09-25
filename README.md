@@ -133,6 +133,9 @@ New benchmark output goes under ignored `artifacts/`. The
 allocation measurements. The [performance assessment](docs/performance.md)
 summarizes measured gains, regressions and hardware-specific limits; there is no
 universal speed guarantee.
+The latest [double sweep experiment](benchmarks/PolylineKit.ScanbeamBenchmarks/DOUBLE-RESULTS.md)
+passes its numerical checks but is substantially slower than both current Winding
+and Clipper on the measured contours; it remains outside the library.
 
 Historical recognition experiments did not justify developing area-based
 recognition further. Their code, protocols and negative results remain available

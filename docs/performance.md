@@ -14,8 +14,16 @@ rounded real-contour table versus 12.5 ms for Clipper and 10 ms for existing
 Winding intersection. All four real speed gates fail. Metre-grid conversion also
 fails the original-input error budgets in 312 of 2156 directional comparisons.
 Wider-coordinate grid controls pass the four EvenOdd gates but fail all four
-NonZero gates. The prototype remains outside the shipping library; an incremental
-double-input scanline is only a proposed next experiment.
+NonZero gates. The prototype remains outside the shipping library.
+
+The [guarded double sweep](../benchmarks/PolylineKit.ScanbeamBenchmarks/DOUBLE-RESULTS.md)
+at `a3eb54e` preserves the original coordinates and certifies all 422 geometry
+candidates without fallback. Its warm full tables take about 101 ms versus
+12.6–12.9 ms for Clipper and 9.2–9.7 ms for existing Winding, with zero warm
+allocations. All four performance gates fail. General interval arithmetic and
+remaining per-band work are plausible costs; CPU shares have not been profiled.
+An untimed common-Y count identifies a possible reduction in endpoint bands,
+not a measured speedup. This candidate also remains outside the shipping library.
 
 The [intersection-only coverage experiment](../examples/RegionCoverage/INTERSECTION-RESULTS.md)
 at `f93cc25` establishes a newer, narrower result: the dedicated

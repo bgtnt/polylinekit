@@ -49,14 +49,14 @@ differences before rounding; subtracting two already rounded large crossing
 coordinates can erase small areas even with correct topology. Ordinary filtered
 calculations need certified error bounds for their values as well as signs.
 
-## Bounded next step
+## Implemented first experiment
 
-Implement an experimental guarded double intersection sweep, with conservative
-whole-call fallback for every unsupported or uncertified case. A fallback must
-discard partial accumulation, release its workspace and preserve the existing
-operation's numerical contract. Instrument reasons and frequencies; count their
-cost in full-query timings. This limits the first implementation without silently
-weakening robustness. Extend exact predicates only where evidence warrants it.
+The experimental guarded double intersection sweep uses conservative whole-call
+fallback for every unsupported or uncertified case. It discards partial
+accumulation and preserves the existing operation's numerical contract. Reasons
+and frequencies are recorded; fallback costs count in full-query timings. The
+reusable instance retains its scratch buffers and resets state on the next call.
+This limits the first implementation without silently weakening robustness.
 
 Validate the original unquantized Census contours, degeneracies, narrow regions,
 large offsets, extreme exponents, swapped/reversed rings and adversarial event
@@ -66,6 +66,53 @@ fallback rate and existing regressions, using the existing reproducibility rules
 SIMD or unsafe code can follow a measured hot loop; neither fixes redundant
 active-list reconstruction or inconsistent event ordering. No C++ port is needed
 to test this architectural hypothesis.
+
+`GuardedDoubleSweep.cs` implements this conservative version. It retains a sorted
+copy of the active list per endpoint band to enumerate inversions; incremental
+membership does not remove all per-band work. The [measurements](DOUBLE-RESULTS.md)
+report its actual cost. It does not yet implement a cheap scalar filter ahead of
+every interval operation, nor a neighbor-event priority queue.
+
+## Current certificate
+
+1. Supplied binary64 vertices are treated as exact values. Both complete arrays
+   are checked before an early AABB zero; effective vertex-count and unsupported
+   input cases delegate to the original public operation.
+2. Scalar coordinate differences use TwoDiff. A nonzero tail selects the adjacent
+   outward endpoint. The bounded coordinates keep these additions/subtractions
+   far from overflow. Products/divisions do not assume exact residuals under
+   underflow: their rounded extrema are expanded with BitDecrement/BitIncrement.
+   Nonfinite interval endpoints or denominator intervals containing zero cause
+   fallback. Algebraically exact zero/identity operations retain point intervals.
+3. Active-edge comparisons require disjoint X enclosures or justified exact
+   source/support equality. Shared endpoint ordering requires certified slopes.
+   Each inversion of the certified bottom/top orders identifies a crossing of
+   two affine edges. Its Y is enclosed by
+   `bottom + (xRight(bottom)-xLeft(bottom))/(slopeLeft-slopeRight)`.
+4. Constructed event intervals must be strictly separated and strictly inside
+   their endpoint band. Processing requires adjacent edges, and the resulting
+   active order must match the independently constructed top order. Uncertain
+   same-level or multiway events cause whole-call fallback.
+5. Independent prefix winding counts select intersection gaps. Each gap retains
+   its last level until one of its boundaries changes. Between changes its width
+   is affine, so `(widthStart+widthEnd)*height/2` gives its exact real integral.
+   Every arithmetic operation encloses that expression; dependency between
+   interval operands can widen the enclosure but cannot invalidate it.
+6. Certified ordering proves widths and height nonnegative, so intersecting their
+   enclosures with `[0,+infinity]` is valid. At the provenance-identified crossing
+   of the actual boundary pair, width is exactly zero. These operations do not
+   replace uncertain topology with an arbitrary clamped value.
+7. The returned midpoint lies inside the accumulated area enclosure. The maximum
+   distance to either endpoint is rounded upward, then checked against the fixed
+   absolute and relative budgets. A failed check discards all provisional area.
+   The next call resets state; fallback's error radius is NaN to prevent claiming
+   this new certificate for a result computed by the existing Winding engine.
+
+The independent checks use exact rational convex clipping of the actual dyadic
+input coordinates and verify the error-radius inequality before rounding the
+oracle result. Analytic and existing rational-slab controls cover additional
+degeneracies. These checks support the derivation; they are not a general formal
+proof of the implementation.
 
 Clipper is a conceptual reference here; no Clipper source was copied. Any later
 source reuse must retain its upstream provenance and applicable license notices.
