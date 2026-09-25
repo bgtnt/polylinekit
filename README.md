@@ -133,10 +133,10 @@ New benchmark output goes under ignored `artifacts/`. The
 allocation measurements. The [performance assessment](docs/performance.md)
 summarizes measured gains, regressions and hardware-specific limits; there is no
 universal speed guarantee.
-The latest [double sweep ablations](benchmarks/PolylineKit.ScanbeamBenchmarks/DOUBLE-ABLATION-RESULTS.md)
-halve that prototype's full-query time while preserving the tested certificates.
-It is still substantially slower than current Winding and Clipper on the measured
-contours and remains outside the library.
+The latest [scalar-filter experiment](benchmarks/PolylineKit.ScanbeamBenchmarks/SCALAR-FILTER-RESULTS.md)
+reduces the optimized double sweep to about 39 ms per table while preserving the
+tested certificates. Current Winding takes 9–10 ms and Clipper 12–13 ms in that
+comparison; the sweep remains outside the library.
 
 Historical recognition experiments did not justify developing area-based
 recognition further. Their code, protocols and negative results remain available

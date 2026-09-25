@@ -78,6 +78,11 @@ adds independently switchable range restriction and lazy endpoint-X caching.
 It preserves the same numerical certificate, with paired cache/uncached tests.
 Both switches default off; the original commands retain their baseline behavior.
 
+The later [scalar order filter](SCALAR-FILTER-RESULTS.md) adds a third optional
+switch. A [derived uniform error bound](SCALAR-FILTER-NUMERICS.md) certifies
+ordinary strict endpoint orders before interval evaluation; uncertain comparisons
+use the original path. Area arithmetic and constructed-event ordering are unchanged.
+
 ## Current certificate
 
 1. Supplied binary64 vertices are treated as exact values. Both complete arrays

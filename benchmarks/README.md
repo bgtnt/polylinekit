@@ -16,6 +16,10 @@ on the frozen real-contour workload. It remains an experiment outside the librar
 The subsequent [common-Y and cached-X ablations](PolylineKit.ScanbeamBenchmarks/DOUBLE-ABLATION-RESULTS.md)
 cut its full-query time by 2.0–2.1x, but the combined version still fails all four
 competitor gates. These gains do not change the shipping implementation.
+The subsequent [certified scalar order filter](PolylineKit.ScanbeamBenchmarks/SCALAR-FILTER-RESULTS.md)
+saves another 20% against the optimized sweep in the same measured processes,
+while all competitor gates still fail. Its error-bound derivation and exact-sign
+checks accompany the measurements.
 
 For an area-engine optimization with a predeclared Clipper gate, see the
 [intersection-only protocol](../examples/RegionCoverage/INTERSECTION-PROTOCOL.md),

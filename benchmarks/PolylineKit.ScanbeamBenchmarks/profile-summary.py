@@ -44,7 +44,7 @@ def summarize(path):
     def rows(values):
         return [dict(Frame=name, Time=value, Percent=100 * value / total)
                 for name, value in sorted(values.items(), key=lambda item: -item[1])
-                if "GuardedDouble" in name and "!" in name][:30]
+                if ("GuardedDouble" in name or "ScalarOrderFilter" in name) and "!" in name][:30]
 
     return dict(Unit=units.pop(), TraverseRealSampledTime=total,
                 Inclusive=rows(inclusive), Exclusive=rows(exclusive),

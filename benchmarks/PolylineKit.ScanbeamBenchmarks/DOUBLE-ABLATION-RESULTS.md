@@ -1,5 +1,9 @@
 # Double sweep: common-Y and cached-X results
 
+A subsequent [scalar order filter](SCALAR-FILTER-RESULTS.md) saves about 20% against
+this optimized sweep in a contemporary comparison. It still fails the competitor
+gates. The source and historical measurements below remain unchanged.
+
 Measured source: [`ab1c6bae6d0bcce7f4a757d9cf156f5539403a68`](https://github.com/bgtnt/polylinekit/commit/ab1c6bae6d0bcce7f4a757d9cf156f5539403a68).
 
 The combined changes reduce full-query time by about **2.0–2.1x** relative to

@@ -44,6 +44,14 @@ as their double counterparts. `profile-double-ablation <method> <seconds>`
 repeats the warm county table separately from timing; `profile-summary.py`
 summarizes a dotnet-trace Speedscope trace. These optional tools are for research.
 
+The [scalar filter experiment](SCALAR-FILTER-RESULTS.md) adds a certified strict
+order filter ahead of interval comparisons, saving about 20% against the optimized
+sweep. It remains slower than both competitors. See the
+[numerical derivation](SCALAR-FILTER-NUMERICS.md) and
+[fixed protocol](SCALAR-FILTER-PROTOCOL.md). Commands `check-scalar-filter`,
+`benchmark-scalar-filter` and `summarize-scalar-filter` use the same arguments as
+the double commands. Profile `Guarded-combined` and `Guarded-filtered` separately.
+
 From the repository root, using PowerShell:
 
 ```powershell

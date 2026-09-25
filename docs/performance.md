@@ -34,6 +34,15 @@ and Winding 9.2–9.8 ms in those same processes. All competitor gates still fai
 the optimized sweep remains outside the library. Profiles support the removed
 comparison work, but their overlapping thread-time shares are not CPU percentages.
 
+The [scalar order filter](../benchmarks/PolylineKit.ScanbeamBenchmarks/SCALAR-FILTER-RESULTS.md)
+at `c9f0072` then certifies strict endpoint order using a prepared scalar error
+bound, continuing uncertain cases through the existing interval comparator.
+It saves another 19.9–20.2% against the contemporary optimized sweep: about
+39.4 ms per warm table versus 49.2–49.5 ms. Clipper takes 12.3–12.5 ms and Winding
+9.1–9.6 ms in those processes. All four filtered competitor gates still fail.
+The filter accepts 97.63% of its comparisons while preserving tested result and
+certificate bits. Its preparation cost is included in complete calls.
+
 The [intersection-only coverage experiment](../examples/RegionCoverage/INTERSECTION-RESULTS.md)
 at `f93cc25` establishes a newer, narrower result: the dedicated
 `WindingArea.IntersectionArea` method takes 26-29% less time than direct reusable

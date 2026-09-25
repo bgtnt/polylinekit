@@ -1,0 +1,1052 @@
+{
+  "Protocol": "benchmarks/PolylineKit.ScanbeamBenchmarks/SCALAR-FILTER-PROTOCOL.md",
+  "Environment": {
+    "Run": 1,
+    "Revision": "c9f0072a31fa89513edfcaf59365765b72c7f3d2",
+    "Utc": "2026-09-25T12:05:35.9925898+00:00",
+    "SourceHash": "c42265beea7590918ecf06107263ad63f1395dc33f592653344c5980bda379b0",
+    "Runtime": ".NET 10.0.12",
+    "OS": "Microsoft Windows 10.0.26200",
+    "Architecture": "X64",
+    "Cpu": "Intel64 Family 6 Model 158 Stepping 12, GenuineIntel",
+    "LogicalProcessors": 16,
+    "TieredCompilation": "0",
+    "HarnessHash": "c6d0f8475db3041b58d0457082697127b30ee9efec1c0629d5fcc14a14b564f6",
+    "WindingHash": "00b72c9ba9d4793f6f60633778dbc169c5f25de2129e23ead984ee06ec4d838d",
+    "ClipperHash": "e9bf01e01f494ef6072cd46c792ed4f3004288a92b1e98c1f44931e558b8a5d0",
+    "NtsHash": "98fa6bae8b75b5f9445236679883fa27750d990aec11e985b85b57a30c37a858",
+    "Rows": []
+  },
+  "SampleCount": 360,
+  "BaselineMethod": "Guarded-combined",
+  "SelectedMethod": "Guarded-filtered",
+  "SelectedPass": false,
+  "CombinedPass": false,
+  "RawFiles": [
+    {
+      "File": "run-1.json",
+      "Sha256": "f32683649381ca60cddb31b497ecd2c0415c3153b5c3e97ec757a4eed283120a"
+    },
+    {
+      "File": "run-2.json",
+      "Sha256": "9cc15708970db474166ee772594fac5a56c8c7861ce1c71ded47a571cff83009"
+    },
+    {
+      "File": "run-3.json",
+      "Sha256": "45693d31b8497cb9235164f1c16aab564005fd9f8eb1ff7189c0e0098a901bf3"
+    }
+  ],
+  "ValidationFileSha256": "0fee7d075dc7aa49fd1076b612a497a4f43c9e7460d8f2d8c1adbcb943c25fe8",
+  "Validation": {
+    "SourceHash": "c42265beea7590918ecf06107263ad63f1395dc33f592653344c5980bda379b0",
+    "GeometryHash": "3cc5dcac07871507da1187167d32ea11c1124accb652a062ce004e5731bf8f35",
+    "DirectionalPairs": 2156,
+    "Candidates": 422,
+    "Pairs": []
+  },
+  "Diagnostics": [
+    {
+      "Method": "Winding-intersection-only",
+      "Candidates": 422,
+      "Certified": 0,
+      "Fallbacks": 0,
+      "MaxAreaError": 5.3947733249515295e-06,
+      "MaxCoverageError": 6.38378239159465e-15,
+      "MaxCertifiedRadius": null,
+      "Bands": 0,
+      "Events": 0,
+      "Visits": 0,
+      "XEvaluations": 0,
+      "XCacheHits": 0,
+      "FilterAttempts": 0,
+      "FilterAccepted": 0,
+      "FilterInterval": 0,
+      "FallbackReasons": {}
+    },
+    {
+      "Method": "Guarded-combined",
+      "Candidates": 422,
+      "Certified": 422,
+      "Fallbacks": 0,
+      "MaxAreaError": 2.6226043701171875e-06,
+      "MaxCoverageError": 2.7755575615628914e-15,
+      "MaxCertifiedRadius": 0.00032496452331542974,
+      "Bands": 65932,
+      "Events": 1504,
+      "Visits": 2230171,
+      "XEvaluations": 495764,
+      "XCacheHits": 585766,
+      "FilterAttempts": 0,
+      "FilterAccepted": 0,
+      "FilterInterval": 0,
+      "FallbackReasons": {}
+    },
+    {
+      "Method": "Guarded-filtered",
+      "Candidates": 422,
+      "Certified": 422,
+      "Fallbacks": 0,
+      "MaxAreaError": 2.6226043701171875e-06,
+      "MaxCoverageError": 2.7755575615628914e-15,
+      "MaxCertifiedRadius": 0.00032496452331542974,
+      "Bands": 65932,
+      "Events": 1504,
+      "Visits": 2230171,
+      "XEvaluations": 25580,
+      "XCacheHits": 0,
+      "FilterAttempts": 540765,
+      "FilterAccepted": 527975,
+      "FilterInterval": 12790,
+      "FallbackReasons": {}
+    },
+    {
+      "Method": "Clipper64-reused-data",
+      "Candidates": 422,
+      "Certified": 0,
+      "Fallbacks": 0,
+      "MaxAreaError": 0.0229949951171875,
+      "MaxCoverageError": 2.8686941710986957e-11,
+      "MaxCertifiedRadius": null,
+      "Bands": 0,
+      "Events": 0,
+      "Visits": 0,
+      "XEvaluations": 0,
+      "XCacheHits": 0,
+      "FilterAttempts": 0,
+      "FilterAccepted": 0,
+      "FilterInterval": 0,
+      "FallbackReasons": {}
+    }
+  ],
+  "Gates": [
+    {
+      "Direction": "county-zones",
+      "Method": "Guarded-combined",
+      "Scope": "prepare-plus-one",
+      "BaselineOverVariant": 1,
+      "ClipperOverVariant": 0.2608329357788853,
+      "WindingOverVariant": 0.19826429419705843,
+      "Pass": false
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Guarded-combined",
+      "Scope": "warm-table",
+      "BaselineOverVariant": 1,
+      "ClipperOverVariant": 0.2533751146932688,
+      "WindingOverVariant": 0.19394429646037373,
+      "Pass": false
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Guarded-filtered",
+      "Scope": "prepare-plus-one",
+      "BaselineOverVariant": 1.2394166681343897,
+      "ClipperOverVariant": 0.3232806882027773,
+      "WindingOverVariant": 0.24573207092373459,
+      "Pass": false
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Guarded-filtered",
+      "Scope": "warm-table",
+      "BaselineOverVariant": 1.2536910302959665,
+      "ClipperOverVariant": 0.31765410859116283,
+      "WindingOverVariant": 0.24314622484943232,
+      "Pass": false
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Guarded-combined",
+      "Scope": "prepare-plus-one",
+      "BaselineOverVariant": 1,
+      "ClipperOverVariant": 0.25779603401756646,
+      "WindingOverVariant": 0.19028473720035757,
+      "Pass": false
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Guarded-combined",
+      "Scope": "warm-table",
+      "BaselineOverVariant": 1,
+      "ClipperOverVariant": 0.24935151462215188,
+      "WindingOverVariant": 0.18385855401471865,
+      "Pass": false
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Guarded-filtered",
+      "Scope": "prepare-plus-one",
+      "BaselineOverVariant": 1.2469749070037965,
+      "ClipperOverVariant": 0.3214651855450025,
+      "WindingOverVariant": 0.23728029247465773,
+      "Pass": false
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Guarded-filtered",
+      "Scope": "warm-table",
+      "BaselineOverVariant": 1.2491937223258351,
+      "ClipperOverVariant": 0.31148834671843084,
+      "WindingOverVariant": 0.229674951471092,
+      "Pass": false
+    }
+  ],
+  "Measurements": [
+    {
+      "Direction": "county-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "prepare",
+      "Value": 225407786180.86548,
+      "MedianNs": 400753.125,
+      "MinNs": 396806.25,
+      "MaxNs": 401578.125,
+      "MedianBytes": 968888
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "prepare-plus-one",
+      "Value": 99289942172.56465,
+      "MedianNs": 12848500,
+      "MinNs": 12744900,
+      "MaxNs": 12930950,
+      "MedianBytes": 1626168
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "warm-table",
+      "Value": 99289942172.56465,
+      "MedianNs": 12536950,
+      "MinNs": 12428200,
+      "MaxNs": 12554200,
+      "MedianBytes": 625088
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Guarded-combined",
+      "Scope": "prepare",
+      "Value": 225407786180.8534,
+      "MedianNs": 126541.40625,
+      "MinNs": 125698.4375,
+      "MaxNs": 127381.25,
+      "MedianBytes": 10896
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Guarded-combined",
+      "Scope": "prepare-plus-one",
+      "Value": 99289942172.58379,
+      "MedianNs": 49259500,
+      "MinNs": 49122700,
+      "MaxNs": 51618600,
+      "MedianBytes": 460816
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Guarded-combined",
+      "Scope": "warm-table",
+      "Value": 99289942172.58379,
+      "MedianNs": 49479800,
+      "MinNs": 48940000,
+      "MaxNs": 51454200,
+      "MedianBytes": 0
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Guarded-filtered",
+      "Scope": "prepare",
+      "Value": 225407786180.8534,
+      "MedianNs": 125647.265625,
+      "MinNs": 124902.34375,
+      "MaxNs": 127641.796875,
+      "MedianBytes": 10896
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Guarded-filtered",
+      "Scope": "prepare-plus-one",
+      "Value": 99289942172.58379,
+      "MedianNs": 39744100,
+      "MinNs": 39407600,
+      "MaxNs": 40211100,
+      "MedianBytes": 561088
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Guarded-filtered",
+      "Scope": "warm-table",
+      "Value": 99289942172.58379,
+      "MedianNs": 39467300,
+      "MinNs": 38971700,
+      "MaxNs": 40077700,
+      "MedianBytes": 0
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "prepare",
+      "Value": 225407786180.8534,
+      "MedianNs": 125555.078125,
+      "MinNs": 125026.171875,
+      "MaxNs": 125563.28125,
+      "MedianBytes": 10544
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "prepare-plus-one",
+      "Value": 99289942172.58374,
+      "MedianNs": 9766400,
+      "MinNs": 9746725,
+      "MaxNs": 9851975,
+      "MedianBytes": 10480
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "warm-table",
+      "Value": 99289942172.58374,
+      "MedianNs": 9596325,
+      "MinNs": 9506200,
+      "MaxNs": 9628125,
+      "MedianBytes": 0
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "prepare",
+      "Value": 225407786180.86548,
+      "MedianNs": 400306.25,
+      "MinNs": 398350,
+      "MaxNs": 401254.6875,
+      "MedianBytes": 968888
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "prepare-plus-one",
+      "Value": 99289942102.12396,
+      "MedianNs": 12573950,
+      "MinNs": 12472900,
+      "MaxNs": 12711400,
+      "MedianBytes": 1624352
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "warm-table",
+      "Value": 99289942102.12396,
+      "MedianNs": 12275600,
+      "MinNs": 12242450,
+      "MaxNs": 12315350,
+      "MedianBytes": 625088
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Guarded-combined",
+      "Scope": "prepare",
+      "Value": 225407786180.8534,
+      "MedianNs": 125341.015625,
+      "MinNs": 125098.046875,
+      "MaxNs": 126046.484375,
+      "MedianBytes": 10896
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Guarded-combined",
+      "Scope": "prepare-plus-one",
+      "Value": 99289942102.14305,
+      "MedianNs": 48774800,
+      "MinNs": 48531400,
+      "MaxNs": 51736700,
+      "MedianBytes": 445744
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Guarded-combined",
+      "Scope": "warm-table",
+      "Value": 99289942102.14305,
+      "MedianNs": 49230100,
+      "MinNs": 48258100,
+      "MaxNs": 51511200,
+      "MedianBytes": 0
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Guarded-filtered",
+      "Scope": "prepare",
+      "Value": 225407786180.8534,
+      "MedianNs": 125779.6875,
+      "MinNs": 125570.703125,
+      "MaxNs": 126940.625,
+      "MedianBytes": 10896
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Guarded-filtered",
+      "Scope": "prepare-plus-one",
+      "Value": 99289942102.14305,
+      "MedianNs": 39114500,
+      "MinNs": 38846200,
+      "MaxNs": 40641900,
+      "MedianBytes": 542632
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Guarded-filtered",
+      "Scope": "warm-table",
+      "Value": 99289942102.14305,
+      "MedianNs": 39409500,
+      "MinNs": 38962600,
+      "MaxNs": 40392000,
+      "MedianBytes": 0
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "prepare",
+      "Value": 225407786180.8534,
+      "MedianNs": 126406.640625,
+      "MinNs": 124893.75,
+      "MaxNs": 126971.484375,
+      "MedianBytes": 10544
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "prepare-plus-one",
+      "Value": 99289942102.14304,
+      "MedianNs": 9281100,
+      "MinNs": 9184425,
+      "MaxNs": 9286700,
+      "MedianBytes": 10480
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "warm-table",
+      "Value": 99289942102.14304,
+      "MedianNs": 9051375,
+      "MinNs": 8954375,
+      "MaxNs": 9146650,
+      "MedianBytes": 0
+    }
+  ],
+  "Compatibility": {
+    "HistoricalSource": "ab1c6bae6d0bcce7f4a757d9cf156f5539403a68",
+    "MeasuredSource": "c9f0072a31fa89513edfcaf59365765b72c7f3d2",
+    "HistoricalPairsChecked": 2156,
+    "HistoricalMethodResultsChecked": 12936,
+    "HistoricalResultBitsAndDiagnosticsIdentical": true,
+    "FilteredPairsWithIdenticalResultBitsAndLogicalDiagnostics": 2156,
+    "ReferenceValidationSha256": "9f58532f2a3f92621d2993c06d8864db17fd41056a00ac543ac80307c19db0b2",
+    "CurrentOldCommandsValidationSha256": "ccf62a185cdce695cb163efebdbce88ab536a09c9d5572064ec5dd20f333f858"
+  },
+  "ProfileEvidence": {
+    "Tool": "dotnet-trace 10.0.745401",
+    "Profile": "dotnet-sampled-thread-time",
+    "MeasuredSource": "c9f0072a31fa89513edfcaf59365765b72c7f3d2",
+    "HarnessHash": "c6d0f8475db3041b58d0457082697127b30ee9efec1c0629d5fcc14a14b564f6",
+    "SummaryScriptSha256": "00e7febb82ff8f741c025ec514ec2c9e031020a6a6f3470d9c846d422fc8907e",
+    "SummaryScriptNote": "Reporting-only update after measured source: include ScalarOrderFilter frames alongside GuardedDouble frames.",
+    "TieredCompilation": "0",
+    "Direction": "county-zones",
+    "WarmupCallsIncluded": 4,
+    "LoopSeconds": 20,
+    "Profiles": [
+      {
+        "Method": "Guarded-combined",
+        "TraceFile": "c9f0072-combined.nettrace",
+        "TraceSha256": "1d833dc607413e61c6e935b66323f0fe394ddb124bc3e744fdf1d4c903015f8c",
+        "Command": "dotnet-trace collect --profile dotnet-sampled-thread-time --format Speedscope -- dotnet <measured-runner.dll> profile-double-ablation Guarded-combined 20",
+        "Unit": "milliseconds",
+        "TraverseRealSampledTime": 20259.31736920643,
+        "Inclusive": [
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.MeasureIntersection(value class PolylineKit.Point2[],value class PolylineKit.Point2[],value class PolylineKit.PathFillRule)",
+            "Time": 20244.823434266094,
+            "Percent": 99.92845793036261
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.SweepCommonY(float64,float64)",
+            "Time": 14257.977661152812,
+            "Percent": 70.37738439708991
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.ProcessBand(float64,float64)",
+            "Time": 11828.212970914574,
+            "Percent": 58.384064750834646
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.CompareAtEndpoint(int32,int32,float64,bool)",
+            "Time": 6623.409130074069,
+            "Percent": 32.69315056064751
+          },
+          {
+            "Frame": "System.Private.CoreLib.il!System.Collections.Generic.ArraySortHelper`1[PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Endpoint].Sort(value class System.Span`1<!0>,class System.Comparison`1<!0>)",
+            "Time": 4308.761024057774,
+            "Percent": 21.268046427896753
+          },
+          {
+            "Frame": "System.Private.CoreLib.il!System.Collections.Generic.ArraySortHelper`1[PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Endpoint].IntroSort(value class System.Span`1<!0>,int32,class System.Comparison`1<!0>)",
+            "Time": 4305.695224653442,
+            "Percent": 21.252913640604557
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.AccumulateGap(int32,value class Level)",
+            "Time": 3289.9188648996155,
+            "Percent": 16.239041054266693
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.XAt(int32,value class Interval)",
+            "Time": 2807.260868831593,
+            "Percent": 13.856640960166542
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.HorizontalDifference(int32,int32,value class Level)",
+            "Time": 2120.0299728980976,
+            "Percent": 10.464468936749475
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.Insert(int32,float64)",
+            "Time": 1588.3489565549917,
+            "Percent": 7.84009119166688
+          },
+          {
+            "Frame": "System.Private.CoreLib.il!System.Collections.Generic.ArraySortHelper`1[PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Endpoint].InsertionSort(value class System.Span`1<!0>,class System.Comparison`1<!0>)",
+            "Time": 1537.7139214498397,
+            "Percent": 7.590156634730053
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.AppendEdges(int32,int32,int32)",
+            "Time": 1446.3923353636005,
+            "Percent": 7.13939324314093
+          },
+          {
+            "Frame": "System.Private.CoreLib.il!System.Collections.Generic.ArraySortHelper`1[PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Endpoint].PickPivotAndPartition(value class System.Span`1<!0>,class System.Comparison`1<!0>)",
+            "Time": 1439.4161333749864,
+            "Percent": 7.104958706865696
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Interval.Multiply(value class Interval,value class Interval)",
+            "Time": 932.4259866245354,
+            "Percent": 4.602455105628562
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Interval.Down(float64)",
+            "Time": 695.2197891185754,
+            "Percent": 3.4316052039112095
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Interval.Up(float64)",
+            "Time": 367.28009314899026,
+            "Percent": 1.8128947113847245
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.SameSupport(int32,int32)",
+            "Time": 281.9603956573448,
+            "Percent": 1.39175664470273
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Interval.Difference(float64,float64)",
+            "Time": 212.0354952247706,
+            "Percent": 1.0466073034970977
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.CopyValidated(value class PolylineKit.Point2[],int32)",
+            "Time": 207.73398997574247,
+            "Percent": 1.0253750715781376
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Interval.Divide(value class Interval,value class Interval)",
+            "Time": 185.77609305343793,
+            "Percent": 0.9169908821104317
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.Visit()",
+            "Time": 179.33549663944223,
+            "Percent": 0.8852000952017609
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.SetWinding(int32,int32,int32,int32)",
+            "Time": 119.23279760493739,
+            "Percent": 0.588533144686147
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.Remove(int32)",
+            "Time": 49.394098899081655,
+            "Percent": 0.24380929524387254
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.ConstructCrossing(int32,int32,float64,float64)",
+            "Time": 47.579099188812734,
+            "Percent": 0.2348504558259775
+          },
+          {
+            "Frame": "System.Private.CoreLib.il!System.Collections.Generic.ArraySortHelper`1[PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Endpoint].SwapIfGreater(value class System.Span`1<!0>,class System.Comparison`1<!0>,int32,int32)",
+            "Time": 24.035999653627925,
+            "Percent": 0.11864170552045322
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.CertifiedValue()",
+            "Time": 2.0362995532996138,
+            "Percent": 0.010051175546490671
+          }
+        ],
+        "Exclusive": [
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.CompareAtEndpoint(int32,int32,float64,bool)",
+            "Time": 3589.344564590641,
+            "Percent": 17.717006447839847
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.ProcessBand(float64,float64)",
+            "Time": 2723.6982468400856,
+            "Percent": 13.444175818974173
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.XAt(int32,value class Interval)",
+            "Time": 1989.6342799697563,
+            "Percent": 9.820835735531455
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.HorizontalDifference(int32,int32,value class Level)",
+            "Time": 1558.0684825244714,
+            "Percent": 7.690626757704532
+          },
+          {
+            "Frame": "System.Private.CoreLib.il!System.Collections.Generic.ArraySortHelper`1[PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Endpoint].InsertionSort(value class System.Span`1<!0>,class System.Comparison`1<!0>)",
+            "Time": 1537.7139214498397,
+            "Percent": 7.590156634730053
+          },
+          {
+            "Frame": "System.Private.CoreLib.il!System.Collections.Generic.ArraySortHelper`1[PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Endpoint].PickPivotAndPartition(value class System.Span`1<!0>,class System.Comparison`1<!0>)",
+            "Time": 1415.3801337213586,
+            "Percent": 6.986317001345242
+          },
+          {
+            "Frame": "System.Private.CoreLib.il!System.Collections.Generic.ArraySortHelper`1[PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Endpoint].IntroSort(value class System.Span`1<!0>,int32,class System.Comparison`1<!0>)",
+            "Time": 1328.5651698286151,
+            "Percent": 6.557798299008807
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.AppendEdges(int32,int32,int32)",
+            "Time": 1200.50864535543,
+            "Percent": 5.92571123437835
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.AccumulateGap(int32,value class Level)",
+            "Time": 965.4404936288672,
+            "Percent": 4.7654147276270455
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.SweepCommonY(float64,float64)",
+            "Time": 792.0216347841658,
+            "Percent": 3.9094191593445076
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Interval.Down(float64)",
+            "Time": 695.2197891185754,
+            "Percent": 3.4316052039112095
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.Insert(int32,float64)",
+            "Time": 499.5306910497728,
+            "Percent": 2.4656837244133647
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Interval.Multiply(value class Interval,value class Interval)",
+            "Time": 428.152893364916,
+            "Percent": 2.11336288169164
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Interval.Up(float64)",
+            "Time": 367.28009314899026,
+            "Percent": 1.8128947113847245
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.SameSupport(int32,int32)",
+            "Time": 281.9603956573448,
+            "Percent": 1.39175664470273
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Interval.Difference(float64,float64)",
+            "Time": 212.0354952247706,
+            "Percent": 1.0466073034970977
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.CopyValidated(value class PolylineKit.Point2[],int32)",
+            "Time": 207.73398997574247,
+            "Percent": 1.0253750715781376
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.Visit()",
+            "Time": 179.33549663944223,
+            "Percent": 0.8852000952017609
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.SetWinding(int32,int32,int32,int32)",
+            "Time": 87.19749809837145,
+            "Percent": 0.43040689135414356
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Interval.Divide(value class Interval,value class Interval)",
+            "Time": 85.64579680042425,
+            "Percent": 0.4227476930224873
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.Remove(int32)",
+            "Time": 33.42449922866945,
+            "Percent": 0.16498334380937094
+          },
+          {
+            "Frame": "System.Private.CoreLib.il!System.Collections.Generic.ArraySortHelper`1[PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Endpoint].SwapIfGreater(value class System.Span`1<!0>,class System.Comparison`1<!0>,int32,int32)",
+            "Time": 24.035999653627925,
+            "Percent": 0.11864170552045322
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.ConstructCrossing(int32,int32,float64,float64)",
+            "Time": 17.907300045017337,
+            "Percent": 0.0883904413888886
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.MeasureIntersection(value class PolylineKit.Point2[],value class PolylineKit.Point2[],value class PolylineKit.PathFillRule)",
+            "Time": 10.060725072480238,
+            "Percent": 0.04965974365835369
+          },
+          {
+            "Frame": "System.Private.CoreLib.il!System.Collections.Generic.ArraySortHelper`1[PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Endpoint].Sort(value class System.Span`1<!0>,class System.Comparison`1<!0>)",
+            "Time": 3.0657994043322105,
+            "Percent": 0.015132787292192461
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.CertifiedValue()",
+            "Time": 0.0,
+            "Percent": 0.0
+          }
+        ],
+        "SpeedscopeSha256": "0c06b536925f002d3a3b3b1aeb4fc46dba7e2f7cd9645095233cf343600fa4c8",
+        "Limit": "Managed sampled thread time within TraverseReal, including its warmup calls. Inclusive shares overlap. JIT inlining affects attribution. These are not exact CPU percentages or benchmark timings."
+      },
+      {
+        "Method": "Guarded-filtered",
+        "TraceFile": "c9f0072-filtered.nettrace",
+        "TraceSha256": "cfc838c8ef7c5f845ce5628fcd4f83ca80ed15904ad669f88bde91eefc9c627d",
+        "Command": "dotnet-trace collect --profile dotnet-sampled-thread-time --format Speedscope -- dotnet <measured-runner.dll> profile-double-ablation Guarded-filtered 20",
+        "Unit": "milliseconds",
+        "TraverseRealSampledTime": 20191.700141276357,
+        "Inclusive": [
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.MeasureIntersection(value class PolylineKit.Point2[],value class PolylineKit.Point2[],value class PolylineKit.PathFillRule)",
+            "Time": 20179.727950509452,
+            "Percent": 99.94070736647663
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.SweepCommonY(float64,float64)",
+            "Time": 10391.164549611094,
+            "Percent": 51.46255380629998
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.ProcessBand(float64,float64)",
+            "Time": 8309.227899991027,
+            "Percent": 41.151700163202726
+          },
+          {
+            "Frame": "System.Private.CoreLib.il!System.Collections.Generic.ArraySortHelper`1[PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Endpoint].Sort(value class System.Span`1<!0>,class System.Comparison`1<!0>)",
+            "Time": 5418.179611066476,
+            "Percent": 26.833696881177943
+          },
+          {
+            "Frame": "System.Private.CoreLib.il!System.Collections.Generic.ArraySortHelper`1[PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Endpoint].IntroSort(value class System.Span`1<!0>,int32,class System.Comparison`1<!0>)",
+            "Time": 5412.155311243099,
+            "Percent": 26.803861355782722
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.AccumulateGap(int32,value class Level)",
+            "Time": 4299.25016270621,
+            "Percent": 21.292165259118427
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.AppendEdges(int32,int32,int32)",
+            "Time": 4068.336911379788,
+            "Percent": 20.148560462539738
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.HorizontalDifference(int32,int32,value class Level)",
+            "Time": 2784.4057673019456,
+            "Percent": 13.789852998113798
+          },
+          {
+            "Frame": "System.Private.CoreLib.il!System.Collections.Generic.ArraySortHelper`1[PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Endpoint].InsertionSort(value class System.Span`1<!0>,class System.Comparison`1<!0>)",
+            "Time": 1982.4241448137436,
+            "Percent": 9.818014981121996
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.CompareAtEndpoint(int32,int32,float64,bool)",
+            "Time": 1947.0449615442117,
+            "Percent": 9.642798515831837
+          },
+          {
+            "Frame": "System.Private.CoreLib.il!System.Collections.Generic.ArraySortHelper`1[PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Endpoint].PickPivotAndPartition(value class System.Span`1<!0>,class System.Comparison`1<!0>)",
+            "Time": 1742.6445549524474,
+            "Percent": 8.630499377266858
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.Insert(int32,float64)",
+            "Time": 1034.192576460095,
+            "Percent": 5.121869724808234
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.ScalarOrderFilter.Prepare(float64,float64,float64,float64,float64)",
+            "Time": 841.9163715948184,
+            "Percent": 4.169616058599012
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Interval.Multiply(value class Interval,value class Interval)",
+            "Time": 549.8572907600328,
+            "Percent": 2.7231847091271
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Interval.Down(float64)",
+            "Time": 505.7962897571588,
+            "Percent": 2.504971281359304
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.SameSupport(int32,int32)",
+            "Time": 384.11659360541483,
+            "Percent": 1.902348939999334
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Interval.Divide(value class Interval,value class Interval)",
+            "Time": 367.7925912416404,
+            "Percent": 1.8215038291391321
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.CopyValidated(value class PolylineKit.Point2[],int32)",
+            "Time": 277.96499239903085,
+            "Percent": 1.376629954160265
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Interval.Up(float64)",
+            "Time": 229.7025967325211,
+            "Percent": 1.1376089934247664
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Interval.Difference(float64,float64)",
+            "Time": 210.18509572238162,
+            "Percent": 1.0409479848243004
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.Visit()",
+            "Time": 197.84559629707724,
+            "Percent": 0.9798362441636925
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.SetWinding(int32,int32,int32,int32)",
+            "Time": 167.01859796772237,
+            "Percent": 0.8271646111973452
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.ConstructCrossing(int32,int32,float64,float64)",
+            "Time": 73.55079865951552,
+            "Percent": 0.36426253433291245
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.Remove(int32)",
+            "Time": 73.18669879569723,
+            "Percent": 0.3624593188469911
+          },
+          {
+            "Frame": "System.Private.CoreLib.il!System.Collections.Generic.ArraySortHelper`1[PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Endpoint].SwapIfGreater(value class System.Span`1<!0>,class System.Comparison`1<!0>,int32,int32)",
+            "Time": 57.60499837112249,
+            "Percent": 0.2852904805839751
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.XAt(int32,value class Interval)",
+            "Time": 29.133899111363803,
+            "Percent": 0.14428650835502252
+          }
+        ],
+        "Exclusive": [
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.AppendEdges(int32,int32,int32)",
+            "Time": 2747.6451513076527,
+            "Percent": 13.607794945859219
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.ProcessBand(float64,float64)",
+            "Time": 2497.8959632972665,
+            "Percent": 12.370904608428727
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.HorizontalDifference(int32,int32,value class Level)",
+            "Time": 2054.760578913319,
+            "Percent": 10.176263338583007
+          },
+          {
+            "Frame": "System.Private.CoreLib.il!System.Collections.Generic.ArraySortHelper`1[PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Endpoint].InsertionSort(value class System.Span`1<!0>,class System.Comparison`1<!0>)",
+            "Time": 1982.4241448137436,
+            "Percent": 9.818014981121996
+          },
+          {
+            "Frame": "System.Private.CoreLib.il!System.Collections.Generic.ArraySortHelper`1[PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Endpoint].IntroSort(value class System.Span`1<!0>,int32,class System.Comparison`1<!0>)",
+            "Time": 1687.0866114769078,
+            "Percent": 8.35534699739387
+          },
+          {
+            "Frame": "System.Private.CoreLib.il!System.Collections.Generic.ArraySortHelper`1[PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Endpoint].PickPivotAndPartition(value class System.Span`1<!0>,class System.Comparison`1<!0>)",
+            "Time": 1685.0395565813246,
+            "Percent": 8.345208896682882
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.CompareAtEndpoint(int32,int32,float64,bool)",
+            "Time": 1602.120067990104,
+            "Percent": 7.934547644727606
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.AccumulateGap(int32,value class Level)",
+            "Time": 1326.9771983896421,
+            "Percent": 6.571894338293007
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.SweepCommonY(float64,float64)",
+            "Time": 974.5573743642738,
+            "Percent": 4.826524599442026
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.ScalarOrderFilter.Prepare(float64,float64,float64,float64,float64)",
+            "Time": 841.9163715948184,
+            "Percent": 4.169616058599012
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Interval.Down(float64)",
+            "Time": 505.7962897571588,
+            "Percent": 2.504971281359304
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.SameSupport(int32,int32)",
+            "Time": 384.11659360541483,
+            "Percent": 1.902348939999334
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.CopyValidated(value class PolylineKit.Point2[],int32)",
+            "Time": 277.96499239903085,
+            "Percent": 1.376629954160265
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.Insert(int32,float64)",
+            "Time": 251.08079462089898,
+            "Percent": 1.2434851590710463
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Interval.Multiply(value class Interval,value class Interval)",
+            "Time": 249.3122966468719,
+            "Percent": 1.2347266198611069
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Interval.Up(float64)",
+            "Time": 229.7025967325211,
+            "Percent": 1.1376089934247664
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Interval.Difference(float64,float64)",
+            "Time": 210.18509572238162,
+            "Percent": 1.0409479848243004
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.Visit()",
+            "Time": 197.84559629707724,
+            "Percent": 0.9798362441636925
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Interval.Divide(value class Interval,value class Interval)",
+            "Time": 149.37399530048714,
+            "Percent": 0.7397791877620707
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.SetWinding(int32,int32,int32,int32)",
+            "Time": 117.92319836730826,
+            "Percent": 0.5840181735179735
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.Remove(int32)",
+            "Time": 59.211699348638376,
+            "Percent": 0.29324771532039745
+          },
+          {
+            "Frame": "System.Private.CoreLib.il!System.Collections.Generic.ArraySortHelper`1[PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Endpoint].SwapIfGreater(value class System.Span`1<!0>,class System.Comparison`1<!0>,int32,int32)",
+            "Time": 57.60499837112249,
+            "Percent": 0.2852904805839751
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.ConstructCrossing(int32,int32,float64,float64)",
+            "Time": 29.946699623682434,
+            "Percent": 0.14831192724809078
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.XAt(int32,value class Interval)",
+            "Time": 29.133899111363803,
+            "Percent": 0.14428650835502252
+          },
+          {
+            "Frame": "PolylineKit.ScanbeamBenchmarks!PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep.MeasureIntersection(value class PolylineKit.Point2[],value class PolylineKit.Point2[],value class PolylineKit.PathFillRule)",
+            "Time": 24.081886053063812,
+            "Percent": 0.11926626229871078
+          },
+          {
+            "Frame": "System.Private.CoreLib.il!System.Collections.Generic.ArraySortHelper`1[PolylineKit.ScanbeamBenchmarks.GuardedDoubleSweep+Endpoint].Sort(value class System.Span`1<!0>,class System.Comparison`1<!0>)",
+            "Time": 6.024299823377078,
+            "Percent": 0.029835525395219494
+          }
+        ],
+        "SpeedscopeSha256": "d425c8e7f47fed35fc417be21221289070dbcb058222ef41e0d12f416083dc29",
+        "Limit": "Managed sampled thread time within TraverseReal, including its warmup calls. Inclusive shares overlap. JIT inlining affects attribution. These are not exact CPU percentages or benchmark timings."
+      }
+    ]
+  },
+  "NegativeControls": [
+    {
+      "Defect": "missing-row",
+      "Rejected": true,
+      "EvidenceUnchanged": true
+    },
+    {
+      "Defect": "order",
+      "Rejected": true,
+      "EvidenceUnchanged": true
+    },
+    {
+      "Defect": "median",
+      "Rejected": true,
+      "EvidenceUnchanged": true
+    },
+    {
+      "Defect": "output",
+      "Rejected": true,
+      "EvidenceUnchanged": true
+    },
+    {
+      "Defect": "binary",
+      "Rejected": true,
+      "EvidenceUnchanged": true
+    },
+    {
+      "Defect": "filter-diagnostic",
+      "Rejected": true,
+      "EvidenceUnchanged": true
+    },
+    {
+      "Defect": "fallback-record",
+      "Rejected": true,
+      "EvidenceUnchanged": true
+    }
+  ],
+  "LocalArchive": {
+    "File": "artifacts/scanbeam-scalar-filter-c9f0072.zip",
+    "Bytes": 1016578,
+    "Sha256": "75be82dba45e918d606d2044642e5a583adcee045d88b9ec2a3f825642363c99",
+    "PubliclyHosted": false
+  }
+}
