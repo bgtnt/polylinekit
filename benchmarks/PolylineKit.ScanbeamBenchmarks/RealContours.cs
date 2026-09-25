@@ -19,9 +19,10 @@ internal static partial class Program
     private static readonly string[] RealScopes = ["prepare", "warm-table", "prepare-plus-one"];
     private sealed record RealFeature(string Id, bool County, Point2[] Points);
     private sealed record RealSource(RealFeature[] Features, Point2 Origin, string SourceHash);
+    private sealed record RecordedOrigin(double X, double Y);
     private sealed record RealSession(CoverageComparator Comparator, PreparedRegion[] Zones, PreparedRegion[] Queries);
     private sealed record RealRow(string Direction, string Method, string Scope, double Value, double MedianNs, double MedianBytes, Sample[] Samples);
-    private sealed record RealRun(int Run, string Revision, DateTimeOffset Utc, string SourceHash, Point2 Origin,
+    private sealed record RealRun(int Run, string Revision, DateTimeOffset Utc, string SourceHash, RecordedOrigin Origin,
         string Runtime, string OS, string Architecture, string? Cpu, int LogicalProcessors, string? TieredCompilation,
         string HarnessHash, string WindingHash, string ClipperHash, string NtsHash, RealRow[] Rows);
     private sealed record RealAggregate(string Direction, string Method, string Scope, double Value, double MedianNs,
@@ -254,7 +255,7 @@ internal static partial class Program
                 Console.WriteLine($"real run{run}: {direction}/{method}/{scope}");
             }
         }
-        var record = new RealRun(run, revision, DateTimeOffset.UtcNow, source.SourceHash, source.Origin,
+        var record = new RealRun(run, revision, DateTimeOffset.UtcNow, source.SourceHash, new(source.Origin.X, source.Origin.Y),
             RuntimeInformation.FrameworkDescription, RuntimeInformation.OSDescription, RuntimeInformation.ProcessArchitecture.ToString(),
             Environment.GetEnvironmentVariable("PROCESSOR_IDENTIFIER"), Environment.ProcessorCount, Environment.GetEnvironmentVariable("DOTNET_TieredCompilation"),
             AssemblyHash(typeof(Program)), AssemblyHash(typeof(WindingArea)), AssemblyHash(typeof(Clipper64)), AssemblyHash(typeof(Polygon)), rows.ToArray());
