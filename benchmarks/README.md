@@ -1,5 +1,11 @@
 # Benchmarks
 
+For an area-engine optimization with a predeclared Clipper gate, see the
+[intersection-only protocol](../examples/RegionCoverage/INTERSECTION-PROTOCOL.md),
+[results](../examples/RegionCoverage/INTERSECTION-RESULTS.md) and
+[compact evidence](intersection-evidence.json). It measures complete coverage
+queries and fresh sessions, with all four gates passing.
+
 For dynamic segment indexing during vertex removal, see the
 [bounded index experiment](PolylineKit.DynamicIndexBenchmarks/README.md).
 It compares linear scans and an independent fixed-slot hierarchy with identical

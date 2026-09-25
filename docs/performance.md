@@ -1,5 +1,13 @@
 # Performance: measured scope and tradeoffs
 
+The [intersection-only coverage experiment](../examples/RegionCoverage/INTERSECTION-RESULTS.md)
+at `f93cc25` establishes a newer, narrower result: the dedicated
+`WindingArea.IntersectionArea` method takes 26-29% less time than direct reusable
+Clipper64 in both whole-population directions, with and without fresh preparation.
+All four predeclared 1.25x gates pass; warm traversal allocations are 0 versus
+625,088 managed bytes. The old full-metric operation and its results below remain
+unchanged. This gain does not establish a win on dense self-crossing inputs.
+
 PolylineKit's geometry contracts are the reason to choose an operation. Performance depends strongly on the shape, vertex count and crossing density. `BetweenGraphs` has a linear graph-specific algorithm; general winding and clipping operations solve broader problems. The results below are complete API-call measurements, not universal speed guarantees.
 
 ## Evidence and reproduction

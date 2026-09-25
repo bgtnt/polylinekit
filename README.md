@@ -27,6 +27,10 @@ For independent regions, the [coverage example](examples/RegionCoverage/README.m
 measures intersection and the fraction of a prepared zone covered by another
 region. It compares complete county/district populations with Clipper2, NTS and
 optional WPF, with separate accuracy, preparation and repeated-query costs.
+Use `WindingArea.IntersectionArea` when only the intersection is needed. In the
+[measured coverage workload](examples/RegionCoverage/INTERSECTION-RESULTS.md),
+it takes 26-29% less time than direct reusable Clipper64, including fresh sessions.
+This is a specific area-only use case, not a universal clipping speed claim.
 
 ## Compare, normalize, align
 

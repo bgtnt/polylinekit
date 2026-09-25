@@ -1,5 +1,10 @@
 # Region coverage: measured result
 
+This report retains the original full-metric comparison. The subsequent
+[intersection-only experiment](INTERSECTION-RESULTS.md) adds a dedicated public
+operation and measures a 26-29% time reduction versus direct reusable Clipper64
+on this same population. It does not replace the historical measurements below.
+
 The experiment supports an **allocation-sensitive intersection/coverage use case** for
 Winding, not a claim that it is the universally fastest geometry engine. Direct
 reusable Clipper64 is a close throughput competitor on this population. NTS

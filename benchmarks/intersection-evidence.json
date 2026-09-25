@@ -1,0 +1,774 @@
+{
+  "SchemaVersion": 1,
+  "Kind": "intersection-only-coverage-ablation",
+  "Repository": "https://github.com/bgtnt/polylinekit",
+  "MeasuredRevision": "f93cc25d589a471e405af9ed53d094dd311aac61",
+  "SourceHadUncommittedChanges": false,
+  "SDK": "10.0.401",
+  "Runtime": ".NET 10.0.12",
+  "OS": "Microsoft Windows 10.0.26200",
+  "Architecture": "X64",
+  "CPU": "Intel64 Family 6 Model 158 Stepping 12, GenuineIntel",
+  "CpuName": "Intel Core i9-9900K @ 3.60GHz, 8 cores / 16 logical processors",
+  "TieredCompilation": "0",
+  "RunUtc": [
+    "2026-09-25T04:58:59.4651919+00:00",
+    "2026-09-25T04:59:16.5234199+00:00",
+    "2026-09-25T04:59:33.5298335+00:00"
+  ],
+  "InputHash": "eac1fd8b704c4ba78f7ced0784b2ec3b6ba3eeb7bedd35d05eece811d15e845c",
+  "Assemblies": {
+    "RegionCoverage": "492b1deca81098a6aed04fd7c26435bcb03c1c2b3a9be2bd0792644d311f0904",
+    "PolylineKit.Winding": "a0e8500ec0357182b1a382ebeed4b4bc99cfb28333669397734a6b3aa74cb349",
+    "Clipper2Lib": "e9bf01e01f494ef6072cd46c792ed4f3004288a92b1e98c1f44931e558b8a5d0",
+    "NetTopologySuite": "98fa6bae8b75b5f9445236679883fa27750d990aec11e985b85b57a30c37a858"
+  },
+  "Population": {
+    "CountyRings": 98,
+    "DistrictRings": 11,
+    "PairsPerDirection": 1078,
+    "BoundsCandidatesPerDirection": 211
+  },
+  "Methods": [
+    "Winding",
+    "Winding-intersection-only",
+    "Clipper64-reused-data"
+  ],
+  "Accuracy": [
+    {
+      "Direction": "county-zones",
+      "Method": "Winding",
+      "Pairs": 1078,
+      "MaximumAreaDelta": 1.430511474609375e-06,
+      "MaximumCoverageDelta": 1.4432899320127035e-15,
+      "FailedPairs": 0
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Winding-intersection-only",
+      "Pairs": 1078,
+      "MaximumAreaDelta": 1.430511474609375e-06,
+      "MaximumCoverageDelta": 1.4432899320127035e-15,
+      "FailedPairs": 0
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Clipper64-reused-data",
+      "Pairs": 1078,
+      "MaximumAreaDelta": 0.02616572380065918,
+      "MaximumCoverageDelta": 2.2365775897981166e-11,
+      "FailedPairs": 0
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Winding",
+      "Pairs": 1078,
+      "MaximumAreaDelta": 1.430511474609375e-06,
+      "MaximumCoverageDelta": 3.3306690738754696e-16,
+      "FailedPairs": 0
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Winding-intersection-only",
+      "Pairs": 1078,
+      "MaximumAreaDelta": 1.430511474609375e-06,
+      "MaximumCoverageDelta": 3.3306690738754696e-16,
+      "FailedPairs": 0
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Clipper64-reused-data",
+      "Pairs": 1078,
+      "MaximumAreaDelta": 0.026165485382080078,
+      "MaximumCoverageDelta": 5.225680999032534e-12,
+      "FailedPairs": 0
+    }
+  ],
+  "Rows": [
+    {
+      "Direction": "county-zones",
+      "Method": "Winding",
+      "Scope": "prepare-catalogues-and-index",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 126117195294.33011,
+        "CoverageSum": 99290590886.52328,
+        "Candidates": 0
+      },
+      "MedianNanoseconds": 146006.640625,
+      "MinimumProcessMedianNanoseconds": 145332.421875,
+      "MaximumProcessMedianNanoseconds": 146152.34375,
+      "MaximumProcessMedianBytes": 18512
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "prepare-catalogues-and-index",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 126117195294.33011,
+        "CoverageSum": 99290590886.52328,
+        "Candidates": 0
+      },
+      "MedianNanoseconds": 145665.234375,
+      "MinimumProcessMedianNanoseconds": 144834.765625,
+      "MaximumProcessMedianNanoseconds": 148373.4375,
+      "MaximumProcessMedianBytes": 18512
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "prepare-catalogues-and-index",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 126117195294.32367,
+        "CoverageSum": 99290590886.53687,
+        "Candidates": 0
+      },
+      "MedianNanoseconds": 412050,
+      "MinimumProcessMedianNanoseconds": 403292.1875,
+      "MaximumProcessMedianNanoseconds": 460640.625,
+      "MaximumProcessMedianBytes": 976856
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Winding",
+      "Scope": "warm-candidate-geometry",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99289942091.14307,
+        "CoverageSum": 81.4406757032932,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 13261350,
+      "MinimumProcessMedianNanoseconds": 13253300,
+      "MaximumProcessMedianNanoseconds": 13279600,
+      "MaximumProcessMedianBytes": 0
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "warm-candidate-geometry",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99289942091.14307,
+        "CoverageSum": 81.4406757032932,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 9612975,
+      "MinimumProcessMedianNanoseconds": 9550750,
+      "MaximumProcessMedianNanoseconds": 9787350,
+      "MaximumProcessMedianBytes": 0
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "warm-candidate-geometry",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99289942091.12743,
+        "CoverageSum": 81.44067570328133,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 12869550,
+      "MinimumProcessMedianNanoseconds": 12659500,
+      "MaximumProcessMedianNanoseconds": 13178950,
+      "MaximumProcessMedianBytes": 625088
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Winding",
+      "Scope": "warm-linear-table",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99289942091.14307,
+        "CoverageSum": 81.4406757032932,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 13099800,
+      "MinimumProcessMedianNanoseconds": 13096600,
+      "MaximumProcessMedianNanoseconds": 13275550,
+      "MaximumProcessMedianBytes": 0
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "warm-linear-table",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99289942091.14307,
+        "CoverageSum": 81.4406757032932,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 9634550,
+      "MinimumProcessMedianNanoseconds": 9625925,
+      "MaximumProcessMedianNanoseconds": 9765075,
+      "MaximumProcessMedianBytes": 0
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "warm-linear-table",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99289942091.12743,
+        "CoverageSum": 81.44067570328133,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 12817450,
+      "MinimumProcessMedianNanoseconds": 12714600,
+      "MaximumProcessMedianNanoseconds": 13639400,
+      "MaximumProcessMedianBytes": 625088
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Winding",
+      "Scope": "warm-indexed-table",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99289942091.14307,
+        "CoverageSum": 81.4406757032932,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 13245350,
+      "MinimumProcessMedianNanoseconds": 13127700,
+      "MaximumProcessMedianNanoseconds": 13528650,
+      "MaximumProcessMedianBytes": 0
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "warm-indexed-table",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99289942091.14307,
+        "CoverageSum": 81.4406757032932,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 9676350,
+      "MinimumProcessMedianNanoseconds": 9661350,
+      "MaximumProcessMedianNanoseconds": 9776150,
+      "MaximumProcessMedianBytes": 0
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "warm-indexed-table",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99289942091.12743,
+        "CoverageSum": 81.44067570328131,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 13290000,
+      "MinimumProcessMedianNanoseconds": 12669850,
+      "MaximumProcessMedianNanoseconds": 13330700,
+      "MaximumProcessMedianBytes": 625088
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Winding",
+      "Scope": "prepare-plus-one-table",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99289942091.14307,
+        "CoverageSum": 81.4406757032932,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 13427050,
+      "MinimumProcessMedianNanoseconds": 13411100,
+      "MaximumProcessMedianNanoseconds": 13449050,
+      "MaximumProcessMedianBytes": 18496
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "prepare-plus-one-table",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99289942091.14307,
+        "CoverageSum": 81.4406757032932,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 9828375,
+      "MinimumProcessMedianNanoseconds": 9770100,
+      "MaximumProcessMedianNanoseconds": 9966050,
+      "MaximumProcessMedianBytes": 18496
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "prepare-plus-one-table",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99289942091.12743,
+        "CoverageSum": 81.44067570328131,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 13294100,
+      "MinimumProcessMedianNanoseconds": 12835650,
+      "MaximumProcessMedianNanoseconds": 13751850,
+      "MaximumProcessMedianBytes": 1634000
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Winding",
+      "Scope": "prepare-plus-eight-tables",
+      "TablesPerInvocation": 8,
+      "Value": {
+        "AreaSum": 99289942091.14307,
+        "CoverageSum": 81.4406757032932,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 13358062.5,
+      "MinimumProcessMedianNanoseconds": 13256300,
+      "MaximumProcessMedianNanoseconds": 13409037.5,
+      "MaximumProcessMedianBytes": 2312
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "prepare-plus-eight-tables",
+      "TablesPerInvocation": 8,
+      "Value": {
+        "AreaSum": 99289942091.14307,
+        "CoverageSum": 81.4406757032932,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 9735062.5,
+      "MinimumProcessMedianNanoseconds": 9671400,
+      "MaximumProcessMedianNanoseconds": 9840462.5,
+      "MaximumProcessMedianBytes": 2312
+    },
+    {
+      "Direction": "county-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "prepare-plus-eight-tables",
+      "TablesPerInvocation": 8,
+      "Value": {
+        "AreaSum": 99289942091.12743,
+        "CoverageSum": 81.44067570328131,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 12834525,
+      "MinimumProcessMedianNanoseconds": 12619275,
+      "MaximumProcessMedianNanoseconds": 12985737.5,
+      "MaximumProcessMedianBytes": 751202
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Winding",
+      "Scope": "prepare-catalogues-and-index",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99290590886.52328,
+        "CoverageSum": 126117195294.33011,
+        "Candidates": 0
+      },
+      "MedianNanoseconds": 170556.25,
+      "MinimumProcessMedianNanoseconds": 170525.78125,
+      "MaximumProcessMedianNanoseconds": 173029.6875,
+      "MaximumProcessMedianBytes": 34496
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "prepare-catalogues-and-index",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99290590886.52328,
+        "CoverageSum": 126117195294.33011,
+        "Candidates": 0
+      },
+      "MedianNanoseconds": 170475.78125,
+      "MinimumProcessMedianNanoseconds": 170154.6875,
+      "MaximumProcessMedianNanoseconds": 170808.59375,
+      "MaximumProcessMedianBytes": 34496
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "prepare-catalogues-and-index",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99290590886.53687,
+        "CoverageSum": 126117195294.32367,
+        "Candidates": 0
+      },
+      "MedianNanoseconds": 430121.875,
+      "MinimumProcessMedianNanoseconds": 424565.625,
+      "MaximumProcessMedianNanoseconds": 440581.25,
+      "MaximumProcessMedianBytes": 992840
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Winding",
+      "Scope": "warm-candidate-geometry",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99289942091.14308,
+        "CoverageSum": 10.99994577131996,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 12966650,
+      "MinimumProcessMedianNanoseconds": 12790950,
+      "MaximumProcessMedianNanoseconds": 13145550,
+      "MaximumProcessMedianBytes": 0
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "warm-candidate-geometry",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99289942091.14308,
+        "CoverageSum": 10.99994577131996,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 9305300,
+      "MinimumProcessMedianNanoseconds": 9298650,
+      "MaximumProcessMedianNanoseconds": 9433850,
+      "MaximumProcessMedianBytes": 0
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "warm-candidate-geometry",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99289942091.1275,
+        "CoverageSum": 10.999945771314998,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 12903050,
+      "MinimumProcessMedianNanoseconds": 12888200,
+      "MaximumProcessMedianNanoseconds": 13303700,
+      "MaximumProcessMedianBytes": 625088
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Winding",
+      "Scope": "warm-linear-table",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99289942091.14308,
+        "CoverageSum": 10.99994577131996,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 12783150,
+      "MinimumProcessMedianNanoseconds": 12768600,
+      "MaximumProcessMedianNanoseconds": 13148050,
+      "MaximumProcessMedianBytes": 0
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "warm-linear-table",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99289942091.14308,
+        "CoverageSum": 10.99994577131996,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 9307875,
+      "MinimumProcessMedianNanoseconds": 9162725,
+      "MaximumProcessMedianNanoseconds": 9345200,
+      "MaximumProcessMedianBytes": 0
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "warm-linear-table",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99289942091.1275,
+        "CoverageSum": 10.999945771314998,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 13022750,
+      "MinimumProcessMedianNanoseconds": 12665200,
+      "MaximumProcessMedianNanoseconds": 13032400,
+      "MaximumProcessMedianBytes": 625088
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Winding",
+      "Scope": "warm-indexed-table",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99289942091.14311,
+        "CoverageSum": 10.99994577131996,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 12900550,
+      "MinimumProcessMedianNanoseconds": 12783950,
+      "MaximumProcessMedianNanoseconds": 13203650,
+      "MaximumProcessMedianBytes": 0
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "warm-indexed-table",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99289942091.14311,
+        "CoverageSum": 10.99994577131996,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 9334325,
+      "MinimumProcessMedianNanoseconds": 9325150,
+      "MaximumProcessMedianNanoseconds": 9374750,
+      "MaximumProcessMedianBytes": 0
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "warm-indexed-table",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99289942091.12749,
+        "CoverageSum": 10.999945771314998,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 12657650,
+      "MinimumProcessMedianNanoseconds": 12601500,
+      "MaximumProcessMedianNanoseconds": 13033000,
+      "MaximumProcessMedianBytes": 625088
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Winding",
+      "Scope": "prepare-plus-one-table",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99289942091.14311,
+        "CoverageSum": 10.99994577131996,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 13148450,
+      "MinimumProcessMedianNanoseconds": 12945400,
+      "MaximumProcessMedianNanoseconds": 13265250,
+      "MaximumProcessMedianBytes": 34480
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "prepare-plus-one-table",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99289942091.14311,
+        "CoverageSum": 10.99994577131996,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 9441175,
+      "MinimumProcessMedianNanoseconds": 9432500,
+      "MaximumProcessMedianNanoseconds": 9544075,
+      "MaximumProcessMedianBytes": 34480
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "prepare-plus-one-table",
+      "TablesPerInvocation": 1,
+      "Value": {
+        "AreaSum": 99289942091.12749,
+        "CoverageSum": 10.999945771314998,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 13272600,
+      "MinimumProcessMedianNanoseconds": 12648250,
+      "MaximumProcessMedianNanoseconds": 13947700,
+      "MaximumProcessMedianBytes": 1648464
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Winding",
+      "Scope": "prepare-plus-eight-tables",
+      "TablesPerInvocation": 8,
+      "Value": {
+        "AreaSum": 99289942091.14311,
+        "CoverageSum": 10.99994577131996,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 12839287.5,
+      "MinimumProcessMedianNanoseconds": 12834537.5,
+      "MaximumProcessMedianNanoseconds": 13059812.5,
+      "MaximumProcessMedianBytes": 4310
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Winding-intersection-only",
+      "Scope": "prepare-plus-eight-tables",
+      "TablesPerInvocation": 8,
+      "Value": {
+        "AreaSum": 99289942091.14311,
+        "CoverageSum": 10.99994577131996,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 9333575,
+      "MinimumProcessMedianNanoseconds": 9252162.5,
+      "MaximumProcessMedianNanoseconds": 9444387.5,
+      "MaximumProcessMedianBytes": 4310
+    },
+    {
+      "Direction": "district-zones",
+      "Method": "Clipper64-reused-data",
+      "Scope": "prepare-plus-eight-tables",
+      "TablesPerInvocation": 8,
+      "Value": {
+        "AreaSum": 99289942091.12749,
+        "CoverageSum": 10.999945771314998,
+        "Candidates": 211
+      },
+      "MedianNanoseconds": 12449712.5,
+      "MinimumProcessMedianNanoseconds": 12263775,
+      "MaximumProcessMedianNanoseconds": 12901362.5,
+      "MaximumProcessMedianBytes": 753010
+    }
+  ],
+  "Decision": {
+    "Revision": "f93cc25d589a471e405af9ed53d094dd311aac61",
+    "MinimumRatio": 1.25,
+    "Passed": true,
+    "Cells": [
+      {
+        "Direction": "county-zones",
+        "Scope": "warm-indexed-table",
+        "ClipperNanoseconds": 13290000,
+        "IntersectionNanoseconds": 9676350,
+        "Ratio": 1.3734517664201895,
+        "Passed": true
+      },
+      {
+        "Direction": "county-zones",
+        "Scope": "prepare-plus-one-table",
+        "ClipperNanoseconds": 13294100,
+        "IntersectionNanoseconds": 9828375,
+        "Ratio": 1.3526244165490227,
+        "Passed": true
+      },
+      {
+        "Direction": "district-zones",
+        "Scope": "warm-indexed-table",
+        "ClipperNanoseconds": 12657650,
+        "IntersectionNanoseconds": 9334325,
+        "Ratio": 1.3560327072391416,
+        "Passed": true
+      },
+      {
+        "Direction": "district-zones",
+        "Scope": "prepare-plus-one-table",
+        "ClipperNanoseconds": 13272600,
+        "IntersectionNanoseconds": 9441175,
+        "Ratio": 1.4058207797228628,
+        "Passed": true
+      }
+    ]
+  },
+  "Validation": {
+    "ReleaseBuildWarnings": 0,
+    "ReleaseBuildErrors": 0,
+    "ImplementationModeChecks": {
+      "portable": 181272,
+      "modern": 181184,
+      "forced_scalar": 181184,
+      "no_avx": 181184,
+      "no_intrinsics": 181184
+    },
+    "NewDirectContractChecks": 349,
+    "ExistingOperationRecordsBitIdentical": 120,
+    "OldNewCoveragePairValuesIdentical": 2156,
+    "CoverageAdapterAssertions": 2859,
+    "BoundsIndexAssertions": 2840,
+    "TimingSamples": 540,
+    "Consumers": "Standalone net10, portable netstandard2, and precompiled original consumers on both targets passed.",
+    "EvidenceControls": [
+      {
+        "Case": "missing-row",
+        "Passed": true,
+        "ExpectedOutcome": "rejected-corrupt-evidence"
+      },
+      {
+        "Case": "changed-output",
+        "Passed": true,
+        "ExpectedOutcome": "rejected-corrupt-evidence"
+      },
+      {
+        "Case": "changed-median",
+        "Passed": true,
+        "ExpectedOutcome": "rejected-corrupt-evidence"
+      },
+      {
+        "Case": "changed-input-hash",
+        "Passed": true,
+        "ExpectedOutcome": "rejected-corrupt-evidence"
+      },
+      {
+        "Case": "invalid-sample",
+        "Passed": true,
+        "ExpectedOutcome": "rejected-corrupt-evidence"
+      },
+      {
+        "Case": "synthetic-negative-gate",
+        "Passed": true,
+        "ExpectedOutcome": "valid-report-gate-failed"
+      }
+    ]
+  },
+  "Protocol": "../examples/RegionCoverage/INTERSECTION-PROTOCOL.md",
+  "RawFiles": [
+    {
+      "Name": "run-1.json",
+      "Bytes": 4738907,
+      "Sha256": "e7d185053e1ede4513d65491da4a58ba06e7fe36c19c0aa9835bf21945d687eb"
+    },
+    {
+      "Name": "run-2.json",
+      "Bytes": 4738924,
+      "Sha256": "cf2f0e4ecf808134e5d3c6f0c52a992a991931c8db74ce9a404b67b9396909a2"
+    },
+    {
+      "Name": "run-3.json",
+      "Bytes": 4738906,
+      "Sha256": "25b8b48d16802714cbc300ee07c3de0130d847dd4f6486b65dd695a0399ce02d"
+    },
+    {
+      "Name": "summary.md",
+      "Bytes": 7945,
+      "Sha256": "0d7e3ada4ae63d1dc4433a9aa56f2c5c8b50c809b51a270aa028ad322f7d4c1a"
+    },
+    {
+      "Name": "decision.json",
+      "Bytes": 1054,
+      "Sha256": "59cd2db2b253a03c039b34fa19e1b1dff8f4b24332b54b6aa32570a814eb22a3"
+    },
+    {
+      "Name": "evidence-controls.json",
+      "Bytes": 704,
+      "Sha256": "898ce7ce8c40f75cf4433b5216dc1bcf698d34ef3d6e2328333897d0d33d45a8"
+    },
+    {
+      "Name": "validation.json",
+      "Bytes": 1366,
+      "Sha256": "ce54334c124bd343c69587ed022cc69058c5582e614829549f54940150a591b2"
+    },
+    {
+      "Name": "before-outputs.json",
+      "Bytes": 60273,
+      "Sha256": "d704082ddff74170a3875b08b40b82dc8737fcdf467085b960c3c195d40f7ef9"
+    },
+    {
+      "Name": "after-outputs.json",
+      "Bytes": 60273,
+      "Sha256": "d704082ddff74170a3875b08b40b82dc8737fcdf467085b960c3c195d40f7ef9"
+    }
+  ],
+  "Archive": {
+    "Name": "intersection-evidence-f93cc25.zip",
+    "Bytes": 471261,
+    "Sha256": "10bf61bee6bceeacf3967a4ad016c7370ad82c13c191d2ca2f91c129fa811fec",
+    "Published": false,
+    "Location": "local artifacts directory; checksum is not a public download"
+  },
+  "Reproduction": "Three sequential benchmark-intersection runs followed by summarize-intersection, per linked protocol. Preserve measured assemblies for re-summarization."
+}

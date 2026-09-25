@@ -17,8 +17,10 @@ preparation. `IntersectionArea` accumulates only the requested intersection.
 It still validates the inputs and computes their crossings per call; preparation
 in this example does not cache Winding's internal edges or pair results.
 
-The [measured result](RESULTS.md) reports three independent processes on the
-frozen population, with all-row values and binary/input hashes in its evidence manifest.
+The [intersection-only results](INTERSECTION-RESULTS.md) measure the dedicated
+operation against unchanged full Winding and direct reusable Clipper. The
+[earlier comparison](RESULTS.md) retains the full-metric and wider competitor
+measurements. Both use three independent processes on the frozen population.
 
 ## Fixed workload
 
