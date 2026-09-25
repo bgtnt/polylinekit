@@ -83,6 +83,11 @@ switch. A [derived uniform error bound](SCALAR-FILTER-NUMERICS.md) certifies
 ordinary strict endpoint orders before interval evaluation; uncertain comparisons
 use the original path. Area arithmetic and constructed-event ordering are unchanged.
 
+The [prepared-path experiment](PREPARED-SWEEP-RESULTS.md) separately snapshots
+original coordinates, slopes/scalar bounds and sorted endpoints. Its query path
+copies edge metadata and merges endpoint streams before entering the same sweep.
+It changes no certificate arithmetic and remains outside the shipping library.
+
 ## Current certificate
 
 1. Supplied binary64 vertices are treated as exact values. Both complete arrays

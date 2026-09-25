@@ -52,6 +52,14 @@ sweep. It remains slower than both competitors. See the
 `benchmark-scalar-filter` and `summarize-scalar-filter` use the same arguments as
 the double commands. Profile `Guarded-combined` and `Guarded-filtered` separately.
 
+The [prepared sweep](PREPARED-SWEEP-RESULTS.md) reuses immutable slopes/scalar bounds
+and merges previously sorted endpoint streams, saving another 47% in warm tables.
+It still loses to the competitors. Its [fixed protocol](PREPARED-SWEEP-PROTOCOL.md)
+also charges preparation of incoming queries and records retained array payload.
+Commands `check-prepared-sweep`, `benchmark-prepared-sweep` and
+`summarize-prepared-sweep` use the same argument shapes as the double commands.
+Profile `Guarded-filtered` and `Guarded-prepared` separately.
+
 From the repository root, using PowerShell:
 
 ```powershell

@@ -20,6 +20,10 @@ The subsequent [certified scalar order filter](PolylineKit.ScanbeamBenchmarks/SC
 saves another 20% against the optimized sweep in the same measured processes,
 while all competitor gates still fail. Its error-bound derivation and exact-sign
 checks accompany the measurements.
+The [prepared-path experiment](PolylineKit.ScanbeamBenchmarks/PREPARED-SWEEP-RESULTS.md)
+then saves 47% against the filtered sweep by reusing slopes and sorted endpoints.
+Warm tables take 20.3–20.5 ms, but all competitor gates still fail. Preparation,
+retained array payload and incoming-query costs are measured separately.
 
 For an area-engine optimization with a predeclared Clipper gate, see the
 [intersection-only protocol](../examples/RegionCoverage/INTERSECTION-PROTOCOL.md),

@@ -43,6 +43,15 @@ It saves another 19.9–20.2% against the contemporary optimized sweep: about
 The filter accepts 97.63% of its comparisons while preserving tested result and
 certificate bits. Its preparation cost is included in complete calls.
 
+The [prepared sweep](../benchmarks/PolylineKit.ScanbeamBenchmarks/PREPARED-SWEEP-RESULTS.md)
+at `57c519c` moves slope construction and endpoint sorting into immutable path
+preparation. In the same measured processes it reduces warm table time from
+38.5–38.7 ms to 20.3–20.5 ms (47% less), while preparing the catalogue takes
+2.19–2.20 ms and retains 1.52 MB of array-element payload, excluding headers and
+engine scratch. Prepared zones with freshly prepared queries take 21.4–22.2 ms.
+Current Winding takes 9.1–9.7 ms and Clipper 12.2–12.4 ms for warm tables.
+All six prepared competitor gates fail; this variant also stays experimental.
+
 The [intersection-only coverage experiment](../examples/RegionCoverage/INTERSECTION-RESULTS.md)
 at `f93cc25` establishes a newer, narrower result: the dedicated
 `WindingArea.IntersectionArea` method takes 26-29% less time than direct reusable

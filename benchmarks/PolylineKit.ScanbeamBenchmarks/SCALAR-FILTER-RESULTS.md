@@ -2,6 +2,10 @@
 
 Measured source: [`c9f0072a31fa89513edfcaf59365765b72c7f3d2`](https://github.com/bgtnt/polylinekit/commit/c9f0072a31fa89513edfcaf59365765b72c7f3d2).
 
+A later [prepared-path experiment](PREPARED-SWEEP-RESULTS.md) reuses slopes and
+sorted endpoint streams and measures preparation, warm tables and fresh queries.
+The measurements below remain the historical scalar-filter result.
+
 The scalar filter reduces warm table time by **19.95–20.24%**, from about 49 ms
 to **39.4 ms**. Fresh preparation plus one table improves by 19.32–19.81%.
 These gains include filter metadata preparation. **All four filtered competitor
