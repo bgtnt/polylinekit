@@ -73,6 +73,11 @@ membership does not remove all per-band work. The [measurements](DOUBLE-RESULTS.
 report its actual cost. It does not yet implement a cheap scalar filter ahead of
 every interval operation, nor a neighbor-event priority queue.
 
+The follow-up [common-Y and cached-X experiment](DOUBLE-ABLATION-RESULTS.md)
+adds independently switchable range restriction and lazy endpoint-X caching.
+It preserves the same numerical certificate, with paired cache/uncached tests.
+Both switches default off; the original commands retain their baseline behavior.
+
 ## Current certificate
 
 1. Supplied binary64 vertices are treated as exact values. Both complete arrays

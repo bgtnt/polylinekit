@@ -13,6 +13,9 @@ The [guarded double sweep](PolylineKit.ScanbeamBenchmarks/DOUBLE-RESULTS.md)
 preserves original coordinates and passes its numerical checks. All four speed
 gates fail: roughly 8x slower than Clipper and 10–11x slower than existing Winding
 on the frozen real-contour workload. It remains an experiment outside the library.
+The subsequent [common-Y and cached-X ablations](PolylineKit.ScanbeamBenchmarks/DOUBLE-ABLATION-RESULTS.md)
+cut its full-query time by 2.0–2.1x, but the combined version still fails all four
+competitor gates. These gains do not change the shipping implementation.
 
 For an area-engine optimization with a predeclared Clipper gate, see the
 [intersection-only protocol](../examples/RegionCoverage/INTERSECTION-PROTOCOL.md),

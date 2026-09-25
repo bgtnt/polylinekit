@@ -25,6 +25,15 @@ remaining per-band work are plausible costs; CPU shares have not been profiled.
 An untimed common-Y count identifies a possible reduction in endpoint bands,
 not a measured speedup. This candidate also remains outside the shipping library.
 
+The [two measured ablations](../benchmarks/PolylineKit.ScanbeamBenchmarks/DOUBLE-ABLATION-RESULTS.md)
+at `ab1c6ba` then restrict bands to the common Y bounds and lazily cache endpoint-X
+interval evaluations. Separately, they save about 41% and 22% of warm traversal
+time. Combined, they save about 51%, reaching 49.7–49.8 ms per warm table with
+unchanged result/certificate bits on the frozen pairs. Clipper takes 13.0–13.2 ms
+and Winding 9.2–9.8 ms in those same processes. All competitor gates still fail;
+the optimized sweep remains outside the library. Profiles support the removed
+comparison work, but their overlapping thread-time shares are not CPU percentages.
+
 The [intersection-only coverage experiment](../examples/RegionCoverage/INTERSECTION-RESULTS.md)
 at `f93cc25` establishes a newer, narrower result: the dedicated
 `WindingArea.IntersectionArea` method takes 26-29% less time than direct reusable

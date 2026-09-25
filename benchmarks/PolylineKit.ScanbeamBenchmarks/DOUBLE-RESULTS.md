@@ -1,5 +1,9 @@
 # Guarded double intersection sweep
 
+Subsequent [common-Y and cached-X ablations](DOUBLE-ABLATION-RESULTS.md) halve
+the prototype's time but still fail the competitor gates. The original measured
+implementation and evidence below remain unchanged.
+
 Measured source: [`a3eb54e7167bf17d8e989aaec1815b4507fef37d`](https://github.com/bgtnt/polylinekit/commit/a3eb54e7167bf17d8e989aaec1815b4507fef37d).
 
 Predeclared performance gate: **FAIL**.

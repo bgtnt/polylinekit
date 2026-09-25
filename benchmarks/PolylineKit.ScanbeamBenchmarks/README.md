@@ -35,6 +35,15 @@ Use `check-double <directory>`, `benchmark-double <directory> <run> <revision>`
 and `summarize-double <directory>`. This additional prototype does not change
 the integer engine or the shipping APIs.
 
+The [common-Y and cached-X ablations](DOUBLE-ABLATION-RESULTS.md) reduce that
+prototype to about 50 ms per table, still slower than Clipper and Winding.
+Their [fixed protocol](DOUBLE-ABLATION-PROTOCOL.md) uses all four flag variants
+and both competitors. Commands `check-double-ablation`,
+`benchmark-double-ablation` and `summarize-double-ablation` use the same arguments
+as their double counterparts. `profile-double-ablation <method> <seconds>`
+repeats the warm county table separately from timing; `profile-summary.py`
+summarizes a dotnet-trace Speedscope trace. These optional tools are for research.
+
 From the repository root, using PowerShell:
 
 ```powershell
