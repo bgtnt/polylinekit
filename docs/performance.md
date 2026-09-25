@@ -1,5 +1,18 @@
 # Performance: measured scope and tradeoffs
 
+The latest [adaptive closed-area experiment](../benchmarks/PolylineKit.ScanbeamBenchmarks/HYBRID-V2-RESULTS.md)
+at `87858da` selects a bounded integer sweep for dense/retraced walks and Winding
+otherwise. All 22 targeted input/fill cases beat both current Winding and
+full-input Clipper by at least 20%, including dispatch. However, roughly 4 us
+of selection adds 14–30% to six easy controls. The overall gate fails: combining
+complementary engines is useful here, but this automatic selector is not ready
+for adoption. The first failed selector is also preserved. Only six of the 28
+inputs are new confirmation cases for this second policy; the first 22 are reused.
+This measures one requested closed fill area. Winding also computes its other
+three integrals and diagnostics; Clipper constructs contours. The guarded double
+candidate falls back on 28 of 56 cases and is not automatically selected.
+These results do not claim wins on arbitrary binary64 inputs or change the library.
+
 The separate [integer scanbeam prototype](../benchmarks/PolylineKit.ScanbeamBenchmarks/RESULTS.md)
 at `168f5eb` takes 22-24% less time for NonZero and 54-57% less time for EvenOdd
 than the faster direct Clipper64 variant on the two frozen dense integer grids.

@@ -1,5 +1,18 @@
 # Experimental area sweeps
 
+The latest [adaptive closed-area experiment](HYBRID-V2-RESULTS.md) actually selects
+between Winding and the integer sweep. It passes all 22 dense-grid/retraced
+target gates but fails preservation on six easy cases because selection itself
+costs too much. The [second fixed protocol](HYBRID-V2-PROTOCOL.md) and
+[evidence](../scanbeam-hybrid-v2-evidence.json) retain all comparisons, including
+forced double sweep, preloaded Clipper and unfavorable controls. The
+[first selector's failure](HYBRID-V1-RESULTS.md) remains separate evidence.
+Commands are `check-hybrid <directory>`,
+`benchmark-hybrid <directory> <run 1..3> <measured-commit>` and
+`summarize-hybrid <directory>`; run timings in three sequential Release processes
+with `DOTNET_TieredCompilation=0`. Hybrid returns one requested fill area of one
+walk, not the four-integral public result or the earlier two-region operation.
+
 This is a research executable, not a library backend or supported public API.
 It tests whether scanbeams and grouped active-edge crossings improve the dense
 integer-grid cases where the general binary64 engine loses to Clipper.

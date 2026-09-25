@@ -133,11 +133,15 @@ New benchmark output goes under ignored `artifacts/`. The
 allocation measurements. The [performance assessment](docs/performance.md)
 summarizes measured gains, regressions and hardware-specific limits; there is no
 universal speed guarantee.
-The latest [experimental double sweep measurements](benchmarks/PolylineKit.ScanbeamBenchmarks/FILTER-FIRST-RESULTS.md)
-take about 10.24 ms per prepared table, with another 2.2 ms for catalogue
-preparation. Current Winding takes 8.93–9.56 ms and Clipper 12.31–12.50 ms on
-that workload. The sweep remains outside the library; its performance on
-common-support-heavy inputs is not established by these measurements.
+The latest [adaptive closed-area experiment](benchmarks/PolylineKit.ScanbeamBenchmarks/HYBRID-V2-RESULTS.md)
+combines Winding with a bounded integer sweep. Including selection, it beats
+both Winding and full-input Clipper by at least 20% on all 22 dense-grid/retraced
+input/fill cases. However, selection adds 14–30% on six easy control cases,
+so the overall adoption gate fails. It remains outside the library and returns
+one fill area, rather than the four integrals of `WindingArea.ClosedPath`.
+The earlier [double sweep measurements](benchmarks/PolylineKit.ScanbeamBenchmarks/FILTER-FIRST-RESULTS.md)
+measure a different operation: prepared two-region GIS intersection. They do
+not establish whether dispatch improves these closed-path losses.
 
 Historical recognition experiments did not justify developing area-based
 recognition further. Their code, protocols and negative results remain available
