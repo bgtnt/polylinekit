@@ -38,6 +38,14 @@ against its contemporary baseline. Warm tables take 13.7â€“14.1 ms, with no warm
 allocations and up to 84840 additional retained scratch-array element bytes on
 this workload. All competitor gates still fail; shipping Winding remains faster.
 
+The [active-pass experiment](PolylineKit.ScanbeamBenchmarks/ACTIVE-PASSES-RESULTS.md)
+then streams bands without crossings instead of initializing and rechecking
+all active edges. It saves 57% of counted active visits and 18–22% of
+complete-query time, preserving area/certificate bits. Warm tables take
+11.1–11.3 ms, now faster than Clipper's 12.4–12.5 ms on this workload, but still
+slower than Winding's 9.0–9.5 ms. Preparation plus one table remains slower than
+Clipper; all predeclared competitor gates still fail. No shipping change follows.
+
 For an area-engine optimization with a predeclared Clipper gate, see the
 [intersection-only protocol](../examples/RegionCoverage/INTERSECTION-PROTOCOL.md),
 [results](../examples/RegionCoverage/INTERSECTION-RESULTS.md) and

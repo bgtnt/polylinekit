@@ -88,10 +88,12 @@ rounding. See the [proof](GAP-COALESCING-NUMERICS.md) and
 shapes. The flag defaults off; the shipping engine and original commands remain
 unchanged. The new buffer cost and the failed competitor gates are reported.
 
-The [active-pass experiment](ACTIVE-PASSES-PROTOCOL.md) streams winding values
+The [active-pass experiment](ACTIVE-PASSES-RESULTS.md) streams winding values
 through bands without crossings and builds the sorted copy incrementally.
-It retains bit-identical arithmetic and certificates for commonly certified
-calls while measuring removed initialization/verification visits separately.
+It removes 57% of counted active visits and saves 18–22% of complete-query
+time, retaining area/certificate bits. Warm tables now beat Clipper on this
+workload but still lose to Winding, and the original competitor gates fail.
+The [protocol](ACTIVE-PASSES-PROTOCOL.md) includes a historical-binary control.
 Commands `check-active-passes`, `benchmark-active-passes` and
 `summarize-active-passes` use the same argument shapes. The seventh option
 defaults off; there are no additional workspace arrays.
