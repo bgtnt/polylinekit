@@ -28,6 +28,10 @@ The [direct-access experiment](PolylineKit.ScanbeamBenchmarks/DIRECT-SWEEP-RESUL
 then removes per-pair edge copying but finds no gain: direct access has 1.6–2.9%
 higher medians than copying in the same binary. Separate historical-binary runs
 check the effect of shared code changes on that baseline.
+The [specialized interval area arithmetic](PolylineKit.ScanbeamBenchmarks/AREA-ARITHMETIC-RESULTS.md)
+then saves 2.3–3.4% against the contemporary copied baseline with identical
+result/certificate bits. The gain against the preceding binary is only 0.9–1.7%;
+all competitor gates still fail. The shipping engine remains unchanged.
 
 For an area-engine optimization with a predeclared Clipper gate, see the
 [intersection-only protocol](../examples/RegionCoverage/INTERSECTION-PROTOCOL.md),

@@ -68,6 +68,16 @@ Commands `check-direct-sweep`, `benchmark-direct-sweep` and `summarize-direct-sw
 use the same argument shapes. Profile `Guarded-prepared` and `Guarded-direct`
 separately. The direct flag defaults off; original commands remain available.
 
+The [area arithmetic experiment](AREA-ARITHMETIC-RESULTS.md) replaces generic
+interval multiplication with specialized endpoint products inside trapezoid
+integration. Its [derivation](AREA-ARITHMETIC-NUMERICS.md) preserves every bound
+bit, including subnormals and negative outward lower bounds. It saves 2.3–3.4%
+against the contemporary baseline, but remains slower than Winding and Clipper.
+The [protocol](AREA-ARITHMETIC-PROTOCOL.md) also reruns the preceding binary.
+Commands `check-area-arithmetic`, `benchmark-area-arithmetic` and
+`summarize-area-arithmetic` use the same argument shapes. The option defaults
+off, and both measured sweep variants use copied prepared geometry.
+
 From the repository root, using PowerShell:
 
 ```powershell
