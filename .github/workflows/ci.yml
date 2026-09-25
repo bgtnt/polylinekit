@@ -26,6 +26,8 @@ jobs:
         run: python examples/RegionCoverage/data/freeze.py
       - name: Dynamic segment-index contracts and identical simplification traces (no timing)
         run: dotnet run --project benchmarks/PolylineKit.DynamicIndexBenchmarks -c Release --no-build -- check
+      - name: Experimental bounded-integer scanbeam and independent area oracle (no timing)
+        run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check
       - name: Optional WPF comparison contracts (Windows only, no timing)
         if: runner.os == 'Windows'
         run: |

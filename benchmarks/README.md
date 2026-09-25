@@ -1,5 +1,9 @@
 # Benchmarks
 
+For the isolated active-edge experiment on dense integer grids, see the
+[bounded-integer scanbeam prototype](PolylineKit.ScanbeamBenchmarks/README.md).
+Its exact-integer input contract is separate from the shipping binary64 engine.
+
 For an area-engine optimization with a predeclared Clipper gate, see the
 [intersection-only protocol](../examples/RegionCoverage/INTERSECTION-PROTOCOL.md),
 [results](../examples/RegionCoverage/INTERSECTION-RESULTS.md) and
