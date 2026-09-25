@@ -9,11 +9,12 @@ internal static class DoubleSweepChecks
 {
     private static int passed, certified, fallback;
 
-    internal static void Run(bool restrictToCommonY = false, bool cacheEndpointX = false)
+    internal static void Run(bool restrictToCommonY = false, bool cacheEndpointX = false, bool scalarOrderFilter = false)
     {
         passed = certified = fallback = 0;
-        var engine = new GuardedDoubleSweep(restrictToCommonY, cacheEndpointX);
-        GuardedDoubleSweep? uncached = cacheEndpointX ? new GuardedDoubleSweep(restrictToCommonY, false) : null;
+        var engine = new GuardedDoubleSweep(restrictToCommonY, cacheEndpointX, scalarOrderFilter);
+        GuardedDoubleSweep? uncached = cacheEndpointX ? new GuardedDoubleSweep(restrictToCommonY, false, scalarOrderFilter) : null;
+        GuardedDoubleSweep? unfiltered = scalarOrderFilter ? new GuardedDoubleSweep(restrictToCommonY, cacheEndpointX, false) : null;
         Point2[] a = [new(-4, -3), new(5, 1), new(0, 6)];
         Point2[] b = [new(-3, 2), new(4, -4), new(7, 5)];
         Point2[] contained = [new(-.5, .25), new(.75, .75), new(.25, 1.5)];
@@ -232,6 +233,8 @@ internal static class DoubleSweepChecks
             double actual = engine.MeasureIntersection(first, second, rule);
             if (uncached is not null)
                 CacheParity(name, engine, actual, uncached, uncached.MeasureIntersection(first, second, rule));
+            if (unfiltered is not null)
+                FilterParity(name, engine, actual, unfiltered, unfiltered.MeasureIntersection(first, second, rule));
             CheckDiagnostics(name, first, second, rule, actual, mustCertify);
             Require(double.IsFinite(actual) && actual >= 0, name + ": invalid area.");
             Require(beforeFirst.SequenceEqual(Bits(first)) && beforeSecond.SequenceEqual(Bits(second)), name + ": mutated input.");
@@ -248,6 +251,8 @@ internal static class DoubleSweepChecks
             double actual = engine.MeasureIntersection(first, second, rule);
             if (uncached is not null)
                 CacheParity(name, engine, actual, uncached, uncached.MeasureIntersection(first, second, rule));
+            if (unfiltered is not null)
+                FilterParity(name, engine, actual, unfiltered, unfiltered.MeasureIntersection(first, second, rule));
             CheckDiagnostics(name, first, second, rule, actual, false);
             RoundedNear(name, expected, actual);
             // ExactAreaOracle returned the correctly rounded area. Do not pretend it
@@ -256,6 +261,9 @@ internal static class DoubleSweepChecks
 
         void CheckDiagnostics(string name, Point2[] first, Point2[] second, PathFillRule rule, double actual, bool mustCertify)
         {
+            Require(engine.FilterAttemptCount == engine.FilterAcceptedCount + engine.FilterIntervalCount,
+                name + ": scalar filter attempt accounting differs.");
+            if (!scalarOrderFilter) Require(engine.FilterAttemptCount == 0, name + ": disabled scalar filter was used.");
             if (engine.LastUsedFallback)
             {
                 fallback++;
@@ -342,6 +350,21 @@ internal static class DoubleSweepChecks
             cached.WorkCount == uncached.WorkCount, name + ": caching changed logical sweep diagnostics.");
         Require(cached.XEvaluationCount + cached.XCacheHitCount == uncached.XEvaluationCount && uncached.XCacheHitCount == 0,
             name + ": cached X evaluation accounting differs from the uncached operation.");
+        Require(cached.FilterAttemptCount == uncached.FilterAttemptCount && cached.FilterAcceptedCount == uncached.FilterAcceptedCount &&
+            cached.FilterIntervalCount == uncached.FilterIntervalCount,
+            name + ": caching changed scalar filter decisions or accounting.");
+    }
+
+    private static void FilterParity(string name, GuardedDoubleSweep filtered, double actual, GuardedDoubleSweep unfiltered, double expected)
+    {
+        // A certified scalar order may resolve an interval ambiguity and avoid historical fallback.
+        // Do not require equal fallback decisions. When both sweeps certify, their unchanged area
+        // arithmetic must still produce the same result and radius bits.
+        if (filtered.LastUsedFallback || unfiltered.LastUsedFallback) return;
+        Require(BitConverter.DoubleToInt64Bits(actual) == BitConverter.DoubleToInt64Bits(expected),
+            name + ": scalar order filter changed an already-certified area.");
+        Require(BitConverter.DoubleToInt64Bits(filtered.LastErrorBound) == BitConverter.DoubleToInt64Bits(unfiltered.LastErrorBound),
+            name + ": scalar order filter changed an already-certified radius.");
     }
 
     private static IEnumerable<(Point2[] A, Point2[] B)> Variants(Point2[] first, Point2[] second)

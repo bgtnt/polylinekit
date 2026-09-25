@@ -36,6 +36,8 @@ jobs:
         run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-double artifacts/scanbeam-double-ci
       - name: Double sweep common-Y and cache ablations (no timing)
         run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-double-ablation artifacts/scanbeam-double-ablation-ci
+      - name: Scalar order filter exact-sign and area controls (no timing)
+        run: dotnet run --project benchmarks/PolylineKit.ScanbeamBenchmarks -c Release --no-build -- check-scalar-filter artifacts/scanbeam-scalar-filter-ci
       - name: Optional WPF comparison contracts (Windows only, no timing)
         if: runner.os == 'Windows'
         run: |

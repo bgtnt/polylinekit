@@ -43,6 +43,7 @@ internal sealed class GuardedDoubleSweep
     private int[] active = [], topOrder = [], positions = [], prefixA = [], prefixB = [];
     private Level[] gapStarts = [];
     private Interval[] cachedX = [];
+    private ScalarOrderFilter.PreparedEdge[] scalarEdges = [];
     private long[] cachedXLevelBits = [];
     private int[] cachedXGeneration = [];
     private int cacheGeneration;
@@ -52,12 +53,13 @@ internal sealed class GuardedDoubleSweep
     private Interval area;
     private readonly Comparison<Endpoint> endpointComparison;
     private readonly Comparison<Crossing> crossingComparison;
-    private readonly bool restrictToCommonY, cacheEndpointX;
+    private readonly bool restrictToCommonY, cacheEndpointX, scalarOrderFilter;
 
-    internal GuardedDoubleSweep(bool restrictToCommonY = false, bool cacheEndpointX = false)
+    internal GuardedDoubleSweep(bool restrictToCommonY = false, bool cacheEndpointX = false, bool scalarOrderFilter = false)
     {
         this.restrictToCommonY = restrictToCommonY;
         this.cacheEndpointX = cacheEndpointX;
+        this.scalarOrderFilter = scalarOrderFilter;
         endpointComparison = CompareEndpoints;
         crossingComparison = CompareCrossings;
     }
@@ -74,12 +76,16 @@ internal sealed class GuardedDoubleSweep
     /// <summary>Actual XAt evaluations, including known endpoints and excluding cache hits.</summary>
     internal long XEvaluationCount { get; private set; }
     internal long XCacheHitCount { get; private set; }
+    internal long FilterAttemptCount { get; private set; }
+    internal long FilterAcceptedCount { get; private set; }
+    internal long FilterIntervalCount { get; private set; }
 
     internal double MeasureIntersection(Point2[] first, Point2[] second, PathFillRule rule = PathFillRule.NonZero)
     {
         LastUsedFallback = false; LastFallbackReason = null; LastErrorBound = double.NaN;
         BandCount = PeakActiveCount = 0; EventCount = ActiveEdgeVisits = work = 0;
         XEvaluationCount = XCacheHitCount = 0;
+        FilterAttemptCount = FilterAcceptedCount = FilterIntervalCount = 0;
         if (cacheEndpointX)
         {
             if (cacheGeneration == int.MaxValue) { Array.Clear(cachedXGeneration); cacheGeneration = 1; }
@@ -198,6 +204,8 @@ internal sealed class GuardedDoubleSweep
             if (delta < 0) (a, b) = (b, a);
             Interval slope = Interval.Divide(Interval.Difference(b.X, a.X), Interval.Difference(b.Y, a.Y));
             edges[edgeCount] = new(a, b, delta, loop, slope);
+            if (scalarOrderFilter)
+                scalarEdges[edgeCount] = ScalarOrderFilter.Prepare(a.X, a.Y, b.Y, slope.Lo, slope.Hi);
             endpoints[endpointCount++] = new(a.Y, edgeCount, true);
             endpoints[endpointCount++] = new(b.Y, edgeCount, false);
             edgeCount++;
@@ -298,6 +306,16 @@ internal sealed class GuardedDoubleSweep
         Charge();
         if (left == right) return 0;
         if (SameSupport(left, right)) return left.CompareTo(right);
+        if (scalarOrderFilter)
+        {
+            FilterAttemptCount++;
+            if (ScalarOrderFilter.TryOrder(in scalarEdges[left], in scalarEdges[right], y, out int certifiedOrder))
+            {
+                FilterAcceptedCount++;
+                return certifiedOrder;
+            }
+            FilterIntervalCount++;
+        }
         Interval a = XAt(left, Interval.Point(y)), b = XAt(right, Interval.Point(y));
         if (a.Hi < b.Lo) return -1;
         if (b.Hi < a.Lo) return 1;
@@ -314,6 +332,29 @@ internal sealed class GuardedDoubleSweep
             throw new Uncertified("endpoint-on-edge");
         return below ? -order : order;
     }
+
+    /// <summary>Direct probe of the actual scalar filter using the sweep's certified slope construction.</summary>
+    internal static bool TryScalarOrderAtY(Point2 a0, Point2 a1, Point2 b0, Point2 b1, double y, out int order)
+    {
+        order = 0;
+        if (!FilterPointValid(a0) || !FilterPointValid(a1) || !FilterPointValid(b0) || !FilterPointValid(b1) ||
+            !double.IsFinite(y) || a0.Y == a1.Y || b0.Y == b1.Y) return false;
+        if (a0.Y > a1.Y) (a0, a1) = (a1, a0);
+        if (b0.Y > b1.Y) (b0, b1) = (b1, b0);
+        if (y < a0.Y || y > a1.Y || y < b0.Y || y > b1.Y) return false;
+        try
+        {
+            Interval aSlope = Interval.Divide(Interval.Difference(a1.X, a0.X), Interval.Difference(a1.Y, a0.Y));
+            Interval bSlope = Interval.Divide(Interval.Difference(b1.X, b0.X), Interval.Difference(b1.Y, b0.Y));
+            ScalarOrderFilter.PreparedEdge a = ScalarOrderFilter.Prepare(a0.X, a0.Y, a1.Y, aSlope.Lo, aSlope.Hi);
+            ScalarOrderFilter.PreparedEdge b = ScalarOrderFilter.Prepare(b0.X, b0.Y, b1.Y, bSlope.Lo, bSlope.Hi);
+            return ScalarOrderFilter.TryOrder(in a, in b, y, out order);
+        }
+        catch (Uncertified) { return false; }
+    }
+
+    private static bool FilterPointValid(Point2 p) => double.IsFinite(p.X) && double.IsFinite(p.Y) &&
+        Math.Abs(p.X) <= CoordinateLimit && Math.Abs(p.Y) <= CoordinateLimit;
 
     private int CompareCrossings(Crossing a, Crossing b)
     {
@@ -449,6 +490,7 @@ internal sealed class GuardedDoubleSweep
         vertices = new Point2[capacity]; edges = new Edge[capacity]; endpoints = new Endpoint[2 * capacity];
         active = new int[capacity]; topOrder = new int[capacity]; positions = new int[capacity];
         prefixA = new int[capacity]; prefixB = new int[capacity]; gapStarts = new Level[capacity];
+        if (scalarOrderFilter) scalarEdges = new ScalarOrderFilter.PreparedEdge[capacity];
         if (cacheEndpointX)
         {
             cachedX = new Interval[capacity]; cachedXLevelBits = new long[capacity]; cachedXGeneration = new int[capacity];
