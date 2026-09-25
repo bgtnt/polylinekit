@@ -57,6 +57,14 @@ internal static class WindingEngine
     internal sealed class Workspace
     {
         [ThreadStatic] private static Workspace? cached;
+        internal const long MaxCachedArrayBytes = 4L * 1024 * 1024;
+#if NET10_0_OR_GREATER
+        private static readonly int CrossingBytes = Unsafe.SizeOf<Crossing>(), PieceBytes = Unsafe.SizeOf<Piece>();
+#else
+        // Conservative managed sizes for the portable layouts, including their padding. Primitive
+        // arrays use their exact element widths below; headers and workspace objects are separate.
+        private const int CrossingBytes = 32, PieceBytes = 56;
+#endif
 
         internal Point2[] Vertices = new Point2[256];
         internal int[] Next = new int[256];
@@ -98,8 +106,23 @@ internal static class WindingEngine
             return workspace;
         }
 
-        /// <summary>Makes the workspace available to the next call on this thread.</summary>
-        internal static void Return(Workspace workspace) => cached = workspace;
+        /// <summary>Retains a bounded array payload; oversized calls can allocate again next time.</summary>
+        internal static void Return(Workspace workspace)
+        {
+            // A nested call may already have returned a smaller workspace. Discarding an oversized
+            // outer call must leave that usable cache intact. This caps retention, not active memory.
+            if (workspace.RetainedArrayBytes <= MaxCachedArrayBytes) cached = workspace;
+        }
+
+        internal long RetainedArrayBytes =>
+            16L * (Vertices.Length + (long)Origin.Length + Sums.Length) +
+            sizeof(int) * (Next.Length + (long)Order.Length + MergeOrder.Length + Runs.Length + Candidates.Length +
+                Start.Length + CrossingOrder.Length + Slots.Length + Group.Length) +
+            sizeof(double) * (Keys.Length + (long)MergeKeys.Length + SweepMax.Length + SweepMinOther.Length +
+                SweepMaxOther.Length + CrossingKeys.Length + MinX.Length + MinY.Length + MaxX.Length + MaxY.Length + EdgeTerms.Length) +
+            (long)Overlapping.Length + Used.Length +
+            CrossingBytes * (Found.Length + (long)Sorted.Length) + (long)PieceBytes * Shared.Length +
+            (SimpleSweep?.RetainedArrayBytes ?? 0);
 
         /// <summary>Vertex storage with at least the requested capacity.</summary>
         internal Point2[] VertexBuffer(int capacity)

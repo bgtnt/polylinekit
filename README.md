@@ -9,14 +9,16 @@ The library is available as source. Clone it and add a project reference:
 
 ```sh
 git clone https://github.com/bgtnt/polylinekit.git
-dotnet add MyApp/MyApp.csproj reference polylinekit/src/PolylineKit.Winding/PolylineKit.Winding.csproj
+dotnet add MyApp/MyApp.csproj reference polylinekit/src/PolylineKit.Core/PolylineKit.Core.csproj
 ```
 
-That area-only project has **no third-party runtime dependencies**. For alignment,
-normalization, resampling or output contours, reference
-`polylinekit/src/PolylineKit/PolylineKit.csproj` instead; it includes the area
-methods and uses Clipper2 for contour-producing operations. Both use the
+`PolylineKit.Core` includes area methods, normalization, scaling, resampling and
+alignment with **zero third-party runtime dependencies**. All use the
 `PolylineKit` namespace. A NuGet release is not available yet.
+
+The optional `PolylineKit.Clipper` project adds Clipper2 for resolved output
+contours and the existing quantized `PolylineComparison` methods. Only reference
+it if you need those operations; see the [adapter guide](docs/clipper.md).
 
 ## Measure and compare areas
 
@@ -49,7 +51,7 @@ producing output contours or quantizing input onto a decimal grid.
 | Centering and scaling | `PolylineNormalization.ToUnitBounds(path)` / `MatchBounds(path, reference)` |
 | Equidistant samples along a path | `PolylineSampling.ResampleByArcLength(path)` |
 | Translation, rotation and optional uniform-scale alignment | `PolylineAlignment.FitSimilarity(moving, reference)` |
-| Resolved contours as well as area | `PolylineComparison.EndpointBridgedArea(...)` / `FilledRegionDifference(...)`, with `includeContours: true` |
+| Resolved contours as well as area | Optional [Clipper adapter](docs/clipper.md): `PolylineComparison.EndpointBridgedArea(...)` / `FilledRegionDifference(...)`, with `includeContours: true` |
 
 Normalization, alignment and measurement are separate operations. For example:
 
@@ -79,12 +81,12 @@ distinct stroke. Choose invariances such as rotation or scaling to suit your dat
   offsets are not supported by these area methods.
 
 Read the [area guide](docs/area.md) for fill rules, examples and contracts, or the
-[comparison and transformation guide](docs/comparison-api.md) for alignment and
-contour-producing operations.
+[transformation guide](docs/comparison-api.md) for normalization and alignment.
 
 ## Examples and documentation
 
 - [Runnable quick start](examples/Basic/Program.cs)
+- [Optional contour output](examples/ClipperContours/Program.cs)
 - [Measure change after contour simplification](examples/AreaChange/README.md)
 - [Measure how much of a region is covered](examples/RegionCoverage/README.md)
 - [Documentation index](docs/README.md)

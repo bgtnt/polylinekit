@@ -1,3 +1,63 @@
+public readonly struct PolylineKit.AffineTransform2D
+  public PolylineKit.AffineTransform2D Then(PolylineKit.AffineTransform2D next)
+  public PolylineKit.AffineTransform2D(System.Double m11, System.Double m12, System.Double m21, System.Double m22, System.Double offsetX, System.Double offsetY)
+  public PolylineKit.Point2 Apply(PolylineKit.Point2 point)
+  public PolylineKit.Point2[] Apply(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> points)
+  public System.Double M11 { get; }
+  public System.Double M12 { get; }
+  public System.Double M21 { get; }
+  public System.Double M22 { get; }
+  public System.Double OffsetX { get; }
+  public System.Double OffsetY { get; }
+  public static PolylineKit.AffineTransform2D Identity { get; }
+  public static PolylineKit.AffineTransform2D Rotation(System.Double radians)
+  public static PolylineKit.AffineTransform2D Scaling(System.Double scale)
+  public static PolylineKit.AffineTransform2D Scaling(System.Double x, System.Double y)
+  public static PolylineKit.AffineTransform2D Translation(System.Double x, System.Double y)
+
+public class PolylineKit.AlignmentOptions
+  public PolylineKit.AlignmentOptions()
+  public System.Boolean AllowReversal { get; set; }
+  public System.Boolean AllowScaling { get; set; }
+  public System.Boolean Closed { get; set; }
+  public System.Boolean SearchClosedPhase { get; set; }
+  public System.Int32 SampleCount { get; set; }
+
+public class PolylineKit.AlignmentResult
+  public PolylineKit.AffineTransform2D Transform { get; }
+  public System.Boolean Reversed { get; }
+  public System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> AlignedPoints { get; }
+  public System.Double PhaseShift { get; }
+  public System.Double RmsError { get; }
+  public System.Double RotationRadians { get; }
+  public System.Double Scale { get; }
+  public System.Int32 SampleCount { get; }
+  public System.String Strategy { get; }
+
+public readonly struct PolylineKit.Bounds2D
+  public PolylineKit.Bounds2D Union(PolylineKit.Bounds2D other)
+  public PolylineKit.Bounds2D(System.Double minX, System.Double minY, System.Double maxX, System.Double maxY)
+  public PolylineKit.Point2 Center { get; }
+  public System.Double Area { get; }
+  public System.Double Height { get; }
+  public System.Double MaxX { get; }
+  public System.Double MaxY { get; }
+  public System.Double MinX { get; }
+  public System.Double MinY { get; }
+  public System.Double Width { get; }
+  public static PolylineKit.Bounds2D FromPoints(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> points)
+
+public enum PolylineKit.BoundsScaling : System.Int32
+  public const PolylineKit.BoundsScaling Stretch = 1
+  public const PolylineKit.BoundsScaling Uniform = 0
+
+public class PolylineKit.NormalizationResult
+  public PolylineKit.AffineTransform2D Transform { get; }
+  public PolylineKit.Bounds2D Bounds { get; }
+  public PolylineKit.Bounds2D OriginalBounds { get; }
+  public PolylineKit.BoundsScaling Strategy { get; }
+  public System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> Points { get; }
+
 public enum PolylineKit.PathFillRule : System.Int32
   public const PolylineKit.PathFillRule EvenOdd = 1
   public const PolylineKit.PathFillRule NonZero = 0
@@ -7,11 +67,22 @@ public readonly struct PolylineKit.Point2
   public System.Double X { get; }
   public System.Double Y { get; }
 
+public static class PolylineKit.PolylineAlignment
+  public static PolylineKit.AlignmentResult FitSimilarity(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> moving, System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> reference, PolylineKit.AlignmentOptions options = null)
+
 public static class PolylineKit.PolylineArea
   public static PolylineKit.RegionOverlapResult CompareRegions(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> first, System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> second, PolylineKit.PathFillRule fillRule = PolylineKit.PathFillRule.NonZero (0))
   public static System.Double BetweenGraphs(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> first, System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> second)
   public static System.Double FilledArea(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> path, PolylineKit.PathFillRule fillRule = PolylineKit.PathFillRule.NonZero (0))
   public static System.Double IntersectionArea(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> first, System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> second, PolylineKit.PathFillRule fillRule = PolylineKit.PathFillRule.NonZero (0))
+
+public static class PolylineKit.PolylineNormalization
+  public static PolylineKit.NormalizationResult FitBounds(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> points, PolylineKit.Bounds2D target, PolylineKit.BoundsScaling scaling = PolylineKit.BoundsScaling.Uniform (0))
+  public static PolylineKit.NormalizationResult MatchBounds(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> moving, System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> reference, PolylineKit.BoundsScaling scaling = PolylineKit.BoundsScaling.Uniform (0))
+  public static PolylineKit.NormalizationResult ToUnitBounds(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> points, PolylineKit.BoundsScaling scaling = PolylineKit.BoundsScaling.Uniform (0), System.Double size = 1)
+
+public static class PolylineKit.PolylineSampling
+  public static PolylineKit.Point2[] ResampleByArcLength(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> path, System.Int32 sampleCount = 64, System.Boolean closed = false)
 
 public readonly struct PolylineKit.RegionOverlapResult
   public PolylineKit.PathFillRule FillRule { get; }

@@ -7,7 +7,7 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../../src/PolylineKit/PolylineKit.csproj" />
+    <ProjectReference Include="../../src/PolylineKit.Clipper/PolylineKit.Clipper.csproj" />
     <PackageReference Include="Clipper2" Version="2.0.0" />
     <None Update="winding-public-api.txt" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

@@ -7,13 +7,14 @@ monolithic `PolylineKit.dll`. Git history must contain that commit (`fetch-depth
 in CI). An existing monolithic build can instead be supplied with
 `-LegacyAssembly <absolute-path-to-PolylineKit.dll>`.
 
-* `LeafOnly` is a .NET 10 executable referencing only `PolylineKit.Winding`.
-  It checks analytic areas and rejects unexpected runtime references.
+* `LeafOnly` is a .NET 10 executable referencing only `PolylineKit.Core`.
+  It checks areas, transformations, normalization, sampling and alignment,
+  and rejects unexpected runtime references.
 * `PortableOnly` compiles a .NET Standard 2.0 class library referencing only
-  `PolylineKit.Winding`. It demonstrates the portable compile-time surface; it
+  `PolylineKit.Core`. It demonstrates the portable compile-time surface; it
   is not a claim that CI ran .NET Framework or another .NET Standard runtime.
 * `LegacyApiConsumer` compiles **once against the old monolithic DLL**, using all
-  six extracted public types and passing its old `Point2[]` to the forwarded
+  fifteen extracted public types and passing its old `Point2[]` to the forwarded
   `PolylineArea.BetweenGraphs` method.
 * `CompatibilityHost` supplies the new dependency graph, then loads and executes
   that unchanged legacy component against the modern and portable parent/leaf

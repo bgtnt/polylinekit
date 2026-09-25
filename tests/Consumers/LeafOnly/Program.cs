@@ -24,6 +24,22 @@ if (bridge.NonZero != 4) throw new InvalidOperationException("Standalone bridged
 if (PolylineArea.BetweenGraphs([new(0, 0), new(2, 0)], [new(0, 2), new(2, 2)]) != 4)
     throw new InvalidOperationException("Standalone graph area is incorrect.");
 
+AffineTransform2D transform = AffineTransform2D.Scaling(2).Then(AffineTransform2D.Translation(10, -4));
+Point2[] transformed = transform.Apply(square);
+Bounds2D bounds = Bounds2D.FromPoints(transformed);
+if (bounds.Width != 4 || bounds.Height != 4 || bounds.Center.X != 12 || bounds.Center.Y != -2)
+    throw new InvalidOperationException("Standalone transform/bounds values are incorrect.");
+NormalizationResult normalized = PolylineNormalization.ToUnitBounds(transformed, BoundsScaling.Uniform);
+if (PolylineArea.FilledArea(normalized.Points) != 1 || normalized.Bounds.Center.X != 0 || normalized.Bounds.Center.Y != 0)
+    throw new InvalidOperationException("Standalone normalization is incorrect.");
+Point2[] samples = PolylineSampling.ResampleByArcLength(square, 8, closed: true);
+if (samples.Length != 8 || PolylineArea.FilledArea(samples) != 4)
+    throw new InvalidOperationException("Standalone arc-length sampling is incorrect.");
+var options = new AlignmentOptions { Closed = true, SampleCount = 8, SearchClosedPhase = false };
+AlignmentResult aligned = PolylineAlignment.FitSimilarity(transformed, square, options);
+if (aligned.RmsError > 1e-12 || aligned.Scale != .5 || aligned.AlignedPoints.Count != square.Length)
+    throw new InvalidOperationException("Standalone similarity alignment is incorrect.");
+
 var framework = new HashSet<string>(StringComparer.Ordinal)
 {
     "mscorlib", "netstandard", "System.Private.CoreLib", "System.Runtime", "System.Collections",
@@ -34,9 +50,11 @@ var framework = new HashSet<string>(StringComparer.Ordinal)
 var assembly = typeof(PolylineArea).Assembly;
 if (assembly.GetName().Name != "PolylineKit.Winding" || typeof(Point2).Assembly != assembly
     || typeof(RegionOverlapResult).Assembly != assembly || typeof(WindingArea).Assembly != assembly
+    || new[] { typeof(AffineTransform2D), typeof(Bounds2D), typeof(AlignmentOptions), typeof(AlignmentResult), typeof(PolylineAlignment),
+        typeof(BoundsScaling), typeof(NormalizationResult), typeof(PolylineNormalization), typeof(PolylineSampling) }.Any(t => t.Assembly != assembly)
     || assembly.GetReferencedAssemblies().Any(r => r.Name is null || !framework.Contains(r.Name)))
     throw new InvalidOperationException("The standalone library has an unexpected runtime dependency.");
 if (AppDomain.CurrentDomain.GetAssemblies().Any(a => a.GetName().Name is "PolylineKit" or "Clipper2Lib"))
     throw new InvalidOperationException("The standalone consumer unexpectedly loaded the broader library or Clipper2.");
-Console.WriteLine("PASS: standalone net10.0 consumer; analytic areas and framework-only runtime references.");
+Console.WriteLine("PASS: standalone net10.0 core consumer; areas, transforms, normalization, sampling, alignment and framework-only runtime references.");
 return 0;

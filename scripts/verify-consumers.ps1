@@ -41,7 +41,7 @@ try {
     }
 
     # Build both parent target frameworks before replacing the host's matching DLL pairs below.
-    Build-CurrentConsumer 'src/PolylineKit/PolylineKit.csproj'
+    Build-CurrentConsumer 'src/PolylineKit.Clipper/PolylineKit.Clipper.csproj'
     Build-CurrentConsumer 'tests/Consumers/LeafOnly/LeafOnly.csproj'
     & dotnet "tests/Consumers/LeafOnly/bin/$Configuration/net10.0/LeafOnly.dll"
     if ($LASTEXITCODE) { throw 'Standalone winding consumer failed.' }
@@ -64,8 +64,8 @@ try {
         Get-ChildItem -LiteralPath "tests/Consumers/CompatibilityHost/bin/$Configuration/net10.0" -File | ForEach-Object {
             Copy-Item -LiteralPath $_.FullName -Destination $runtime
         }
-        foreach ($assembly in @('PolylineKit', 'PolylineKit.Winding')) {
-            $source = "src/$assembly/bin/$Configuration/$target/$assembly.dll"
+        foreach ($component in @(@{ Project='PolylineKit.Clipper'; Assembly='PolylineKit' }, @{ Project='PolylineKit.Core'; Assembly='PolylineKit.Winding' })) {
+            $source = "src/$($component.Project)/bin/$Configuration/$target/$($component.Assembly).dll"
             if (!(Test-Path -LiteralPath $source)) { throw "Missing matching assembly target: $source. Build the solution first." }
             Copy-Item -LiteralPath $source -Destination $runtime -Force
         }

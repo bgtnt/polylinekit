@@ -29,6 +29,21 @@ public static class LegacyEntry
         Equal(4, WindingArea.EndpointBridged(bottom, top).NonZero);
         // Both old Point2 and PolylineArea identities must resolve through the parent assembly's forwarders.
         Equal(4, PolylineArea.BetweenGraphs(bottom, top));
+        // Compile all nine transform/sampling/alignment types against their original assembly identity.
+        AffineTransform2D transform = AffineTransform2D.Translation(3, 5);
+        Point2[] moved = transform.Apply(square);
+        Bounds2D bounds = Bounds2D.FromPoints(moved);
+        Equal(2, bounds.Width); Equal(2, bounds.Height); Equal(4, bounds.Center.X); Equal(6, bounds.Center.Y);
+        BoundsScaling scaling = BoundsScaling.Uniform;
+        NormalizationResult normalized = PolylineNormalization.ToUnitBounds(moved, scaling);
+        Equal(1, normalized.Bounds.Width); Equal(1, normalized.Bounds.Height);
+        Equal(0, normalized.Bounds.Center.X); Equal(0, normalized.Bounds.Center.Y);
+        Point2[] samples = PolylineSampling.ResampleByArcLength(square, 8, closed: true);
+        Equal(8, samples.Length); Equal(1, samples[1].X); Equal(0, samples[1].Y);
+        AlignmentOptions options = new() { Closed = true, SampleCount = 4, AllowScaling = false, SearchClosedPhase = false };
+        AlignmentResult alignment = PolylineAlignment.FitSimilarity(moved, square, options);
+        Equal(0, alignment.RmsError); Equal(1, alignment.Scale); Equal(-3, alignment.Transform.OffsetX);
+        Equal(-5, alignment.Transform.OffsetY); Equal(4, alignment.AlignedPoints.Count);
         return passed;
 
         void Equal(double expected, double actual)

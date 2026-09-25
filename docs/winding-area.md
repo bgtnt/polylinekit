@@ -4,7 +4,7 @@ This is the implementation reference. Applications should start with the
 [PolylineArea guide](area.md). Engine-specific APIs below remain available for
 advanced integrals and compatibility.
 
-`WindingArea` computes area integrals directly from closed boundaries, without a decimal grid or polygon clipping. It returns areas, not resolved contours. The independent [PolylineKit.Winding assembly](../src/PolylineKit.Winding/README.md) has no external runtime dependencies; both `netstandard2.0` and `net10.0` expose the same API in namespace `PolylineKit`. Use the broader library's Clipper2-based operations in [comparison-api.md](comparison-api.md) when output boundaries are needed.
+`WindingArea` computes area integrals directly from closed boundaries, without a decimal grid or polygon clipping. It returns areas, not resolved contours. The independent [PolylineKit.Core project](../src/PolylineKit.Core/README.md) has no external runtime dependencies; both `netstandard2.0` and `net10.0` expose the same API in namespace `PolylineKit`. Use the optional [Clipper adapter](clipper.md) when output boundaries are needed.
 
 ## Inputs and results
 
@@ -173,25 +173,38 @@ establish that numerical contract.
 
 For the boundary engine, with `n` edges, `m` candidate pairs, `k` crossing/overlap-split events and `s` sub-edges of collinearly overlapping edges, work is `O(n log n + m + k log k + s)`. Hash netting is expected-linear in `s`, not a worst-case guarantee. Candidate pairs and events can be quadratic. The certificate has a `32*n*(floor(log2(n))+1)` traversal budget and falls back when exhausted: it adds bounded `O(n log n)` combinatorial work, plus exact-predicate bit cost, without improving the general engine's worst-case bound.
 
-Each call leases its own workspace. Consecutive calls on one thread reuse storage; a nested call receives separate storage. In the boundary engine, warm calls handled by filtered/expansion predicates allocate no managed memory, but first use, buffer growth, nesting and extreme-exponent integer arithmetic can allocate. A thread retains its largest workspace capacity; zero bytes allocated per warm call does not mean zero retained memory.
+Each call leases its own workspace. Consecutive calls on a thread can reuse
+storage; nested calls receive separate storage. On return, each engine retains
+its workspace only if the combined array payload is at most **4 MiB**. Oversized
+workspaces are left for GC, including after an exceptional return. An oversized
+outer call does not displace a smaller cache returned by a nested call.
 
-The boundary engine's bounds cache retains 24 payload bytes per edge slot. Merge buffers and candidate indices add up to 16 bytes per slot and a 65-int run buffer. The optional certificate is allocated lazily and adds 28 payload bytes per vertex slot. These are additions to the engine's other vertex, event and chain storage, not a total memory bound; object and array headers are extra.
+The general engine's capacity accounting includes vertices, edges, crossings,
+per-edge sorted events and sort keys, netted chains and hash slots, bounds,
+merge/candidate buffers, and the optional simplicity certificate's arrays. The
+integer engine counts vertices, edges, levels, active order, positions, winding
+prefixes, last levels and crossings. Counts use allocated capacities, not used
+lengths. Array headers, fixed workspace/comparer objects and 264 bytes of
+thread-local predicate scratch arrays are additional.
 
-The [measured first-use/storage profile](performance.md#first-use-and-retained-workspace)
-reports the complete cached array inventory separately from warm allocations.
-For example, the 256-vertex-per-path degenerate grid retains 7,013,261 payload
-bytes on one thread, despite allocating zero bytes during subsequent measured
-calls. Capacity depends on crossings and overlaps as well as vertex count.
+The .NET 10 engines have separate caches: together at most **8 MiB of array
+payload per thread** after calls finish; the portable engine has one 4 MiB cache.
+This does not limit peak memory, nested workspaces, active threads, transient
+exact-predicate arithmetic or the complete managed heap. GC reclamation is not
+immediate. First use, growth, nesting and some exact predicates allocate;
+repeated oversized calls also allocate because their workspaces are not retained.
 
-The integer sweep uses a separate per-thread workspace. A thread that calls both
-routes can retain both caches. First use and buffer growth allocate; later calls
-reuse vertices, edges, active ordering and crossing buffers. Crossings within one
-band can be quadratic in its active edge count. At the 1024-vertex admission
-limit, the pair-count bound is 523,776; capacity growth can round the crossing
-buffer to 524,288 records of 24 payload bytes each, or **12 MiB for that buffer
-alone**. This is a capacity bound, not a measurement of typical input or a total
-workspace bound. Other arrays and object headers add storage. Integer-sweep
-memory is not included in the historical boundary-engine storage figures above.
+Within the cache budget, warmed filtered/expansion-predicate calls can reuse all
+buffers. Historical zero warm-allocation measurements used the earlier unbounded
+policy and do not apply automatically to oversized calls now. See
+[performance and memory](performance.md#first-use-and-retained-workspace).
+
+Crossings can require quadratic storage. In the integer sweep, the 1024-vertex
+admission limit permits 523,776 edge pairs; growth can round the crossing buffer
+to 524,288 records of 24 payload bytes each, or **12 MiB during the call**. Other
+arrays add memory. Such a workspace exceeds the cache budget and is not cached.
+The general boundary engine can require still more storage on dense geometry.
+The cache limit does not reduce the work or peak memory needed to compute it.
 
 ## Correctness checks
 

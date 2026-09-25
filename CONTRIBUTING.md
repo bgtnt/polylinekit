@@ -10,6 +10,7 @@ dotnet build PolylineKit.slnx -c Release --no-restore
 pwsh -File scripts/verify-implementations.ps1
 pwsh -File scripts/verify-consumers.ps1
 dotnet run --project examples/Basic -c Release --no-build
+dotnet run --project examples/ClipperContours -c Release --no-build
 ```
 
 The correctness suite is a deterministic console executable, not a `dotnet test`
@@ -22,18 +23,19 @@ Git history available for that check.
 
 | Directory | Contents |
 |---|---|
-| `src/PolylineKit.Winding` | Dependency-free area methods, coordinate/fill types and internal engines |
-| `src/PolylineKit` | Transformation, alignment, sampling and contour-producing methods |
+| `src/PolylineKit.Core` | Dependency-free area methods, normalization, transformation, sampling and alignment |
+| `src/PolylineKit.Clipper` | Optional Clipper2 adapter for quantized comparisons and output contours |
 | `examples` | Runnable consumers and attributed data |
 | `tests` | Correctness, numerical and compatibility checks |
 | `benchmarks` | Maintained performance runners and fixtures |
 | `docs` | Usage contracts and implementation documentation |
 | `scripts` | Verification and measurement commands |
 
-The area assembly retains its `PolylineKit.Winding` identity for binary
-compatibility. `PolylineArea` is the developer-facing area API. The complete
-assembly forwards moved types. Deploy using project/dependency resolution;
-replacing one old DLL without its dependencies is insufficient.
+The core retains the assembly identity `PolylineKit.Winding`; the optional
+adapter retains `PolylineKit`. These historical DLL names preserve binary
+compatibility while project names describe their roles. The adapter forwards
+the fifteen public types moved into the core. Deploy using project/dependency
+resolution; replacing one old DLL without its dependencies is insufficient.
 
 ## Changes and performance
 

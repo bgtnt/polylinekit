@@ -4,6 +4,6 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../../../src/PolylineKit.Winding/PolylineKit.Winding.csproj" />
+    <ProjectReference Include="../../../src/PolylineKit.Core/PolylineKit.Core.csproj" />
   </ItemGroup>
 </Project>

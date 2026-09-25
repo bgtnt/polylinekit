@@ -8,14 +8,14 @@
         "resolved": "2.0.0",
         "contentHash": "2X23RZxJrjRjOSZc20aqXY9jpmHLekDRy4PIMfrsi2LPNzxFYlnuqzX/nLdk77fbURHUeX+gMhUn2a1z9/wMTQ=="
       },
-      "polylinekit": {
+      "polylinekit.clipper": {
         "type": "Project",
         "dependencies": {
           "Clipper2": "[2.0.0, )",
-          "PolylineKit.Winding": "[0.1.0-alpha.1, )"
+          "PolylineKit.Core": "[0.1.0-alpha.1, )"
         }
       },
-      "polylinekit.winding": {
+      "polylinekit.core": {
         "type": "Project"
       }
     }

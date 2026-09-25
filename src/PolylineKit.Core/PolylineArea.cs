@@ -15,8 +15,9 @@ public static class PolylineArea
     /// be finite with magnitude at most 1e100. A collinear path with enough vertices has zero area.
     /// No normalization, input quantization or result clamping is applied. Results carry floating-point
     /// rounding; the implementation can depend on the runtime and input representation. Equivalent inputs
-    /// can differ in their final rounding. Warm calls reuse per-thread storage; first use, buffer growth
-    /// and nested calls can allocate, and the largest workspace remains retained on the thread.
+    /// can differ in their final rounding. Warm calls reuse per-thread storage within a 4 MiB array-payload
+    /// budget for each engine. First use, buffer growth, nested calls and repeated oversized calls can
+    /// allocate. The budget excludes object/header overhead and does not bound active or peak memory.
     /// </remarks>
     /// <exception cref="ArgumentNullException">The path is null.</exception>
     /// <exception cref="ArgumentException">The path is empty, has invalid coordinates or has too few vertices.</exception>

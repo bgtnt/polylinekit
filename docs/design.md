@@ -57,9 +57,10 @@ For the supported graph pair, winding magnitude is at most one almost everywhere
 
 ## Dependencies and reference precision
 
-The graph integral is available from the dependency-free area project on both
-.NET Standard 2.0 and .NET 10. The complete PolylineKit project adds Clipper2
-for contour-producing comparisons; it is not called by this graph method.
+The graph integral is available from the dependency-free `PolylineKit.Core`
+project on both .NET Standard 2.0 and .NET 10. The optional `PolylineKit.Clipper`
+adapter adds quantized comparisons and output contours; this graph method does
+not call it.
 
 The independent Clipper oracle uses decimal precision 8 and limits fixture
 coordinate magnitudes to 1e6. Small faces can disappear under quantization;

@@ -1,4 +1,6 @@
 #if NET10_0_OR_GREATER
+using System.Runtime.CompilerServices;
+
 namespace PolylineKit;
 
 /// <summary>Area-only sweep for an admitted, bounded integer closed walk.</summary>
@@ -13,6 +15,7 @@ namespace PolylineKit;
 internal sealed class IntegerFilledAreaSweep
 {
     private const int CoordinateLimit = 2048, VertexLimit = 1024;
+    internal const long MaxCachedArrayBytes = 4L * 1024 * 1024;
 
     private readonly struct Edge(long y0, long y1, long dx, long dy, long intercept, int delta)
     {
@@ -58,7 +61,18 @@ internal sealed class IntegerFilledAreaSweep
         return workspace ?? new IntegerFilledAreaSweep();
     }
 
-    internal static void Return(IntegerFilledAreaSweep workspace) => cached = workspace;
+    internal static void Return(IntegerFilledAreaSweep workspace)
+    {
+        // Preserve a smaller nested call's cache if this outer workspace grew beyond the budget.
+        // The discarded arrays become collectible after the active call releases this instance.
+        if (workspace.RetainedArrayBytes <= MaxCachedArrayBytes) cached = workspace;
+    }
+
+    internal long RetainedArrayBytes =>
+        (long)Unsafe.SizeOf<Point2>() * vertices.Length + (long)Unsafe.SizeOf<Edge>() * edges.Length +
+        sizeof(long) * (long)levels.Length +
+        sizeof(int) * (active.Length + (long)topOrder.Length + positions.Length + prefix.Length) +
+        (long)Unsafe.SizeOf<Level>() * lastLevel.Length + (long)Unsafe.SizeOf<Crossing>() * crossings.Length;
 
     internal double Measure(Point2[] path, PathFillRule fillRule)
     {

@@ -18,6 +18,7 @@ jobs:
       - run: ./scripts/verify-implementations.ps1
         shell: pwsh
       - run: dotnet run --project examples/Basic -c Release --no-build
+      - run: dotnet run --project examples/ClipperContours -c Release --no-build
       - name: Area-change example contracts and frozen contour hashes (no timing)
         run: dotnet run --project examples/AreaChange -c Release --no-build -- check
       - name: Region coverage contracts and frozen GIS pairs (no timing)
@@ -42,7 +43,7 @@ jobs:
           }
           $runner = 'benchmarks/PolylineKit.AssemblyBenchmarks/bin/Release/net10.0/PolylineKit.AssemblyBenchmarks.dll'
           foreach ($target in @('net10.0', 'netstandard2.0')) {
-            $dll = (Resolve-Path "src/PolylineKit.Winding/bin/Release/$target/PolylineKit.Winding.dll").Path
+            $dll = (Resolve-Path "src/PolylineKit.Core/bin/Release/$target/PolylineKit.Winding.dll").Path
             dotnet $runner $dll $fixture check 0 $target
             if ($LASTEXITCODE) { throw "Assembly fixture checks failed: $target" }
           }

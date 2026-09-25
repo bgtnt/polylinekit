@@ -28,7 +28,7 @@ try {
             if ($rows[$index].Run -ne $index + 1 -or $rows[$index].Case -ne $case -or $rows[$index].Revision -ne $revision) {
                 throw 'Profile run/case/revision does not match the requested measurement.'
             }
-            if (($rows[$index].RetainedArrays.PayloadBytes | Measure-Object -Sum).Sum -ne $rows[$index].RetainedArrayPayloadBytes) {
+            if ([long]($rows[$index].RetainedArrays.PayloadBytes | Measure-Object -Sum).Sum -ne $rows[$index].RetainedArrayPayloadBytes) {
                 throw 'Retained array payload total differs.'
             }
         }

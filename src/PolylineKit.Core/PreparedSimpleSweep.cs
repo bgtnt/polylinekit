@@ -25,6 +25,10 @@ internal sealed class PreparedSimpleSweep
     private int root, count, active, exactPredicates;
     private long remainingWork;
     private bool rejected;
+    // The borrowed vertices reference is cleared in TryCertify's finally; only these seven arrays
+    // survive a completed call and belong to the enclosing workspace's retention budget.
+    internal long RetainedArrayBytes => sizeof(int) * (events.Length + (long)start.Length + end.Length +
+        left.Length + right.Length + parent.Length + priority.Length);
 #if NET10_0_OR_GREATER
     private readonly Comparison<int> eventComparison;
 

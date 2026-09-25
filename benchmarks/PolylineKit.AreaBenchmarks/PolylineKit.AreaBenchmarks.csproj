@@ -5,7 +5,7 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../../src/PolylineKit.Winding/PolylineKit.Winding.csproj" />
+    <ProjectReference Include="../../src/PolylineKit.Core/PolylineKit.Core.csproj" />
     <PackageReference Include="Clipper2" Version="2.0.0" />
     <None Update="data/*.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

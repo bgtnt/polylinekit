@@ -34,7 +34,8 @@ internal static partial class ClipperBenchmarks
         var arrays = new List<object>();
         var seen = new HashSet<object>(ReferenceEqualityComparer.Instance);
         long payload = 0;
-        Visit(cache.GetValue(null)!, "Workspace");
+        object? retainedWorkspace = cache.GetValue(null);
+        if (retainedWorkspace is not null) Visit(retainedWorkspace, "Workspace");
         Type predicates = assembly.GetType("PolylineKit.RobustOrientation", throwOnError: true)!;
         foreach (FieldInfo field in predicates.GetFields(BindingFlags.NonPublic | BindingFlags.Static))
             if (field.IsDefined(typeof(ThreadStaticAttribute), false) && field.GetValue(null) is Array array)
@@ -72,6 +73,7 @@ internal static partial class ClipperBenchmarks
             InputSha256 = Hash(JsonSerializer.SerializeToUtf8Bytes(new { workload.First, workload.Second })),
             Value = value, FirstCallNanoseconds = elapsed * 1e9 / Stopwatch.Frequency, FirstCallAllocatedBytes = allocated,
             RetainedManagedHeapDelta = retainedAfter - retainedBefore,
+            WorkspaceCached = retainedWorkspace is not null,
             RetainedArrayPayloadBytes = payload, RetainedArrays = arrays,
             WarmMedianNanoseconds = samples.Select(s => s.Nanoseconds).Order().ElementAt(4),
             WarmMedianBytes = samples.Select(s => s.Bytes).Order().ElementAt(4), WarmSamples = samples,

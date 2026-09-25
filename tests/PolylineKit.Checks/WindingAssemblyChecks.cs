@@ -11,12 +11,18 @@ internal static class WindingAssemblyChecks
     private static int passed;
     private static readonly string[] PublicTypes =
     [
-        "PolylineKit.PathFillRule", "PolylineKit.Point2", "PolylineKit.PolylineArea", "PolylineKit.RegionOverlapResult", "PolylineKit.WindingArea",
+        "PolylineKit.AffineTransform2D", "PolylineKit.AlignmentOptions", "PolylineKit.AlignmentResult",
+        "PolylineKit.Bounds2D", "PolylineKit.BoundsScaling", "PolylineKit.NormalizationResult",
+        "PolylineKit.PathFillRule", "PolylineKit.Point2", "PolylineKit.PolylineAlignment", "PolylineKit.PolylineArea",
+        "PolylineKit.PolylineNormalization", "PolylineKit.PolylineSampling", "PolylineKit.RegionOverlapResult", "PolylineKit.WindingArea",
         "PolylineKit.WindingAreaResult", "PolylineKit.WindingOverlapResult"
     ];
     private static readonly string[] ForwardedTypes =
     [
-        "PolylineKit.PathFillRule", "PolylineKit.Point2", "PolylineKit.PolylineArea", "PolylineKit.WindingArea",
+        "PolylineKit.AffineTransform2D", "PolylineKit.AlignmentOptions", "PolylineKit.AlignmentResult",
+        "PolylineKit.Bounds2D", "PolylineKit.BoundsScaling", "PolylineKit.NormalizationResult",
+        "PolylineKit.PathFillRule", "PolylineKit.Point2", "PolylineKit.PolylineAlignment", "PolylineKit.PolylineArea",
+        "PolylineKit.PolylineNormalization", "PolylineKit.PolylineSampling", "PolylineKit.WindingArea",
         "PolylineKit.WindingAreaResult", "PolylineKit.WindingOverlapResult"
     ];
 
@@ -38,11 +44,13 @@ internal static class WindingAssemblyChecks
         Check(winding.GetName().Name == "PolylineKit.Winding", "WindingArea belongs to PolylineKit.Winding");
         Check(core.GetName().Name == "PolylineKit" && core != winding, "the broader library remains a separate assembly");
         Type[] exported = winding.GetExportedTypes().OrderBy(t => t.FullName, StringComparer.Ordinal).ToArray();
-        Check(exported.Select(t => t.FullName).SequenceEqual(PublicTypes), "the area assembly exports exactly its seven contract types");
-        Check(new[] { typeof(Point2), typeof(PathFillRule), typeof(PolylineArea), typeof(RegionOverlapResult), typeof(WindingAreaResult), typeof(WindingOverlapResult) }
-            .All(t => t.Assembly == winding), "every shared winding type has one owning assembly");
+        Check(exported.Select(t => t.FullName).SequenceEqual(PublicTypes), "the dependency-free core exports exactly its sixteen contract types");
+        Check(new[] { typeof(Point2), typeof(PathFillRule), typeof(PolylineArea), typeof(RegionOverlapResult), typeof(WindingAreaResult), typeof(WindingOverlapResult),
+            typeof(AffineTransform2D), typeof(Bounds2D), typeof(AlignmentOptions), typeof(AlignmentResult), typeof(PolylineAlignment),
+            typeof(BoundsScaling), typeof(NormalizationResult), typeof(PolylineNormalization), typeof(PolylineSampling) }
+            .All(t => t.Assembly == winding), "every shared core type has one owning assembly");
         Check(core.GetForwardedTypes().Select(t => t.FullName).OrderBy(n => n, StringComparer.Ordinal).SequenceEqual(ForwardedTypes),
-            "the broader library forwards precisely the six extracted public types");
+            "the optional adapter forwards precisely the fifteen extracted public types");
         foreach (Type type in exported.Where(t => ForwardedTypes.Contains(t.FullName!, StringComparer.Ordinal)))
             Check(core.GetType(type.FullName!, throwOnError: true) == type, $"old assembly identity resolves {type.FullName}");
 

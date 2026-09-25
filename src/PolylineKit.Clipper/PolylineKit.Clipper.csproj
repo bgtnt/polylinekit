@@ -1,9 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net10.0</TargetFrameworks>
+    <AssemblyName>PolylineKit</AssemblyName>
+    <RootNamespace>PolylineKit</RootNamespace>
+    <PackageId>PolylineKit.Clipper</PackageId>
     <Version>0.1.0-alpha.1</Version>
     <Authors>PolylineKit contributors</Authors>
-    <Description>Explicit polyline area comparisons, bounds normalization and sampled similarity alignment.</Description>
+    <Description>Optional Clipper2 contour output and decimal-grid compatibility operations for PolylineKit.Core.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/bgtnt/polylinekit</RepositoryUrl>
@@ -13,9 +16,9 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../PolylineKit.Winding/PolylineKit.Winding.csproj" />
+    <ProjectReference Include="../PolylineKit.Core/PolylineKit.Core.csproj" />
     <PackageReference Include="Clipper2" Version="2.0.0" />
-    <None Include="../../README.md" Pack="true" PackagePath="/" />
+    <None Update="README.md" Pack="true" PackagePath="/" />
     <InternalsVisibleTo Include="PolylineKit.Experiments" />
   </ItemGroup>
 </Project>

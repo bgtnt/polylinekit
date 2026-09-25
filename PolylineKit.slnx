@@ -6,12 +6,13 @@
   </Folder>
   <Folder Name="/examples/">
     <Project Path="examples/Basic/Basic.csproj" />
+    <Project Path="examples/ClipperContours/ClipperContours.csproj" />
     <Project Path="examples/AreaChange/AreaChange.csproj" />
     <Project Path="examples/RegionCoverage/RegionCoverage.csproj" />
   </Folder>
   <Folder Name="/src/">
-    <Project Path="src/PolylineKit/PolylineKit.csproj" />
-    <Project Path="src/PolylineKit.Winding/PolylineKit.Winding.csproj" />
+    <Project Path="src/PolylineKit.Clipper/PolylineKit.Clipper.csproj" />
+    <Project Path="src/PolylineKit.Core/PolylineKit.Core.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/PolylineKit.Checks/PolylineKit.Checks.csproj" />

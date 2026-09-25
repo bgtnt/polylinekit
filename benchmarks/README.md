@@ -45,7 +45,7 @@ frozen numerical fixtures. Supply an absolute DLL path:
 
 ```powershell
 $runner = 'benchmarks/PolylineKit.AssemblyBenchmarks/bin/Release/net10.0/PolylineKit.AssemblyBenchmarks.dll'
-$library = (Resolve-Path src/PolylineKit.Winding/bin/Release/net10.0/PolylineKit.Winding.dll).Path
+$library = (Resolve-Path src/PolylineKit.Core/bin/Release/net10.0/PolylineKit.Winding.dll).Path
 dotnet $runner $library benchmarks/fixtures/winding.json check 0 current
 ```
 

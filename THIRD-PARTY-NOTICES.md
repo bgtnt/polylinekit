@@ -6,13 +6,14 @@ content hashes are pinned in `packages.lock.json` files.
 
 ## Runtime dependency
 
-The complete `PolylineKit` project references [Clipper2 2.0.0](https://www.nuget.org/packages/Clipper2/2.0.0),
+The optional `PolylineKit.Clipper` project references [Clipper2 2.0.0](https://www.nuget.org/packages/Clipper2/2.0.0),
 by Angus Johnson, Copyright 2010–2025, under the
 [Boost Software License 1.0](https://www.boost.org/LICENSE_1_0.txt). Its package
-distributes the license. The dependency is used without alteration for general
-contour-producing fill/Boolean comparisons. Area integration, graph comparison,
-normalization, transforms, resampling and alignment do not call Clipper.
-The area-only project has no third-party runtime dependency.
+distributes the license. The adapter uses it without alteration for all
+`PolylineComparison` operations, including calls with `includeContours: false`.
+These methods preserve their quantized fill/Boolean contracts.
+`PolylineKit.Core` contains area integration, graph comparison, normalization,
+transforms, resampling and alignment with no third-party runtime dependencies.
 
 ## Tooling dependencies
 
@@ -20,7 +21,7 @@ Examples and benchmarks also use Clipper2. The region-coverage example reference
 [NetTopologySuite 2.6.0](https://www.nuget.org/packages/NetTopologySuite/2.6.0),
 Copyright 2006–2025 NetTopologySuite contributors, under
 [BSD-3-Clause](https://licenses.nuget.org/BSD-3-Clause). These example/tool
-dependencies are not added to the area library's runtime.
+dependencies are not added to the core library's runtime.
 
 ## Algorithm references
 

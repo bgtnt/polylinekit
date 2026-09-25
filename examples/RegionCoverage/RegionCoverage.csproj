@@ -5,7 +5,7 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../../src/PolylineKit.Winding/PolylineKit.Winding.csproj" />
+    <ProjectReference Include="../../src/PolylineKit.Core/PolylineKit.Core.csproj" />
     <!-- Example-only competing geometry engines. Neither is added to the winding runtime. -->
     <PackageReference Include="Clipper2" Version="2.0.0" />
     <PackageReference Include="NetTopologySuite" Version="2.6.0" />

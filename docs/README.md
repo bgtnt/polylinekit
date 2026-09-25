@@ -4,7 +4,8 @@
 |---|---|
 | Start using the library | [Quick start](../README.md) |
 | Measure areas, intersection, XOR, IoU or coverage | [Area methods](area.md) |
-| Normalize, resample, align or generate contours | [Comparison and transformations](comparison-api.md) |
+| Normalize, resample or align | [Transformations](comparison-api.md) |
+| Generate contours or use quantized comparisons | [Optional Clipper adapter](clipper.md) |
 | Integrate vertical separation between graphs | [Graph-area formula](design.md) |
 | Understand speed, allocations and memory | [Performance](performance.md) |
 | Build or contribute a change | [Contributor guide](../CONTRIBUTING.md) |

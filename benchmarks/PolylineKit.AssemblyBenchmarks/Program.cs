@@ -28,7 +28,8 @@ internal static class Runner
     private static readonly Type Workspace = typeof(WindingArea).Assembly.GetType("PolylineKit.WindingEngine+Workspace")!;
     private static readonly FieldInfo Cached = Workspace.GetField("cached", BindingFlags.NonPublic | BindingFlags.Static)!;
     private static readonly FieldInfo? OutcomeField = Workspace.GetField("SimpleSweepOutcome", BindingFlags.NonPublic | BindingFlags.Instance);
-    private static int Outcome() => OutcomeField is null ? -1 : (int)OutcomeField.GetValue(Cached.GetValue(null))!;
+    private static int Outcome() => OutcomeField is not null && Cached.GetValue(null) is object workspace
+        ? (int)OutcomeField.GetValue(workspace)! : -1; // Unavailable after an oversized workspace was discarded.
 
     [MethodImpl(MethodImplOptions.NoInlining)]
     internal static int Run(string[] args)
@@ -144,7 +145,7 @@ internal static class Runner
                 AppContext.SetSwitch("PolylineKit.DisableSimpleSweep", false);
                 var actual = WindingArea.ClosedPath(fixture.Path);
                 int outcome = Outcome();
-                if (outcome != 0) attempted++;
+                if (outcome > 0) attempted++;
                 if (outcome == 2) certified++;
                 Require(baseline.NonZero == actual.NonZero && baseline.EvenOdd == actual.EvenOdd &&
                     baseline.AbsoluteWinding == actual.AbsoluteWinding && baseline.Signed == actual.Signed &&

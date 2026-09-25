@@ -18,8 +18,8 @@ try {
     )
     $modernFeatures = $null
     foreach ($mode in $modes) {
-        Copy-Item -LiteralPath "src/PolylineKit/bin/Release/$($mode.Target)/PolylineKit.dll" -Destination $directory
-        Copy-Item -LiteralPath "src/PolylineKit.Winding/bin/Release/$($mode.Target)/PolylineKit.Winding.dll" -Destination $directory
+        Copy-Item -LiteralPath "src/PolylineKit.Clipper/bin/Release/$($mode.Target)/PolylineKit.dll" -Destination $directory
+        Copy-Item -LiteralPath "src/PolylineKit.Core/bin/Release/$($mode.Target)/PolylineKit.Winding.dll" -Destination $directory
         $env:POLYLINEKIT_FORCE_SCALAR = $mode.Scalar
         $env:DOTNET_EnableHWIntrinsic = $mode.Hardware
         $env:DOTNET_EnableAVX = $mode.Avx

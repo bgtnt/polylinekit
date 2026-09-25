@@ -7,9 +7,9 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- Build the hint assembly on clean checkouts without copying it to this runner's output. -->
-    <ProjectReference Include="../../src/PolylineKit.Winding/PolylineKit.Winding.csproj" ReferenceOutputAssembly="false" />
+    <ProjectReference Include="../../src/PolylineKit.Core/PolylineKit.Core.csproj" ReferenceOutputAssembly="false" />
     <Reference Include="PolylineKit.Winding">
-      <HintPath>../../src/PolylineKit.Winding/bin/$(Configuration)/net10.0/PolylineKit.Winding.dll</HintPath>
+      <HintPath>../../src/PolylineKit.Core/bin/$(Configuration)/net10.0/PolylineKit.Winding.dll</HintPath>
       <Private>false</Private>
     </Reference>
     <Compile Include="../Shared/Fixtures.cs" Link="Fixtures.cs" />

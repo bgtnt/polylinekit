@@ -44,18 +44,49 @@ exclude initialization and retained storage.
 
 ## First use and retained workspace
 
-Each active call owns its working storage. Consecutive calls on a thread reuse
-buffers; nested calls receive separate workspaces. First use, buffer growth and
-some exact-predicate fallbacks allocate. A thread retains its largest cache,
-so zero warm B/op does not mean zero retained memory.
+Each active call owns its working storage; nested calls receive separate
+workspaces. A completed workspace is cached only when its array payload is at
+most **4 MiB per engine per thread**. The general engine and integer sweep have
+separate caches, so together they can retain up to **8 MiB of array payload per
+thread**, plus array/object headers, small fixed metadata and 264 bytes of
+thread-local predicate buffers. The portable build
+has only the general engine. This is a retained-cache limit, not a bound on
+active-call memory, concurrent calls, exact arithmetic or the process heap.
 
-The general engine and integer sweep have separate caches. At the integer
-route's 1024-vertex limit, its crossing buffer alone can have a **12 MiB capacity**;
-other arrays and object headers add memory. This is a bound, not a typical-input
-measurement. The [algorithm documentation](winding-area.md#cost-and-storage)
-describes the buffer inventory and general engine complexity.
+Larger workspaces are not cached and become eligible for garbage collection
+after return. Repeated large dense inputs therefore allocate again; the policy
+trades their previous zero warm allocations for bounded idle retention. Smaller
+workspaces still reuse buffers. First use, growth, nesting and some exact
+predicates can allocate. The policy changes retention, not geometry or fill rules.
+
+At the integer route's 1024-vertex limit, its crossing buffer alone can reach
+**12 MiB during a call**. It exceeds the cache limit and is not retained afterward.
+The [algorithm documentation](winding-area.md#cost-and-storage) describes the
+inventory and complexity. Historical warm B/op figures apply to their recorded
+cache policy; they are not promises for oversized inputs under the current policy.
+
+The [retention regression](../tests/PolylineKit.Checks/WorkspaceRetentionChecks.cs)
+includes a deterministic 1024-vertex walk alternating between two Y levels.
+Compared with `0e53b07`, its retained workspace payload changes as follows:
+
+| Engine | Earlier retained payload | Current retained payload | Approximate repeated-call allocations now |
+|---|---:|---:|---:|
+| General boundary engine | 65.12 MiB | 0 | 97.14 MiB |
+| Integer sweep | 12.15 MiB | 0 | 24.15 MiB |
+
+These are stress-case allocation checks, not typical-input costs or timings.
+Each engine's result bits were unchanged. First-call allocations did not decrease;
+the cache limit prevents idle retention, not the large working set itself.
 
 ## Supporting measurements
+
+The [fresh real-contour benchmark](../benchmarks/PolylineKit.AreaBenchmarks/README.md#recorded-real-contour-result-primary-gate-failed)
+at `0e53b0713b2d0c6ebd0b7603125010defccb81ed` **failed its primary preservation gate**:
+the EvenOdd complete batch was 23.19% slower than ClosedPath, although all 18 individual
+ring/fill ratios stayed within 10%. The recorded ranges, allocations, correctness checks
+and local evidence hashes remain visible; the cause of the batch discrepancy is unisolated.
+Those timings precede the core/Clipper separation and retained-cache limit; they
+apply to the recorded binaries, not a new measurement of the current build.
 
 Detailed prior measurements remain in an immutable
 [public snapshot](https://github.com/bgtnt/polylinekit/tree/5ef33e8e0f11ba955cf8fc078e91dc87a325f7b3):

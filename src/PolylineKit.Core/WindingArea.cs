@@ -100,8 +100,10 @@ public readonly struct WindingOverlapResult
 /// linear time, not a worst-case bound); m, k and s are O(n^2) in the worst case. Each call uses its own working storage: a per-thread workspace is
 /// reused by consecutive calls, and a call made while another is active on the same thread (for example from
 /// a list indexer) gets a separate one. Warm calls whose predicates are decided by the filter or by expansion
-/// arithmetic allocate no managed memory; first use, buffer growth, nested calls and the BigInteger predicate fallback do, and
-/// the per-thread workspace keeps its largest size. Results differ from the Clipper2-based methods by their
+/// arithmetic can allocate no managed memory when the cached workspace fits. First use, buffer growth,
+/// nested calls, the BigInteger predicate fallback and repeated oversized calls can allocate. Each engine
+/// retains at most 4 MiB of array payload per thread, plus object/header overhead; oversized workspaces are
+/// discarded after use. This is a retention budget, not a bound on active or peak memory. Results differ from the Clipper2-based methods by their
 /// quantization.
 /// </remarks>
 public static class WindingArea
@@ -118,8 +120,9 @@ public static class WindingArea
     /// normalization or input rounding is applied. The implementation strategy can change with input
     /// representation or runtime; equivalent inputs can differ in their final rounding. No bitwise equality
     /// with ClosedPath, relative-error bound or universal speed improvement is promised. Values are not clamped.
-    /// Each active call owns its workspace; warm calls reuse per-thread storage. First use and buffer growth
-    /// can allocate, and the largest workspace remains retained on the thread.
+    /// Each active call owns its workspace; warm calls reuse per-thread storage within a 4 MiB array-payload
+    /// budget for each engine. First use, buffer growth, nested calls and repeated oversized calls can
+    /// allocate. Object/header overhead and active working memory are outside this retention budget.
     /// Use ClosedPath when all four integrals or crossing diagnostics are needed.
     /// </remarks>
     /// <exception cref="ArgumentNullException">The path is null.</exception>

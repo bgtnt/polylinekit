@@ -1,8 +1,8 @@
 # Measuring areas and region changes
 
 Use `PolylineArea` when you need numerical areas rather than output contours.
-These methods are available from the area-only project and from the complete
-PolylineKit project. All areas are in squared input-coordinate units.
+These methods are available from `PolylineKit.Core`, which has no third-party
+runtime dependencies. All areas are in squared input-coordinate units.
 
 ## One filled area
 
