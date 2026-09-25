@@ -52,6 +52,16 @@ engine scratch. Prepared zones with freshly prepared queries take 21.4–22.2 ms
 Current Winding takes 9.1–9.7 ms and Clipper 12.2–12.4 ms for warm tables.
 All six prepared competitor gates fail; this variant also stays experimental.
 
+The [direct-access experiment](../benchmarks/PolylineKit.ScanbeamBenchmarks/DIRECT-SWEEP-RESULTS.md)
+at `bc6184c` borrows the immutable edge/scalar arrays instead of copying them.
+It shows no gain: direct warm tables take 19.87–20.03 ms versus 19.55 ms for
+copied mode in the same binary. All six direct full-query medians are 1.6–2.9%
+higher, with overlapping process ranges. Historical `57c519c` reruns take
+20.34–20.77 ms for copied warm tables; shared ref-readonly accessors and separate
+builds also affect the baseline, so the historical difference cannot establish
+a benefit from removing copying. All competitor gates still fail; copied mode
+remains the default. Array payload and workspace allocation policy are unchanged.
+
 The [intersection-only coverage experiment](../examples/RegionCoverage/INTERSECTION-RESULTS.md)
 at `f93cc25` establishes a newer, narrower result: the dedicated
 `WindingArea.IntersectionArea` method takes 26-29% less time than direct reusable

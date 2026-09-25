@@ -24,6 +24,10 @@ The [prepared-path experiment](PolylineKit.ScanbeamBenchmarks/PREPARED-SWEEP-RES
 then saves 47% against the filtered sweep by reusing slopes and sorted endpoints.
 Warm tables take 20.3–20.5 ms, but all competitor gates still fail. Preparation,
 retained array payload and incoming-query costs are measured separately.
+The [direct-access experiment](PolylineKit.ScanbeamBenchmarks/DIRECT-SWEEP-RESULTS.md)
+then removes per-pair edge copying but finds no gain: direct access has 1.6–2.9%
+higher medians than copying in the same binary. Separate historical-binary runs
+check the effect of shared code changes on that baseline.
 
 For an area-engine optimization with a predeclared Clipper gate, see the
 [intersection-only protocol](../examples/RegionCoverage/INTERSECTION-PROTOCOL.md),

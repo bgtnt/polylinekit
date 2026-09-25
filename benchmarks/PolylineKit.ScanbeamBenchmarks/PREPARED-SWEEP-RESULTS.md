@@ -2,6 +2,10 @@
 
 Measured source: [`57c519cba31c039ef3dd7f254665d8c26a8716e2`](https://github.com/bgtnt/polylinekit/commit/57c519cba31c039ef3dd7f254665d8c26a8716e2).
 
+A later [direct-access experiment](DIRECT-SWEEP-RESULTS.md) tests borrowing these
+arrays instead of copying them and includes separate reruns of this binary.
+The measurements below remain the historical prepared-sweep result.
+
 Immutable path preparation reduces warm table time by **47.05–47.16%**,
 from 38.5–38.7 ms to **20.3–20.5 ms**. With prepared zones and fresh query
 preparation inside each operation, it takes **21.4–22.2 ms**. Fresh catalogue

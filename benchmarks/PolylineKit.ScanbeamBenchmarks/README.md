@@ -60,6 +60,14 @@ Commands `check-prepared-sweep`, `benchmark-prepared-sweep` and
 `summarize-prepared-sweep` use the same argument shapes as the double commands.
 Profile `Guarded-filtered` and `Guarded-prepared` separately.
 
+The [direct-access experiment](DIRECT-SWEEP-RESULTS.md) reads the two immutable
+edge/scalar arrays directly. It does not improve on copied mode. Its
+[fixed protocol](DIRECT-SWEEP-PROTOCOL.md) includes separate reruns of the previous
+binary because shared accessors can also change the copied baseline's timing.
+Commands `check-direct-sweep`, `benchmark-direct-sweep` and `summarize-direct-sweep`
+use the same argument shapes. Profile `Guarded-prepared` and `Guarded-direct`
+separately. The direct flag defaults off; original commands remain available.
+
 From the repository root, using PowerShell:
 
 ```powershell

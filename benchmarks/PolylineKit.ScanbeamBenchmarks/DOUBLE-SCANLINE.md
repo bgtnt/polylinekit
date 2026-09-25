@@ -88,6 +88,11 @@ original coordinates, slopes/scalar bounds and sorted endpoints. Its query path
 copies edge metadata and merges endpoint streams before entering the same sweep.
 It changes no certificate arithmetic and remains outside the shipping library.
 
+The [direct-access experiment](DIRECT-SWEEP-RESULTS.md) adds an optional flag to
+borrow prepared edge/scalar arrays for one query. It preserves endpoint merging
+and certificate arithmetic, clearing the borrowed references in `finally`.
+It shows no measured gain over copied mode, which remains the default.
+
 ## Current certificate
 
 1. Supplied binary64 vertices are treated as exact values. Both complete arrays
