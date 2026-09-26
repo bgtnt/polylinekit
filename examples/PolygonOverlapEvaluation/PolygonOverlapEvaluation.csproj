@@ -10,5 +10,6 @@
     <PackageReference Include="Clipper2" Version="2.0.0" />
     <PackageReference Include="NetTopologySuite" Version="2.6.0" />
     <None Update="PROTOCOL.md" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="ReviewReport.html" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

@@ -23,6 +23,44 @@ backend or another JSON input:
 dotnet run --project examples/PolygonOverlapEvaluation -c Release --no-build -- run-example examples/PolygonOverlapEvaluation/data/generated/solaris.json core artifacts/polygon-overlap/core.json
 ```
 
+## Review contours visually
+
+Generate a standalone local HTML report from the same evaluation:
+
+```sh
+dotnet run --project examples/PolygonOverlapEvaluation -c Release --no-build -- review-report
+```
+
+Open `artifacts/polygon-overlap/review.html` in a browser. The file embeds its
+data, JavaScript and SVG; it needs no server, internet connection or new package.
+Choose an image, filter the tables to false positives/false negatives or excluded
+inputs, then select a contour or row. A prediction shows its actual best available
+reference, accepted-match status, intersection, IoU, missing/excess area and any
+fallback. A reference shows its retained evaluation score and accepted prediction.
+The detail panel preserves full IoU precision so that scores on either side of
+the strict 0.5 threshold remain distinguishable; table values are rounded.
+
+These are original image coordinates with Y down. The display fits the contours
+without changing their geometry. No image raster or computed difference contours
+are supplied. Empty sentinels and filtered inputs remain visible in the tables.
+The report is a read-only review example, not an annotation editor.
+
+To review your own inputs, use the same [JSON schema](data/README.md#json-contract)
+with `Expected` omitted. Use pixel XY coordinates; an explicit `CoordinateSystem`
+other than `ImagePixelXY` is rejected by `review-report`.
+
+```sh
+dotnet run --project examples/PolygonOverlapEvaluation -c Release --no-build -- review-report my-polygons.json core artifacts/my-review.html
+```
+
+The existing confidence/area/IoU matching policy still applies. This command does
+not claim that a custom input passed the pinned Solaris reference check. Its
+report embeds the input contours and identifiers, so share it only with recipients
+who should receive that data. Report generation is outside the frozen benchmark;
+the recorded timing results remain measurements of revision `2019112`.
+
+## Select an evaluation backend
+
 Choices are `core`, `clipper`, `nts`, and `convex`. The
 [input schema, downloader and attribution](data/README.md) explain the original
 data. No CSV/WKT parser is added to Core. Custom inputs use the same schema;

@@ -10,6 +10,7 @@ internal static class Verification
             throw new InvalidDataException("Wrong reference population.");
         int protocolChecks = EvaluatorChecks.Run();
         int geometryChecks = GeometryChecks.Run();
+        int reportChecks = ReviewReportChecks.Run(corpus);
         var reference = new PreparedEvaluation(corpus, GeometryBackends.Create("nts"));
         EvaluationResult expected = reference.Run();
         var population = new
@@ -82,7 +83,7 @@ internal static class Verification
         return new
         {
             Pass = true, SourceCommit = corpus.SourceCommit, DataSHA256 = Corpus.Hash(input), ProtocolChecks = protocolChecks,
-            GeometryChecks = geometryChecks, FullFixtureCoverage = true, Population = population,
+            GeometryChecks = geometryChecks, ReviewReportChecks = reportChecks, FullFixtureCoverage = true, Population = population,
             MinSelectedIoUDistanceToThreshold = expected.Predictions.Where(x => x.BestTruthBuildingId is not null).Min(x => Math.Abs(x.BestIoU - .5)),
             RetainedPositiveSubthresholdTruthScores = expected.Buildings.Count(x => x.IoU > 0 && x.IoU <= .5),
             Backends = reports, Images = expected.Images,

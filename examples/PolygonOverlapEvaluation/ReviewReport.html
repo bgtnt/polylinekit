@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'">
+<title>Polygon annotation review</title>
+<style>
+:root { color-scheme: light; font-family: system-ui, sans-serif; color: #213035; background: #f3f5f3; }
+* { box-sizing: border-box; }
+body { margin: 0; }
+header, main, footer { max-width: 1440px; margin: auto; padding: 24px 32px; }
+header { border-bottom: 1px solid #d4dfda; }
+h1 { font-size: 28px; letter-spacing: -.7px; margin: 0 0 8px; }
+h2 { font-size: 17px; margin: 0 0 12px; }
+p { line-height: 1.5; margin: 8px 0; }
+.muted { color: #576b70; font-size: 14px; }
+.eyebrow { text-transform: uppercase; letter-spacing: 1.6px; font-size: 11px; font-weight: 700; color: #496a5a; margin: 0 0 10px; }
+.summary { display: flex; flex-wrap: wrap; gap: 12px 28px; margin-top: 18px; }
+.summary strong { font-size: 23px; display: block; }
+.summary span { font-size: 12px; color: #576b70; }
+.toolbar { display: flex; gap: 16px; align-items: end; flex-wrap: wrap; margin-bottom: 18px; }
+label { display: grid; gap: 6px; font-size: 13px; font-weight: 600; }
+select, button { font: inherit; }
+select, .control { min-height: 38px; border: 1px solid #adbfba; border-radius: 6px; background: white; color: inherit; padding: 7px 10px; }
+button { cursor: pointer; }
+button:focus-visible, select:focus-visible, path:focus-visible { outline: 3px solid #2369ba; outline-offset: 2px; }
+.canvas-grid { display: grid; grid-template-columns: minmax(0, 1fr) 310px; gap: 16px; }
+.card { border: 1px solid #d4dfda; border-radius: 10px; background: white; overflow: hidden; }
+.canvas-heading { display: flex; justify-content: space-between; align-items: center; padding: 15px 18px; border-bottom: 1px solid #e1e8e4; gap: 12px; flex-wrap: wrap; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 12px; }
+.legend span::before { content: ''; display: inline-block; width: 19px; border-top: 3px solid; margin-right: 6px; vertical-align: middle; }
+.truth-key { color: #087f8c; } .prediction-key { color: #bd590e; }
+#plot { display: block; width: 100%; height: 510px; background: #fcfdfc; }
+.shape { stroke-width: 1.5; vector-effect: non-scaling-stroke; cursor: pointer; }
+.truth { stroke: #087f8c; fill: #087f8c; fill-opacity: .07; }
+.prediction { stroke: #bd590e; fill: #ef902e; fill-opacity: .1; }
+.excluded { stroke: #7d888d; stroke-dasharray: 4 3; fill-opacity: .03; }
+.dim { opacity: .17; } .selected { stroke-width: 3; fill-opacity: .16; }
+.canvas-note { padding: 10px 18px; border-top: 1px solid #e1e8e4; font-size: 12px; color: #576b70; }
+#detail { padding: 18px; overflow-wrap: anywhere; }
+dl { margin: 18px 0; display: grid; grid-template-columns: 1fr auto; gap: 10px 14px; font-size: 13px; }
+dt { color: #576b70; } dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+.badge { display: inline-block; padding: 3px 7px; border-radius: 4px; background: #eef2ef; font-size: 12px; }
+.matched-badge { background: #e2f2e9; color: #216143; }
+.issue-badge { background: #fff0dc; color: #834410; }
+.tables { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 18px; }
+.table-title { padding: 16px 18px 10px; margin: 0; }
+.table-scroll { max-height: 370px; overflow: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 10px 14px; text-align: left; border-top: 1px solid #e4eae7; }
+th { color: #576b70; font-weight: 500; font-size: 12px; background: #f8faf8; position: sticky; top: 0; }
+td { font-variant-numeric: tabular-nums; }
+.row-button { border: 0; color: #175862; text-decoration: underline; background: transparent; padding: 3px 0; }
+.active-row { background: #edf6f5; }
+#excluded { margin-top: 18px; padding: 14px 18px; }
+#excluded ul { margin-bottom: 0; font-size: 13px; line-height: 1.8; }
+footer { font-size: 12px; color: #576b70; overflow-wrap: anywhere; }
+#empty { display: none; text-align: center; padding: 22px; }
+noscript { display: block; padding: 25px; }
+@media(max-width: 950px) { .canvas-grid, .tables { grid-template-columns: 1fr; } #plot { height: 430px; } }
+@media(max-width: 600px) { header, main, footer { padding: 20px 14px; } select { max-width: 100%; } #plot { height: 330px; } }
+@media print { .table-scroll { max-height: none; } .toolbar { display: none; } .canvas-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header>
+  <p class="eyebrow">PolylineKit / annotation review</p>
+  <h1>Compare polygons where they were drawn</h1>
+  <p class="muted">Inspect accepted matches, missed references and extra predictions in the original image coordinates.</p>
+  <div id="totals" class="summary" aria-label="All-image totals"></div>
+</header>
+<noscript>This local report needs JavaScript to display the embedded contours. No network connection is used.</noscript>
+<main>
+  <div class="toolbar">
+    <label>Image<select id="image" aria-label="Image"></select></label>
+    <label>Rows<select id="filter" aria-label="Rows"><option value="all">All inputs</option><option value="issues">False positives / false negatives</option><option value="excluded">Excluded inputs</option></select></label>
+    <button type="button" class="control" id="clear">Show all contours</button>
+    <span id="image-summary" class="muted" aria-live="polite"></span>
+  </div>
+  <div class="canvas-grid">
+    <section class="card" aria-label="Contour overlay">
+      <div class="canvas-heading"><strong id="image-title"></strong><div class="legend"><span class="truth-key">Reference</span><span class="prediction-key">Prediction</span></div></div>
+      <svg id="plot" role="group" aria-label="Original image-coordinate polygon overlay" preserveAspectRatio="xMidYMid meet"></svg>
+      <div id="empty" class="muted">No contours in this image. Empty sentinel rows remain in the tables.</div>
+      <div class="canvas-note">Geometry only; no source image is embedded. X increases right, Y down. Dashed contours were excluded by the area filter. Click a contour or a row to inspect it.</div>
+    </section>
+    <aside id="detail" class="card" aria-live="polite"></aside>
+  </div>
+  <div class="tables">
+    <section class="card"><h2 class="table-title">Predictions</h2><div class="table-scroll"><table><thead><tr><th>ID</th><th>Status</th><th>Confidence</th><th>Best available IoU</th></tr></thead><tbody id="predictions"></tbody></table></div></section>
+    <section class="card"><h2 class="table-title">References</h2><div class="table-scroll"><table><thead><tr><th>ID</th><th>Status</th><th>Retained score</th></tr></thead><tbody id="truth"></tbody></table></div></section>
+  </div>
+  <details id="excluded" class="card"><summary id="excluded-title"></summary><ul id="excluded-list"></ul></details>
+</main>
+<footer>
+  <p id="provenance"></p>
+  <p>Matching uses confidence order and consumes a reference only when IoU &gt; 0.5. A positive retained reference score can still be a false negative. “Best available” refers to candidates left at that prediction’s turn, not a global nearest-neighbor search.</p>
+  <p>Intersection, union, missing and excess are areas in pixel². Missing/excess are pair diagnostics, not additional Solaris metrics. Invalid inputs are rejected; valid holes and multipart inputs may use an explicitly reported fallback. This report is a review example, not an annotation editor or independent validation of your data.</p>
+</footer>
+<script>
+'use strict';
+const report = /*__REPORT_DATA__*/null;
+const $ = id => document.getElementById(id);
+const svgNS = 'http://www.w3.org/2000/svg';
+const number = value => Number.isFinite(value) ? new Intl.NumberFormat('en', {maximumFractionDigits: 6}).format(value) : '—';
+// Keep threshold-sensitive detail scores at round-trip precision, including values near 0.5.
+const exactScore = value => Number.isFinite(value) ? String(value) : '—';
+const labels = {'matched':'Accepted match', 'false-positive':'False positive', 'false-negative':'False negative', 'excluded':'Excluded'};
+let current = null, selected = null;
+
+function node(tag, text, className) {
+  const element = document.createElement(tag);
+  if (text !== undefined) element.textContent = text;
+  if (className) element.className = className;
+  return element;
+}
+function statistic(label, value) {
+  const item = node('div'); item.append(node('strong', value), node('span', label)); return item;
+}
+function metric(list, label, value) { list.append(node('dt', label), node('dd', value)); }
+function badge(status) { return node('span', labels[status], 'badge ' + (status === 'matched' ? 'matched-badge' : status === 'excluded' ? '' : 'issue-badge')); }
+function visible(row) {
+  const filter = $('filter').value;
+  return filter === 'all' || (filter === 'excluded' ? row.Status === 'excluded' : row.Status === 'false-positive' || row.Status === 'false-negative');
+}
+function showDetail() {
+  const panel = $('detail'); panel.replaceChildren();
+  if (!selected) {
+    panel.append(node('h2', 'Inspect a contour'), node('p', 'Select a prediction to see its best available reference and the actual pair measurements.', 'muted'),
+      node('p', 'Selecting an unmatched reference shows its retained score without inventing a corresponding prediction.', 'muted'));
+    return;
+  }
+  const row = selected.row, prediction = selected.role === 'prediction';
+  panel.append(node('h2', (prediction ? 'Prediction #' : 'Reference #') + row.BuildingId), badge(row.Status));
+  const list = node('dl'); metric(list, 'Own area', number(row.Area));
+  if (prediction) {
+    metric(list, 'Confidence', number(row.Confidence));
+    metric(list, 'Best available reference', row.BestTruthBuildingId == null ? 'None' : '#' + row.BestTruthBuildingId);
+    metric(list, 'Best available IoU', row.Status === 'excluded' ? 'Not evaluated' : exactScore(row.BestIoU));
+    metric(list, 'Assigned score', row.Status === 'excluded' ? 'Not evaluated' : exactScore(row.AssignedScore));
+    if (row.Pair) {
+      metric(list, 'Intersection', number(row.Pair.Intersection)); metric(list, 'Union', number(row.Pair.Union));
+      metric(list, 'Reference missing area', number(row.Pair.MissingArea)); metric(list, 'Prediction excess area', number(row.Pair.ExcessArea));
+      metric(list, 'Fallback', row.Pair.UsedFallback ? row.Pair.FallbackReason : 'None');
+    }
+  } else {
+    metric(list, 'Retained evaluation score', exactScore(row.RetainedIoU));
+    metric(list, 'Accepted prediction', row.MatchedPredictionId == null ? 'None' : '#' + row.MatchedPredictionId);
+  }
+  panel.append(list);
+  if (row.Status === 'excluded') panel.append(node('p', 'This input was excluded before matching. See the exclusion list for the reason.', 'muted'));
+  else if (prediction && !row.Pair) panel.append(node('p', 'No available reference geometrically intersected this prediction. Pair areas are not fabricated.', 'muted'));
+  else if (!prediction && row.Status === 'false-negative') panel.append(node('p', 'No prediction was accepted for this reference. A subthreshold overlap can still contribute to its retained score.', 'muted'));
+}
+function choose(role, row) { selected = {role, row}; draw(); renderTables(); showDetail(); }
+function draw() {
+  const plot = $('plot'); plot.replaceChildren();
+  const [x, y, width, height] = current.Bounds, padding = Math.max(width, height) * .035;
+  plot.setAttribute('viewBox', [x - padding, y - padding, width + 2 * padding, height + 2 * padding].join(' '));
+  const focusTruth = selected && (selected.role === 'truth' ? selected.row.BuildingId : selected.row.BestTruthBuildingId);
+  const focusPrediction = selected && (selected.role === 'prediction' ? selected.row.BuildingId : selected.row.MatchedPredictionId);
+  let count = 0;
+  for (const [role, rows] of [['truth', current.Truth], ['prediction', current.Predictions]]) {
+    for (const row of rows) {
+      for (const polygon of row.Polygons) {
+        const path = document.createElementNS(svgNS, 'path');
+        path.setAttribute('d', polygon.map(ring => 'M' + ring.map(p => p[0] + ',' + p[1]).join('L') + 'Z').join(' '));
+        path.setAttribute('fill-rule', 'evenodd');
+        const focused = selected && row.BuildingId === (role === 'truth' ? focusTruth : focusPrediction);
+        path.setAttribute('class', 'shape ' + role + (row.Status === 'excluded' ? ' excluded' : '') + (selected ? focused ? ' selected' : ' dim' : ''));
+        const title = document.createElementNS(svgNS, 'title'); title.textContent = `${role === 'truth' ? 'Reference' : 'Prediction'} #${row.BuildingId} — ${labels[row.Status]}`; path.append(title);
+        path.setAttribute('tabindex', '0'); path.setAttribute('role', 'button'); path.setAttribute('aria-label', title.textContent);
+        path.addEventListener('click', () => choose(role, row));
+        path.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); choose(role, row); } });
+        plot.append(path); count++;
+      }
+    }
+  }
+  $('empty').style.display = count ? 'none' : 'block';
+}
+function renderTables() {
+  for (const [role, rows, target] of [['prediction', current.Predictions, 'predictions'], ['truth', current.Truth, 'truth']]) {
+    const body = $(target); body.replaceChildren();
+    for (const row of rows.filter(visible)) {
+      const tr = node('tr'); if (selected && selected.role === role && selected.row.Index === row.Index) tr.className = 'active-row';
+      const id = node('td'), button = node('button', '#' + row.BuildingId, 'row-button'); button.type = 'button';
+      button.setAttribute('aria-label', `Inspect ${role} ${row.BuildingId}`); button.addEventListener('click', () => choose(role, row)); id.append(button);
+      const status = node('td'); status.append(badge(row.Status)); tr.append(id, status);
+      if (role === 'prediction') tr.append(node('td', number(row.Confidence)), node('td', row.Status === 'excluded' ? '—' : number(row.BestIoU)));
+      else tr.append(node('td', number(row.RetainedIoU)));
+      body.append(tr);
+    }
+    if (!body.children.length) { const tr = node('tr'), td = node('td', 'No rows in this view.', 'muted'); td.colSpan = role === 'prediction' ? 4 : 3; tr.append(td); body.append(tr); }
+  }
+}
+function setImage(index) {
+  current = report.Images[index]; selected = null;
+  $('image-title').textContent = current.ImageId;
+  $('image-summary').textContent = `${current.TruePos} TP · ${current.FalsePos} FP · ${current.FalseNeg} FN · F1 ${number(current.F1Score)}`;
+  $('excluded-title').textContent = `Excluded inputs in this image (${current.ExcludedInputs.length})`;
+  $('excluded-list').replaceChildren(...current.ExcludedInputs.map(row => node('li', `${row.Role} #${row.BuildingId}: ${row.Reason}; area ${number(row.OriginalArea)} pixel²`)));
+  draw(); renderTables(); showDetail();
+}
+const sums = report.Images.reduce((sum, image) => [sum[0] + image.TruePos, sum[1] + image.FalsePos, sum[2] + image.FalseNeg], [0, 0, 0]);
+$('totals').append(statistic('images', report.Images.length), statistic('accepted matches', sums[0]), statistic('false positives', sums[1]), statistic('false negatives', sums[2]), statistic('fallback pair calls', report.FallbackPairs));
+report.Images.forEach((image, index) => { const option = node('option', image.ImageId); option.value = index; $('image').append(option); });
+$('provenance').textContent = `Backend: ${report.Backend}. Input SHA-256: ${report.InputSHA256}. Source: ${report.SourceCommit || 'not specified'}. Reference area ≥ ${report.MinArea}; prediction area > ${report.MinArea}. Original input coordinates are preserved; the viewBox only fits the display.`;
+$('image').addEventListener('change', event => setImage(Number(event.target.value)));
+$('filter').addEventListener('change', renderTables);
+$('clear').addEventListener('click', () => { selected = null; draw(); renderTables(); showDetail(); });
+if (report.Images.length) setImage(0);
+else { document.querySelector('main').replaceChildren(node('p', 'The input contains no images or contours.')); }
+</script>
+</body>
+</html>

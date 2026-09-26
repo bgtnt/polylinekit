@@ -31,6 +31,8 @@ jobs:
         run: python examples/PolygonOverlapEvaluation/data/prepare-data.py
       - name: Polygon evaluation reference and geometry contracts
         run: dotnet run --project examples/PolygonOverlapEvaluation -c Release --no-build -- verify-reference
+      - name: Generate standalone polygon annotation review
+        run: dotnet run --project examples/PolygonOverlapEvaluation -c Release --no-build -- review-report
       - name: Polygon evaluation benchmark startup (no timing threshold)
         shell: pwsh
         run: |
