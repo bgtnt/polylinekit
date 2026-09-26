@@ -23,6 +23,12 @@ they do not establish external production adoption. The building evaluator shows
 the most complete review workflow. The territorial example has a recorded speed
 advantage for its coverage workload. See [the scenario-specific evidence](docs/performance.md#recorded-results-by-scenario).
 
+[![Building review with selected prediction, reference outline, IoU and area errors](docs/images/building-review.png)](examples/PolygonOverlapEvaluation/README.md#review-contours-visually)
+
+Actual HTML review: prediction #3 against reference #15 in the supplied Las Vegas
+sample. IoU is 0.68774; missing area is 505.89 pixel² and excess area is 972.32
+pixel². The view shows original contours, without an image raster.
+
 ## Add to your application
 
 Choose `PolylineKit.Core` for numeric areas, intersection and coverage. Version
@@ -108,19 +114,22 @@ distinct stroke. Choose invariances such as rotation or scaling to suit your dat
 
 ## Performance by scenario
 
-`FilledArea` has large measured wins over Clipper2 on selected synthetic shapes:
-about **26×** on a simple spiky star and **17–45×** on a repeatedly traced square.
-A dense integer crossing grid shows a smaller **1.65–3.03×** advantage. These
-compare one area result with preloaded Clipper2 C# producing filled contours.
+The county/district coverage repeat with the current Core took **24–26% less
+time** than reusable prepared Clipper2 C#, including preparation plus one traversal.
+Complete building-evaluator times were effectively tied, with **15.8% fewer
+allocated bytes**; its prepared intersection batch was **12% slower** than Clipper2.
+The complete evaluator was **3.05× faster** than the configured NetTopologySuite
+backend. A nine-ring county own-area batch was about **1.3× faster** than Clipper2.
 
-Real workloads give a different picture: a nine-ring county-area batch was about
-**1.3× faster**. A separate historical county/district coverage workload took
-**26–29% less time**, including the measured preparation-inclusive cases.
-The prepared building-pair intersection batch was **12% slower** than Clipper2;
-complete building-evaluator times were effectively tied.
+Selected synthetic shapes show larger `FilledArea` wins over Clipper2: about
+**26×** on a simple spiky star and **17–45×** on a repeatedly traced square.
+A dense integer crossing grid shows a **1.65–3.03×** advantage. These compare one
+area result with preloaded Clipper2 C# producing filled contours.
+
 See [the scenario table, reproduction commands and limits](docs/performance.md#recorded-results-by-scenario)
 before choosing for your workload. A trusted simple ring needs only a shoelace sum;
 the star result does not establish an advantage for that narrower operation.
+Reducing the repeated square to a minimal path before clipping was not measured.
 
 ## Input and numerical limits
 

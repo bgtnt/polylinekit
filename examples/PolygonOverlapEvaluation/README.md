@@ -51,6 +51,16 @@ without changing their geometry. No image raster or computed difference contours
 are supplied. Empty sentinels and filtered inputs remain visible in the tables.
 The report is a read-only review example, not an annotation editor.
 
+![Actual building contour review with IoU and missing/excess areas](../../docs/images/building-review.png)
+
+The screenshot shows `AOI_2_Vegas_img3457`, prediction **#3**, accepted reference
+**#15**: IoU **0.6877396015592816**, missing area **505.889631 pixel²**, excess
+area **972.316631 pixel²**. To reproduce it, run `review-report` above, leave the
+first image selected and click prediction #3. It was captured from the unchanged
+HTML example at PolylineKit revision `2fe5f74`, using the pinned
+[Solaris input and attribution](data/README.md). The screenshot contains original
+contours and measured values; there is no satellite image or synthesized geometry.
+
 To review your own inputs, use the same [JSON schema](data/README.md#json-contract)
 with `Expected` omitted. Use pixel XY coordinates; an explicit `CoordinateSystem`
 other than `ImagePixelXY` is rejected by `review-report`.

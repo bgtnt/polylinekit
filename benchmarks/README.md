@@ -32,6 +32,16 @@ alongside them. All inputs are generated or included in the repository.
 dotnet run --project benchmarks/PolylineKit.AreaBenchmarks -c Release -- synthetic-check artifacts/selected-shapes-check
 ```
 
+## Territorial coverage
+
+The [RegionCoverage measurement](../examples/RegionCoverage/PERFORMANCE.md)
+compares complete county/district coverage traversals with reusable prepared
+Clipper2. It includes preparation and warm scopes, both coverage directions,
+three sequential processes and 540 samples. The report records the current Core
+repeat, its four fixed acceptance cells and the earlier result. All inputs are
+included; reproduction uses the example's `benchmark-intersection` and
+`summarize-intersection` commands.
+
 ## Graphs, transforms and engine costs
 
 The general runner provides graph, transformation, winding and Clipper suites:

@@ -47,17 +47,23 @@ and user workflow are not demonstrated here.
 
 ## Recorded performance
 
-At measured revision `f93cc25`, intersection-only coverage took **26–29% less
+At measured revision `2fe5f74`, intersection-only coverage took **24–26% less
 time** than reusable prepared Clipper2 C# in four predeclared whole-traversal
 comparisons, including fresh preparation plus one traversal. Each direction
 included all 1,078 potential county/district pairs: 211 bounds candidates needed
 geometry and 867 were rejected by the common bounds check. Warm calls returned
 numeric coverage without constructing an output matrix or caching pair areas.
 
-This is a historical result for related Census layers, measured before the
-current retained-workspace cap. It is not a timing of the current package or
-arbitrary GIS data. See the [full measured report and reproduction protocol](https://github.com/bgtnt/polylinekit/blob/5ef33e8e0f11ba955cf8fc078e91dc87a325f7b3/examples/RegionCoverage/INTERSECTION-RESULTS.md)
-and the [current cross-scenario comparison](../../docs/performance.md#recorded-results-by-scenario).
+This repeat uses the current Core with its retained-workspace cap. All 2,156
+directional pair results remain identical to the earlier measurement. All 90
+intersection-only warm allocation samples are zero bytes; preparation and first
+use can allocate. The earlier 26–29% time advantage is retained as historical
+evidence; this repeat gives 24–26% under the unchanged protocol.
+
+These are related Census layers, not arbitrary GIS data or an external deployment.
+The measurement uses a source build rather than a packed package. See the
+[full measured report and reproduction commands](PERFORMANCE.md) and the
+[cross-scenario comparison](../../docs/performance.md#recorded-results-by-scenario).
 
 ## Application considerations
 
