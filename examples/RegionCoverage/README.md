@@ -1,5 +1,10 @@
 # Measure region coverage
 
+**How many square metres of a county lie in a congressional district, and what
+percentage of the county is that?** This example answers that question from two
+existing boundary layers. The shapes represent different territories; their
+boundary similarity is not the requested result.
+
 Start with the [minimal package-based example](../PackageCoverage) for an
 L-shaped zone: area 20, intersection 7 and coverage 35%. This larger example
 uses frozen real Census contours and demonstrates candidate selection as well
@@ -34,6 +39,25 @@ the source snapshot and are listed in the [data documentation](data/README.md).
 The data originate from the U.S. Census Bureau and are public domain in the
 United States. [Source metadata and hashes](data/manifest.json) and the
 [offline verification script](data/freeze.py) accompany the example.
+
+`accuracy.json` is a developer-facing numerical report for these frozen layers.
+The example is not a general GIS layer-import application. A parcel/flood-zone
+report would use the same intersection and coverage operations, but that dataset
+and user workflow are not demonstrated here.
+
+## Recorded performance
+
+At measured revision `f93cc25`, intersection-only coverage took **26–29% less
+time** than reusable prepared Clipper2 C# in four predeclared whole-traversal
+comparisons, including fresh preparation plus one traversal. Each direction
+included all 1,078 potential county/district pairs: 211 bounds candidates needed
+geometry and 867 were rejected by the common bounds check. Warm calls returned
+numeric coverage without constructing an output matrix or caching pair areas.
+
+This is a historical result for related Census layers, measured before the
+current retained-workspace cap. It is not a timing of the current package or
+arbitrary GIS data. See the [full measured report and reproduction protocol](https://github.com/bgtnt/polylinekit/blob/5ef33e8e0f11ba955cf8fc078e91dc87a325f7b3/examples/RegionCoverage/INTERSECTION-RESULTS.md)
+and the [current cross-scenario comparison](../../docs/performance.md#recorded-results-by-scenario).
 
 ## Application considerations
 

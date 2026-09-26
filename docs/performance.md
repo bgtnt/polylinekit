@@ -57,6 +57,7 @@ The rows are different workloads, not values to average into one speedup.
 | Repeated square, 512 vertices: NonZero area | 29.726 | 493.163 | **16.59×** |
 | Same repeated square: EvenOdd area | 28.382 | 1272.256 | **44.83×** |
 | Nine Census rings: batch of NonZero areas | 1470.731 | 1914.525 | **1.30×** |
+| County/district coverage: warm indexed traversal (historical) | 9676.350 | 13290.000 | **1.37×** |
 | Solaris: prepared intersection batch, 205 pairs | 2308 | 2062 | **0.89×** |
 
 The first five rows measure `PolylineArea.FilledArea` in
@@ -64,11 +65,14 @@ The first five rows measure `PolylineArea.FilledArea` in
 They are selected synthetic cases, with all inputs and
 [commands to reproduce](../benchmarks/PolylineKit.AreaBenchmarks/SYNTHETIC.md)
 in the repository. The Census row is the recorded `eea1671` result detailed below;
+the territorial-coverage row is the historical `f93cc25` traversal detailed below;
 the Solaris row is the recorded `2019112` application result. All used .NET 10.0.12
 on Windows x64. None is a measurement of a subsequently packed release.
 
 For single-area rows, the Clipper comparator excludes conversion and Add, then
-times Union under the chosen fill rule plus summation of output area. The Solaris
+times Union under the chosen fill rule plus summation of output area. Territorial
+coverage reuses Clipper's prepared inputs and engine across the indexed traversal.
+The Solaris
 row measures the application's prepared intersection workload, including its
 shared touching/disjoint predicate for zero-area pairs. Output and coordinate
 contracts differ: Core returns numeric areas on the supplied double coordinates;
@@ -121,6 +125,43 @@ an advantage over a shoelace sum for a trusted simple ring.
 The earlier EvenOdd batch discrepancy did not recur. This is not evidence that
 the cache change fixed it: the unchanged Clipper binary also ran faster in the
 new session. The earlier failed measurement remains documented below.
+
+## Territorial coverage: historical application result
+
+The [RegionCoverage example](../examples/RegionCoverage/README.md) answers how
+many square metres and what fraction of one territory lie in another. The
+recorded population is 98 single-ring North Carolina counties and 11 single-ring
+congressional districts. Each traversal covers 1,078 potential pairs: 211 bounds
+candidates undergo intersection and 867 are rejected by the common bounds check.
+This is separate from the nine-ring own-area benchmark above.
+
+Measured source **`f93cc25d589a471e405af9ed53d094dd311aac61`**, three sequential
+processes and 540 samples. All four predeclared whole-traversal comparisons
+passed: intersection-only coverage took **26–29% less time** than direct
+reusable Clipper2, including preparation plus one traversal.
+
+| Zone / scope | Core ms | Clipper ms | Clipper / Core |
+|---|---:|---:|---:|
+| County / warm indexed traversal | 9.676350 | 13.290000 | 1.373× |
+| County / preparation + one traversal | 9.828375 | 13.294100 | 1.353× |
+| District / warm indexed traversal | 9.334325 | 12.657650 | 1.356× |
+| District / preparation + one traversal | 9.441175 | 13.272600 | 1.406× |
+
+All methods use the same outer STRtree; these are not index speedups. Clipper
+reuses prepared integer input data and its engine, performs its per-pair
+Clear/AddReuseableData work, executes one intersection and sums output areas.
+No pair area is cached and no output matrix is allocated. Historic warm Core
+traversals allocated zero managed bytes versus 625,088 bytes for Clipper;
+preparation-inclusive calls allocate for both.
+
+This result predates the current workspace cap and package split. The related
+Census layers may share boundaries, and the workload was already observed
+before optimization. It does not establish the same gain on arbitrary GIS data
+or the current alpha package. Two multi-component counties and three multi-ring
+districts were excluded under the single-ring contract. The
+[immutable report](https://github.com/bgtnt/polylinekit/blob/5ef33e8e0f11ba955cf8fc078e91dc87a325f7b3/examples/RegionCoverage/INTERSECTION-RESULTS.md)
+preserves all scopes, ranges, numerical checks, evidence hashes and reproduction
+commands. NTS agreement in that report is a diagnostic, not an exact oracle.
 
 ## Polygon annotation evaluation
 

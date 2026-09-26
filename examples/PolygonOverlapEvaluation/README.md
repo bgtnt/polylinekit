@@ -1,9 +1,15 @@
 # Evaluate predicted polygons against reference annotations
 
-This example measures intersection and IoU between building predictions and
-reference polygons in image coordinates. It reproduces the provided six-image
-Solaris/SpaceNet 2 evaluation sample and emits per-building scores, matches,
-per-image TP/FP/FN and pair diagnostics. It trains no model.
+Compare a model's building outlines with reference annotations to find missed
+buildings, extra detections and incorrectly covered areas. The example returns
+matches, IoU, missing/excess area, per-image TP/FP/FN and an interactive HTML
+review. It accepts the supplied six-image Solaris/SpaceNet 2 evaluation sample
+or your own polygon JSON in the same image coordinates.
+
+The supplied sample reproduces all 172 reference scores. This demonstrates a
+usable evaluation workflow; the [measured complete evaluator](RESULTS.md) is
+effectively tied with Clipper2 and allocates 15.8% fewer bytes. Its prepared
+intersection batch is slower than Clipper2. No model training is included.
 
 ## Run
 

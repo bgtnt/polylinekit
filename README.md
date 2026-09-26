@@ -5,6 +5,24 @@ dependencies** in the core. Includes self-intersecting paths with explicit fill
 rules, plus normalization, resampling and alignment. Supports **.NET Standard 2.0**
 and **.NET 10**. MIT licensed.
 
+## Applications
+
+| Developer task | Result | Runnable example |
+|---|---|---|
+| Check a model's building outlines against reference annotations | Matched and missed buildings, false detections, IoU, missing/excess area and an interactive HTML review | [Building annotation evaluation](examples/PolygonOverlapEvaluation/README.md) |
+| Calculate how much of one territory lies in another | Shared square metres and the fraction of each county covered by a congressional district | [Territorial coverage](examples/RegionCoverage/README.md) |
+| Check a contour after simplification | Changed filled area and overlays of the original and simplified boundary | [Simplification change](examples/AreaChange/README.md) |
+
+For annotations and territorial coverage, positions are part of the question:
+keep the supplied coordinates. RMS between boundary samples does not supply
+intersection, missing area or coverage. Normalization and alignment are separate
+tools for applications where moving or resizing a shape is intentional.
+
+These are implemented integration examples with recorded checks and measurements;
+they do not establish external production adoption. The building evaluator shows
+the most complete review workflow. The territorial example has a recorded speed
+advantage for its coverage workload. See [the scenario-specific evidence](docs/performance.md#recorded-results-by-scenario).
+
 ## Add to your application
 
 Choose `PolylineKit.Core` for numeric areas, intersection and coverage. Version
@@ -96,8 +114,10 @@ A dense integer crossing grid shows a smaller **1.65–3.03×** advantage. These
 compare one area result with preloaded Clipper2 C# producing filled contours.
 
 Real workloads give a different picture: a nine-ring county-area batch was about
-**1.3× faster**, while the prepared building-pair intersection batch was **12%
-slower** than Clipper2; complete building-evaluator times were effectively tied.
+**1.3× faster**. A separate historical county/district coverage workload took
+**26–29% less time**, including the measured preparation-inclusive cases.
+The prepared building-pair intersection batch was **12% slower** than Clipper2;
+complete building-evaluator times were effectively tied.
 See [the scenario table, reproduction commands and limits](docs/performance.md#recorded-results-by-scenario)
 before choosing for your workload. A trusted simple ring needs only a shoelace sum;
 the star result does not establish an advantage for that narrower operation.
