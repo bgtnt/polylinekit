@@ -12,7 +12,9 @@ if (git status --porcelain) { throw 'Commit source changes before timing.' }
 if ((git rev-parse HEAD) -ne $Revision) { throw 'Working source is not the requested revision.' }
 $binary = [System.IO.File]::ReadAllBytes($runnerPath)
 if (![System.Text.Encoding]::UTF8.GetString($binary).Contains("1.0.0+$Revision")) { throw 'Binary does not embed the requested source revision.' }
-if (Test-Path -LiteralPath (Join-Path $outputPath 'run-1.json')) { throw 'Existing measurements will not be overwritten.' }
+if ((Test-Path -LiteralPath $outputPath) -and (Get-ChildItem -LiteralPath $outputPath -Force | Select-Object -First 1)) {
+    throw 'Use a new or empty output directory; existing measurement files will not be overwritten.'
+}
 $hash = (Get-FileHash -LiteralPath $runnerPath -Algorithm SHA256).Hash.ToLowerInvariant()
 $oldTiering = $env:DOTNET_TieredCompilation
 $runCommand = if ($Suite -eq 'Synthetic') { 'synthetic-run' } else { 'run' }

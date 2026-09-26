@@ -6,6 +6,9 @@ It complements the [real-contour benchmark](README.md) and
 It is a deliberate selection of five historical cells, not a random population,
 an application benchmark or a universal performance ranking.
 
+See [the recorded results](SYNTHETIC-RESULTS.md) for the measured revision,
+per-method timings, allocation counts and process ranges.
+
 ## Inputs and operation
 
 | Input | Supplied vertices | Geometry | Fills |

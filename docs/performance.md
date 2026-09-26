@@ -42,6 +42,60 @@ implementations. Clipper uses quantized coordinates and produces contours;
 an area-only result is not interchangeable with that output. Warm measurements
 exclude initialization and retained storage.
 
+## Recorded results by scenario
+
+The advantage depends on both geometry and the requested operation. The table
+compares with **Clipper2 C# 2.0.0**. Times are medians of three process medians;
+the ratio is **Clipper time / Core time**, so a value above 1 favors Core.
+The rows are different workloads, not values to average into one speedup.
+
+| Workload and requested result | Core µs | Clipper µs | Clipper / Core |
+|---|---:|---:|---:|
+| Simple spiky star, 4096 vertices: NonZero area | 2193.412 | 56820.700 | **25.91×** |
+| Dense integer grid, 512 vertices: NonZero area | 3057.537 | 5039.538 | **1.65×** |
+| Same grid: EvenOdd area | 2945.356 | 8933.675 | **3.03×** |
+| Repeated square, 512 vertices: NonZero area | 29.726 | 493.163 | **16.59×** |
+| Same repeated square: EvenOdd area | 28.382 | 1272.256 | **44.83×** |
+| Nine Census rings: batch of NonZero areas | 1470.731 | 1914.525 | **1.30×** |
+| Solaris: prepared intersection batch, 205 pairs | 2308 | 2062 | **0.89×** |
+
+The first five rows measure `PolylineArea.FilledArea` in
+[`cc888de`](../benchmarks/PolylineKit.AreaBenchmarks/SYNTHETIC-RESULTS.md).
+They are selected synthetic cases, with all inputs and
+[commands to reproduce](../benchmarks/PolylineKit.AreaBenchmarks/SYNTHETIC.md)
+in the repository. The Census row is the recorded `eea1671` result detailed below;
+the Solaris row is the recorded `2019112` application result. All used .NET 10.0.12
+on Windows x64. None is a measurement of a subsequently packed release.
+
+For single-area rows, the Clipper comparator excludes conversion and Add, then
+times Union under the chosen fill rule plus summation of output area. The Solaris
+row measures the application's prepared intersection workload, including its
+shared touching/disjoint predicate for zero-area pairs. Output and coordinate
+contracts differ: Core returns numeric areas on the supplied double coordinates;
+Clipper constructs contours on its integer grid. These are not C++ measurements.
+
+The large synthetic gains have distinct explanations:
+
+- **The star has no self-intersections.** The engine certifies its simple boundary
+  and uses a simpler area calculation. If the application already guarantees a
+  simple ring, a direct shoelace sum is the cheaper relevant alternative; that
+  narrower operation is not benchmarked here.
+- **The grid mixes crossings, contacts and repeated edges.** Its 512 supplied
+  vertices visit 64 distinct integer points. It qualifies for the integer sweep;
+  the measured 1.65–3.03× gain does not establish the same result for every dense
+  self-intersecting path.
+- **The square traverses the same four edges 128 times.** NonZero area is 49;
+  EvenOdd area is 0. Its 16.59–44.83× gain uses the integer specialization, not
+  the general four-integral engine. Recognizing and reducing this constructed
+  repetition before clipping was not measured.
+
+These optimizations remain reachable through the public method. The selected
+integer route does not apply to pairwise intersection, arbitrary double inputs
+or the portable assembly. All public warm samples in this five-cell measurement
+allocated zero bytes; first calls, different inputs and oversized workspaces can
+allocate. The [complete record](../benchmarks/PolylineKit.AreaBenchmarks/SYNTHETIC-RESULTS.md)
+also shows the slower general-engine cases, process ranges and allocation costs.
+
 ## Measured real contours
 
 On the [nine-ring Census workload](../benchmarks/PolylineKit.AreaBenchmarks/README.md#recorded-real-contour-result-primary-gate-passed),

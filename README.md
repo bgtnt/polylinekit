@@ -88,6 +88,20 @@ Alignment minimizes sampled squared distances. Area measures accumulated region
 difference; it does not bound maximum boundary displacement or identify every
 distinct stroke. Choose invariances such as rotation or scaling to suit your data.
 
+## Performance by scenario
+
+`FilledArea` has large measured wins over Clipper2 on selected synthetic shapes:
+about **26×** on a simple spiky star and **17–45×** on a repeatedly traced square.
+A dense integer crossing grid shows a smaller **1.65–3.03×** advantage. These
+compare one area result with preloaded Clipper2 C# producing filled contours.
+
+Real workloads give a different picture: a nine-ring county-area batch was about
+**1.3× faster**, while the prepared building-pair intersection batch was **12%
+slower** than Clipper2; complete building-evaluator times were effectively tied.
+See [the scenario table, reproduction commands and limits](docs/performance.md#recorded-results-by-scenario)
+before choosing for your workload. A trusted simple ring needs only a shoelace sum;
+the star result does not establish an advantage for that narrower operation.
+
 ## Input and numerical limits
 
 - Filled-area methods accept one ordered walk per operand, with at least three
