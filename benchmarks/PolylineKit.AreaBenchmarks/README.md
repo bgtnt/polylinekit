@@ -5,6 +5,11 @@ It references only the area library and benchmark-only Clipper2 2.0.0; the retir
 runners are not build dependencies. See [the fixed protocol](PROTOCOL.md) and
 [fixture provenance](data/README.md).
 
+The same executable also provides a separate [selected-shapes suite](SYNTHETIC.md)
+for a simple spiky star, a dense integer grid and a repeated square. Those five
+synthetic cells exercise different optimization paths; they are not included in
+the Census population, its batch timings or its preservation criterion.
+
 From the repository root:
 
 ```powershell

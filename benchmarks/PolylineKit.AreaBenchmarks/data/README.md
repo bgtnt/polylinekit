@@ -38,3 +38,14 @@ No separate rings are joined with synthetic connector edges. Every ring's area i
 independently, including both Washington County rings; their relationship is not interpreted
 as a county union or hole hierarchy. The service geometry can include water boundaries and
 source generalization. Its coordinates are test inputs, not cadastral or survey truth.
+
+## Separate synthetic grid fixture
+
+`synthetic-grid.json` belongs only to the [selected-shapes suite](../SYNTHETIC.md),
+not the Census population. It preserves the `frozen-grid-256` input from
+PolylineKit's MIT-licensed [filled-area integration experiment](https://github.com/bgtnt/polylinekit/blob/5ef33e8e0f11ba955cf8fc078e91dc87a325f7b3/benchmarks/PolylineKit.ScanbeamBenchmarks/FILLED-AREA-RESULTS.md).
+The name refers to two original 256-vertex paths; the tested closed walk contains
+512 supplied vertices and 64 distinct integer points. Vertex order and duplicates
+are preserved. Its `Point2[]` JSON serialization SHA-256 is
+`548c4085dc2e69b087d4f5a23aeb8903f12428eceb84a79eb818f7b3c35c6c31`.
+The runner checks that coordinate hash independently of JSON whitespace.

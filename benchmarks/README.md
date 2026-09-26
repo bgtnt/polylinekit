@@ -19,6 +19,19 @@ dotnet run --project benchmarks/PolylineKit.AreaBenchmarks -c Release -- check a
 
 Follow its [protocol and commands](PolylineKit.AreaBenchmarks/README.md) for timing.
 
+## Selected single-area shapes
+
+The same runner's [selected-shapes suite](PolylineKit.AreaBenchmarks/SYNTHETIC.md)
+measures a simple spiky star, a dense crossing grid and a repeated square. It
+distinguishes general-engine and integer-specialization gains, compares with
+preloaded Clipper2, and reports every method's warm allocations. The five cells
+are selected synthetic cases; use the real-contour and application evaluations
+alongside them. All inputs are generated or included in the repository.
+
+```sh
+dotnet run --project benchmarks/PolylineKit.AreaBenchmarks -c Release -- synthetic-check artifacts/selected-shapes-check
+```
+
 ## Graphs, transforms and engine costs
 
 The general runner provides graph, transformation, winding and Clipper suites:

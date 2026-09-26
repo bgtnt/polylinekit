@@ -1,7 +1,8 @@
 param(
     [Parameter(Mandatory=$true)][string]$Revision,
     [Parameter(Mandatory=$true)][string]$Runner,
-    [Parameter(Mandatory=$true)][string]$Output
+    [Parameter(Mandatory=$true)][string]$Output,
+    [ValidateSet('Real', 'Synthetic')][string]$Suite = 'Real'
 )
 $ErrorActionPreference = 'Stop'
 if ($Revision -notmatch '^[0-9a-fA-F]{40}$') { throw 'Supply a full measured commit SHA.' }
@@ -14,19 +15,21 @@ if (![System.Text.Encoding]::UTF8.GetString($binary).Contains("1.0.0+$Revision")
 if (Test-Path -LiteralPath (Join-Path $outputPath 'run-1.json')) { throw 'Existing measurements will not be overwritten.' }
 $hash = (Get-FileHash -LiteralPath $runnerPath -Algorithm SHA256).Hash.ToLowerInvariant()
 $oldTiering = $env:DOTNET_TieredCompilation
+$runCommand = if ($Suite -eq 'Synthetic') { 'synthetic-run' } else { 'run' }
+$summaryCommand = if ($Suite -eq 'Synthetic') { 'synthetic-summarize' } else { 'summarize' }
 try {
     $env:DOTNET_TieredCompilation = '0'
     New-Item -ItemType Directory -Path $outputPath -Force | Out-Null
     $launches = @()
     foreach ($run in 1..3) {
         $start = [DateTimeOffset]::UtcNow.ToString('o')
-        dotnet $runnerPath run $outputPath $run $Revision | Tee-Object -FilePath (Join-Path $outputPath "run-$run-console.txt")
+        dotnet $runnerPath $runCommand $outputPath $run $Revision | Tee-Object -FilePath (Join-Path $outputPath "run-$run-console.txt")
         $code = $LASTEXITCODE
         $launches += [pscustomobject]@{ Run=$run; Revision=$Revision; HarnessHash=$hash; StartedUtc=$start; FinishedUtc=[DateTimeOffset]::UtcNow.ToString('o'); ExitCode=$code }
         $launches | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $outputPath 'process-order.json')
         if ($code) { throw "Benchmark process $run failed." }
         if ((Get-FileHash -LiteralPath $runnerPath -Algorithm SHA256).Hash.ToLowerInvariant() -ne $hash) { throw 'Measured binary changed.' }
     }
-    dotnet $runnerPath summarize $outputPath
+    dotnet $runnerPath $summaryCommand $outputPath
     if ($LASTEXITCODE) { throw 'Evidence validation failed.' }
 } finally { $env:DOTNET_TieredCompilation = $oldTiering }

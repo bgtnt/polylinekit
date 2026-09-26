@@ -40,6 +40,8 @@ jobs:
           dotnet run --project examples/PolygonOverlapEvaluation -c Release --no-build -- benchmark-smoke examples/PolygonOverlapEvaluation/data/generated/solaris.json artifacts/polygon-overlap-ci-smoke.json 1 $revision
       - name: Public area benchmark contracts (no timing)
         run: dotnet run --project benchmarks/PolylineKit.AreaBenchmarks -c Release --no-build -- check artifacts/area-ci-check
+      - name: Selected shape inputs and area contracts (no timing)
+        run: dotnet run --project benchmarks/PolylineKit.AreaBenchmarks -c Release --no-build -- synthetic-check artifacts/selected-shapes-ci-check
       - name: Standalone and precompiled consumer compatibility
         run: ./scripts/verify-consumers.ps1
         shell: pwsh

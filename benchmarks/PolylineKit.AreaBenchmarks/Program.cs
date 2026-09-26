@@ -8,7 +8,7 @@ using PolylineKit;
 
 namespace PolylineKit.AreaBenchmarks;
 
-internal static class Program
+internal static partial class Program
 {
     private const double Scale = 1e6;
     private static readonly JsonSerializerOptions Json = new() { WriteIndented = true };
@@ -36,8 +36,11 @@ internal static class Program
             case "check" when args.Length == 2: Validate(Corpus.Load(), args[1]); return 0;
             case "run" when args.Length == 4: MeasureRun(args[1], int.Parse(args[2]), args[3]); return 0;
             case "summarize" when args.Length == 2: Summarize(args[1]); return 0;
+            case "synthetic-check" when args.Length == 2: ValidateSynthetic(SyntheticInputs(), args[1]); return 0;
+            case "synthetic-run" when args.Length == 4: MeasureSyntheticRun(args[1], int.Parse(args[2]), args[3]); return 0;
+            case "synthetic-summarize" when args.Length == 2: SummarizeSynthetic(args[1]); return 0;
             default:
-                Console.Error.WriteLine("check <output> | run <output> <1..3> <commit> | summarize <output>");
+                Console.Error.WriteLine("check <output> | run <output> <1..3> <commit> | summarize <output> (prefix commands with synthetic- for synthetic cases)");
                 return 2;
         }
     }
