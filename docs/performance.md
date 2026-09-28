@@ -51,7 +51,7 @@ exclude initialization and retained storage.
 ### Complete regions with holes and disconnected components
 
 The public prepared-region API was measured at
-[`78126b2`](https://github.com/bgtnt/polylinekit/commit/78126b22b9f75ad79df6f7661ef7e9ec5cb8d76d)
+[`6de6d38`](https://github.com/bgtnt/polylinekit/commit/6de6d38e9c86f5402d77346531a5b3917256e7c7)
 on all **100 counties and 14 districts**, with their 123 rings and one hole.
 Each direction traverses 1,400 pairs, including 285 common bounds candidates.
 Unlike the older single-walk example below, no feature is excluded. This is the
@@ -59,26 +59,28 @@ complete population of the same frozen source, not an independent new dataset.
 
 | Direction, warm complete traversal | Core ms | Clipper2 C# ms | NTS ms | Clipper / Core |
 |---|---:|---:|---:|---:|
-| County → district | 13.625 | 19.006 | 44.961 | 1.39× |
-| District → county | 13.051 | 19.451 | 46.020 | 1.49× |
+| County → district | 14.031 | 20.161 | 48.184 | 1.44× |
+| District → county | 13.352 | 19.885 | 48.441 | 1.49× |
 
-Core preparation takes approximately **1.59 ms**, compared with 0.60 ms
-for Clipper and 0.40 ms for NTS. It computes own areas through its general fill
+Core preparation takes approximately **1.63 ms**, compared with 0.66 ms
+for Clipper and 0.44 ms for NTS. It computes own areas through its general fill
 operation; the validated polygon hierarchy lets the comparators use signed
 shell/hole areas. Including preparation and one full traversal, Core still takes
-approximately **22–25% less time** than reused Clipper inputs. Warm traversals
+approximately **24–25% less time** than reused Clipper inputs. Warm traversals
 allocate **0 B** in Core, 878,096 B in Clipper and 36,271,104 B in NTS on the
 measuring thread. Preparation, retained storage and cold calls are excluded
 from those warm allocation figures; workspace retention is bounded.
 
-Spatial ring grouping and linear component packing reduce warm time by
-**3.53–5.10×** against the previous implementation at 1,024 generated rings per
-operand. The baseline was rebuilt and measured in the same session with the
-unchanged benchmark and protocol. This improvement does not establish parity
-with Clipper: disjoint squares and shell/hole collections still take
-**31–44% longer for warm queries**, or **72–111% longer including preparation**.
-Some small generated cases take 8–12% longer than the baseline. The full report
-includes those regressions and every measured scope.
+Leaves containing up to four ring bounds and one join per unordered pair reduce
+warm time by **6–10%** across the eight generated cases versus the previous
+one-ring-leaf hierarchy (`70291d2`). The 1,024-ring cases improve by **7–9%**;
+the complete GIS results are effectively unchanged. Both revisions were rebuilt
+and measured in one coordinated session with the same benchmark and protocol.
+Disjoint squares and shell/hole collections at 1,024 rings per operand still take
+**18–34% longer than Clipper for warm queries**, or **46–97% longer including
+preparation**. At 16 rings with holes, warm Core and Clipper times are close:
+17.706 versus 18.009 microseconds. The full report includes every measured scope
+and process range.
 
 Grouping builds a bounds hierarchy in O(R log² R) time; heavily overlapping
 bounds can still require O(R²) query work. Component packing takes O(R+N) time.
@@ -91,7 +93,9 @@ and [fixed reproduction protocol](../tests/PolylineKit.MultiRingChecks/PROTOCOL.
 The comparison uses Clipper2 C# 2.0.0 with reusable prepared inputs and NTS 2.6.0
 `OverlayNGRobust`, on Windows x64 / .NET 10.0.12. Three sequential processes per
 revision produce 2,700 samples across both revisions, including all backends,
-real and generated workloads. The backends have different output contracts:
+real and generated workloads. The cooperating local benchmark tasks were
+serialized with a shared host lock. Earlier uncoordinated attempts are excluded
+from these results. The backends have different output contracts:
 Core returns numbers in double coordinates, while the comparators construct
 geometry; Clipper uses a grid.
 

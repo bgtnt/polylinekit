@@ -120,13 +120,12 @@ distinct stroke. Choose invariances such as rotation or scaling to suit your dat
 ## Performance by scenario
 
 The complete county/district layers, including holes and disconnected components,
-took **22–25% less time** than reusable prepared Clipper2 C# with preparation plus
-one full traversal. Warm prepared traversals were **1.39–1.49× faster** and allocated
-0 B on the measured thread. Preparation alone was slower. Spatial ring grouping
-reduced warm time by **3.53–5.10×** versus the previous implementation at 1,024
-generated rings per operand. These cases still took **31–44% longer than Clipper**
-(**72–111% longer** including preparation). Some small generated cases regressed
-by 8–12%; this is not an improvement for every input.
+took **24–25% less time** than reusable prepared Clipper2 C# with preparation plus
+one full traversal. Warm prepared traversals were **1.44–1.49× faster** and allocated
+0 B on the measured thread. Preparation alone was slower. At 1,024 generated
+rings per operand, warm comparisons took **18–34% longer than Clipper**
+(**46–97% longer** including preparation). Performance depends on component
+count, geometry and input reuse; there is no universal speed advantage.
 See the [prepared-region assessment](tests/PolylineKit.MultiRingChecks/RESULTS.md).
 
 Earlier single-walk application measurements remain separate:
