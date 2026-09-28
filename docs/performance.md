@@ -51,7 +51,7 @@ exclude initialization and retained storage.
 ### Complete regions with holes and disconnected components
 
 The public prepared-region API was measured at
-[`9cb0813`](https://github.com/bgtnt/polylinekit/commit/9cb08131e42ba84cf96190db20c60ae893afa969)
+[`78126b2`](https://github.com/bgtnt/polylinekit/commit/78126b22b9f75ad79df6f7661ef7e9ec5cb8d76d)
 on all **100 counties and 14 districts**, with their 123 rings and one hole.
 Each direction traverses 1,400 pairs, including 285 common bounds candidates.
 Unlike the older single-walk example below, no feature is excluded. This is the
@@ -59,32 +59,41 @@ complete population of the same frozen source, not an independent new dataset.
 
 | Direction, warm complete traversal | Core ms | Clipper2 C# ms | NTS ms | Clipper / Core |
 |---|---:|---:|---:|---:|
-| County → district | 13.756 | 19.667 | 44.770 | 1.43× |
-| District → county | 13.387 | 18.744 | 45.136 | 1.40× |
+| County → district | 13.625 | 19.006 | 44.961 | 1.39× |
+| District → county | 13.051 | 19.451 | 46.020 | 1.49× |
 
-Core preparation takes approximately **1.55–1.57 ms**, compared with 0.59–0.60 ms
+Core preparation takes approximately **1.59 ms**, compared with 0.60 ms
 for Clipper and 0.40 ms for NTS. It computes own areas through its general fill
 operation; the validated polygon hierarchy lets the comparators use signed
 shell/hole areas. Including preparation and one full traversal, Core still takes
-approximately **20–23% less time** than reused Clipper inputs. Warm traversals
+approximately **22–25% less time** than reused Clipper inputs. Warm traversals
 allocate **0 B** in Core, 878,096 B in Clipper and 36,271,104 B in NTS on the
 measuring thread. Preparation, retained storage and cold calls are excluded
 from those warm allocation figures; workspace retention is bounded.
 
-This result does not extend to arbitrary component counts. At 1,024 rings per
-operand, generated disjoint squares and shell/hole collections take about
-**4.7–7.3 times longer than Clipper for warm queries**, or **5.2–9.0 times longer
-including preparation and one query**. The current O(R²) grouping and packing are a
-scalability limit. NTS's configured robust geometry overlay remains slower in
-these measured cases. No general backend ranking is implied.
+Spatial ring grouping and linear component packing reduce warm time by
+**3.53–5.10×** against the previous implementation at 1,024 generated rings per
+operand. The baseline was rebuilt and measured in the same session with the
+unchanged benchmark and protocol. This improvement does not establish parity
+with Clipper: disjoint squares and shell/hole collections still take
+**31–44% longer for warm queries**, or **72–111% longer including preparation**.
+Some small generated cases take 8–12% longer than the baseline. The full report
+includes those regressions and every measured scope.
+
+Grouping builds a bounds hierarchy in O(R log² R) time; heavily overlapping
+bounds can still require O(R²) query work. Component packing takes O(R+N) time.
+The hierarchy is rebuilt per evaluation, rather than cached in `PreparedRegion`.
+NTS's configured robust geometry overlay remains slower in these measured query
+cases. No general backend ranking is implied.
 
 See the [complete results, ranges and allocations](../tests/PolylineKit.MultiRingChecks/RESULTS.md)
 and [fixed reproduction protocol](../tests/PolylineKit.MultiRingChecks/PROTOCOL.md).
 The comparison uses Clipper2 C# 2.0.0 with reusable prepared inputs and NTS 2.6.0
-`OverlayNGRobust`, on Windows x64 / .NET 10.0.12. Three sequential processes
-produce 1,350 samples across real and generated workloads. Neither backend
-produces exactly the same output contract: Core returns numbers in double
-coordinates, while the comparators construct geometry; Clipper uses a grid.
+`OverlayNGRobust`, on Windows x64 / .NET 10.0.12. Three sequential processes per
+revision produce 2,700 samples across both revisions, including all backends,
+real and generated workloads. The backends have different output contracts:
+Core returns numbers in double coordinates, while the comparators construct
+geometry; Clipper uses a grid.
 
 ### Earlier single-walk and application measurements
 

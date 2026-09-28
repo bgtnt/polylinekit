@@ -147,9 +147,9 @@ prototype returned `1.9073486328125e-6`, approximately **2.37% low**. Compensate
 summation could not restore information already lost when forming each term.
 
 The retained implementation groups rings by inclusive bounding-box overlap.
-Nested, touching and crossing rings stay together. Different groups have no
-overlapping bounds, so their winding fields are independent and each group's
-weighted boundary chains close. Each group can safely use its own area origins;
+Nested, touching and crossing rings stay together. No constituent ring bound
+intersects a ring bound in another group, so their winding fields are independent
+and each group's weighted boundary chains close. Each group can safely use its own area origins;
 the resulting areas are added with compensation. This is different from giving
 each input ring its own origin when its weighted chain may be open.
 
@@ -166,14 +166,17 @@ of other rings. Crossing another ring of the same operand updates that operand's
 winding. Collinear pieces are netted across the complete interacting group.
 Single-ring certification and integer specialization are bypassed on this route.
 
-Grouping/packing costs O(R²) in the current simple implementation. Seed work costs
+At the feasibility revision `e05d5bb`, grouping/packing cost O(R²). Current
+grouping and packing costs are described in the
+[region guide](../../docs/regions.md#costs-and-numerical-limits). Seed work costs
 O(sum(Rg * Ng)) over groups, in addition to crossing discovery and accumulation.
 Ring descriptors and group metadata allocate; there is **no zero-allocation or
 speed claim** for this prototype. Large numbers of mutually overlapping rings
 remain an unmeasured workload. Existing public one-walk paths remain separate;
 their API snapshot and regression suite pass in all five existing runtime modes.
 
-The assessment supports continuing toward a public region API. Before exposing it:
+The feasibility assessment identified the following work, now implemented and
+measured through the public API described at the top of this page:
 
 1. Define an explicit region input type and distinguish shell/hole hierarchy from
    arbitrary winding rings. Preserve the existing one-walk API and its validation.
