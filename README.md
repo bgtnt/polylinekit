@@ -119,8 +119,15 @@ distinct stroke. Choose invariances such as rotation or scaling to suit your dat
 
 ## Performance by scenario
 
-The county/district coverage repeat with the current Core took **24–26% less
-time** than reusable prepared Clipper2 C#, including preparation plus one traversal.
+The complete county/district layers, including holes and disconnected components,
+took **20–23% less time** than reusable prepared Clipper2 C# with preparation plus
+one full traversal. Warm prepared traversals were **1.40–1.43× faster** and allocated
+0 B on the measured thread. Preparation alone was slower. With 1,024 generated
+rings per operand, Core's warm queries were **4.7–7.3× slower** than Clipper
+(**5.2–9.0×** including preparation); ring grouping currently has quadratic cost.
+See the [prepared-region assessment](tests/PolylineKit.MultiRingChecks/RESULTS.md).
+
+Earlier single-walk application measurements remain separate:
 Complete building-evaluator times were effectively tied, with **15.8% fewer
 allocated bytes**; its prepared intersection batch was **12% slower** than Clipper2.
 The complete evaluator was **3.05× faster** than the configured NetTopologySuite

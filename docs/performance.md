@@ -5,6 +5,10 @@ avoids calculating unused own/union/XOR areas. `PolylineArea.FilledArea` returns
 one fill; `CompareRegions` calculates the complete region comparison. None of
 these constructs output contours. Contour-producing methods have different costs.
 
+For multiple rings, use `RegionArea.IntersectionArea` or `RegionArea.Compare`
+with immutable `PreparedRegion` inputs. Preparation caches validated coordinates
+and bounds, not a spatial index, own areas or pairwise results.
+
 ## What affects execution time
 
 | Input or operation | Relevant cost |
@@ -44,6 +48,46 @@ exclude initialization and retained storage.
 
 ## Recorded results by scenario
 
+### Complete regions with holes and disconnected components
+
+The public prepared-region API was measured at
+[`9cb0813`](https://github.com/bgtnt/polylinekit/commit/9cb08131e42ba84cf96190db20c60ae893afa969)
+on all **100 counties and 14 districts**, with their 123 rings and one hole.
+Each direction traverses 1,400 pairs, including 285 common bounds candidates.
+Unlike the older single-walk example below, no feature is excluded. This is the
+complete population of the same frozen source, not an independent new dataset.
+
+| Direction, warm complete traversal | Core ms | Clipper2 C# ms | NTS ms | Clipper / Core |
+|---|---:|---:|---:|---:|
+| County → district | 13.756 | 19.667 | 44.770 | 1.43× |
+| District → county | 13.387 | 18.744 | 45.136 | 1.40× |
+
+Core preparation takes approximately **1.55–1.57 ms**, compared with 0.59–0.60 ms
+for Clipper and 0.40 ms for NTS. It computes own areas through its general fill
+operation; the validated polygon hierarchy lets the comparators use signed
+shell/hole areas. Including preparation and one full traversal, Core still takes
+approximately **20–23% less time** than reused Clipper inputs. Warm traversals
+allocate **0 B** in Core, 878,096 B in Clipper and 36,271,104 B in NTS on the
+measuring thread. Preparation, retained storage and cold calls are excluded
+from those warm allocation figures; workspace retention is bounded.
+
+This result does not extend to arbitrary component counts. At 1,024 rings per
+operand, generated disjoint squares and shell/hole collections take about
+**4.7–7.3 times longer than Clipper for warm queries**, or **5.2–9.0 times longer
+including preparation and one query**. The current O(R²) grouping and packing are a
+scalability limit. NTS's configured robust geometry overlay remains slower in
+these measured cases. No general backend ranking is implied.
+
+See the [complete results, ranges and allocations](../tests/PolylineKit.MultiRingChecks/RESULTS.md)
+and [fixed reproduction protocol](../tests/PolylineKit.MultiRingChecks/PROTOCOL.md).
+The comparison uses Clipper2 C# 2.0.0 with reusable prepared inputs and NTS 2.6.0
+`OverlayNGRobust`, on Windows x64 / .NET 10.0.12. Three sequential processes
+produce 1,350 samples across real and generated workloads. Neither backend
+produces exactly the same output contract: Core returns numbers in double
+coordinates, while the comparators construct geometry; Clipper uses a grid.
+
+### Earlier single-walk and application measurements
+
 The advantage depends on both geometry and the requested operation. The table
 compares with **Clipper2 C# 2.0.0**. Times are medians of three process medians;
 the ratio is **Clipper time / Core time**, so a value above 1 favors Core.
@@ -61,7 +105,7 @@ The rows are different workloads, not values to average into one speedup.
 | Repeated square, 512 vertices: NonZero area | 29.726 | 493.163 | **16.59×** |
 | Same repeated square: EvenOdd area | 28.382 | 1272.256 | **44.83×** |
 
-Territorial coverage is the `2fe5f74` repeat with the current Core detailed below;
+Territorial coverage is the historical `2fe5f74` repeat detailed below;
 all four required warm/preparation-inclusive cells took **24–26% less time** than
 Clipper. The Solaris rows are the recorded `2019112` application result. Its
 complete evaluator times are effectively tied within observed process variation,
@@ -147,7 +191,7 @@ Measured source **`2fe5f74056590c7ce63cd7b34a6b0061e91f3fe7`**, three sequential
 processes and 540 samples. All four predeclared whole-traversal comparisons
 passed: intersection-only coverage took **24–26% less time** than direct
 reusable Clipper2, including preparation plus one traversal. The repeat uses the
-current Core and the same inputs, adapters and acceptance threshold as before.
+then-current Core at `2fe5f74` and the same inputs, adapters and acceptance threshold as before.
 
 | Zone / scope | Core ms | Clipper ms | Clipper / Core |
 |---|---:|---:|---:|

@@ -6,6 +6,14 @@ parallel reuse and all complete GIS features through that public API. The raw
 internal entry point remains a comparison path for analytic checks.
 [`PROTOCOL.md`](PROTOCOL.md) defines the separate preparation/reuse benchmark
 against Clipper2 and NTS. Timing is not a CI acceptance threshold.
+The [recorded prepared-region results](RESULTS.md) include the full real workload
+and generated 16–1,024-ring cases, including slower cases and setup costs.
+
+The prepared API passes **5,292 ownership/contract assertions**, alongside
+**16,204 analytic assertions** and **123,432 GIS numeric comparisons**, in all
+three runner modes: .NET 10, .NET 10 with SIMD disabled, and the .NET Standard
+2.0 assembly hosted on .NET 10. The last mode does not establish compatibility
+with every runtime that supports .NET Standard.
 
 ## Historical feasibility assessment
 
