@@ -19,7 +19,8 @@ internal static class GisChecks
     private static readonly GeometryFactory Factory = new();
     private sealed record RawFeature(string Id, string Name, string Type, Point2[][][] Parts);
     private sealed record Feature(string Id, string Name, Point2[][] Rings, Geometry Geometry, Paths64 Integer,
-        int Parts, int Holes, bool PreviouslyAdmitted);
+        int Parts, int Holes, bool PreviouslyAdmitted)
+    { internal PreparedRegion Prepared { get; } = PreparedRegion.FromRings(Rings); }
     private sealed record SourceHash(string File, int Bytes, string Sha256);
     private sealed record Values(double First, double Second, double Intersection, double Union, double Difference)
     {
@@ -121,13 +122,13 @@ internal static class GisChecks
                     Values expected = reversed ? reference.Reverse() : reference;
                     Values quantized = reversed ? clipper.Reverse() : clipper;
                     string pair = first.Id + "/" + second.Id;
-                    WindingOverlapResult result = MultiRingArea.Compare(first.Rings, second.Rings, rule);
+                    RegionOverlapResult result = RegionArea.Compare(first.Prepared, second.Prepared, rule);
                     pairCalls++;
                     var actual = new Values(result.FirstArea, result.SecondArea, result.IntersectionArea,
                         result.UnionArea, result.SymmetricDifferenceArea);
                     CompareValues("Core-vs-NTS", rule, pair, actual, expected);
                     CompareValues("Core-vs-Clipper64", rule, pair, actual, quantized);
-                    double selected = MultiRingArea.Intersection(first.Rings, second.Rings, rule);
+                    double selected = RegionArea.IntersectionArea(first.Prepared, second.Prepared, rule);
                     intersectionCalls++;
                     Check("Core-selected-vs-NTS", rule, "IntersectionM2", pair, selected, expected.Intersection);
                     Check("Core-selected-vs-full", rule, "IntersectionM2", pair, selected, actual.Intersection);
@@ -138,7 +139,7 @@ internal static class GisChecks
         foreach (Feature feature in counties.Concat(districts))
         foreach (PathFillRule rule in new[] { PathFillRule.NonZero, PathFillRule.EvenOdd })
             Check("Core-selected-vs-NTS", rule, "OwnAreaM2", feature.Id,
-                MultiRingArea.FilledArea(feature.Rings, rule), feature.Geometry.Area);
+                RegionArea.FilledArea(feature.Prepared, rule), feature.Geometry.Area);
         Require(candidates == 285 && newCandidates == 74, "Complete candidate inventory changed.");
 
         // This is a real hole/island complement, not a generated analytic fixture.
@@ -148,9 +149,9 @@ internal static class GisChecks
         double islandArea = Factory.CreatePolygon(Close(island)).Area;
         foreach (PathFillRule rule in new[] { PathFillRule.NonZero, PathFillRule.EvenOdd })
         {
-            Check("Core-real-hole", rule, "IslandAreaM2", "3702/island", MultiRingArea.FilledArea([island], rule), islandArea);
+            Check("Core-real-hole", rule, "IslandAreaM2", "3702/island", RegionArea.FilledArea(PreparedRegion.FromRings([island]), rule), islandArea);
             Check("Core-real-hole", rule, "HoleIntersectionM2", "3702-island/3713",
-                MultiRingArea.Intersection([island], district13.Rings, rule), 0);
+                RegionArea.IntersectionArea(PreparedRegion.FromRings([island]), district13.Prepared, rule), 0);
         }
         return new
         {

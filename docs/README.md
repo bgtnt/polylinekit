@@ -4,6 +4,7 @@
 |---|---|
 | Start using the library | [Quick start](../README.md) |
 | Measure areas, intersection, XOR, IoU or coverage | [Area methods](area.md) |
+| Measure regions with holes and disconnected components | [Prepared regions](regions.md) |
 | Normalize, resample or align | [Transformations](comparison-api.md) |
 | Generate contours or use quantized comparisons | [Optional Clipper adapter](clipper.md) |
 | Integrate vertical separation between graphs | [Graph-area formula](design.md) |
@@ -20,7 +21,8 @@
 - [Dependency and algorithm attribution](../THIRD-PARTY-NOTICES.md)
 
 For contributors: [multiple-ring feasibility and complete GIS checks](../tests/PolylineKit.MultiRingChecks/README.md)
-describe an internal prototype; multiple-ring inputs are not yet part of the supported API.
+record the multi-ring validation and measurement evidence. The current source
+exposes these operations through [PreparedRegion and RegionArea](regions.md).
 
 These details explain how the public methods work; they are not alternative
 APIs an application must select. Development studies remain in the

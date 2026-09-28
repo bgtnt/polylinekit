@@ -59,11 +59,11 @@ internal static partial class WindingEngine
         [ThreadStatic] private static Workspace? cached;
         internal const long MaxCachedArrayBytes = 4L * 1024 * 1024;
 #if NET10_0_OR_GREATER
-        private static readonly int CrossingBytes = Unsafe.SizeOf<Crossing>(), PieceBytes = Unsafe.SizeOf<Piece>();
+        private static readonly int CrossingBytes = Unsafe.SizeOf<Crossing>(), PieceBytes = Unsafe.SizeOf<Piece>(), RingSeedBytes = Unsafe.SizeOf<RingSeed>();
 #else
         // Conservative managed sizes for the portable layouts, including their padding. Primitive
         // arrays use their exact element widths below; headers and workspace objects are separate.
-        private const int CrossingBytes = 32, PieceBytes = 56;
+        private const int CrossingBytes = 32, PieceBytes = 56, RingSeedBytes = 24;
 #endif
 
         internal Point2[] Vertices = new Point2[256];
@@ -94,6 +94,12 @@ internal static partial class WindingEngine
         internal readonly double[] EdgeTerms = new double[MaxChains];
         internal readonly Sum[] Sums = new Sum[MaxChains];
         internal PreparedSimpleSweep? SimpleSweep;
+        internal int[] RingStarts = Array.Empty<int>(), RingParents = Array.Empty<int>();
+        internal RingBounds[] RegionBounds = Array.Empty<RingBounds>();
+        internal RingSeed[] RingSeeds = Array.Empty<RingSeed>();
+        // A child is owned by this workspace, used sequentially, and included in its retention budget.
+        // Renting/returning a separate child per component would allocate again on the next outer call.
+        internal Workspace? RegionGroup;
         // Internal experiment diagnostics: 0 bypassed, 1 rejected/budget exhausted, 2 certified.
         internal int SimpleSweepOutcome;
 
@@ -117,12 +123,21 @@ internal static partial class WindingEngine
         internal long RetainedArrayBytes =>
             16L * (Vertices.Length + (long)Origin.Length + Sums.Length) +
             sizeof(int) * (Next.Length + (long)Order.Length + MergeOrder.Length + Runs.Length + Candidates.Length +
-                Start.Length + CrossingOrder.Length + Slots.Length + Group.Length) +
+                Start.Length + CrossingOrder.Length + Slots.Length + Group.Length + RingStarts.Length + RingParents.Length) +
             sizeof(double) * (Keys.Length + (long)MergeKeys.Length + SweepMax.Length + SweepMinOther.Length +
                 SweepMaxOther.Length + CrossingKeys.Length + MinX.Length + MinY.Length + MaxX.Length + MaxY.Length + EdgeTerms.Length) +
             (long)Overlapping.Length + Used.Length +
             CrossingBytes * (Found.Length + (long)Sorted.Length) + (long)PieceBytes * Shared.Length +
-            (SimpleSweep?.RetainedArrayBytes ?? 0);
+            32L * RegionBounds.Length + (long)RingSeedBytes * RingSeeds.Length +
+            (SimpleSweep?.RetainedArrayBytes ?? 0) + (RegionGroup?.RetainedArrayBytes ?? 0);
+
+        internal void RingBuffers(int rings)
+        {
+            if (RingStarts.Length < checked(rings + 1)) RingStarts = new int[Grow(checked(rings + 1))];
+            if (RingParents.Length < rings) RingParents = new int[Grow(rings)];
+            if (RegionBounds.Length < rings) RegionBounds = new RingBounds[Grow(rings)];
+            if (RingSeeds.Length < rings) RingSeeds = new RingSeed[Grow(rings)];
+        }
 
         /// <summary>Vertex storage with at least the requested capacity.</summary>
         internal Point2[] VertexBuffer(int capacity)

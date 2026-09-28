@@ -84,6 +84,17 @@ public static class PolylineKit.PolylineNormalization
 public static class PolylineKit.PolylineSampling
   public static PolylineKit.Point2[] ResampleByArcLength(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> path, System.Int32 sampleCount = 64, System.Boolean closed = false)
 
+public class PolylineKit.PreparedRegion
+  public System.Int32 RingCount { get; }
+  public System.Int32 VertexCount { get; }
+  public System.Nullable<PolylineKit.Bounds2D> Bounds { get; }
+  public static PolylineKit.PreparedRegion FromRings(System.Collections.Generic.IReadOnlyList<System.Collections.Generic.IReadOnlyList<PolylineKit.Point2>> rings)
+
+public static class PolylineKit.RegionArea
+  public static PolylineKit.RegionOverlapResult Compare(PolylineKit.PreparedRegion first, PolylineKit.PreparedRegion second, PolylineKit.PathFillRule fillRule = PolylineKit.PathFillRule.NonZero (0))
+  public static System.Double FilledArea(PolylineKit.PreparedRegion region, PolylineKit.PathFillRule fillRule = PolylineKit.PathFillRule.NonZero (0))
+  public static System.Double IntersectionArea(PolylineKit.PreparedRegion first, PolylineKit.PreparedRegion second, PolylineKit.PathFillRule fillRule = PolylineKit.PathFillRule.NonZero (0))
+
 public readonly struct PolylineKit.RegionOverlapResult
   public PolylineKit.PathFillRule FillRule { get; }
   public System.Double FirstArea { get; }

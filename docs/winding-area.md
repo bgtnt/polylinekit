@@ -4,6 +4,10 @@ This is the implementation reference. Applications should start with the
 [PolylineArea guide](area.md). Engine-specific APIs below remain available for
 advanced integrals and compatibility.
 
+For a collection of independently closed rings, use the current source's
+[PreparedRegion and RegionArea API](regions.md). Its rings contribute to a
+combined winding field; the single-walk APIs below retain their input contract.
+
 `WindingArea` computes area integrals directly from closed boundaries, without a decimal grid or polygon clipping. It returns areas, not resolved contours. The independent [PolylineKit.Core project](../src/PolylineKit.Core/README.md) has no external runtime dependencies; both `netstandard2.0` and `net10.0` expose the same API in namespace `PolylineKit`. Use the optional [Clipper adapter](clipper.md) when output boundaries are needed.
 
 ## Inputs and results
@@ -135,6 +139,23 @@ AppContext.SetSwitch("PolylineKit.DisableSimpleSweep", true);
 
 `PolylineKit.DisableSimd` similarly forces scalar dispatch. These process-wide switches change implementation choices, not the area definitions.
 
+### Multiple-ring regions
+
+`RegionArea` uses the boundary engine with a separate closure and initial winding
+seed for every ring. A seed includes the contributions of the other rings of
+its operand and all rings of the other operand. The selected rule is applied to
+each operand's combined winding field; crossings between rings of one operand
+update that same field. No artificial bridge joins rings.
+
+Rings whose inclusive bounds overlap are grouped transitively. Nested and
+touching rings therefore stay together. Disjoint groups can use separate area
+origins because they have no mutual winding contribution; assigning separate
+origins to arbitrary rings within a group would be unsafe. Grouping currently
+costs O(R²) bound checks, with additional O(Rg × Ng) seed work within each group.
+The single-walk simplicity check and integer specialization are bypassed.
+Preparation stores validated coordinates and bounds, not crossings or query
+results. See [contracts, examples and costs](regions.md).
+
 ### Bounded integer sweep
 
 The specialized `FilledArea` path sweeps between consecutive endpoint Y levels.
@@ -182,6 +203,8 @@ outer call does not displace a smaller cache returned by a nested call.
 The general engine's capacity accounting includes vertices, edges, crossings,
 per-edge sorted events and sort keys, netted chains and hash slots, bounds,
 merge/candidate buffers, and the optional simplicity certificate's arrays. The
+multi-ring route's ring metadata and group workspace are included in that same
+general-engine cache budget. The
 integer engine counts vertices, edges, levels, active order, positions, winding
 prefixes, last levels and crossings. Counts use allocated capacities, not used
 lengths. Array headers, fixed workspace/comparer objects and 264 bytes of

@@ -90,13 +90,18 @@ Run the [package-based example](examples/PackageCoverage) for checked results.
 | You need | Method |
 |---|---|
 | Area filled by one closed path | `PolylineArea.FilledArea(path, fillRule)` |
-| Area shared by two regions | `PolylineArea.IntersectionArea(first, second, fillRule)` |
-| Region change, union, XOR, IoU or Jaccard distance | `PolylineArea.CompareRegions(first, second, fillRule)` |
+| Area shared by two single-walk regions | `PolylineArea.IntersectionArea(first, second, fillRule)` |
+| Single-walk region change, union, XOR, IoU or Jaccard distance | `PolylineArea.CompareRegions(first, second, fillRule)` |
+| Regions with holes or disconnected components | [Prepare rings](docs/regions.md) with `PreparedRegion.FromRings`; use `RegionArea.FilledArea`, `IntersectionArea` or `Compare` |
 | Vertical separation between increasing-x graphs | `PolylineArea.BetweenGraphs(first, second)` |
 | Centering and scaling | `PolylineNormalization.ToUnitBounds(path)` / `MatchBounds(path, reference)` |
 | Equidistant samples along a path | `PolylineSampling.ResampleByArcLength(path)` |
 | Translation, rotation and optional uniform-scale alignment | `PolylineAlignment.FitSimilarity(moving, reference)` |
 | Resolved contours as well as area | Optional [Clipper adapter](docs/clipper.md): `PolylineComparison.EndpointBridgedArea(...)` / `FilledRegionDifference(...)`, with `includeContours: true` |
+
+The prepared-region API is available in the current source; earlier verified
+alpha binaries predate it. Each ring closes independently, with explicit fill
+semantics and no automatic shell/hole orientation.
 
 Normalization, alignment and measurement are separate operations. For example:
 
@@ -133,7 +138,7 @@ Reducing the repeated square to a minimal path before clipping was not measured.
 
 ## Input and numerical limits
 
-- Filled-area methods accept one ordered walk per operand, with at least three
+- `PolylineArea` filled-area methods accept one ordered walk per operand, with at least three
   vertices after consecutive duplicates and an optional closing duplicate are
   removed. Null, empty and too-short inputs throw; valid collinear walks can have zero area.
 - Coordinates must be finite and have magnitude at most `1e100`. Keep input
@@ -141,8 +146,10 @@ Reducing the repeated square to a minimal path before clipping was not measured.
 - Calculations use `double`. Exact geometric decisions do not make intersection
   positions or final areas exact. Tiny features near very large coordinates can
   lose precision. IoU/Jaccard are `null` when the union is not positive.
-- Each operand is one walk. Collections of rings, geodesic areas and polygon
-  offsets are not supported by these area methods.
+- `RegionArea` accepts [prepared collections of rings](docs/regions.md), including
+  empty regions. Each nonempty collection's rings follow the same vertex and
+  coordinate limits; NonZero holes require deliberate orientation.
+- These methods do not calculate geodesic areas or polygon offsets.
 
 Read the [area guide](docs/area.md) for fill rules, examples and contracts, or the
 [transformation guide](docs/comparison-api.md) for normalization and alignment.

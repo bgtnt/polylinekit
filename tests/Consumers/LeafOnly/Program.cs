@@ -20,6 +20,12 @@ foreach (PathFillRule rule in new[] { PathFillRule.NonZero, PathFillRule.EvenOdd
         throw new InvalidOperationException("Standalone filled-region values disagree with analytic squares.");
 }
 var bridge = WindingArea.EndpointBridged([new(0, 0), new(2, 0)], [new(0, 2), new(2, 2)]);
+Point2[] hole = [new(.5, .5), new(.5, 1.5), new(1.5, 1.5), new(1.5, .5)];
+PreparedRegion region = PreparedRegion.FromRings([square, hole]);
+PreparedRegion fullSquare = PreparedRegion.FromRings([square]);
+if (region.RingCount != 2 || region.VertexCount != 8 || RegionArea.FilledArea(region) != 3
+    || RegionArea.IntersectionArea(region, fullSquare) != 3 || RegionArea.Compare(region, fullSquare).IntersectionOverUnion != .75)
+    throw new InvalidOperationException("Standalone prepared shell/hole metrics are incorrect.");
 if (bridge.NonZero != 4) throw new InvalidOperationException("Standalone bridged area is incorrect.");
 if (PolylineArea.BetweenGraphs([new(0, 0), new(2, 0)], [new(0, 2), new(2, 2)]) != 4)
     throw new InvalidOperationException("Standalone graph area is incorrect.");

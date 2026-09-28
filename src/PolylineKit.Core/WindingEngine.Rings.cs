@@ -3,7 +3,7 @@ namespace PolylineKit;
 internal static partial class WindingEngine
 {
     // A seed belongs to a ring; its winding values aggregate every ring of its operand.
-    private readonly struct RingSeed
+    internal readonly struct RingSeed
     {
         internal RingSeed(int first, int count, int own, int other, bool isA)
         { First = first; Count = count; Own = own; Other = other; IsA = isA; }
@@ -12,15 +12,16 @@ internal static partial class WindingEngine
     }
 
     internal static WindingOverlapResult MultipleRings(Workspace ws, int[] starts, int ringSplit,
-        int split, PathFillRule rule, bool intersectionOnly)
+        int split, PathFillRule rule, bool intersectionOnly, int rings = -1, bool boundsReady = false)
     {
-        int rings = starts.Length - 1;
-        if (rings < 2) return ConnectedRings(ws, starts, ringSplit, split, rule, intersectionOnly);
-        var bounds = new RingBounds[rings];
-        var parents = new int[rings];
+        if (rings < 0) rings = starts.Length - 1;
+        ws.RingBuffers(rings);
+        if (rings < 2) return ConnectedRings(ws, starts, rings, ringSplit, split, rule, intersectionOnly);
+        var bounds = ws.RegionBounds;
+        var parents = ws.RingParents;
         for (int r = 0; r < rings; r++)
         {
-            bounds[r] = new RingBounds(ws.Vertices, starts[r], starts[r + 1]);
+            if (!boundsReady) bounds[r] = new RingBounds(ws.Vertices, starts[r], starts[r + 1]);
             parents[r] = r;
         }
         int groups = rings;
@@ -31,7 +32,7 @@ internal static partial class WindingEngine
                     int x = Root(a), y = Root(b);
                     if (x != y) { parents[x] = y; groups--; }
                 }
-        if (groups == 1) return ConnectedRings(ws, starts, ringSplit, split, rule, intersectionOnly);
+        if (groups == 1) return ConnectedRings(ws, starts, rings, ringSplit, split, rule, intersectionOnly);
         for (int r = 0; r < rings; r++) parents[r] = Root(r);
 
         // Disjoint closed bounds imply zero winding outside each group. All interacting rings
@@ -45,27 +46,23 @@ internal static partial class WindingEngine
             int groupRings = 0, capacity = 0;
             for (int r = 0; r < rings; r++)
                 if (parents[r] == root) { groupRings++; capacity += starts[r + 1] - starts[r]; }
-            var group = Workspace.Rent();
-            WindingOverlapResult result;
-            try
+            var group = ws.RegionGroup ??= new Workspace();
+            group.RingBuffers(groupRings);
+            Point2[] v = group.VertexBuffer(capacity);
+            int[] groupStarts = group.RingStarts;
+            int n = 0, i = 0, groupRingSplit = 0, groupSplit = 0;
+            // Preserve operand order and the relative symbolic ordering of every input vertex.
+            for (int r = 0; r < rings; r++)
             {
-                Point2[] v = group.VertexBuffer(capacity);
-                int[] groupStarts = new int[groupRings + 1];
-                int n = 0, i = 0, groupRingSplit = 0, groupSplit = 0;
-                // Preserve operand order and the relative symbolic ordering of every input vertex.
-                for (int r = 0; r < rings; r++)
-                {
-                    if (parents[r] != root) continue;
-                    int length = starts[r + 1] - starts[r];
-                    groupStarts[i++] = n;
-                    Array.Copy(ws.Vertices, starts[r], v, n, length);
-                    n += length;
-                    if (r < ringSplit) { groupRingSplit++; groupSplit = n; }
-                }
-                groupStarts[i] = n;
-                result = ConnectedRings(group, groupStarts, groupRingSplit, groupSplit, rule, intersectionOnly);
+                if (parents[r] != root) continue;
+                int length = starts[r + 1] - starts[r];
+                groupStarts[i++] = n;
+                Array.Copy(ws.Vertices, starts[r], v, n, length);
+                n += length;
+                if (r < ringSplit) { groupRingSplit++; groupSplit = n; }
             }
-            finally { Workspace.Return(group); }
+            groupStarts[i] = n;
+            WindingOverlapResult result = ConnectedRings(group, groupStarts, groupRings, groupRingSplit, groupSplit, rule, intersectionOnly);
             first.Add(result.FirstArea); second.Add(result.SecondArea); intersection.Add(result.IntersectionArea);
             union.Add(result.UnionArea); difference.Add(result.SymmetricDifferenceArea);
             statistics.Crossings += result.CrossingCount;
@@ -81,7 +78,7 @@ internal static partial class WindingEngine
         }
     }
 
-    private readonly struct RingBounds
+    internal readonly struct RingBounds
     {
         private readonly double minX, minY, maxX, maxY;
         internal RingBounds(Point2[] v, int from, int to)
@@ -94,13 +91,14 @@ internal static partial class WindingEngine
             }
         }
         internal bool Intersects(RingBounds b) => minX <= b.maxX && b.minX <= maxX && minY <= b.maxY && b.minY <= maxY;
+        internal Bounds2D Bounds => new Bounds2D(minX, minY, maxX, maxY);
     }
 
-    private static WindingOverlapResult ConnectedRings(Workspace ws, int[] starts, int ringSplit,
+    private static WindingOverlapResult ConnectedRings(Workspace ws, int[] starts, int rings, int ringSplit,
         int split, PathFillRule rule, bool intersectionOnly)
     {
         var statistics = new WindingStatistics();
-        int n = starts[starts.Length - 1], rings = starts.Length - 1;
+        int n = starts[rings];
         if (n == 0) return new WindingOverlapResult(0, 0, 0, 0, 0, rule, statistics);
         if (ws.Next.Length < n) ws.Next = new int[Grow(n)];
         int[] nx = ws.Next;
@@ -113,7 +111,7 @@ internal static partial class WindingEngine
 
         // Certification and selected integer dispatch assume one closure and cannot admit these inputs.
         statistics.Crossings = FindCrossings(ws, n, split, ref statistics, singleRing: false);
-        var seeds = new RingSeed[rings];
+        var seeds = ws.RingSeeds;
         Point2[] v = ws.Vertices;
         for (int r = 0; r < rings; r++)
         {
@@ -151,11 +149,14 @@ internal static partial class WindingEngine
 
         void Walk(bool sum)
         {
-            foreach (RingSeed seed in seeds)
+            for (int r = 0; r < rings; r++)
+            {
+                RingSeed seed = seeds[r];
                 if (intersectionOnly)
                     WalkIntersection(ws, seed.Count, seed.First, seed.Own, seed.Other, nonZero, sum);
                 else
                     WalkRegions(ws, seed.Count, seed.First, seed.Own, seed.Other, nonZero, seed.IsA, sum);
+            }
         }
     }
 }

@@ -1,9 +1,18 @@
-# Multiple-ring feasibility and complete GIS checks
+# Prepared regions: contracts and complete GIS checks
+
+Current source exposes [`PreparedRegion` and `RegionArea`](../../docs/regions.md).
+The runner checks snapshot ownership, empty/invalid inputs, aggregate fills,
+parallel reuse and all complete GIS features through that public API. The raw
+internal entry point remains a comparison path for analytic checks.
+[`PROTOCOL.md`](PROTOCOL.md) defines the separate preparation/reuse benchmark
+against Clipper2 and NTS. Timing is not a CI acceptance threshold.
+
+## Historical feasibility assessment
 
 **Feasible: the internal boundary engine handles the complete frozen county and
 district population, including the five formerly excluded features.** No new
-public API is exposed. Applications must continue to follow the current
-[single-walk contract](../../docs/area.md#input-contract).
+public API was exposed by that revision. The results below record that bounded
+assessment; current application guidance is in the prepared-region guide above.
 
 The implementation and checks are in
 [`e05d5bb`](https://github.com/bgtnt/polylinekit/commit/e05d5bb16359c524cfd555bdeec8351bd4d3ae04).

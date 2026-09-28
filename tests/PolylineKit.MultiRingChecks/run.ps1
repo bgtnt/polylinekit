@@ -28,7 +28,7 @@ try {
         if ($report.CoreTarget -ne $expected -or $report.ForceScalar -ne ($mode.Scalar -eq '1')) {
             throw "Wrong implementation or scalar mode: $($mode.Name)"
         }
-        Write-Output "PASS $($mode.Name): $($report.Analytic.assertions) analytic assertions; $($report.Gis.FullMetricCalls) full GIS comparisons. Core SHA-256 $hash"
+        Write-Output "PASS $($mode.Name): $($report.Analytic.assertions) analytic assertions; $($report.Prepared.Assertions) prepared contract assertions; $($report.Gis.FullMetricCalls) full GIS comparisons. Core SHA-256 $hash"
     }
 } finally {
     $env:POLYLINEKIT_FORCE_SCALAR = $savedScalar

@@ -7,9 +7,19 @@ using PolylineKit.MultiRingChecks;
 if (Environment.GetEnvironmentVariable("POLYLINEKIT_FORCE_SCALAR") == "1")
     AppContext.SetSwitch("PolylineKit.DisableSimd", true);
 
+if (args.Length == 5 && args[0] == "summarize")
+{
+    Write(args[4], RegionBenchmarks.Summarize(args.Skip(1).Take(3).ToArray()));
+    return 0;
+}
+if (args.Length == 4 && args[0] == "benchmark")
+{
+    Write(args[3], RegionBenchmarks.Run(Path.GetFullPath(args[1]), int.Parse(args[2], System.Globalization.CultureInfo.InvariantCulture)));
+    return 0;
+}
 if (args.Length != 2)
 {
-    Console.Error.WriteLine("Usage: MultiRingChecks <repository-root> <output.json>");
+    Console.Error.WriteLine("Usage: MultiRingChecks <repository-root> <output.json> | benchmark <root> <run:1..3> <output.json> | summarize <run1.json> <run2.json> <run3.json> <output.json>");
     return 2;
 }
 string root = Path.GetFullPath(args[0]);
@@ -23,16 +33,22 @@ var report = new
     ForceScalar = Environment.GetEnvironmentVariable("POLYLINEKIT_FORCE_SCALAR") == "1",
     Vector256 = System.Runtime.Intrinsics.Vector256.IsHardwareAccelerated,
     SourceSHA256 = sources,
-    Scope = "Internal multiple-ring feasibility checks; not a public API or timing result.",
+    Scope = "Public prepared-region contracts and multiple-ring geometry checks; not a timing result.",
     Analytic = AnalyticChecks.Run(),
+    Prepared = PreparedRegionChecks.Run(),
     Gis = GisChecks.Run(root)
 };
 if (!sources.SequenceEqual(SourceHashes())) throw new InvalidOperationException("Source changed during evaluation.");
-string output = Path.GetFullPath(args[1]);
-Directory.CreateDirectory(Path.GetDirectoryName(output)!);
-File.WriteAllText(output, JsonSerializer.Serialize(report, new JsonSerializerOptions { WriteIndented = true }));
-Console.WriteLine($"PASS: {output}");
+Write(args[1], report);
 return 0;
+
+static void Write(string path, object report)
+{
+    string output = Path.GetFullPath(path);
+    Directory.CreateDirectory(Path.GetDirectoryName(output)!);
+    File.WriteAllText(output, JsonSerializer.Serialize(report, new JsonSerializerOptions { WriteIndented = true }));
+    Console.WriteLine($"PASS: {output}");
+}
 
 SortedDictionary<string, string> SourceHashes()
 {

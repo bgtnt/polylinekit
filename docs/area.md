@@ -4,6 +4,10 @@ Use `PolylineArea` when you need numerical areas rather than output contours.
 These methods are available from `PolylineKit.Core`, which has no third-party
 runtime dependencies. All areas are in squared input-coordinate units.
 
+The methods on this page accept one ordered walk per operand. For holes or
+disconnected components supplied as separate rings, use
+[PreparedRegion and RegionArea](regions.md).
+
 ## One filled area
 
 ```csharp
@@ -101,9 +105,11 @@ are removed. This is a count of retained vertices, not distinct positions.
 | Three collinear vertices or an adequately long retraced walk | Accepted; filled area can be zero |
 | Self-intersections or overlapping edges | Accepted under the selected fill rule |
 
-Each operand is one ordered walk. A hole can be represented with an exactly
-retraced bridge and appropriate traversal/fill rule. A collection-of-rings API
-is not provided; do not concatenate unrelated rings with invented segments.
+Each `PolylineArea` operand is one ordered walk. A hole can be represented with
+an exactly retraced bridge and appropriate traversal/fill rule. For a collection
+of independent rings, use [PreparedRegion and RegionArea](regions.md); do not
+concatenate unrelated rings with invented segments. The region API accepts an
+empty collection while preserving the single-walk methods' validation above.
 Coordinates are planar: project geographic data appropriately before measuring
 physical areas. The library does not perform a map projection.
 

@@ -11,6 +11,7 @@ using NetTopologySuite.Index.HPRtree;
 using NetTopologySuite.Index.Strtree;
 using PolylineKit;
 using RegionCoverage;
+using PreparedRegion = RegionCoverage.PreparedRegion;
 
 return CoverageExperiment.Run(args);
 
