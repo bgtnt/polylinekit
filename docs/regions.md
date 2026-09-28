@@ -125,19 +125,31 @@ crossing detection and winding propagation again, using per-call working storage
 ## Costs and numerical limits
 
 Preparation takes work and storage proportional to the input vertices and rings.
-For a measurement with `R` rings across both operands, grouping currently checks
-all ring-bound pairs: **O(R²)**. Each interacting group also seeds every ring's
-winding against the other edges, adding **O(Rg × Ng)** work for `Rg` rings and
-`Ng` edges in that group. Crossing detection, sorting and integration add the
-[boundary engine costs](winding-area.md#cost-and-storage). Many mutually
-overlapping rings can be expensive; a prepared snapshot does not remove those
-costs or establish a speed advantage over clipping.
+For a measurement with `R` rings across both operands, up to 16 rings use direct
+pairwise bounds checks. Larger inputs build a balanced hierarchy of ring bounds
+in reusable working arrays. Construction takes **O(R log² R)** because each tree
+level sorts its ring ranges. Queries can reject whole branches of spatially
+separated rings, but still require **O(R²)** bounds checks in the worst case.
+The hierarchy is rebuilt for each measurement; it is not stored in
+`PreparedRegion`.
 
-Groups with disjoint bounds are accumulated separately to limit cancellation
-between distant components. Touching, nested and overlapping bounds stay in the
+Once group membership is known, packing the groups visits each ring and vertex
+at most a constant number of times: **O(R + N)** for `N` total vertices. Each
+interacting group still seeds every ring's winding against the other edges,
+adding **O(Rg × Ng)** work for `Rg` rings and `Ng` edges in that group. Crossing
+detection, sorting and integration add the
+[boundary engine costs](winding-area.md#cost-and-storage). Many mutually
+overlapping rings can be expensive; the hierarchy does not guarantee near-linear
+measurement time or a speed advantage over clipping.
+
+Groups have no intersecting ring bounds between them. They are accumulated
+separately to limit cancellation between distant components. Touching, nested and overlapping bounds stay in the
 same group. This is not permission to assign unrelated origins to individual
-rings inside an interacting group. The single-walk integer specialization and
-simplicity shortcut are not used by `RegionArea`.
+rings inside an interacting group. `IntersectionArea` skips groups containing
+rings from only one operand: strict bounds separation from every other group
+proves their intersection contribution is zero. `FilledArea` and `Compare`
+retain those groups. The single-walk integer specialization and simplicity
+shortcut are not used by `RegionArea`.
 
 Calculations use `double`, without an input grid or output clamping. Exact
 topological decisions do not make intersection coordinates and final areas
@@ -150,6 +162,8 @@ polygons, clipped contours or offsets.
 First use, growth, nesting and some exact-predicate operations allocate. Prepared
 snapshot storage belongs to the caller; engine working storage has a separate
 [retained-cache policy](performance.md#first-use-and-retained-workspace).
+The hierarchy's O(R) node array and group metadata count towards the general
+engine's existing 4 MiB retained array budget, together with the group workspace.
 Recorded single-walk benchmarks do not measure this multi-ring API. See the
 [multi-ring checks and measurement protocol](../tests/PolylineKit.MultiRingChecks/README.md)
 for the applicable evidence.

@@ -15,6 +15,25 @@ three runner modes: .NET 10, .NET 10 with SIMD disabled, and the .NET Standard
 2.0 assembly hosted on .NET 10. The last mode does not establish compatibility
 with every runtime that supports .NET Standard.
 
+The spatial grouping checks add 171 exact bounds-partition fixtures against an
+independent all-pairs oracle, including 100 deterministic randomized cases.
+Another 2,404 public-area assertions cover sparse and long-strip inputs up to
+1,024 rings, contact chains, nesting, tiny distant components, both fill rules
+and repeated/concurrent workspace reuse. These checks use no timing threshold.
+
+To compare grouping performance with the initial prepared-region implementation
+at `9cb0813`, run the unchanged benchmark in six alternating, sequential processes:
+
+```powershell
+./tests/PolylineKit.MultiRingChecks/compare-grouping.ps1
+```
+
+The helper requires a clean committed checkout, builds both revisions before
+timing, freezes the runners, verifies matching benchmark/protocol source blobs,
+and records three runs and a validated summary per revision under `artifacts/`.
+It refuses existing output directories and preserves the process windows and
+hashes. Stop other builds and performance runs while it executes.
+
 ## Historical feasibility assessment
 
 **Feasible: the internal boundary engine handles the complete frozen county and

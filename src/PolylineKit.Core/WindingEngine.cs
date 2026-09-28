@@ -97,6 +97,7 @@ internal static partial class WindingEngine
         internal int[] RingStarts = Array.Empty<int>(), RingParents = Array.Empty<int>();
         internal RingBounds[] RegionBounds = Array.Empty<RingBounds>();
         internal RingSeed[] RingSeeds = Array.Empty<RingSeed>();
+        internal RingNode[] RingNodes = Array.Empty<RingNode>();
         // A child is owned by this workspace, used sequentially, and included in its retention budget.
         // Renting/returning a separate child per component would allocate again on the next outer call.
         internal Workspace? RegionGroup;
@@ -128,7 +129,7 @@ internal static partial class WindingEngine
                 SweepMaxOther.Length + CrossingKeys.Length + MinX.Length + MinY.Length + MaxX.Length + MaxY.Length + EdgeTerms.Length) +
             (long)Overlapping.Length + Used.Length +
             CrossingBytes * (Found.Length + (long)Sorted.Length) + (long)PieceBytes * Shared.Length +
-            32L * RegionBounds.Length + (long)RingSeedBytes * RingSeeds.Length +
+            32L * RegionBounds.Length + (long)RingSeedBytes * RingSeeds.Length + 40L * RingNodes.Length +
             (SimpleSweep?.RetainedArrayBytes ?? 0) + (RegionGroup?.RetainedArrayBytes ?? 0);
 
         internal void RingBuffers(int rings)

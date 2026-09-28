@@ -36,6 +36,8 @@ var report = new
     Scope = "Public prepared-region contracts and multiple-ring geometry checks; not a timing result.",
     Analytic = AnalyticChecks.Run(),
     Prepared = PreparedRegionChecks.Run(),
+    RingPartition = RingPartitionChecks.Run(),
+    RingGrouping = RingGroupingChecks.Run(),
     Gis = GisChecks.Run(root)
 };
 if (!sources.SequenceEqual(SourceHashes())) throw new InvalidOperationException("Source changed during evaluation.");

@@ -17,23 +17,21 @@ internal static partial class WindingEngine
         if (rings < 0) rings = starts.Length - 1;
         ws.RingBuffers(rings);
         if (rings < 2) return ConnectedRings(ws, starts, rings, ringSplit, split, rule, intersectionOnly);
-        var bounds = ws.RegionBounds;
-        var parents = ws.RingParents;
-        for (int r = 0; r < rings; r++)
-        {
-            if (!boundsReady) bounds[r] = new RingBounds(ws.Vertices, starts[r], starts[r + 1]);
-            parents[r] = r;
-        }
-        int groups = rings;
-        for (int a = 0; a < rings; a++)
-            for (int b = 0; b < a; b++)
-                if (bounds[a].Intersects(bounds[b]))
-                {
-                    int x = Root(a), y = Root(b);
-                    if (x != y) { parents[x] = y; groups--; }
-                }
+        if (!boundsReady)
+            for (int r = 0; r < rings; r++) ws.RegionBounds[r] = new RingBounds(ws.Vertices, starts[r], starts[r + 1]);
+        int groups = GroupRings(ws, rings);
         if (groups == 1) return ConnectedRings(ws, starts, rings, ringSplit, split, rule, intersectionOnly);
-        for (int r = 0; r < rings; r++) parents[r] = Root(r);
+
+        // Broad-phase order is no longer needed. Reuse it for per-component linked lists.
+        // Prepending backwards preserves original ring/operand/vertex ordering within each group.
+        int[] parents = ws.RingParents, next = ws.Order, heads = ws.Candidates;
+        for (int r = 0; r < rings; r++) heads[r] = -1;
+        for (int r = rings - 1; r >= 0; r--)
+        {
+            int root = RingRoot(parents, r);
+            next[r] = heads[root];
+            heads[root] = r;
+        }
 
         // Disjoint closed bounds imply zero winding outside each group. All interacting rings
         // (including nesting, overlaps and contacts) remain together. Each group's weighted
@@ -42,24 +40,30 @@ internal static partial class WindingEngine
         WindingStatistics statistics = default;
         for (int root = 0; root < rings; root++)
         {
-            if (parents[root] != root) continue;
-            int groupRings = 0, capacity = 0;
-            for (int r = 0; r < rings; r++)
-                if (parents[r] == root) { groupRings++; capacity += starts[r + 1] - starts[r]; }
+            if (heads[root] < 0) continue;
+            int groupRings = 0, capacity = 0, groupRingSplit = 0;
+            for (int r = heads[root]; r >= 0; r = next[r])
+            {
+                groupRings++;
+                capacity += starts[r + 1] - starts[r];
+                if (r < ringSplit) groupRingSplit++;
+            }
+            // Every ring bound is strictly disjoint from every ring bound in other groups.
+            // Their winding is therefore zero here, even if aggregate group envelopes overlap.
+            if (intersectionOnly && (groupRingSplit == 0 || groupRingSplit == groupRings)) continue;
             var group = ws.RegionGroup ??= new Workspace();
             group.RingBuffers(groupRings);
             Point2[] v = group.VertexBuffer(capacity);
             int[] groupStarts = group.RingStarts;
-            int n = 0, i = 0, groupRingSplit = 0, groupSplit = 0;
+            int n = 0, i = 0, groupSplit = 0;
             // Preserve operand order and the relative symbolic ordering of every input vertex.
-            for (int r = 0; r < rings; r++)
+            for (int r = heads[root]; r >= 0; r = next[r])
             {
-                if (parents[r] != root) continue;
                 int length = starts[r + 1] - starts[r];
                 groupStarts[i++] = n;
                 Array.Copy(ws.Vertices, starts[r], v, n, length);
                 n += length;
-                if (r < ringSplit) { groupRingSplit++; groupSplit = n; }
+                if (r < ringSplit) groupSplit = n;
             }
             groupStarts[i] = n;
             WindingOverlapResult result = ConnectedRings(group, groupStarts, groupRings, groupRingSplit, groupSplit, rule, intersectionOnly);
@@ -70,28 +74,29 @@ internal static partial class WindingEngine
             statistics.SymbolicTieBreaks += result.SymbolicTieBreakCount;
         }
         return new WindingOverlapResult(first.Value, second.Value, intersection.Value, union.Value, difference.Value, rule, statistics);
-
-        int Root(int r)
-        {
-            while (parents[r] != r) { parents[r] = parents[parents[r]]; r = parents[r]; }
-            return r;
-        }
     }
 
     internal readonly struct RingBounds
     {
-        private readonly double minX, minY, maxX, maxY;
+        internal readonly double MinX, MinY, MaxX, MaxY;
         internal RingBounds(Point2[] v, int from, int to)
         {
-            minX = maxX = v[from].X; minY = maxY = v[from].Y;
+            MinX = MaxX = v[from].X; MinY = MaxY = v[from].Y;
             for (int i = from + 1; i < to; i++)
             {
-                minX = Math.Min(minX, v[i].X); minY = Math.Min(minY, v[i].Y);
-                maxX = Math.Max(maxX, v[i].X); maxY = Math.Max(maxY, v[i].Y);
+                MinX = Math.Min(MinX, v[i].X); MinY = Math.Min(MinY, v[i].Y);
+                MaxX = Math.Max(MaxX, v[i].X); MaxY = Math.Max(MaxY, v[i].Y);
             }
         }
-        internal bool Intersects(RingBounds b) => minX <= b.maxX && b.minX <= maxX && minY <= b.maxY && b.minY <= maxY;
-        internal Bounds2D Bounds => new Bounds2D(minX, minY, maxX, maxY);
+        internal RingBounds(RingBounds a, RingBounds b)
+        {
+            MinX = Math.Min(a.MinX, b.MinX); MinY = Math.Min(a.MinY, b.MinY);
+            MaxX = Math.Max(a.MaxX, b.MaxX); MaxY = Math.Max(a.MaxY, b.MaxY);
+        }
+        internal bool Intersects(RingBounds b) => MinX <= b.MaxX && b.MinX <= MaxX && MinY <= b.MaxY && b.MinY <= MaxY;
+        internal double CenterX => MinX + (MaxX - MinX) / 2;
+        internal double CenterY => MinY + (MaxY - MinY) / 2;
+        internal Bounds2D Bounds => new Bounds2D(MinX, MinY, MaxX, MaxY);
     }
 
     private static WindingOverlapResult ConnectedRings(Workspace ws, int[] starts, int rings, int ringSplit,

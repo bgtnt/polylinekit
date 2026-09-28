@@ -150,11 +150,31 @@ update that same field. No artificial bridge joins rings.
 Rings whose inclusive bounds overlap are grouped transitively. Nested and
 touching rings therefore stay together. Disjoint groups can use separate area
 origins because they have no mutual winding contribution; assigning separate
-origins to arbitrary rings within a group would be unsafe. Grouping currently
-costs O(R²) bound checks, with additional O(Rg × Ng) seed work within each group.
-The single-walk simplicity check and integer specialization are bypassed.
-Preparation stores validated coordinates and bounds, not crossings or query
-results. See [contracts, examples and costs](regions.md).
+origins to arbitrary rings within a group would be unsafe.
+
+For up to 16 rings, grouping checks pairs directly. Larger inputs build a flat,
+balanced bounding-volume hierarchy in workspace arrays. Each internal node
+splits its ring range at the median along the axis with wider ring-center spread;
+`Array.Sort` at each node gives O(R log² R) construction work and O(R) node
+storage. A preorder layout lets queries skip rejected subtrees without a query
+stack. Inclusive bounds tests preserve contacts and nesting. Spatially separated
+inputs allow branch pruning, while the worst case remains O(R²) bounds tests;
+the hierarchy makes no near-linear guarantee. Union-find forms the transitive
+groups without reordering geometric vertices.
+
+Once membership is known, per-group linked lists preserve original ring and
+operand order. Group packing takes O(R + N) overall for R rings and N vertices,
+instead of scanning all rings for each group. `IntersectionArea` skips groups
+containing only one operand: strict bounds rejection from every other group
+proves zero intersection. Other measurements keep those groups. The O(Rg × Ng)
+winding-seed work within a group remains unchanged, as do the boundary engine's
+crossing and integration costs. The single-walk simplicity check and integer
+specialization are bypassed.
+
+Preparation stores validated coordinates and bounds, not a persistent hierarchy,
+crossings or query results. The hierarchy is rebuilt in leased storage for each
+measurement. These implementation choices do not change the public contracts.
+See [contracts, examples and costs](regions.md).
 
 ### Bounded integer sweep
 
@@ -203,8 +223,8 @@ outer call does not displace a smaller cache returned by a nested call.
 The general engine's capacity accounting includes vertices, edges, crossings,
 per-edge sorted events and sort keys, netted chains and hash slots, bounds,
 merge/candidate buffers, and the optional simplicity certificate's arrays. The
-multi-ring route's ring metadata and group workspace are included in that same
-general-engine cache budget. The
+multi-ring route's ring metadata, flat hierarchy node array, grouping buffers and
+group workspace are included in that same general-engine cache budget. The
 integer engine counts vertices, edges, levels, active order, positions, winding
 prefixes, last levels and crossings. Counts use allocated capacities, not used
 lengths. Array headers, fixed workspace/comparer objects and 264 bytes of

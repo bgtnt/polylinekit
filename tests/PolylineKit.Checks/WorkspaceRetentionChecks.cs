@@ -28,7 +28,7 @@ internal static class WorkspaceRetentionChecks
     private static void CheckGeneralPool()
     {
         var outer = WindingEngine.Workspace.Rent();
-        CheckArrayInventory(outer, "Vertices Next Keys Order MergeKeys MergeOrder Runs Candidates SweepMax SweepMinOther SweepMaxOther Start Overlapping Found Sorted CrossingKeys CrossingOrder Shared Slots MinX MinY MaxX MaxY Used Origin Group EdgeTerms Sums RingStarts RingParents RegionBounds RingSeeds");
+        CheckArrayInventory(outer, "Vertices Next Keys Order MergeKeys MergeOrder Runs Candidates SweepMax SweepMinOther SweepMaxOther Start Overlapping Found Sorted CrossingKeys CrossingOrder Shared Slots MinX MinY MaxX MaxY Used Origin Group EdgeTerms Sums RingStarts RingParents RegionBounds RingSeeds RingNodes");
         outer.SimpleSweep = new PreparedSimpleSweep();
         WindingStatistics statistics = default;
         Check(outer.SimpleSweep.TryCertify(Square, Square.Length, ref statistics), "independent simple sweep exercised");
@@ -38,6 +38,7 @@ internal static class WorkspaceRetentionChecks
         Check(outer.SimpleSweep.RetainedArrayBytes == ArrayBytes(outer.SimpleSweep), "simple sweep accounts for every owned array");
         Check(outer.RetainedArrayBytes >= ArrayBytes(outer) + ArrayBytes(outer.SimpleSweep), "general accounting includes nested sweep arrays");
         outer.RingBuffers(17);
+        outer.RingNodes = new WindingEngine.RingNode[33];
         outer.RegionGroup = new WindingEngine.Workspace();
         outer.RegionGroup.RingBuffers(9);
         Check(outer.RetainedArrayBytes >= ArrayBytes(outer) + ArrayBytes(outer.SimpleSweep) + ArrayBytes(outer.RegionGroup),
