@@ -17,7 +17,8 @@ transforms, resampling and alignment with no third-party runtime dependencies.
 
 ## Tooling dependencies
 
-Examples and benchmarks also use Clipper2. The region-coverage example references
+Examples, benchmarks and geometry checks also use Clipper2. The region-coverage
+and polygon-evaluation examples and the multiple-ring checks reference
 [NetTopologySuite 2.6.0](https://www.nuget.org/packages/NetTopologySuite/2.6.0),
 Copyright 2006–2025 NetTopologySuite contributors, under
 [BSD-3-Clause](https://licenses.nuget.org/BSD-3-Clause). These example/tool

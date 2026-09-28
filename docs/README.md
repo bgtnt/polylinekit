@@ -19,6 +19,9 @@
 - [Numerical derivation and difficult inputs](winding-numerics.md)
 - [Dependency and algorithm attribution](../THIRD-PARTY-NOTICES.md)
 
+For contributors: [multiple-ring feasibility and complete GIS checks](../tests/PolylineKit.MultiRingChecks/README.md)
+describe an internal prototype; multiple-ring inputs are not yet part of the supported API.
+
 These details explain how the public methods work; they are not alternative
 APIs an application must select. Development studies remain in the
 [historical snapshots](../CONTRIBUTING.md#historical-studies).
