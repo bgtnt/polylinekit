@@ -17,6 +17,7 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/PolylineKit.Checks/PolylineKit.Checks.csproj" />
+    <Project Path="tests/PolylineKit.MultiRingChecks/PolylineKit.MultiRingChecks.csproj" />
     <Project Path="tests/Consumers/LeafOnly/LeafOnly.csproj" />
     <Project Path="tests/Consumers/PortableOnly/PortableOnly.csproj" />
     <Project Path="tests/Consumers/CompatibilityHost/CompatibilityHost.csproj" />

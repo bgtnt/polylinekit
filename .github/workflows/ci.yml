@@ -27,6 +27,9 @@ jobs:
         run: dotnet run --project examples/RegionCoverage -c Release --no-build -- check
       - name: Verify complete coverage source snapshots offline
         run: python examples/RegionCoverage/data/freeze.py
+      - name: Internal multi-ring feasibility on complete GIS inputs (no timing)
+        run: ./tests/PolylineKit.MultiRingChecks/run.ps1
+        shell: pwsh
       - name: Prepare pinned Solaris evaluation sample
         run: python examples/PolygonOverlapEvaluation/data/prepare-data.py
       - name: Polygon evaluation reference and geometry contracts

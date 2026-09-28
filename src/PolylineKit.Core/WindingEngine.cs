@@ -32,14 +32,14 @@ internal struct WindingStatistics
 /// large terms. Local origins reduce cancellation from unrelated input geometry; the numerical limits
 /// of rounded crossings, sub-edge fractions and area accumulation still apply.
 /// </remarks>
-internal static class WindingEngine
+internal static partial class WindingEngine
 {
     internal struct Crossing
     {
         internal Point2 P; // the crossing point, shared by both incidences; exactly the vertex when it lies on one
         internal int Edge;
         internal int Delta; // winding change of the other edge's loop; zero for a split at a collinear overlap
-        internal bool SameLoop;
+        internal bool SameLoop; // same operand (possibly a different ring), not adjacency or ring identity
     }
 
     // One oriented segment with its integer coefficient in each chain.
@@ -249,8 +249,8 @@ internal static class WindingEngine
         ws.SharedCount = 0;
         Array.Clear(ws.Used, 0, MaxChains);
         Array.Clear(ws.Sums, 0, MaxChains);
-        WalkRegions(ws, split, n, firstA, ownA, bAtA, nonZero, true, false);
-        WalkRegions(ws, split, n, firstB, ownB, aAtB, nonZero, false, false);
+        WalkRegions(ws, split, firstA, ownA, bAtA, nonZero, true, false);
+        WalkRegions(ws, n - split, firstB, ownB, aAtB, nonZero, false, false);
         int net = Net(ws);
         for (int x = 0; x < net; x++) Include(ws, ws.Shared[x], MaxChains);
         for (int c = 0; c < MaxChains; c++)
@@ -260,8 +260,8 @@ internal static class WindingEngine
             for (int g = 0; g < c; g++)
                 if (ws.Group[g] == g && WindingInput.Same(ws.Origin[g], ws.Origin[c])) { ws.Group[c] = g; break; }
         }
-        WalkRegions(ws, split, n, firstA, ownA, bAtA, nonZero, true, true);
-        WalkRegions(ws, split, n, firstB, ownB, aAtB, nonZero, false, true);
+        WalkRegions(ws, split, firstA, ownA, bAtA, nonZero, true, true);
+        WalkRegions(ws, n - split, firstB, ownB, aAtB, nonZero, false, true);
         for (int x = 0; x < net; x++) Add(ws, ws.Shared[x], MaxChains);
         double aOnly = Area(ws, AOnly), bOnly = Area(ws, BOnly), both = Area(ws, Both);
         return new WindingOverlapResult(Area(ws, OwnA), Area(ws, OwnB), both, aOnly + bOnly + both, aOnly + bOnly, rule, statistics);
@@ -356,12 +356,11 @@ internal static class WindingEngine
     // chain bounds of ordinary sub-edges and collects those of overlapping edges; with sum it adds their terms.
     // An ordinary sub-edge contributes its share of its edge's term, so a crossing point off the edge's line
     // (rounded) does not distort the area of the long edges around it.
-    private static void WalkRegions(Workspace ws, int split, int n, int first, int w, int other, bool nonZero, bool isA, bool sum)
+    private static void WalkRegions(Workspace ws, int edges, int first, int w, int other, bool nonZero, bool isA, bool sum)
     {
         Point2[] v = ws.Vertices;
         int[] nx = ws.Next, offsets = ws.Start;
         Crossing[] list = ws.Sorted;
-        int edges = isA ? split : n - split;
         int own = isA ? OwnA : OwnB, only = isA ? AOnly : BOnly, otherOnly = isA ? BOnly : AOnly;
         for (int step = 0, e = first; step < edges; step++, e = nx[e])
         {
@@ -703,13 +702,13 @@ internal static class WindingEngine
 
     // Records every symbolic proper crossing between nonadjacent edges, and every split where edges overlap
     // collinearly, and orders them along each edge. Returns the number of proper crossings.
-    private static int FindCrossings(Workspace ws, int n, int split, ref WindingStatistics statistics)
+    private static int FindCrossings(Workspace ws, int n, int split, ref WindingStatistics statistics, bool singleRing = true)
     {
         ws.SimpleSweepOutcome = 0;
         // Attempt only after the current broad phase has demonstrated substantial work.
         // A crossing or overlap cancels eligibility; failed certification resumes this
         // very pass, without recopying input, rebuilding bounds or retesting prior pairs.
-        bool canCertify = split == n && n >= 256 &&
+        bool canCertify = singleRing && split == n && n >= 256 &&
             !(AppContext.TryGetSwitch("PolylineKit.DisableSimpleSweep", out bool disableSweep) && disableSweep);
         long examinedCandidates = 0;
         Point2[] v = ws.Vertices;
