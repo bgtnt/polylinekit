@@ -1,9 +1,12 @@
-# Compare the fixed benchmark on the pre-grouping implementation and a clean HEAD.
-param([string]$Output)
+# Compare the fixed benchmark on a selected baseline commit and a clean HEAD.
+param(
+    [string]$Output,
+    [ValidateNotNullOrEmpty()]
+    [string]$BaselineRevision = '9cb08131e42ba84cf96190db20c60ae893afa969'
+)
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 $repository = (Resolve-Path (Join-Path $PSScriptRoot '../..')).Path
-$baselineRevision = '9cb08131e42ba84cf96190db20c60ae893afa969'
 $project = 'tests/PolylineKit.MultiRingChecks/PolylineKit.MultiRingChecks.csproj'
 $benchmark = 'tests/PolylineKit.MultiRingChecks/RegionBenchmarks.cs'
 $protocol = 'tests/PolylineKit.MultiRingChecks/PROTOCOL.md'
@@ -38,11 +41,14 @@ function Invoke-Dotnet([string[]]$Arguments, [string]$Log) {
     & dotnet @Arguments 2>&1 | Tee-Object -FilePath $Log -Append | Out-Host
     if ($LASTEXITCODE -ne 0) { throw "dotnet failed (exit $LASTEXITCODE): $($Arguments -join ' ')" }
 }
+if ([string]::IsNullOrWhiteSpace($BaselineRevision)) { throw 'BaselineRevision must identify a commit.' }
+$baselineCommit = Git-Text @('rev-parse', '--verify', '--end-of-options', "${BaselineRevision}^{commit}")
+if ($baselineCommit -notmatch '\A(?:[0-9a-f]{40}|[0-9a-f]{64})\z') { throw 'BaselineRevision did not resolve to one full commit hash.' }
 $candidateRevision = Git-Text @('rev-parse', 'HEAD')
 Require-CleanHead $candidateRevision
 $identical = @()
 foreach ($path in @($benchmark, $protocol)) {
-    $baseBlob = Git-Text @('rev-parse', "${baselineRevision}:$path")
+    $baseBlob = Git-Text @('rev-parse', "${baselineCommit}:$path")
     $candidateBlob = Git-Text @('rev-parse', "${candidateRevision}:$path")
     if ($baseBlob -ne $candidateBlob) { throw "Benchmark/protocol differs between revisions: $path" }
     $identical += [ordered]@{ Path = $path; BaselineBlob = $baseBlob; CandidateBlob = $candidateBlob }
@@ -66,7 +72,7 @@ $cases = @()
 Push-Location $repository
 try {
     Write-NewJson (Join-Path $destination 'comparison.json') ([ordered]@{
-        BaselineRevision = $baselineRevision; CandidateRevision = $candidateRevision
+        BaselineReference = $BaselineRevision; BaselineRevision = $baselineCommit; CandidateRevision = $candidateRevision
         EqualGitBlobs = $identical; ArchivePaths = $archivePaths
         ProcessOrder = @('baseline-1', 'candidate-1', 'candidate-2', 'baseline-2', 'baseline-3', 'candidate-3')
         TieredCompilation = '0'; ForceScalar = '0'
@@ -74,7 +80,7 @@ try {
     })
     Invoke-Dotnet @('--info') (Join-Path $destination 'dotnet-info.txt')
 
-    foreach ($definition in @(@{ Name = 'baseline'; Revision = $baselineRevision }, @{ Name = 'candidate'; Revision = $candidateRevision })) {
+    foreach ($definition in @(@{ Name = 'baseline'; Revision = $baselineCommit }, @{ Name = 'candidate'; Revision = $candidateRevision })) {
         $name = $definition.Name
         $revision = $definition.Revision
         $archive = Join-Path $destination "$name-source.zip"

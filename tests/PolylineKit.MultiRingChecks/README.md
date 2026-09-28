@@ -15,7 +15,7 @@ three runner modes: .NET 10, .NET 10 with SIMD disabled, and the .NET Standard
 2.0 assembly hosted on .NET 10. The last mode does not establish compatibility
 with every runtime that supports .NET Standard.
 
-The spatial grouping checks add 171 exact bounds-partition fixtures against an
+The spatial grouping checks add 231 exact bounds-partition fixtures against an
 independent all-pairs oracle, including 100 deterministic randomized cases.
 Another 2,404 public-area assertions cover sparse and long-strip inputs up to
 1,024 rings, contact chains, nesting, tiny distant components, both fill rules
@@ -27,6 +27,20 @@ at `9cb0813`, run the unchanged benchmark in six alternating, sequential process
 ```powershell
 ./tests/PolylineKit.MultiRingChecks/compare-grouping.ps1
 ```
+
+The default baseline remains `9cb08131e42ba84cf96190db20c60ae893afa969`.
+To compare a later candidate with another committed implementation, select a
+baseline explicitly; the candidate is always the current clean `HEAD`:
+
+```powershell
+./tests/PolylineKit.MultiRingChecks/compare-grouping.ps1 -BaselineRevision 70291d2
+```
+
+`-BaselineRevision` accepts a commit hash or a Git reference resolving to a
+commit. The helper resolves it once and records both the supplied reference and
+the full commit hash, so subsequent branch movement cannot change the baseline.
+Unresolvable references and references to non-commit objects are rejected before
+any output directory is created.
 
 The helper requires a clean committed checkout, builds both revisions before
 timing, freezes the runners, verifies matching benchmark/protocol source blobs,

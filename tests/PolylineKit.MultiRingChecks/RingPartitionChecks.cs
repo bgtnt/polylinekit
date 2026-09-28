@@ -14,6 +14,7 @@ internal static class RingPartitionChecks
             cases = checks.Cases,
             maximumBounds = checks.MaximumBounds,
             randomizedCases = 100,
+            gapCases = 16,
             generatorSeed = "0xe5b17a29",
             scope = "Exact connected partition of inclusive ring bounds against independent all-pairs union-find; no timing threshold.",
             ownership = "One workspace is reused across large, small and empty inputs to expose stale pooled metadata."
@@ -41,7 +42,7 @@ internal static class RingPartitionChecks
             Case("distant tiny bounds", [new(0, 0, .001, .001), new(1e12, 1e12, 1e12 + .001, 1e12 + .001),
                 new(1e14, 1e14, 1e14 + .1, 1e14 + .1)]);
 
-            foreach (int count in new[] { 16, 17, 32, 33, 257, 1024 })
+            foreach (int count in new[] { 16, 17, 31, 32, 33, 63, 65, 129, 257, 1024 })
             {
                 Box[] grid = Grid(count, paired: false);
                 Case($"separate grid {count}", grid);
@@ -64,6 +65,21 @@ internal static class RingPartitionChecks
                 Case($"small after {count}", [new(0, 0, 1, 1), new(3, 0, 4, 1)]);
                 Case($"empty after {count}", []);
                 Case($"large after empty {count}", grid);
+            }
+
+            foreach (int count in new[] { 31, 63, 65, 129 })
+            {
+                // An envelope may cover empty space between its members. A query in that space
+                // must not connect those members, even when it intersects another small box there.
+                // Non-power-of-two sizes exercise uneven partitions without assuming their layout.
+                Box[] gaps = Gaps(count);
+                Case($"empty gaps between rectangle corners {count}", gaps);
+                Case($"reversed gap fixtures {count}", gaps.Reverse().ToArray());
+                Case($"transposed gap fixtures {count}", gaps.Select(b => new Box(b.MinY, b.MinX, b.MaxY, b.MaxX)).ToArray());
+                Box[] shuffled = (Box[])gaps.Clone();
+                var gapShuffle = new FixedRandom((uint)(count * 13 + 7));
+                Shuffle(shuffled, ref gapShuffle);
+                Case($"permuted gap fixtures {count}", shuffled);
             }
 
             var random = new FixedRandom(0xe5b17a29);
@@ -162,6 +178,27 @@ internal static class RingPartitionChecks
             double shift = paired && (i & 1) != 0 ? .25 : 0;
             double x = cell % columns * 4 + shift, y = cell / columns * 4 + shift;
             boxes[i] = new Box(x, y, x + 1, y + 1);
+        }
+        return boxes;
+    }
+
+    private static Box[] Gaps(int count)
+    {
+        int columns = (int)Math.Ceiling(Math.Sqrt((count + 5) / 6));
+        var boxes = new Box[count];
+        for (int i = 0; i < count; i++)
+        {
+            int cell = i / 6;
+            double x = cell % columns * 32, y = cell / columns * 32;
+            boxes[i] = (i % 6) switch
+            {
+                0 => new Box(x, y, x + 1, y + 1),
+                1 => new Box(x + 8, y, x + 9, y + 1),
+                2 => new Box(x, y + 8, x + 1, y + 9),
+                3 => new Box(x + 8, y + 8, x + 9, y + 9),
+                4 => new Box(x + 3, y + 3, x + 5, y + 5),
+                _ => new Box(x + 4, y + 4, x + 4, y + 4)
+            };
         }
         return boxes;
     }

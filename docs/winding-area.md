@@ -155,10 +155,15 @@ origins to arbitrary rings within a group would be unsafe.
 For up to 16 rings, grouping checks pairs directly. Larger inputs build a flat,
 balanced bounding-volume hierarchy in workspace arrays. Each internal node
 splits its ring range at the median along the axis with wider ring-center spread;
-`Array.Sort` at each node gives O(R log² R) construction work and O(R) node
-storage. A preorder layout lets queries skip rejected subtrees without a query
-stack. Inclusive bounds tests preserve contacts and nesting. Spatially separated
-inputs allow branch pruning, while the worst case remains O(R²) bounds tests;
+`Array.Sort` at each internal node gives O(R log² R) construction work and O(R)
+node storage. Splitting stops at leaves of at most four rings, avoiding the
+lowest sorting levels. A preorder layout lets queries skip rejected subtrees
+without a query stack. A leaf envelope hit only admits candidates: each member
+still receives an inclusive bounds check. Each unordered pair is joined at most
+once, looking forward in original ring order so one dense collection can become
+a single group during the first query. Inclusive tests preserve contacts and
+nesting. Spatially separated inputs allow branch pruning, while the worst case
+remains O(R²) bounds tests;
 the hierarchy makes no near-linear guarantee. Union-find forms the transitive
 groups without reordering geometric vertices.
 

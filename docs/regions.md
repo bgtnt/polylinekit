@@ -127,9 +127,11 @@ crossing detection and winding propagation again, using per-call working storage
 Preparation takes work and storage proportional to the input vertices and rings.
 For a measurement with `R` rings across both operands, up to 16 rings use direct
 pairwise bounds checks. Larger inputs build a balanced hierarchy of ring bounds
-in reusable working arrays. Construction takes **O(R log² R)** because each tree
-level sorts its ring ranges. Queries can reject whole branches of spatially
-separated rings, but still require **O(R²)** bounds checks in the worst case.
+in reusable working arrays, with up to four rings per leaf. Each leaf candidate
+still receives its own inclusive bounds check. Construction takes **O(R log² R)**
+because each internal tree level sorts its ring ranges. Queries can reject whole
+branches of spatially separated rings, but still require **O(R²)** bounds checks
+in the worst case.
 The hierarchy is rebuilt for each measurement; it is not stored in
 `PreparedRegion`.
 

@@ -2,8 +2,8 @@ namespace PolylineKit;
 
 internal static partial class WindingEngine
 {
-    // Preorder layout: a failed bounds test jumps to End, without a query stack.
-    // Ring is an original ring index at a leaf, -1 at an internal node.
+    // Preorder layout: internal End skips a rejected subtree, without a query stack.
+    // Leaves store End = -count and Ring = first slot in Order, with at most four members.
     internal struct RingNode
     {
         internal RingBounds Bounds;
@@ -35,7 +35,9 @@ internal static partial class WindingEngine
         }
 
         if (ws.Keys.Length < rings) ws.Keys = new double[Grow(rings)];
-        int capacity = checked(rings * 2 - 1);
+        // Median splits stop at four: every leaf has at least two members, so fewer
+        // than rings nodes suffice. Grow retains spare capacity for subsequent calls.
+        int capacity = rings;
         if (ws.RingNodes.Length < capacity) ws.RingNodes = new RingNode[Grow(capacity)];
         RingNode[] nodes = ws.RingNodes;
         int[] order = ws.Order;
@@ -51,8 +53,15 @@ internal static partial class WindingEngine
             while (node < used && groups > 1)
             {
                 RingNode item = nodes[node];
-                if (!query.Intersects(item.Bounds)) { node = item.End; continue; }
-                if (item.Ring >= 0 && item.Ring != r) Join(r, item.Ring);
+                if (!query.Intersects(item.Bounds)) { node = item.End < 0 ? node + 1 : item.End; continue; }
+                if (item.End < 0)
+                    for (int i = item.Ring; i < item.Ring - item.End; i++)
+                    {
+                        int other = order[i];
+                        // Visit each unordered pair once. Looking forward lets the first query
+                        // connect a dense collection and stop immediately when only one group remains.
+                        if (other > r && query.Intersects(bounds[other])) Join(r, other);
+                    }
                 node++;
             }
         }
@@ -71,9 +80,10 @@ internal static partial class WindingEngine
         {
             int at = used++;
             RingBounds box = bounds[order[from]];
-            if (count == 1)
+            if (count <= 4)
             {
-                nodes[at] = new RingNode { Bounds = box, End = used, Ring = order[from] };
+                for (int i = from + 1; i < from + count; i++) box = new RingBounds(box, bounds[order[i]]);
+                nodes[at] = new RingNode { Bounds = box, End = -count, Ring = from };
                 return;
             }
             double minX = box.CenterX, maxX = minX, minY = box.CenterY, maxY = minY;
