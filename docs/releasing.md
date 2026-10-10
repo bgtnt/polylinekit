@@ -17,7 +17,8 @@ pwsh -File scripts/verify-packages.ps1 -OutputDirectory artifacts/alpha-0.1.0-al
 The script runs `dotnet restore --locked-mode` and Release `dotnet pack` for
 both projects, then inspects the actual package files. It copies the coverage
 example outside the repository and executes four package-only consumers:
-Core and Clipper, each on .NET 10 and .NET 8. The latter selects the packages'
+Core and Clipper, each on .NET 10 and .NET 8. All consumers exercise a prepared
+shell, hole, island and empty region under both fill rules. The latter selects the packages'
 .NET Standard 2.0 assets. This is not a .NET Framework compatibility run.
 
 Consumers use an isolated temporary package/HTTP cache and explicit
@@ -84,6 +85,38 @@ the verifier avoids that ambiguity with its fresh isolated cache and byte checks
 
 ## Original measurement evidence
 
+Two evidence archives preserve different measurement series. The prepared-region
+archive covers all 2,700 samples from the coordinated September 28 comparison;
+the historical alpha archive below covers 2,940 earlier samples. Their frozen
+binaries belong to the measured revisions, not the new release packages. Sidecar
+JSON records describe archive generation; the GitHub release identifies delivery.
+
+To curate the prepared-region series from the retained local originals:
+
+```powershell
+python scripts/bundle-prepared-region-evidence.py --output artifacts/polylinekit-prepared-region-evidence.zip
+```
+
+The script uses an explicit allowlist, checks the original hashes and verifies
+the paired summary. Text metadata with personal build paths is redacted with
+original and published hashes recorded in provenance. Raw timing JSON and frozen
+DLLs are unchanged; the latter retain known public-repository CodeView build
+paths. PDBs, executables, private files and unrelated artifacts are excluded.
+
+After extracting this archive into a new directory, run its standalone verifier:
+
+```powershell
+python verify-prepared-region-evidence.py .
+python verify-prepared-region-evidence.py . --summarize
+```
+
+Python's standard library verifies integrity and independently recomputes the
+summary cells. `--summarize` additionally invokes the frozen .NET 10 summarizers
+and requires byte-identical original summary JSON. It performs no timings,
+restore, build or network requests. The manifest identifies the source/input
+snapshots and explains metadata redactions. A fresh clone can verify a downloaded
+archive; curating it requires the retained original evidence.
+
 The maintainer-side bundler uses only a named allowlist of retained original
 files, Git source snapshots and third-party license notices:
 
@@ -117,7 +150,7 @@ contain original build paths; the bundle excludes private project files and PDBs
 
 Publication is a separate authorized step. The local preparation does not
 reserve either package ID. Both NuGet flat-container lookups returned HTTP 404
-on 2026-09-25; that does not establish ownership or guarantee later availability.
+on 2026-10-10; that does not establish ownership or guarantee later availability.
 Recheck package ownership and version availability immediately before pushing.
 
 Use the verified files as-is. In PowerShell, from the repository root:

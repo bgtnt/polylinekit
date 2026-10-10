@@ -31,8 +31,9 @@ The default project uses only Core. `UseClipper=true` references the optional ad
 which brings Core and Clipper2. For another prepared alpha version, pass
 `-p:PolylineKitVersion=<version>` to both restore and run.
 
-Coordinates must already be planar; latitude/longitude is not projected. The API accepts
-one closed walk per operand, not a general collection of rings or multipolygons. Fill
-rules determine self-intersection behavior. Adding coverage from overlapping footprints
+Coordinates must already be planar; latitude/longitude is not projected. This example uses
+one closed walk per operand. For holes and disconnected components, use the Core's
+[PreparedRegion and RegionArea methods](../../docs/regions.md). Fill rules determine
+self-intersection behavior. Adding coverage from overlapping footprints
 can count the same area more than once. This small example checks semantics and package
 usability; it is not a performance benchmark.

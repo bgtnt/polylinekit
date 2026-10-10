@@ -99,9 +99,9 @@ Run the [package-based example](examples/PackageCoverage) for checked results.
 | Translation, rotation and optional uniform-scale alignment | `PolylineAlignment.FitSimilarity(moving, reference)` |
 | Resolved contours as well as area | Optional [Clipper adapter](docs/clipper.md): `PolylineComparison.EndpointBridgedArea(...)` / `FilledRegionDifference(...)`, with `includeContours: true` |
 
-The prepared-region API is available in the current source; earlier verified
-alpha binaries predate it. Each ring closes independently, with explicit fill
-semantics and no automatic shell/hole orientation.
+The current alpha candidate includes the prepared-region API. Each ring closes
+independently, with explicit fill semantics and no automatic shell/hole
+orientation. Earlier locally built candidates predate it; use the verified pair.
 
 Normalization, alignment and measurement are separate operations. For example:
 

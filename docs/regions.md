@@ -5,8 +5,9 @@ rings. They return filled area, intersection, union, XOR and overlap ratios
 without constructing output contours. They are part of the dependency-free
 `PolylineKit.Core` project and use the `PolylineKit` namespace.
 
-This guide describes the current source API. Use a project reference to the
-current Core; the previously verified `0.1.0-alpha.1` binaries predate it.
+These methods are included in the current `0.1.0-alpha.1` candidate. Use its
+verified package pair or a project reference to the current Core. Earlier locally
+built candidates predate this API.
 For one ordered walk per operand, the existing [PolylineArea methods](area.md)
 remain available with their original input contract.
 

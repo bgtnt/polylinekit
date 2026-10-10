@@ -50,7 +50,8 @@ For holes and disconnected components in the current source, use
 [`PreparedRegion.FromRings` and `RegionArea`](https://github.com/bgtnt/polylinekit/blob/main/docs/regions.md).
 Preparation copies coordinates without inferring holes or reversing rings.
 Empty collections are valid; every supplied ring still needs three retained
-vertices. These APIs postdate the previously verified alpha binaries.
+vertices. The current alpha candidate includes these APIs; earlier locally built
+candidates predate them. Use the verified package pair.
 
 Use `CompareRegions` for union, XOR, IoU and Jaccard distance; `BetweenGraphs`
 for the integral of absolute vertical separation between increasing-x graphs.

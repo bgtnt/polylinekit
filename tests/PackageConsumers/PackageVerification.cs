@@ -39,6 +39,56 @@ internal static class PackageVerification
         Require(typeof(AffineTransform2D).Assembly == core && typeof(NormalizationResult).Assembly == core,
             "Transforms and normalization must belong to Core.");
 
+        // Exercise the multi-ring API from the packaged assembly, not a source project.
+        Point2[] shell = [new(0, 0), new(0, 10), new(10, 10), new(10, 0)];
+        Point2[] hole = [new(2, 2), new(6, 2), new(6, 6), new(2, 6)];
+        Point2[] island = [new(20, 0), new(20, 2), new(22, 2), new(22, 0)];
+        Point2[] rectangle = [new(4, 0), new(4, 8), new(12, 8), new(12, 0)];
+        var preparedZone = PreparedRegion.FromRings(new IReadOnlyList<Point2>[] { shell, hole, island });
+        var preparedFootprint = PreparedRegion.FromRings(new IReadOnlyList<Point2>[] { rectangle });
+        var emptyRegion = PreparedRegion.FromRings(Array.Empty<IReadOnlyList<Point2>>());
+        Require(typeof(PreparedRegion).Assembly == core && typeof(RegionArea).Assembly == core,
+            "Prepared regions and their area methods must belong to Core.");
+        Require(preparedZone.RingCount == 3 && preparedZone.VertexCount == 12,
+            "Prepared shell, hole and island metadata differs.");
+        Require(emptyRegion.RingCount == 0 && emptyRegion.VertexCount == 0 && emptyRegion.Bounds is null,
+            "Empty prepared region metadata differs.");
+        var preparedChecks = new List<object>();
+        foreach (PathFillRule preparedRule in new[] { PathFillRule.NonZero, PathFillRule.EvenOdd })
+        {
+            Near(88, RegionArea.FilledArea(preparedZone, preparedRule)); // 100 - 16 + 4.
+            Near(64, RegionArea.FilledArea(preparedFootprint, preparedRule));
+            Near(40, RegionArea.IntersectionArea(preparedZone, preparedFootprint, preparedRule)); // 48 - 8.
+            RegionOverlapResult preparedOverlap = RegionArea.Compare(preparedZone, preparedFootprint, preparedRule);
+            Near(88, preparedOverlap.FirstArea); Near(64, preparedOverlap.SecondArea);
+            Near(40, preparedOverlap.IntersectionArea); Near(112, preparedOverlap.UnionArea);
+            Near(72, preparedOverlap.SymmetricDifferenceArea);
+            Near(5.0 / 14, preparedOverlap.IntersectionOverUnion!.Value);
+            Near(9.0 / 14, preparedOverlap.JaccardDistance!.Value);
+            Require(preparedOverlap.FillRule == preparedRule, "Prepared comparison fill rule differs.");
+            Near(0, RegionArea.FilledArea(emptyRegion, preparedRule));
+            Near(0, RegionArea.IntersectionArea(emptyRegion, preparedZone, preparedRule));
+            RegionOverlapResult emptyOverlap = RegionArea.Compare(emptyRegion, emptyRegion, preparedRule);
+            Require(emptyOverlap.FirstArea == 0 && emptyOverlap.SecondArea == 0 && emptyOverlap.IntersectionArea == 0 &&
+                emptyOverlap.UnionArea == 0 && emptyOverlap.SymmetricDifferenceArea == 0 &&
+                emptyOverlap.IntersectionOverUnion is null && emptyOverlap.JaccardDistance is null,
+                "Empty prepared regions must have zero areas and undefined overlap ratios.");
+            preparedChecks.Add(new
+            {
+                FillRule = preparedRule.ToString(),
+                ZoneArea = preparedOverlap.FirstArea,
+                FootprintArea = preparedOverlap.SecondArea,
+                Intersection = preparedOverlap.IntersectionArea,
+                Union = preparedOverlap.UnionArea,
+                SymmetricDifferenceArea = preparedOverlap.SymmetricDifferenceArea,
+                IoU = preparedOverlap.IntersectionOverUnion,
+                JaccardDistance = preparedOverlap.JaccardDistance,
+                EmptyUnion = emptyOverlap.UnionArea,
+                EmptyIoU = emptyOverlap.IntersectionOverUnion,
+                EmptyJaccardDistance = emptyOverlap.JaccardDistance
+            });
+        }
+
         Assembly? adapter = null;
         #if PACKAGE_ADAPTER
         adapter = typeof(PolylineComparison).Assembly;
@@ -73,7 +123,10 @@ internal static class PackageVerification
             Coverage = coverage,
             Union = overlap.UnionArea,
             IoU = overlap.IntersectionOverUnion,
-            ZeroAreaCoverage = zeroCoverage
+            ZeroAreaCoverage = zeroCoverage,
+            PreparedRegionRingCount = preparedZone.RingCount,
+            PreparedRegionVertexCount = preparedZone.VertexCount,
+            PreparedRegionChecks = preparedChecks
         }));
 
         static string? Target(Assembly assembly) => assembly.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkName;
