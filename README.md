@@ -68,10 +68,12 @@ command selects the latest prerelease available on
 dotnet add MyApp/MyApp.csproj package PolylineKit.Core --prerelease
 ```
 
-The [package guide](docs/releasing.md) covers package verification and the
-optional adapter. APIs added for alpha.2 are described in the
-[alpha.2 release notes](docs/releases/0.1.0-alpha.2.md); they are not available in
-alpha.1.
+The [package guide](docs/releasing.md) covers installation and the optional adapter.
+The new polygon-role factories are available in the
+[alpha.2 GitHub prerelease](https://github.com/bgtnt/polylinekit/releases/tag/v0.1.0-alpha.2);
+its NuGet.org publication is pending. See the
+[alpha.2 release notes](docs/releases/0.1.0-alpha.2.md). Alpha.1 on NuGet.org does
+not include those factories.
 
 Alternatively, use a project reference:
 

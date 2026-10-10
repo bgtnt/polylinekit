@@ -1,12 +1,36 @@
 # Install verified packages and prepare a release
 
-## Prepare alpha.2
+## Install alpha.2 from GitHub
 
-The current source prepares `0.1.0-alpha.2`; it has not yet been tagged or published.
-See its [release notes](releases/0.1.0-alpha.2.md) for the additive polygon-role
-factories and tested NTS conversion example. The public alpha.1 below is unchanged.
+`0.1.0-alpha.2` is available in the
+[GitHub prerelease](https://github.com/bgtnt/polylinekit/releases/tag/v0.1.0-alpha.2).
+NuGet.org publication is pending; alpha.1 remains the latest NuGet version.
+See the [alpha.2 release notes](releases/0.1.0-alpha.2.md) for its additive
+polygon-role factories and tested NTS conversion example.
 
-After committing source, verify the new package pair and four external consumers:
+Download the original
+[Core package](https://github.com/bgtnt/polylinekit/releases/download/v0.1.0-alpha.2/PolylineKit.Core.0.1.0-alpha.2.nupkg)
+into a local directory such as `./packages`, then install it:
+
+```powershell
+dotnet add MyApp/MyApp.csproj package PolylineKit.Core --version 0.1.0-alpha.2 --source ./packages
+```
+
+For the optional adapter, also download its
+[matching package](https://github.com/bgtnt/polylinekit/releases/download/v0.1.0-alpha.2/PolylineKit.Clipper.0.1.0-alpha.2.nupkg)
+and permit restoring Clipper2 2.0.0 from NuGet.org. See the
+[local-feed source mapping](#install-from-the-local-feed), using alpha.2 and your
+download directory. Core itself has no third-party runtime dependencies.
+
+The original pair is pinned to `5e9dcc1a5bcb34b5b2d8ae60105d328aec66a80c`.
+Anonymous downloads of both packages, `verification.json` and `SHA256SUMS`
+matched the verified originals. No packages were rebuilt for upload.
+
+## Verify a release candidate
+
+After committing source, verify a new package pair and four external consumers.
+The following commands describe the alpha.2 checks; rebuilding does not replace
+the original release assets:
 
 ```powershell
 pwsh -File scripts/check-package-readme.ps1
@@ -26,10 +50,11 @@ IoU or overlap tags. `check-package-readme.ps1` exercises rejection controls;
 external applications exercise the new factories from both package targets.
 
 Pin the clean verification's source, package hashes and record hash in
-`publish-nuget.yml`. Do not substitute a rebuild after verification. Creating
-`v0.1.0-alpha.2`, creating its GitHub prerelease and dispatching publication each
-require the owner's separate instruction. The workflow remains manual and uses
-the current confirmed NuGet username until support completes any rename.
+`publish-nuget.yml`. Do not substitute a rebuild after verification. Creating a
+new tag, creating its GitHub prerelease and dispatching publication each require
+the owner's separate instruction. Alpha.2 tagging and GitHub delivery are complete;
+NuGet publication remains pending. The workflow remains manual and uses the
+current confirmed NuGet username until support completes any rename.
 
 ## Install the published alpha.1
 
