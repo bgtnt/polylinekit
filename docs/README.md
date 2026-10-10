@@ -12,8 +12,8 @@
 | Understand speed, allocations and memory | [Performance](performance.md) |
 | Evaluate predicted polygons against reference annotations | [Polygon overlap example](../examples/PolygonOverlapEvaluation/README.md) |
 | Build or contribute a change | [Contributor guide](../CONTRIBUTING.md) |
-| Inspect the alpha release and evidence | [Release notes](releases/0.1.0-alpha.1.md) |
-| Inspect the next alpha's consumer improvements | [Alpha.2 preparation](releases/0.1.0-alpha.2.md) |
+| Inspect the current alpha's consumer improvements and delivery | [Alpha.2 release notes](releases/0.1.0-alpha.2.md) |
+| Inspect the original alpha and historical evidence | [Alpha.1 release notes](releases/0.1.0-alpha.1.md) |
 | Verify packages or prepare publication | [Package verification and release guide](releasing.md) |
 
 ## Implementation reference

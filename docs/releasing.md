@@ -1,10 +1,44 @@
 # Install verified packages and prepare a release
 
+## Install from NuGet.org
+
+`0.1.0-alpha.2` is published on NuGet.org:
+[Core](https://www.nuget.org/packages/PolylineKit.Core/0.1.0-alpha.2) and the
+[optional Clipper adapter](https://www.nuget.org/packages/PolylineKit.Clipper/0.1.0-alpha.2).
+A source build is not required:
+
+```powershell
+dotnet add MyApp/MyApp.csproj package PolylineKit.Core --version 0.1.0-alpha.2 --source https://api.nuget.org/v3/index.json
+```
+
+Core needs no third-party runtime package. If you need resolved contours, add
+the adapter instead; NuGet also restores Core and Clipper2 2.0.0:
+
+```powershell
+dotnet add MyApp/MyApp.csproj package PolylineKit.Clipper --version 0.1.0-alpha.2 --source https://api.nuget.org/v3/index.json
+```
+
+The published packages retain the original source identity
+`5e9dcc1a5bcb34b5b2d8ae60105d328aec66a80c`. NuGet.org adds a repository signature;
+all ten original ZIP entries in each package, including both target assemblies
+and the README, were verified byte-for-byte against the GitHub originals.
+Four isolated NuGet.org-only consumers passed on .NET 8 and .NET 10; .NET 8
+selects the .NET Standard 2.0 assets. The gallery READMEs also match the packaged
+text. See the [delivery checks](releases/0.1.0-alpha.2.md#validation-and-delivery).
+
+If you previously restored a locally built package with this same version,
+NuGet may reuse it from the global cache despite the changed source. Use a fresh
+cache before adding/restoring the release packages:
+
+```powershell
+$env:NUGET_PACKAGES = '/absolute/path/to/fresh/package-cache'
+```
+
 ## Install alpha.2 from GitHub
 
 `0.1.0-alpha.2` is available in the
 [GitHub prerelease](https://github.com/bgtnt/polylinekit/releases/tag/v0.1.0-alpha.2).
-NuGet.org publication is pending; alpha.1 remains the latest NuGet version.
+The same version is also published on NuGet.org, as described above.
 See the [alpha.2 release notes](releases/0.1.0-alpha.2.md) for its additive
 polygon-role factories and tested NTS conversion example.
 
@@ -50,13 +84,12 @@ IoU or overlap tags. `check-package-readme.ps1` exercises rejection controls;
 external applications exercise the new factories from both package targets.
 
 Pin the clean verification's source, package hashes and record hash in
-`publish-nuget.yml`. Do not substitute a rebuild after verification. Creating a
-new tag, creating its GitHub prerelease and dispatching publication each require
-the owner's separate instruction. Alpha.2 tagging and GitHub delivery are complete;
-NuGet publication remains pending. The workflow remains manual and uses the
-current confirmed NuGet username until support completes any rename.
+`publish-nuget.yml`. Do not substitute a rebuild after verification. Release
+actions require the owner's authorization. Alpha.2 tagging, GitHub delivery and
+NuGet publication are complete. The workflow remains manual and uses the current
+confirmed NuGet username until support completes any rename.
 
-## Install the published alpha.1
+## Preserved alpha.1 release
 
 `0.1.0-alpha.1` is available on NuGet.org:
 [Core](https://www.nuget.org/packages/PolylineKit.Core/0.1.0-alpha.1) and
@@ -65,49 +98,14 @@ The [GitHub prerelease](https://github.com/bgtnt/polylinekit/releases/tag/v0.1.0
 preserves the original packages from source
 `a07ac5528da4cd0fc00c29d9bff01fae4d76c031`. Package and assembly names differ
 intentionally; see the [release notes](releases/0.1.0-alpha.1.md).
-
-## Install from NuGet.org
-
-A source build is not required:
-
-```powershell
-dotnet add MyApp/MyApp.csproj package PolylineKit.Core --version 0.1.0-alpha.1 --source https://api.nuget.org/v3/index.json
-```
-
-Core needs no third-party runtime package. If you need resolved contours, add
-the adapter instead; NuGet also restores Core and Clipper2:
-
-```powershell
-dotnet add MyApp/MyApp.csproj package PolylineKit.Clipper --version 0.1.0-alpha.1 --source https://api.nuget.org/v3/index.json
-```
-
-Alternatively, download the original
-[Core](https://github.com/bgtnt/polylinekit/releases/download/v0.1.0-alpha.1/PolylineKit.Core.0.1.0-alpha.1.nupkg)
-and [adapter](https://github.com/bgtnt/polylinekit/releases/download/v0.1.0-alpha.1/PolylineKit.Clipper.0.1.0-alpha.1.nupkg)
-files to a local feed and follow the [local-feed instructions](#install-from-the-local-feed).
-The release's `SHA256SUMS` and `verification.json` identify these original files.
-NuGet.org adds a repository signature, so its outer ZIP hashes can differ; the
-original package entries and assemblies are unchanged. The embedded READMEs
-retain the package-source snapshot and can describe the earlier GitHub-only
-delivery; this guide gives the current installation instructions.
-
-If you previously restored an older locally built package with this same version,
-NuGet may reuse it from the global cache despite the changed source. Set `NUGET_PACKAGES`
-to a fresh cache directory before adding/restoring the release packages:
-
-```powershell
-$env:NUGET_PACKAGES = '/absolute/path/to/fresh/package-cache'
-```
-
-The shipped pair includes the multi-ring API; do not substitute an earlier
-local candidate. The GitHub originals were verified without authentication,
-including all hashes and the tag/source identity. The four external consumers cover
-.NET 8 and .NET 10; .NET 8 selects the .NET Standard 2.0 assets.
+Alpha.1 remains listed and unchanged. It includes the raw multi-ring API but not
+alpha.2's polygon-role factories. Its original package files, embedded READMEs
+and historical measurement archives remain preserved in that release.
 
 ## Produce the packages and verify real consumers
 
 This is a maintainer verification workflow, not a prerequisite for installation.
-To rebuild the shipped source, use the `v0.1.0-alpha.1` tag. Fresh builds can have
+To rebuild the current shipped source, use the `v0.1.0-alpha.2` tag. Fresh builds can have
 different package bytes; the public release remains the originally verified pair.
 
 Use a committed checkout, PowerShell 7, the .NET 10 SDK and .NET 8/10 runtimes.
@@ -115,14 +113,15 @@ Installing both SDKs also supplies their targeting packs. From the repository
 root, choose a new or empty output directory:
 
 ```powershell
-pwsh -File scripts/verify-packages.ps1 -OutputDirectory artifacts/alpha-0.1.0-alpha.1
+pwsh -File scripts/verify-packages.ps1 -Version 0.1.0-alpha.2 -OutputDirectory artifacts/alpha-0.1.0-alpha.2
 ```
 
 The script runs `dotnet restore --locked-mode` and Release `dotnet pack` for
 both projects, then inspects the actual package files. It copies the coverage
 example outside the repository and executes four package-only consumers:
 Core and Clipper, each on .NET 10 and .NET 8. All consumers exercise a prepared
-shell, hole, island and empty region under both fill rules. The latter selects the packages'
+shell, hole, island, empty region and polygon-role factories under both fill rules.
+The .NET 8 consumer selects the packages'
 .NET Standard 2.0 assets. This is not a .NET Framework compatibility run.
 
 Consumers use an isolated temporary package/HTTP cache and explicit
@@ -135,8 +134,8 @@ The coverage check also exercises normalization and a zero-area zone.
 
 The output directory contains:
 
-- `PolylineKit.Core.0.1.0-alpha.1.nupkg`
-- `PolylineKit.Clipper.0.1.0-alpha.1.nupkg`
+- `PolylineKit.Core.0.1.0-alpha.2.nupkg`
+- `PolylineKit.Clipper.0.1.0-alpha.2.nupkg`
 - `verification.json`, with source commit, package hashes and four consumer results
 - per-consumer project/source, assets and execution records
 
@@ -153,7 +152,7 @@ For a minimal Core application:
 
 ```powershell
 dotnet new console -n CoverageDemo
-dotnet add CoverageDemo/CoverageDemo.csproj package PolylineKit.Core --version 0.1.0-alpha.1 --source ./artifacts/alpha-0.1.0-alpha.1
+dotnet add CoverageDemo/CoverageDemo.csproj package PolylineKit.Core --version 0.1.0-alpha.2 --source ./artifacts/alpha-0.1.0-alpha.2
 ```
 
 Copy the [coverage program](../examples/PackageCoverage/Program.cs) into the
@@ -167,7 +166,7 @@ next to your consumer, replacing the absolute local path:
 <configuration>
   <packageSources>
     <clear />
-    <add key="local" value="C:/absolute/path/to/artifacts/alpha-0.1.0-alpha.1" />
+    <add key="local" value="C:/absolute/path/to/artifacts/alpha-0.1.0-alpha.2" />
     <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
   </packageSources>
   <packageSourceMapping>
@@ -180,7 +179,7 @@ next to your consumer, replacing the absolute local path:
 Then run from that consumer directory:
 
 ```powershell
-dotnet add package PolylineKit.Clipper --version 0.1.0-alpha.1
+dotnet add package PolylineKit.Clipper --version 0.1.0-alpha.2
 ```
 
 Add explicit mappings for your application's other packages if needed. Source
@@ -256,16 +255,17 @@ contain original build paths; the bundle excludes private project files and PDBs
 
 ## NuGet publication and future releases
 
-Both `0.1.0-alpha.1` packages were published on NuGet.org on 2026-10-10 through
-GitHub Trusted Publishing, using the verified GitHub files without rebuilding.
-This version is immutable: do not repeat `publish=true` or push it again.
+Both `0.1.0-alpha.2` packages were published on NuGet.org on 2026-10-10 through
+[GitHub Trusted Publishing](https://github.com/bgtnt/polylinekit/actions/runs/38084874880),
+using the verified GitHub files without rebuilding. Alpha.1 remains published.
+Both versions are immutable: do not repeat `publish=true` or push them again.
 For a new release, recheck package ownership and version availability before
 pushing, and update the workflow's version, source and pinned hashes together.
 
 ### Publish through GitHub Trusted Publishing
 
 The manual [publish-nuget.yml](../.github/workflows/publish-nuget.yml) workflow
-downloads the delivered `v0.1.0-alpha.1` package pair and verification record,
+is currently pinned to the delivered `v0.1.0-alpha.2` package pair and verification record,
 checks their pinned SHA256 values and clean source identity, then uses
 [NuGet Trusted Publishing](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing)
 to obtain a temporary credential. It does not rebuild the packages. No permanent
@@ -333,7 +333,7 @@ For a future authorized GitHub prerelease, choose a new version/tag and target
 the exact source recorded in the clean package verification. Upload the checked
 packages, compact verification record, curated evidence archives and checksums
 to a draft, verify its complete asset inventory, then publish. Preserve the
-existing `v0.1.0-alpha.1` tag and assets.
+existing alpha.1 and alpha.2 tags and assets.
 
 For a future version, update release-note status to match the actual delivery
 channel. After upload, verify each asset's public download hash and update install

@@ -69,11 +69,14 @@ dotnet add MyApp/MyApp.csproj package PolylineKit.Core --prerelease
 ```
 
 The [package guide](docs/releasing.md) covers installation and the optional adapter.
-The new polygon-role factories are available in the
-[alpha.2 GitHub prerelease](https://github.com/bgtnt/polylinekit/releases/tag/v0.1.0-alpha.2);
-its NuGet.org publication is pending. See the
-[alpha.2 release notes](docs/releases/0.1.0-alpha.2.md). Alpha.1 on NuGet.org does
-not include those factories.
+Alpha.2 is published on NuGet.org:
+[Core](https://www.nuget.org/packages/PolylineKit.Core/0.1.0-alpha.2) and the
+[optional Clipper adapter](https://www.nuget.org/packages/PolylineKit.Clipper/0.1.0-alpha.2).
+It includes the polygon-role factories; see the
+[alpha.2 release notes](docs/releases/0.1.0-alpha.2.md). The
+[GitHub prerelease](https://github.com/bgtnt/polylinekit/releases/tag/v0.1.0-alpha.2)
+preserves the verified original packages. Alpha.1 remains available but does not
+include those factories.
 
 Alternatively, use a project reference:
 
