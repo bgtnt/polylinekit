@@ -5,11 +5,13 @@ dependencies**. Includes self-intersecting paths with explicit fill rules, plus
 normalization, transforms, resampling and alignment. Targets .NET Standard 2.0
 and .NET 10. MIT licensed.
 
-## Install the alpha candidate
+## Install the alpha release
 
-Version `0.1.0-alpha.1` is prepared for evaluation. Until publication on NuGet.org,
-use the verified local feed produced by the
-[package verification guide](https://github.com/bgtnt/polylinekit/blob/main/docs/releasing.md):
+Version `0.1.0-alpha.1` is available in the
+[GitHub prerelease](https://github.com/bgtnt/polylinekit/releases/tag/v0.1.0-alpha.1),
+with verified packages and checksums. It is not yet published on NuGet.org.
+Download the Core `.nupkg` to a local feed and follow the
+[package guide](https://github.com/bgtnt/polylinekit/blob/main/docs/releasing.md):
 
 ```sh
 dotnet add MyApp/MyApp.csproj package PolylineKit.Core --version 0.1.0-alpha.1 --source /absolute/path/to/feed
@@ -50,7 +52,7 @@ For holes and disconnected components in the current source, use
 [`PreparedRegion.FromRings` and `RegionArea`](https://github.com/bgtnt/polylinekit/blob/main/docs/regions.md).
 Preparation copies coordinates without inferring holes or reversing rings.
 Empty collections are valid; every supplied ring still needs three retained
-vertices. The current alpha candidate includes these APIs; earlier locally built
+vertices. This alpha release includes these APIs; earlier locally built
 candidates predate them. Use the verified package pair.
 
 Use `CompareRegions` for union, XOR, IoU and Jaccard distance; `BetweenGraphs`

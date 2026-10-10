@@ -3,14 +3,17 @@
 This executable uses `PackageReference`, with no source-project references. It is outside
 the main solution because the alpha packages must first exist in a feed.
 
-From the repository root, produce and verify a local feed in a new directory:
+Download the Core package from the
+[GitHub prerelease](https://github.com/bgtnt/polylinekit/releases/tag/v0.1.0-alpha.1)
+to `artifacts/alpha-0.1.0-alpha.1`, then restore and run from the repository root:
 
 ```powershell
-pwsh -File scripts/verify-packages.ps1 -OutputDirectory artifacts/alpha-0.1.0-alpha.1
 dotnet restore examples/PackageCoverage --source ./artifacts/alpha-0.1.0-alpha.1 --source https://api.nuget.org/v3/index.json
 dotnet run --project examples/PackageCoverage -c Release --no-restore
 ```
 
+For a source rebuild and delivery check instead, run
+`pwsh -File scripts/verify-packages.ps1 -OutputDirectory <fresh-directory>`.
 The verifier requires .NET 10 SDK and .NET 8/10 runtimes. It runs isolated copies outside
 the repository, maps `PolylineKit.*` exclusively to its newly produced local feed, and
 checks actual package assets and runtime assemblies. Its `net8.0` consumers select the
@@ -20,7 +23,10 @@ Expected values: zone area **20 m²**, footprint **16 m²**, intersection **7 m�
 coverage **35%**, union **29 m²**, and IoU **7/29**. The example calculates the fixed
 zone's area once and treats coverage as undefined when that area is zero.
 
-To also exercise contour output, restore and run with the same adapter property:
+To also exercise contour output, download `PolylineKit.Clipper.0.1.0-alpha.1.nupkg`
+from the same release into that feed directory, then restore and run with the
+same adapter property. See the [package guide](../../docs/releasing.md) if an
+older locally built candidate is already cached.
 
 ```powershell
 dotnet restore examples/PackageCoverage -p:UseClipper=true --source ./artifacts/alpha-0.1.0-alpha.1 --source https://api.nuget.org/v3/index.json

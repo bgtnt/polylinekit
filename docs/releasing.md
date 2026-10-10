@@ -1,10 +1,43 @@
-# Verify packages and prepare a release
+# Install verified packages and prepare a release
 
-The `0.1.0-alpha.1` candidate is local. Neither NuGet.org publication nor a
-public GitHub release has been completed. Package and assembly names differ
-intentionally; see the [release notes](releases/0.1.0-alpha.1.md).
+`0.1.0-alpha.1` is published as a [GitHub prerelease](https://github.com/bgtnt/polylinekit/releases/tag/v0.1.0-alpha.1),
+with source `a07ac5528da4cd0fc00c29d9bff01fae4d76c031`. NuGet.org publication
+has not been completed. Package and assembly names differ intentionally;
+see the [release notes](releases/0.1.0-alpha.1.md).
+
+## Download and install the delivered packages
+
+Download [Core](https://github.com/bgtnt/polylinekit/releases/download/v0.1.0-alpha.1/PolylineKit.Core.0.1.0-alpha.1.nupkg)
+to an empty local feed directory. If you need resolved contours, also download
+the [optional adapter](https://github.com/bgtnt/polylinekit/releases/download/v0.1.0-alpha.1/PolylineKit.Clipper.0.1.0-alpha.1.nupkg).
+The release's `SHA256SUMS` and `verification.json` identify the exact checked
+files. A source build is not required to use them.
+
+```powershell
+dotnet add MyApp/MyApp.csproj package PolylineKit.Core --version 0.1.0-alpha.1 --source /absolute/path/to/feed
+```
+
+For the adapter, use the [two-source configuration below](#install-from-the-local-feed),
+so Clipper2 can restore from NuGet.org. Core needs no third-party runtime package.
+
+If you previously restored an older locally built package with this same version,
+NuGet may reuse it from the global cache despite the new feed. Set `NUGET_PACKAGES`
+to a fresh cache directory before adding/restoring the release packages:
+
+```powershell
+$env:NUGET_PACKAGES = '/absolute/path/to/fresh/package-cache'
+```
+
+The shipped pair includes the multi-ring API; do not substitute an earlier
+local candidate. Public downloads were verified without authentication, including
+all hashes and the tag/source identity. The four external consumers cover
+.NET 8 and .NET 10; .NET 8 selects the .NET Standard 2.0 assets.
 
 ## Produce the packages and verify real consumers
+
+This is a maintainer verification workflow, not a prerequisite for installation.
+To rebuild the shipped source, use the `v0.1.0-alpha.1` tag. Fresh builds can have
+different package bytes; the public release remains the originally verified pair.
 
 Use a committed checkout, PowerShell 7, the .NET 10 SDK and .NET 8/10 runtimes.
 Installing both SDKs also supplies their targeting packs. From the repository
@@ -91,6 +124,10 @@ the historical alpha archive below covers 2,940 earlier samples. Their frozen
 binaries belong to the measured revisions, not the new release packages. Sidecar
 JSON records describe archive generation; the GitHub release identifies delivery.
 
+Public downloads:
+[prepared-region evidence](https://github.com/bgtnt/polylinekit/releases/download/v0.1.0-alpha.1/polylinekit-prepared-region-evidence.zip)
+and [historical alpha evidence](https://github.com/bgtnt/polylinekit/releases/download/v0.1.0-alpha.1/polylinekit-alpha-evidence.zip).
+
 To curate the prepared-region series from the retained local originals:
 
 ```powershell
@@ -146,14 +183,16 @@ result as well as the passes. Read its provenance for the historical memory
 probe's dirty build and redacted path fields. Embedded binary debug records can
 contain original build paths; the bundle excludes private project files and PDBs.
 
-## Publication after approval
+## NuGet publication and future releases
 
-Publication is a separate authorized step. The local preparation does not
-reserve either package ID. Both NuGet flat-container lookups returned HTTP 404
+NuGet publication is still pending; the GitHub release does not reserve either
+package ID. Both NuGet flat-container lookups returned HTTP 404
 on 2026-10-10; that does not establish ownership or guarantee later availability.
 Recheck package ownership and version availability immediately before pushing.
 
-Use the verified files as-is. In PowerShell, from the repository root:
+Use the already delivered, verified files as-is; do not replace them with a
+later rebuild. Download the two packages and `verification.json` to the candidate
+directory used below. In PowerShell, from the repository root:
 
 ```powershell
 $candidate = 'artifacts/alpha-0.1.0-alpha.1'
@@ -172,21 +211,15 @@ dotnet nuget push "$candidate/PolylineKit.Clipper.0.1.0-alpha.1.nupkg" --source 
 if ($LASTEXITCODE) { throw 'Adapter publication failed.' }
 ```
 
-For an authorized GitHub prerelease, install/authenticate GitHub CLI and verify
-the evidence archive's hash against its sidecar before uploading. The command
-below tags the exact source recorded in the package verification, not an
-unrelated later HEAD:
+For a future authorized GitHub prerelease, choose a new version/tag and target
+the exact source recorded in the clean package verification. Upload the checked
+packages, compact verification record, curated evidence archives and checksums
+to a draft, verify its complete asset inventory, then publish. Preserve the
+existing `v0.1.0-alpha.1` tag and assets.
 
-```powershell
-gh release create v0.1.0-alpha.1 --repo bgtnt/polylinekit --target $record.SourceRevision --prerelease --title 'PolylineKit 0.1.0-alpha.1' --notes-file docs/releases/0.1.0-alpha.1.md "$candidate/PolylineKit.Core.0.1.0-alpha.1.nupkg" "$candidate/PolylineKit.Clipper.0.1.0-alpha.1.nupkg" "$candidate/verification.json" artifacts/polylinekit-alpha-evidence.zip artifacts/polylinekit-alpha-evidence.json
-```
-
-Before that command, update the release-note status to match the completed NuGet
-publication. After upload, verify that each asset downloads with its recorded
-hash, replace the explicitly pending raw-data references with the actual asset
-URL, and update install instructions to use NuGet.org. The intended evidence
-address is `/releases/download/v0.1.0-alpha.1/polylinekit-alpha-evidence.zip` on
-this GitHub repository; it is **not a live evidence link before upload**.
+For a future version, update release-note status to match the actual delivery
+channel. After upload, verify each asset's public download hash and update install
+instructions. Do not claim NuGet.org availability until publication succeeds.
 
 Keep local per-consumer restore records out of release assets: they include
 temporary machine paths. The compact `verification.json`, packages and curated

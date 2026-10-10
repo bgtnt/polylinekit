@@ -32,13 +32,18 @@ pixel². The view shows original contours, without an image raster.
 ## Add to your application
 
 Choose `PolylineKit.Core` for numeric areas, intersection and coverage. Version
-**0.1.0-alpha.1** is an alpha candidate; it has not been published on NuGet.org.
-The [package guide](docs/releasing.md) produces and verifies a local feed:
+**0.1.0-alpha.1** is available as a verified
+[GitHub prerelease](https://github.com/bgtnt/polylinekit/releases/tag/v0.1.0-alpha.1).
+It has not been published on NuGet.org. Download
+[PolylineKit.Core.0.1.0-alpha.1.nupkg](https://github.com/bgtnt/polylinekit/releases/download/v0.1.0-alpha.1/PolylineKit.Core.0.1.0-alpha.1.nupkg)
+to a local feed directory, then install:
 
 ```sh
-pwsh -File scripts/verify-packages.ps1
 dotnet add MyApp/MyApp.csproj package PolylineKit.Core --version 0.1.0-alpha.1 --source /absolute/path/to/feed
 ```
+
+The [package guide](docs/releasing.md) covers checksums, the optional adapter,
+isolated caches for earlier local candidates, and rebuilding the packages.
 
 Alternatively, use a project reference:
 
@@ -99,7 +104,7 @@ Run the [package-based example](examples/PackageCoverage) for checked results.
 | Translation, rotation and optional uniform-scale alignment | `PolylineAlignment.FitSimilarity(moving, reference)` |
 | Resolved contours as well as area | Optional [Clipper adapter](docs/clipper.md): `PolylineComparison.EndpointBridgedArea(...)` / `FilledRegionDifference(...)`, with `includeContours: true` |
 
-The current alpha candidate includes the prepared-region API. Each ring closes
+This release includes the prepared-region API. Each ring closes
 independently, with explicit fill semantics and no automatic shell/hole
 orientation. Earlier locally built candidates predate it; use the verified pair.
 

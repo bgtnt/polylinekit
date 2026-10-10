@@ -257,11 +257,19 @@ checkout and LF in its Git archive; their JSON contents are identical. Recorded
 source hashes describe the measured checkout bytes, not normalized archive bytes.
 
 The assessed source, input snapshots, benchmark and comparison helper are public.
-Raw files remain in the author's ignored local
-`artifacts/paired-ring-buckets-coordinated-20260928/` directory; **they are not
-published downloads**. Hashes identify retained evidence rather than providing
-access. The host log is in its parent `artifacts/` directory. Re-run the comparison
-for an independent result.
+All 2,700 original samples are available in the
+[prepared-region evidence archive](https://github.com/bgtnt/polylinekit/releases/download/v0.1.0-alpha.1/polylinekit-prepared-region-evidence.zip),
+alongside frozen summarizers, allowlisted measured sources, inputs and this
+original report. Its standalone verifier independently recalculates 180 summary
+cells and can reproduce both frozen .NET summaries without new timings. See
+[verification instructions](../../docs/releasing.md#original-measurement-evidence).
+The ZIP SHA-256 is `9d5d7e9fdda26d101ab88dd1c02e265175748a34af8479912c6964a386db988e`.
+
+The local evidence hashes below remain original provenance. Raw timing JSON and
+summary bytes are unchanged. The published host log and helper redact only the
+identified personal path metadata, with original/published hashes and replacement
+counts in `coordination/provenance.json`. Original source archives are represented
+by allowlisted, unchanged members. Re-run the comparison for an independent result.
 
 | Local evidence file | SHA-256 |
 |---|---|

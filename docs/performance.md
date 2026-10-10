@@ -302,7 +302,9 @@ and [first-use/storage data](https://github.com/bgtnt/polylinekit/blob/5ef33e8e0
 Each applies to its recorded code revision, hardware, inputs and requested work.
 They preserve slower cases and are not new timings of subsequent API changes.
 
-The original raw measurements, frozen summarizers and data have been assembled
-into a verified local archive; see [the alpha evidence inventory](releases/0.1.0-alpha.1.md#measurement-evidence).
-The archive is not yet uploaded publicly. Its planned release location is not
-an available raw-data URL until publication is explicitly completed.
+Original raw measurements are public in two [GitHub release archives](https://github.com/bgtnt/polylinekit/releases/tag/v0.1.0-alpha.1):
+2,700 coordinated prepared-region samples and 2,940 earlier intersection/area
+samples, including unfavorable results. Checksums, scope and standalone
+verification instructions are in [the alpha evidence inventory](releases/0.1.0-alpha.1.md#measurement-evidence).
+Re-summarization uses the frozen measured binaries, not the newly delivered
+release packages; it does not take new timings.

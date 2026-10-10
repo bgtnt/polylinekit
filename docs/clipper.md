@@ -13,8 +13,8 @@ It adds **one third-party runtime package, Clipper2 2.0.0**, and references
 `includeContours: false`. Its decimal-grid contract differs from the core's
 area methods; choosing not to return contours does not switch its engine.
 
-For the `0.1.0-alpha.1` NuGet candidate, follow the
-[local-feed package guide](releasing.md). It verifies the adapter and its core
+For the `0.1.0-alpha.1` packages in the [GitHub prerelease](https://github.com/bgtnt/polylinekit/releases/tag/v0.1.0-alpha.1),
+follow the [local-feed package guide](releasing.md). It verifies the adapter and its core
 dependency using package references on both supplied target assemblies.
 
 For areas, normalization, resampling and alignment alone, reference only
