@@ -5,6 +5,9 @@ construction followed by a fixed query. It uses **only public APIs** and an
 explicit DLL reference. It does not rebuild the library, restore its package, or
 take a source `ProjectReference`. The runner has no NuGet dependencies.
 
+See the [recorded comparison](RESULTS.md) for the published alpha.2 and guarded
+orientation implementation, including all process medians and allocations.
+
 The purpose is to compare the already published `0.1.0-alpha.2` payload with a
 candidate using identical inputs and executable code. It is not a timing test for
 CI, a new polygon validity checker, or a comparison with another library.

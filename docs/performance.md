@@ -48,6 +48,20 @@ exclude initialization and retained storage.
 
 ## Recorded results by scenario
 
+### Polygon factory construction after alpha.2
+
+The role-aware factories had been computing a complete winding result just to
+orient each copied ring. A guarded direct sum reduces preparation of the complete
+114-feature Census snapshot from **1.524 ms to 0.369 ms**, and allocations from
+**426,528 B to 228,664 B**, against the actual published alpha.2 DLL.
+Preparation plus 1,400 intersection queries has a smaller median reduction of
+**7–8.5%**. The intersection engine is unchanged. Tiny or cancelling rings retain
+the old orientation route after an additional pass; no universal acceleration
+or numerical equivalence is claimed. These are source changes after alpha.2,
+not improvements already present in the published package.
+
+See the [factory measurements, process ranges and reproduction commands](../benchmarks/PolylineKit.PreparationBenchmarks/RESULTS.md).
+
 ### Complete regions with holes and disconnected components
 
 The public prepared-region API was measured at

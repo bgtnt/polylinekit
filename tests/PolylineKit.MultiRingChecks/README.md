@@ -9,6 +9,14 @@ against Clipper2 and NTS. Timing is not a CI acceptance threshold.
 The [recorded prepared-region results](RESULTS.md) include the full real workload
 and generated 16–1,024-ring cases, including slower cases and setup costs.
 
+The polygon-factory orientation checks additionally inspect stored vertex order
+against the legacy `ClosedPath(...).Signed` decision on 1,668 numerical variants,
+including cancellation, large origins and subnormal inputs. The current prepared
+contract group has 128,431 assertions. See the separate
+[factory construction measurements](../../benchmarks/PolylineKit.PreparationBenchmarks/RESULTS.md)
+for the actual alpha.2 DLL comparison; the historical counts below precede these
+factory checks.
+
 The prepared API passes **5,292 ownership/contract assertions**, alongside
 **16,204 analytic assertions** and **123,432 GIS numeric comparisons**, in all
 three runner modes: .NET 10, .NET 10 with SIMD disabled, and the .NET Standard
