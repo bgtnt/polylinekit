@@ -32,14 +32,11 @@ pixel². The view shows original contours, without an image raster.
 ## Add to your application
 
 Choose `PolylineKit.Core` for numeric areas, intersection and coverage. Version
-**0.1.0-alpha.1** is available as a verified
-[GitHub prerelease](https://github.com/bgtnt/polylinekit/releases/tag/v0.1.0-alpha.1).
-It has not been published on NuGet.org. Download
-[PolylineKit.Core.0.1.0-alpha.1.nupkg](https://github.com/bgtnt/polylinekit/releases/download/v0.1.0-alpha.1/PolylineKit.Core.0.1.0-alpha.1.nupkg)
-to a local feed directory, then install:
+**0.1.0-alpha.1** is available on
+[NuGet.org](https://www.nuget.org/packages/PolylineKit.Core/0.1.0-alpha.1):
 
 ```sh
-dotnet add MyApp/MyApp.csproj package PolylineKit.Core --version 0.1.0-alpha.1 --source /absolute/path/to/feed
+dotnet add MyApp/MyApp.csproj package PolylineKit.Core --version 0.1.0-alpha.1 --source https://api.nuget.org/v3/index.json
 ```
 
 The [package guide](docs/releasing.md) covers checksums, the optional adapter,

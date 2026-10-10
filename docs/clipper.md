@@ -1,11 +1,14 @@
 # Optional Clipper adapter
 
-Reference `PolylineKit.Clipper` only when you need resolved output contours or
+Install `PolylineKit.Clipper` only when you need resolved output contours or
 the existing quantized `PolylineComparison` operations:
 
 ```sh
-dotnet add MyApp/MyApp.csproj reference polylinekit/src/PolylineKit.Clipper/PolylineKit.Clipper.csproj
+dotnet add MyApp/MyApp.csproj package PolylineKit.Clipper --version 0.1.0-alpha.1 --source https://api.nuget.org/v3/index.json
 ```
+
+For a source checkout, use a project reference to
+`src/PolylineKit.Clipper/PolylineKit.Clipper.csproj` instead.
 
 It adds **one third-party runtime package, Clipper2 2.0.0**, and references
 `PolylineKit.Core`. Both projects use the `PolylineKit` namespace.
@@ -13,9 +16,10 @@ It adds **one third-party runtime package, Clipper2 2.0.0**, and references
 `includeContours: false`. Its decimal-grid contract differs from the core's
 area methods; choosing not to return contours does not switch its engine.
 
-For the `0.1.0-alpha.1` packages in the [GitHub prerelease](https://github.com/bgtnt/polylinekit/releases/tag/v0.1.0-alpha.1),
-follow the [local-feed package guide](releasing.md). It verifies the adapter and its core
-dependency using package references on both supplied target assemblies.
+Version `0.1.0-alpha.1` is available on
+[NuGet.org](https://www.nuget.org/packages/PolylineKit.Clipper/0.1.0-alpha.1).
+The [package guide](releasing.md) also covers verified GitHub originals and
+external consumer checks on both supplied target assemblies.
 
 For areas, normalization, resampling and alignment alone, reference only
 [the core](../README.md#add-to-your-application). It does not load this adapter
@@ -95,4 +99,4 @@ geometry and transformation types resolvable. Public method names, the
 `PolylineKit` namespace and the Clipper-based methods' behavior remain unchanged.
 Projects referencing the old source paths must update their project references.
 Deploy the complete dependency graph; replacing an isolated DLL is insufficient.
-No NuGet package has been published.
+Both alpha packages are available on NuGet.org; preserve their matching versions.

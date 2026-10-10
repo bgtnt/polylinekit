@@ -4,15 +4,14 @@ Optional Clipper2 integration for quantized area comparisons and operations
 that also need resulting contours. Targets .NET Standard 2.0 and .NET 10.
 References `PolylineKit.Core` at the same alpha version and Clipper2 2.0.0.
 
-Version `0.1.0-alpha.1` is available in the
-[GitHub prerelease](https://github.com/bgtnt/polylinekit/releases/tag/v0.1.0-alpha.1),
-but is not yet published on NuGet.org. Download both Core and Clipper `.nupkg`
-files and use the local feed plus NuGet.org source configuration in the
-[package verification guide](https://github.com/bgtnt/polylinekit/blob/main/docs/releasing.md).
-Then add the package:
+Version `0.1.0-alpha.1` is available on
+[NuGet.org](https://www.nuget.org/packages/PolylineKit.Clipper/0.1.0-alpha.1).
+Adding it also restores Core and Clipper2. See the
+[package guide](https://github.com/bgtnt/polylinekit/blob/main/docs/releasing.md)
+for verified GitHub originals and cache isolation:
 
 ```sh
-dotnet add MyApp/MyApp.csproj package PolylineKit.Clipper --version 0.1.0-alpha.1
+dotnet add MyApp/MyApp.csproj package PolylineKit.Clipper --version 0.1.0-alpha.1 --source https://api.nuget.org/v3/index.json
 ```
 
 ```csharp

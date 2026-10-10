@@ -7,14 +7,13 @@ and .NET 10. MIT licensed.
 
 ## Install the alpha release
 
-Version `0.1.0-alpha.1` is available in the
-[GitHub prerelease](https://github.com/bgtnt/polylinekit/releases/tag/v0.1.0-alpha.1),
-with verified packages and checksums. It is not yet published on NuGet.org.
-Download the Core `.nupkg` to a local feed and follow the
-[package guide](https://github.com/bgtnt/polylinekit/blob/main/docs/releasing.md):
+Version `0.1.0-alpha.1` is available on
+[NuGet.org](https://www.nuget.org/packages/PolylineKit.Core/0.1.0-alpha.1).
+See the [package guide](https://github.com/bgtnt/polylinekit/blob/main/docs/releasing.md)
+for the optional adapter, verified GitHub originals and cache isolation:
 
 ```sh
-dotnet add MyApp/MyApp.csproj package PolylineKit.Core --version 0.1.0-alpha.1 --source /absolute/path/to/feed
+dotnet add MyApp/MyApp.csproj package PolylineKit.Core --version 0.1.0-alpha.1 --source https://api.nuget.org/v3/index.json
 ```
 
 ## Measure zone coverage
@@ -48,7 +47,7 @@ area. Coordinates are planar, and areas use squared coordinate units. Input is
 not quantized, projected, normalized or resampled implicitly. Calculations use
 `double`; tiny features near large coordinates can lose precision.
 
-For holes and disconnected components in the current source, use
+For holes and disconnected components, use
 [`PreparedRegion.FromRings` and `RegionArea`](https://github.com/bgtnt/polylinekit/blob/main/docs/regions.md).
 Preparation copies coordinates without inferring holes or reversing rings.
 Empty collections are valid; every supplied ring still needs three retained
