@@ -1,0 +1,93 @@
+name: Publish verified alpha to NuGet.org
+
+on:
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish the verified packages (false only checks public downloads)
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: polylinekit-nuget-publication
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    if: github.repository == 'bgtnt/polylinekit' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      id-token: write
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - name: Install the publishing CLI
+        uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Download and verify the delivered packages
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $source = 'a07ac5528da4cd0fc00c29d9bff01fae4d76c031'
+          $version = '0.1.0-alpha.1'
+          $base = 'https://github.com/bgtnt/polylinekit/releases/download/v0.1.0-alpha.1'
+          $destination = Join-Path $env:RUNNER_TEMP 'polylinekit-alpha-publish'
+          if (Test-Path -LiteralPath $destination) { throw 'Use a fresh publication directory.' }
+          New-Item -ItemType Directory -Path $destination | Out-Null
+          $expected = [ordered]@{
+            'verification.json' = '17bf396ea37815c261ca11fdf1e820bf36bb540d493c0002e5510c41bf2a0bdb'
+            'PolylineKit.Core.0.1.0-alpha.1.nupkg' = '23ed39388681bd3da959a3a6c4124859d6b2d677b5777f31f8505335602127e6'
+            'PolylineKit.Clipper.0.1.0-alpha.1.nupkg' = 'd689cdb59075bd3657ccd8ff71aa778009b05583bff46417847622d5beed9bd9'
+          }
+          foreach ($entry in $expected.GetEnumerator()) {
+            $file = Join-Path $destination $entry.Key
+            Invoke-WebRequest -Uri "$base/$($entry.Key)" -OutFile $file
+            if ((Get-FileHash -LiteralPath $file -Algorithm SHA256).Hash.ToLowerInvariant() -ne $entry.Value) {
+              throw "Release checksum differs: $($entry.Key)"
+            }
+          }
+          $record = Get-Content -LiteralPath (Join-Path $destination 'verification.json') -Raw | ConvertFrom-Json
+          if ($record.SourceRevision -ne $source -or $record.DirtyWorkingTree -ne $false -or $record.Version -ne $version) {
+            throw 'The package verification does not identify the clean release source.'
+          }
+          if (@($record.Packages).Count -ne 2 -or @($record.Consumers).Count -ne 4) {
+            throw 'The release must include both packages and four external consumers.'
+          }
+          foreach ($package in $record.Packages) {
+            if ($package.Version -ne $version -or $expected[$package.File] -ne $package.SHA256) {
+              throw 'Package identity or recorded checksum differs.'
+            }
+          }
+          if ([version](dotnet --version) -lt [version]'10.0.300') {
+            throw 'Use .NET SDK 10.0.300 or newer for NUGET_API_KEY environment support.'
+          }
+          "Verified both delivered packages from $source; no rebuild." | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
+
+      - name: Obtain a temporary NuGet credential
+        if: inputs.publish
+        id: login
+        uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
+        with:
+          user: wowbagger
+
+      - name: Push the verified package pair
+        if: inputs.publish
+        env:
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ([string]::IsNullOrWhiteSpace($env:NUGET_API_KEY)) { throw 'NuGet login returned no credential.' }
+          $destination = Join-Path $env:RUNNER_TEMP 'polylinekit-alpha-publish'
+          foreach ($name in @('PolylineKit.Core.0.1.0-alpha.1.nupkg', 'PolylineKit.Clipper.0.1.0-alpha.1.nupkg')) {
+            dotnet nuget push (Join-Path $destination $name) --source https://api.nuget.org/v3/index.json
+            if ($LASTEXITCODE) { throw "NuGet publication failed: $name" }
+          }
+          'Both push requests completed. Verify public availability and package contents after NuGet validation.' | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY

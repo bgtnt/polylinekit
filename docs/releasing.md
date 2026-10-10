@@ -190,6 +190,50 @@ package ID. Both NuGet flat-container lookups returned HTTP 404
 on 2026-10-10; that does not establish ownership or guarantee later availability.
 Recheck package ownership and version availability immediately before pushing.
 
+### Publish through GitHub Trusted Publishing
+
+The manual [publish-nuget.yml](../.github/workflows/publish-nuget.yml) workflow
+downloads the delivered `v0.1.0-alpha.1` package pair and verification record,
+checks their pinned SHA256 values and clean source identity, then uses
+[NuGet Trusted Publishing](https://learn.microsoft.com/en-us/nuget/nuget-org/trusted-publishing)
+to obtain a temporary credential. It does not rebuild the packages. No permanent
+API key or GitHub secret is needed. The workflow runs only on this repository's
+`main` branch and serializes publication attempts.
+
+Create a policy in the `wowbagger` NuGet account with these fields:
+
+| Field | Value |
+| --- | --- |
+| Policy Name | `PolylineKit publishing` |
+| Package Owner | `wowbagger` |
+| CI/CD Provider | `GitHub Actions` |
+| Repository Owner | `bgtnt` |
+| Repository | `polylinekit` |
+| Workflow File | `publish-nuget.yml` (file name only) |
+| Environment | Leave empty; the workflow does not use a GitHub environment |
+| Scope | Push new packages and package versions |
+| Glob Patterns and Packages | `PolylineKit.*` |
+
+Save the policy with **Create**. An empty policy list means none has been created;
+this process does not issue a key for you to copy. The workflow's login username
+is the NuGet profile name `wowbagger`, distinct from the GitHub owner `bgtnt`.
+
+From GitHub **Actions**, select **Publish verified alpha to NuGet.org**, then
+**Run workflow** on `main`. Leave `publish` false to verify public downloads
+without requesting a credential or pushing. Set it true only for an authorized
+publication after the policy is active. Publishing is not triggered by a commit,
+pull request or tag.
+
+After a successful push, wait for NuGet validation and indexing, verify both
+public package identities and assembly contents, and check an external consumer
+before reporting the NuGet release as delivered. NuGet.org repository-signs
+packages, so the served ZIP checksum can differ from the uploaded file; compare
+contents while accounting for the added signature. A partial upload or an
+existing version is a failure requiring inspection, not a silent duplicate skip.
+For future releases, update the version, source and pinned download hashes together.
+
+### Publish locally with an API key
+
 Use the already delivered, verified files as-is; do not replace them with a
 later rebuild. Download the two packages and `verification.json` to the candidate
 directory used below. In PowerShell, from the repository root:
