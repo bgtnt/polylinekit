@@ -36,17 +36,17 @@ jobs:
       - name: Download and verify the delivered packages
         run: |
           $ErrorActionPreference = 'Stop'
-          # Filled from the clean alpha.2 package verification before release authorization.
-          $source = 'PENDING_ALPHA2_VERIFICATION'
+          # Clean package-source commit; subsequent commits only pin delivery metadata.
+          $source = '5e9dcc1a5bcb34b5b2d8ae60105d328aec66a80c'
           $version = '0.1.0-alpha.2'
           $base = "https://github.com/bgtnt/polylinekit/releases/download/v$version"
           $destination = Join-Path $env:RUNNER_TEMP 'polylinekit-alpha-publish'
           if (Test-Path -LiteralPath $destination) { throw 'Use a fresh publication directory.' }
           New-Item -ItemType Directory -Path $destination | Out-Null
           $expected = [ordered]@{
-            'verification.json' = 'PENDING_ALPHA2_VERIFICATION'
-            'PolylineKit.Core.0.1.0-alpha.2.nupkg' = 'PENDING_ALPHA2_VERIFICATION'
-            'PolylineKit.Clipper.0.1.0-alpha.2.nupkg' = 'PENDING_ALPHA2_VERIFICATION'
+            'verification.json' = '3195345de38ba9986a99f9ccf6bd10ae394260b4c4cae6ab73adf88a48a7bdfe'
+            'PolylineKit.Core.0.1.0-alpha.2.nupkg' = 'd8891f397288e7fd0f0148da6704a3bf10bf5edcdb928f6f755221c1a86dcf0a'
+            'PolylineKit.Clipper.0.1.0-alpha.2.nupkg' = '311a473b41c7c898c18158c61fbf7f73b304c343f6f3a6e9d2e902cbcf2a812e'
           }
           if ($source -notmatch '^[0-9a-f]{40}$' -or @($expected.Values | Where-Object { $_ -notmatch '^[0-9a-f]{64}$' }).Count) {
             throw 'Pin the verified clean release source and SHA256 values before attempting publication.'
