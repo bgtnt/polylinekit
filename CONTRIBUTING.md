@@ -9,7 +9,10 @@ dotnet restore PolylineKit.slnx --locked-mode
 dotnet build PolylineKit.slnx -c Release --no-restore
 pwsh -File scripts/verify-implementations.ps1
 pwsh -File scripts/verify-consumers.ps1
+pwsh -File scripts/check-package-readme.ps1
 pwsh -File scripts/verify-packages.ps1
+dotnet run --project examples/NetTopologySuiteInterop -c Release --no-build -- check
+dotnet run --project examples/NetTopologySuiteInterop -c Release --no-build -- check-gis
 dotnet run --project examples/Basic -c Release --no-build
 dotnet run --project examples/ClipperContours -c Release --no-build
 ```

@@ -17,6 +17,9 @@ jobs:
             10.0.x
       - run: dotnet restore PolylineKit.slnx --locked-mode
       - run: dotnet build PolylineKit.slnx -c Release --no-restore
+      - name: Packaged README validation guard contracts
+        run: ./scripts/check-package-readme.ps1
+        shell: pwsh
       - run: ./scripts/verify-implementations.ps1
         shell: pwsh
       - run: dotnet run --project examples/Basic -c Release --no-build
@@ -30,6 +33,10 @@ jobs:
       - name: Prepared region contracts and complete GIS inputs (no timing)
         run: ./tests/PolylineKit.MultiRingChecks/run.ps1
         shell: pwsh
+      - name: NTS polygon conversion and invalid-input observations (no timing)
+        run: dotnet run --project examples/NetTopologySuiteInterop -c Release --no-build -- check artifacts/nts-interop-ci/contracts.json
+      - name: NTS interoperability on complete frozen GIS layers (no timing)
+        run: dotnet run --project examples/NetTopologySuiteInterop -c Release --no-build -- check-gis . artifacts/nts-interop-ci/gis.json
       - name: Prepare pinned Solaris evaluation sample
         run: python examples/PolygonOverlapEvaluation/data/prepare-data.py
       - name: Polygon evaluation reference and geometry contracts

@@ -47,6 +47,24 @@ internal static class PackageVerification
         var preparedZone = PreparedRegion.FromRings(new IReadOnlyList<Point2>[] { shell, hole, island });
         var preparedFootprint = PreparedRegion.FromRings(new IReadOnlyList<Point2>[] { rectangle });
         var emptyRegion = PreparedRegion.FromRings(Array.Empty<IReadOnlyList<Point2>>());
+        // Both packaged target assemblies expose the additive polygon factories.
+        var roleZone = PreparedRegion.FromPolygons(new
+            (IReadOnlyList<Point2> Exterior, IReadOnlyList<IReadOnlyList<Point2>>? Holes)[]
+            { (shell, new IReadOnlyList<Point2>[] { hole }), (island, null) });
+        var roleFootprint = PreparedRegion.FromPolygon(rectangle);
+        var polygonFactoryAreas = new List<double>();
+        foreach (bool reverseShell in new[] { false, true })
+        foreach (bool reverseHole in new[] { false, true })
+        {
+            var rolePolygon = PreparedRegion.FromPolygon(reverseShell ? shell.Reverse().ToArray() : shell,
+                new IReadOnlyList<Point2>[] { reverseHole ? hole.Reverse().ToArray() : hole });
+            Near(84, RegionArea.FilledArea(rolePolygon));
+            Near(84, RegionArea.FilledArea(rolePolygon, PathFillRule.EvenOdd));
+            polygonFactoryAreas.Add(RegionArea.FilledArea(rolePolygon));
+        }
+        Require(PreparedRegion.FromPolygons(Array.Empty<
+            (IReadOnlyList<Point2> Exterior, IReadOnlyList<IReadOnlyList<Point2>>? Holes)>()).RingCount == 0,
+            "Empty polygon collection must prepare an empty region.");
         Require(typeof(PreparedRegion).Assembly == core && typeof(RegionArea).Assembly == core,
             "Prepared regions and their area methods must belong to Core.");
         Require(preparedZone.RingCount == 3 && preparedZone.VertexCount == 12,
@@ -57,6 +75,8 @@ internal static class PackageVerification
         foreach (PathFillRule preparedRule in new[] { PathFillRule.NonZero, PathFillRule.EvenOdd })
         {
             Near(88, RegionArea.FilledArea(preparedZone, preparedRule)); // 100 - 16 + 4.
+            Near(88, RegionArea.FilledArea(roleZone, preparedRule));
+            Near(40, RegionArea.IntersectionArea(roleZone, roleFootprint, preparedRule));
             Near(64, RegionArea.FilledArea(preparedFootprint, preparedRule));
             Near(40, RegionArea.IntersectionArea(preparedZone, preparedFootprint, preparedRule)); // 48 - 8.
             RegionOverlapResult preparedOverlap = RegionArea.Compare(preparedZone, preparedFootprint, preparedRule);
@@ -126,6 +146,7 @@ internal static class PackageVerification
             ZeroAreaCoverage = zeroCoverage,
             PreparedRegionRingCount = preparedZone.RingCount,
             PreparedRegionVertexCount = preparedZone.VertexCount,
+            PolygonFactoryFourDirections = polygonFactoryAreas,
             PreparedRegionChecks = preparedChecks
         }));
 

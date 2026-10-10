@@ -1,12 +1,14 @@
 [CmdletBinding()]
 param(
-    [string]$Version = '0.1.0-alpha.1',
+    [string]$Version = '0.1.0-alpha.2',
     [string]$OutputDirectory,
     [switch]$AllowDirty,
-    [switch]$KeepWorkspace
+    [switch]$KeepWorkspace,
+    [switch]$Offline
 )
 
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'PackageReadme.ps1')
 $repository = [IO.Path]::GetFullPath((Split-Path $PSScriptRoot -Parent))
 if ($Version -notmatch '^\d+\.\d+\.\d+-alpha\.\d+$') { throw 'Supply a complete alpha package version.' }
 $runId = [Guid]::NewGuid().ToString('N')
@@ -45,7 +47,9 @@ function Inspect-Package([string]$Id, [string]$Assembly, [string]$Feed, [string]
         $license = Xml-Child $metadata 'license'
         Require ($license.GetAttribute('type') -eq 'expression' -and $license.InnerText -eq 'MIT') 'Expected MIT license expression.'
         Require ([Text.Encoding]::UTF8.GetString((Read-Zip $zip 'LICENSE')).Contains('Permission is hereby granted')) 'Missing MIT license text.'
-        Require ((Xml-Child $metadata 'readme').InnerText -eq 'README.md' -and (Read-Zip $zip 'README.md').Length -gt 0) 'Package README missing.'
+        $readme = [Text.Encoding]::UTF8.GetString((Read-Zip $zip 'README.md')).TrimStart([char]0xfeff)
+        Assert-PackageReadmeMetadata -Metadata $metadata -Readme $readme -Version $Version
+        Require ((Xml-Child $metadata 'readme').InnerText -eq 'README.md') 'Package README entry differs.'
         $repositoryMetadata = Xml-Child $metadata 'repository'
         Require ($repositoryMetadata.GetAttribute('type') -eq 'git' -and $repositoryMetadata.GetAttribute('url') -eq 'https://github.com/bgtnt/polylinekit' -and
             $repositoryMetadata.GetAttribute('commit') -eq $Revision) 'Repository identity differs.'
@@ -80,7 +84,8 @@ function Inspect-Package([string]$Id, [string]$Assembly, [string]$Feed, [string]
         }
         Require (@($dependencies.Target | Sort-Object -Unique).Count -eq 2) 'Duplicate package dependency framework.'
         return [ordered]@{ Id=$Id; Version=$Version; File=[IO.Path]::GetFileName($path); Assembly=$Assembly; SHA256=(Hash-File $path);
-            SHA512=[Convert]::ToBase64String([Security.Cryptography.SHA512]::HashData([IO.File]::ReadAllBytes($path))); Assets=$assets; Dependencies=$dependencies }
+            SHA512=[Convert]::ToBase64String([Security.Cryptography.SHA512]::HashData([IO.File]::ReadAllBytes($path))); Assets=$assets; Dependencies=$dependencies;
+            Readme=[ordered]@{ SHA256=(Hash-Bytes (Read-Zip $zip 'README.md')); MetadataAndTextCheck='passed' } }
     } finally { $zip.Dispose() }
 }
 
@@ -99,19 +104,29 @@ try {
     # Packing builds the two real source projects. Only the subsequent outside consumers use the isolated feed/cache.
     foreach ($project in @('PolylineKit.Core', 'PolylineKit.Clipper')) {
         $path = "src/$project/$project.csproj"
-        Run-Dotnet @('restore', $path, '--locked-mode')
+        Run-Dotnet @('restore', $path, '--locked-mode', '-p:NuGetAudit=false')
         Run-Dotnet @('pack', $path, '-c', 'Release', '--no-restore', '--output', $feed, "-p:Version=$Version", "-p:PackageVersion=$Version", "-p:RepositoryCommit=$revision")
     }
     $packages = @(Inspect-Package 'PolylineKit.Core' 'PolylineKit.Winding' $feed $revision; Inspect-Package 'PolylineKit.Clipper' 'PolylineKit' $feed $revision)
     $config = Join-Path $workspace 'NuGet.Config'
     $escapedFeed = [Security.SecurityElement]::Escape($feed)
+    $otherSource = '<add key="nuget.org" value="https://api.nuget.org/v3/index.json" />'
+    $otherMapping = '<packageSource key="nuget.org"><package pattern="Clipper2" /><package pattern="Microsoft.NETCore.App.*" /></packageSource>'
+    if ($Offline) {
+        $originalCache = if ($saved['NUGET_PACKAGES']) { $saved['NUGET_PACKAGES'] } else { Join-Path ([Environment]::GetFolderPath('UserProfile')) '.nuget/packages' }
+        $clipperFeed = Join-Path $originalCache 'clipper2/2.0.0'
+        Require (Test-Path -LiteralPath (Join-Path $clipperFeed 'clipper2.2.0.0.nupkg')) 'Offline verification needs the already cached Clipper2 2.0.0 package.'
+        $escapedClipperFeed = [Security.SecurityElement]::Escape($clipperFeed)
+        $otherSource = "<add key=`"cached`" value=`"$escapedClipperFeed`" />"
+        $otherMapping = '<packageSource key="cached"><package pattern="Clipper2" /></packageSource>'
+    }
     @"
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
-  <packageSources><clear /><add key="local" value="$escapedFeed" /><add key="nuget.org" value="https://api.nuget.org/v3/index.json" /></packageSources>
+  <packageSources><clear /><add key="local" value="$escapedFeed" />$otherSource</packageSources>
   <packageSourceMapping>
     <packageSource key="local"><package pattern="PolylineKit.*" /></packageSource>
-    <packageSource key="nuget.org"><package pattern="Clipper2" /><package pattern="Microsoft.NETCore.App.*" /></packageSource>
+    $otherMapping
   </packageSourceMapping>
 </configuration>
 "@ | Set-Content -LiteralPath $config
@@ -175,7 +190,7 @@ try {
     }
     Copy-Item -LiteralPath $config -Destination $output
     [ordered]@{ SourceRevision=$revision; DirtyWorkingTree=$dirty; Version=$Version; Utc=[DateTimeOffset]::UtcNow.ToString('o');
-        SDK=(& dotnet --version); InstalledRuntimes=$runtimes; Packages=$packages; Consumers=$consumers } |
+        SDK=(& dotnet --version); InstalledRuntimes=$runtimes; OfflineConsumers=[bool]$Offline; Packages=$packages; Consumers=$consumers } |
         ConvertTo-Json -Depth 12 | Set-Content -LiteralPath (Join-Path $output 'verification.json')
     $complete = $true
     Write-Output "PASS: inspected and executed both real NuGet packages on net10.0 and net8.0. Evidence: $output"

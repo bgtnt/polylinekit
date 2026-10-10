@@ -88,6 +88,8 @@ public class PolylineKit.PreparedRegion
   public System.Int32 RingCount { get; }
   public System.Int32 VertexCount { get; }
   public System.Nullable<PolylineKit.Bounds2D> Bounds { get; }
+  public static PolylineKit.PreparedRegion FromPolygon(System.Collections.Generic.IReadOnlyList<PolylineKit.Point2> exterior, System.Collections.Generic.IReadOnlyList<System.Collections.Generic.IReadOnlyList<PolylineKit.Point2>> holes = null)
+  public static PolylineKit.PreparedRegion FromPolygons(System.Collections.Generic.IReadOnlyList<System.ValueTuple<System.Collections.Generic.IReadOnlyList<PolylineKit.Point2>, System.Collections.Generic.IReadOnlyList<System.Collections.Generic.IReadOnlyList<PolylineKit.Point2>>>> polygons)
   public static PolylineKit.PreparedRegion FromRings(System.Collections.Generic.IReadOnlyList<System.Collections.Generic.IReadOnlyList<PolylineKit.Point2>> rings)
 
 public static class PolylineKit.RegionArea

@@ -5,6 +5,35 @@ dependencies** in the core. Includes self-intersecting paths with explicit fill
 rules, plus normalization, resampling and alignment. Supports **.NET Standard 2.0**
 and **.NET 10**. MIT licensed.
 
+```sh
+dotnet add package PolylineKit.Core --prerelease
+```
+
+```csharp
+using PolylineKit;
+
+Point2[] first = [new(0, 0), new(2, 0), new(2, 2), new(0, 2)];
+Point2[] second = [new(1, 0), new(3, 0), new(3, 2), new(1, 2)];
+double? iou = PolylineArea.CompareRegions(first, second).IntersectionOverUnion; // 1/3
+```
+
+## PolylineKit, Clipper2 or NetTopologySuite?
+
+| You need | Use |
+|---|---|
+| Area, intersection, IoU or coverage as numbers, with an explicit fill rule for self-intersecting input | `PolylineKit.Core` |
+| Output polygons, offsets or general Boolean geometry | Clipper2, or the optional `PolylineKit.Clipper` adapter for its supported operations |
+| A geometry model, topology validation, spatial predicates and geometry overlays | NetTopologySuite |
+
+Recorded workloads give a guide, not a universal ranking: the building evaluator
+was **3.05× faster** than its configured NTS backend and effectively tied with
+Clipper2; the complete county/district coverage took **24–25% less time** than
+reusable Clipper2. At **1,024 rings per operand**, warm Core comparisons were
+**18–34% slower** than Clipper2. Selected warm geometry calls allocated **0 B**;
+preparation, first calls, growth and oversized workspaces can allocate. These
+are historical measurements, not timings of alpha.2. See
+[the measured scopes and limits](docs/performance.md#recorded-results-by-scenario).
+
 ## Applications
 
 | Developer task | Result | Runnable example |
@@ -31,16 +60,18 @@ pixel². The view shows original contours, without an image raster.
 
 ## Add to your application
 
-Choose `PolylineKit.Core` for numeric areas, intersection and coverage. Version
-**0.1.0-alpha.1** is available on
-[NuGet.org](https://www.nuget.org/packages/PolylineKit.Core/0.1.0-alpha.1):
+Choose `PolylineKit.Core` for numeric areas, intersection and coverage. The
+command selects the latest prerelease available on
+[NuGet.org](https://www.nuget.org/packages/PolylineKit.Core):
 
 ```sh
-dotnet add MyApp/MyApp.csproj package PolylineKit.Core --version 0.1.0-alpha.1 --source https://api.nuget.org/v3/index.json
+dotnet add MyApp/MyApp.csproj package PolylineKit.Core --prerelease
 ```
 
-The [package guide](docs/releasing.md) covers checksums, the optional adapter,
-isolated caches for earlier local candidates, and rebuilding the packages.
+The [package guide](docs/releasing.md) covers package verification and the
+optional adapter. APIs added for alpha.2 are described in the
+[alpha.2 release notes](docs/releases/0.1.0-alpha.2.md); they are not available in
+alpha.1.
 
 Alternatively, use a project reference:
 
@@ -51,7 +82,7 @@ dotnet add MyApp/MyApp.csproj reference polylinekit/src/PolylineKit.Core/Polylin
 
 `PolylineKit.Core` includes area methods, normalization, scaling, resampling and
 alignment. All use the `PolylineKit` namespace. Alpha status means the package
-is ready for evaluation, with numerical and input limits described below.
+has an API that may evolve, with numerical and input limits described below.
 
 The optional `PolylineKit.Clipper` project adds Clipper2 for resolved output
 contours and the existing quantized `PolylineComparison` methods. Only reference
@@ -94,16 +125,17 @@ Run the [package-based example](examples/PackageCoverage) for checked results.
 | Area filled by one closed path | `PolylineArea.FilledArea(path, fillRule)` |
 | Area shared by two single-walk regions | `PolylineArea.IntersectionArea(first, second, fillRule)` |
 | Single-walk region change, union, XOR, IoU or Jaccard distance | `PolylineArea.CompareRegions(first, second, fillRule)` |
-| Regions with holes or disconnected components | [Prepare rings](docs/regions.md) with `PreparedRegion.FromRings`; use `RegionArea.FilledArea`, `IntersectionArea` or `Compare` |
+| Polygons with holes or disconnected components | [Preserve shell/hole roles](docs/regions.md) with `PreparedRegion.FromPolygon` or `FromPolygons`; use `RegionArea.FilledArea`, `IntersectionArea` or `Compare` |
 | Vertical separation between increasing-x graphs | `PolylineArea.BetweenGraphs(first, second)` |
 | Centering and scaling | `PolylineNormalization.ToUnitBounds(path)` / `MatchBounds(path, reference)` |
 | Equidistant samples along a path | `PolylineSampling.ResampleByArcLength(path)` |
 | Translation, rotation and optional uniform-scale alignment | `PolylineAlignment.FitSimilarity(moving, reference)` |
 | Resolved contours as well as area | Optional [Clipper adapter](docs/clipper.md): `PolylineComparison.EndpointBridgedArea(...)` / `FilledRegionDifference(...)`, with `includeContours: true` |
 
-This release includes the prepared-region API. Each ring closes
-independently, with explicit fill semantics and no automatic shell/hole
-orientation. Earlier locally built candidates predate it; use the verified pair.
+`FromPolygon` and `FromPolygons` orient rings by their supplied shell/hole roles.
+`FromRings` preserves the supplied directions for raw winding input. Each ring
+closes independently; none of these methods repairs topology. See
+[polygon input and the 100-versus-84 hole example](docs/regions.md).
 
 Normalization, alignment and measurement are separate operations. For example:
 
@@ -158,7 +190,8 @@ Reducing the repeated square to a minimal path before clipping was not measured.
   lose precision. IoU/Jaccard are `null` when the union is not positive.
 - `RegionArea` accepts [prepared collections of rings](docs/regions.md), including
   empty regions. Each nonempty collection's rings follow the same vertex and
-  coordinate limits; NonZero holes require deliberate orientation.
+  coordinate limits. Role-based factories orient ordinary holes; raw
+  `FromRings` input requires deliberate orientation under NonZero.
 - These methods do not calculate geodesic areas or polygon offsets.
 
 Read the [area guide](docs/area.md) for fill rules, examples and contracts, or the
@@ -168,6 +201,7 @@ Read the [area guide](docs/area.md) for fill rules, examples and contracts, or t
 
 - [Runnable quick start](examples/Basic/Program.cs)
 - [Install and run the coverage example from NuGet packages](examples/PackageCoverage)
+- [Convert NetTopologySuite Polygon/MultiPolygon input](examples/NetTopologySuiteInterop/README.md)
 - [Optional contour output](examples/ClipperContours/Program.cs)
 - [Measure change after contour simplification](examples/AreaChange/README.md)
 - [Measure how much of a region is covered](examples/RegionCoverage/README.md)
@@ -175,7 +209,8 @@ Read the [area guide](docs/area.md) for fill rules, examples and contracts, or t
 - [Documentation index](docs/README.md)
 - [Performance and memory](docs/performance.md)
 - [Build, tests and contributing](CONTRIBUTING.md)
-- [Alpha release notes](docs/releases/0.1.0-alpha.1.md)
+- [Alpha.2 changes and release status](docs/releases/0.1.0-alpha.2.md)
+- [Published alpha.1 release notes](docs/releases/0.1.0-alpha.1.md)
 
 Original code is [MIT licensed](LICENSE). Dependencies, data and algorithm
 attribution are documented in [third-party notices](THIRD-PARTY-NOTICES.md).

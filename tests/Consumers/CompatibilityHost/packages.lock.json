@@ -11,7 +11,7 @@
         "type": "Project",
         "dependencies": {
           "Clipper2": "[2.0.0, )",
-          "PolylineKit.Core": "[0.1.0-alpha.1, )"
+          "PolylineKit.Core": "[0.1.0-alpha.2, )"
         }
       },
       "polylinekit.core": {

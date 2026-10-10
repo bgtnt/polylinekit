@@ -5,19 +5,46 @@ rings. They return filled area, intersection, union, XOR and overlap ratios
 without constructing output contours. They are part of the dependency-free
 `PolylineKit.Core` project and use the `PolylineKit` namespace.
 
-These methods are included in
-[PolylineKit.Core 0.1.0-alpha.1 on NuGet.org](https://www.nuget.org/packages/PolylineKit.Core/0.1.0-alpha.1).
-The [GitHub release](https://github.com/bgtnt/polylinekit/releases/tag/v0.1.0-alpha.1)
-preserves verified original packages and evidence. Earlier locally built
-candidates predate this API.
-For one ordered walk per operand, the existing [PolylineArea methods](area.md)
-remain available with their original input contract.
+Use `PreparedRegion.FromPolygon(exterior, holes)` when your input has explicit
+shell/hole roles, and `FromPolygons` for several such polygons. These factories
+are added in [alpha.2](releases/0.1.0-alpha.2.md). The published alpha.1 contains
+the raw `FromRings` API; check the release status before using newer APIs from
+the current source. For one ordered walk per operand, the existing
+[PolylineArea methods](area.md) remain available with their original contract.
+
+## Supply a polygon's exterior and holes
+
+```csharp
+using System.Collections.Generic;
+using PolylineKit;
+
+Point2[] shell = [new(0, 0), new(10, 0), new(10, 10), new(0, 10)];
+Point2[] hole = [new(2, 2), new(6, 2), new(6, 6), new(2, 6)];
+var polygon = PreparedRegion.FromPolygon(
+    shell, new IReadOnlyList<Point2>[] { hole });
+double area = RegionArea.FilledArea(polygon); // 84
+double parityArea = RegionArea.FilledArea(polygon, PathFillRule.EvenOdd); // 84
+```
+
+The shell and hole above have the same supplied direction. The factory stores
+exteriors with positive signed area and holes with negative signed area, reversing
+the copied ring when needed. A ring with exactly zero signed area is stored as
+supplied. The original collections are not changed. `NonZero` remains the default.
+
+For valid simple polygon boundaries, with holes properly inside their exterior
+and disjoint hole interiors, the factories produce the same filled polygon under
+NonZero and EvenOdd. This is not a guarantee for arbitrary self-intersecting or
+overlapping hole input: a signed-area sign does not establish topology, and a
+zero-signed-area self-intersecting ring has no direction that this rule can infer.
+The factories do not infer nesting, validate polygon topology, repair geometry or
+reorder vertices beyond reversal. Pass raw winding input to `FromRings` when its
+supplied directions are intentional.
 
 ## A shell, a hole and a separate component
 
-This complete example uses Cartesian XY coordinates with Y increasing upwards.
-The shell and island run clockwise; the hole runs counterclockwise. Under
-NonZero filling, their areas are `100 - 16 + 4 = 88`.
+This complete example uses Cartesian XY coordinates and supplies the shell/hole
+roles explicitly. The separate component is a second polygon. Under NonZero
+filling, their areas are `100 - 16 + 4 = 88`.
 
 ```csharp
 using System.Collections.Generic;
@@ -27,14 +54,17 @@ Point2[] shell = [new(0, 0), new(0, 10), new(10, 10), new(10, 0)];
 Point2[] hole = [new(2, 2), new(6, 2), new(6, 6), new(2, 6)];
 Point2[] island = [new(20, 0), new(20, 2), new(22, 2), new(22, 0)];
 
-var zone = PreparedRegion.FromRings(
-    new IReadOnlyList<Point2>[] { shell, hole, island });
+var zone = PreparedRegion.FromPolygons(
+    new (IReadOnlyList<Point2> Exterior, IReadOnlyList<IReadOnlyList<Point2>>? Holes)[]
+    {
+        (shell, new IReadOnlyList<Point2>[] { hole }),
+        (island, null)
+    });
 double zoneArea = RegionArea.FilledArea(zone); // 88; cache across queries
 // zone.RingCount = 3; zone.VertexCount = 12.
 
 Point2[] rectangle = [new(4, 0), new(4, 8), new(12, 8), new(12, 0)];
-var footprint = PreparedRegion.FromRings(
-    new IReadOnlyList<Point2>[] { rectangle });
+var footprint = PreparedRegion.FromPolygon(rectangle);
 
 double sharedArea = RegionArea.IntersectionArea(zone, footprint); // 40
 double? coverage = zoneArea > 0 ? sharedArea / zoneArea : null; // 5/11
@@ -67,22 +97,79 @@ numbers at each location, then applies the fill rule to that total:
   nested rings alternate filled and empty, and overlapping rings toggle their
   common area out of the fill.
 
-Ring order does not assign shell/hole roles. The library does not infer nesting,
-reverse rings, repair topology or connect components with invented segments.
+With raw `FromRings`, ring order does not assign shell/hole roles or change ring
+directions. **A shell of area 100 and a hole of area 16 passed in the same
+direction to `FromRings` give 100 under default NonZero, versus 84 under EvenOdd.**
+Use `FromPolygon` to preserve those roles without manually orienting rings.
+No factory infers nesting, repairs topology or connects components with invented
+segments.
 Self-intersections, contacts, shared edges and retracing are accepted under the
 chosen winding definition.
 
-This is not a general union of independently filled polygons. Under NonZero,
-overlapping consistently oriented simple shells do produce their union, but
-opposite windings can cancel. Two identical same-direction rings fill once under
-NonZero and cancel under EvenOdd. Preserve shell/hole roles when converting
-Polygon or MultiPolygon data, and orient rings deliberately for NonZero.
+Raw `FromRings` is not a general union of independently filled polygons. Under
+NonZero, overlapping consistently oriented simple shells do produce their union,
+but opposite raw windings can cancel. With valid polygon parts passed through
+`FromPolygons`, NonZero fills the union of those parts; EvenOdd fills points
+covered by an odd number of parts, so the shared fill of two parts cancels.
+Two identical same-direction rings fill once under
+NonZero and cancel under EvenOdd. Neither rule recovers an author's intended
+shell/hole arrangement from invalid input.
+
+## Convert NetTopologySuite Polygon or MultiPolygon
+
+The following is the converter from the
+[runnable interoperability example](../examples/NetTopologySuiteInterop/README.md).
+It accepts valid polygon hierarchies and preserves their structural exterior/hole
+roles even when the NTS rings have arbitrary directions. It rejects invalid
+geometries; the example records NTS's actual behavior on invalid rings separately.
+This is example code, not a runtime dependency of Core.
+
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using NetTopologySuite.Geometries;
+using PolylineKit;
+
+public static class PolygonInterop
+{
+    public static PreparedRegion Convert(Geometry geometry)
+    {
+        ArgumentNullException.ThrowIfNull(geometry);
+        if (geometry is not Polygon && geometry is not MultiPolygon)
+            throw new ArgumentException("Expected Polygon or MultiPolygon.", nameof(geometry));
+        if (!geometry.IsValid)
+            throw new ArgumentException("The polygon must be valid; this converter does not repair geometry.", nameof(geometry));
+        if (geometry.IsEmpty) return PreparedRegion.FromPolygons([]);
+        if (geometry is Polygon polygon)
+            return PreparedRegion.FromPolygon(Ring(polygon.ExteriorRing), Holes(polygon));
+        var polygons = Enumerable.Range(0, geometry.NumGeometries)
+            .Select(i => (Polygon)geometry.GetGeometryN(i)).Where(p => !p.IsEmpty)
+            .Select(p => (Exterior: Ring(p.ExteriorRing), Holes: Holes(p))).ToArray();
+        return PreparedRegion.FromPolygons(polygons);
+    }
+
+    private static IReadOnlyList<Point2> Ring(LineString ring) =>
+        ring.Coordinates.Select(c => new Point2(c.X, c.Y)).ToArray();
+    private static IReadOnlyList<IReadOnlyList<Point2>>? Holes(Polygon polygon) =>
+        Enumerable.Range(0, polygon.NumInteriorRings).Select(i => Ring(polygon.GetInteriorRingN(i))).ToArray();
+}
+```
+
+The example targets .NET 10. Both operands must already use the same planar
+coordinate reference. XY is copied unchanged; `SRID` metadata does not project
+coordinates. Z and M do not participate. NTS provides a geometry/topology model,
+not a coordinate transformation in this converter. Conversion validates NTS
+topology and allocates a snapshot; reuse the resulting `PreparedRegion` for queries.
+The [results](../examples/NetTopologySuiteInterop/RESULTS.md) specify the fixed
+area/IoU tolerances and observations for NTS 2.6.0.
 
 ## Preparation, reuse and empty regions
 
-`PreparedRegion.FromRings` copies the coordinates, validates each ring, removes
-consecutive duplicates and an optional duplicate closing vertex, and records
-bounds. Keep source collections stable during preparation. Afterwards they may
+All three factories copy the coordinates, validate each ring's coordinates, remove
+consecutive duplicates and an optional duplicate closing vertex, and record
+bounds. The role-based factories additionally orient nonzero-signed-area rings.
+Keep source collections stable during preparation. Afterwards they may
 be edited without changing the snapshot. Prepared instances are immutable and
 can be shared across threads.
 
@@ -110,6 +197,7 @@ and sufficiently long retraced walks are valid and may contribute zero area.
 | Input | Behavior |
 |---|---|
 | Null collection, or null prepared operand | `ArgumentNullException` |
+| Null exterior in `FromPolygon` | `ArgumentNullException` |
 | Null ring, or fewer than three retained vertices in a ring | `ArgumentException` |
 | Nonfinite coordinate or magnitude above `1e100` | `ArgumentException` |
 | Undefined fill rule | `ArgumentOutOfRangeException`, before operand access |
@@ -127,7 +215,12 @@ crossing detection and winding propagation again, using per-call working storage
 
 ## Costs and numerical limits
 
-Preparation takes work and storage proportional to the input vertices and rings.
+Raw `FromRings` preparation takes work and snapshot storage proportional to the
+input vertices and rings. The role-based factories also evaluate each ring's
+signed-area direction through the existing boundary engine, then reverse copied
+vertices when needed. This orientation work can depend on crossings and overlap
+events and can allocate temporary storage; it is not a linear-time promise for
+arbitrary walks. Snapshot storage remains proportional to vertices and rings.
 For a measurement with `R` rings across both operands, up to 16 rings use direct
 pairwise bounds checks. Larger inputs build a balanced hierarchy of ring bounds
 in reusable working arrays, with up to four rings per leaf. Each leaf candidate

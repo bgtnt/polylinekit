@@ -12,6 +12,9 @@ internal static class PreparedRegionChecks
         checks.EmptyAndDegenerate();
         checks.FillSemantics();
         checks.Validation();
+        checks.PolygonRoles();
+        checks.PolygonSnapshotOwnership();
+        checks.PolygonValidation();
         checks.RepeatedGeneratedPairs();
         checks.ConcurrentReads();
         return new
@@ -21,7 +24,7 @@ internal static class PreparedRegionChecks
             generatedPairs = Checks.PairCount,
             generatorSeed = "0x4628e19b",
             concurrentQueries = Checks.ConcurrentQueries,
-            scope = "Immutable input ownership, validation, fill semantics and repeated/concurrent queries; no Polygon/MultiPolygon validity claim.",
+            scope = "Immutable input ownership, raw winding and explicit polygon-role factories, validation, fill semantics and repeated/concurrent queries; no topology validation or repair claim.",
             parityReference = "Internal raw-ring route, supplemented by analytic areas; not an independent numerical oracle.",
             tolerance = "2e-12 relative to max(1, expected)."
         };
@@ -158,6 +161,136 @@ internal static class PreparedRegionChecks
             }
         }
 
+        internal void PolygonRoles()
+        {
+            Point2[] shell = Rectangle(0, 0, 10, 10), hole = Rectangle(3, 3, 7, 7);
+            PreparedRegion canonical = Prepare(shell, Reverse(hole));
+            PreparedRegion probe = Prepare(Rectangle(0, 0, 5, 10));
+            foreach (bool shellReversed in new[] { false, true })
+            foreach (bool holeReversed in new[] { false, true })
+            {
+                Point2[] exterior = shellReversed ? Reverse(shell) : shell;
+                Point2[] interior = holeReversed ? Reverse(hole) : hole;
+                PreparedRegion single = PreparedRegion.FromPolygon(exterior, [interior]);
+                PreparedRegion multiple = PreparedRegion.FromPolygons([(exterior, new IReadOnlyList<Point2>[] { interior })]);
+                string name = $"Polygon directions exterior={shellReversed}, hole={holeReversed}";
+                True(name + " metadata", single.RingCount == 2 && single.VertexCount == 8);
+                Bounds(name + " bounds", single.Bounds, 0, 0, 10, 10);
+                foreach (PathFillRule rule in Rules)
+                {
+                    Near(name + " single area", 84, RegionArea.FilledArea(single, rule));
+                    Near(name + " multiple area", 84, RegionArea.FilledArea(multiple, rule));
+                    BitAgreement(name + " single", canonical, single, probe, rule);
+                    BitAgreement(name + " multiple", canonical, multiple, probe, rule);
+                }
+                Near(name + " default area", 84, RegionArea.FilledArea(single));
+            }
+
+            // A polygon with no holes is accepted through either optional/null or empty input.
+            BitAgreement("Absent holes", Prepare(shell), PreparedRegion.FromPolygon(shell), probe, PathFillRule.NonZero);
+            BitAgreement("Explicit null holes", Prepare(shell), PreparedRegion.FromPolygon(shell, null), probe, PathFillRule.NonZero);
+            BitAgreement("Empty holes", Prepare(shell), PreparedRegion.FromPolygon(shell, []), probe, PathFillRule.NonZero);
+
+            PreparedRegion island = PreparedRegion.FromPolygons([
+                (Reverse(shell), new IReadOnlyList<Point2>[] { Rectangle(2, 2, 8, 8) }),
+                (Reverse(Rectangle(4, 4, 6, 6)), null),
+                (Rectangle(20, 0, 22, 2), Array.Empty<IReadOnlyList<Point2>>())]);
+            PreparedRegion canonicalIsland = Prepare(shell, Reverse(Rectangle(2, 2, 8, 8)), Rectangle(4, 4, 6, 6), Rectangle(20, 0, 22, 2));
+            PreparedRegion holeProbe = Prepare(Rectangle(2, 2, 8, 8));
+            foreach (PathFillRule rule in Rules)
+            {
+                Near("Polygon island in a hole plus disconnected component", 72, RegionArea.FilledArea(island, rule));
+                Near("Polygon island intersects hole probe", 4, RegionArea.IntersectionArea(island, holeProbe, rule));
+                BitAgreement("Island polygon canonical ring agreement", canonicalIsland, island, holeProbe, rule);
+            }
+
+            PreparedRegion overlap = PreparedRegion.FromPolygons([
+                (Reverse(Rectangle(0, 0, 2, 2)), null), (Rectangle(1, 0, 3, 2), null)]);
+            Near("Overlapping polygons union under default NonZero", 6, RegionArea.FilledArea(overlap));
+            Near("Overlapping polygons cancel under EvenOdd", 4, RegionArea.FilledArea(overlap, PathFillRule.EvenOdd));
+
+            // Signed area gives no direction for these rings. Neither exterior nor hole is reversed.
+            Point2[] bowTie = [new(0, 0), new(2, 2), new(0, 2), new(2, 0)];
+            Point2[] collinear = [new(1, 3), new(4, 3), new(2, 3)];
+            True("Bow tie Signed is exactly zero", WindingArea.ClosedPath(bowTie).Signed == 0);
+            foreach (Point2[] zero in new[] { bowTie, Reverse(bowTie), collinear, Reverse(collinear) })
+            {
+                PreparedRegion exterior = PreparedRegion.FromPolygon(zero);
+                PreparedRegion interior = PreparedRegion.FromPolygon(shell, [zero]);
+                StoredRingOrder("Zero Signed exterior keeps supplied order", exterior, 0, zero);
+                StoredRingOrder("Zero Signed hole keeps supplied order", interior, 1, zero);
+                foreach (PathFillRule rule in Rules)
+                {
+                    BitAgreement("Zero Signed exterior raw agreement", Prepare(zero), exterior, probe, rule);
+                    BitAgreement("Zero Signed hole raw agreement", Prepare(shell, zero), interior, probe, rule);
+                }
+            }
+        }
+
+        internal void PolygonSnapshotOwnership()
+        {
+            Point2[] shell = RepeatAndClose(Reverse(Rectangle(0, 0, 10, 10)));
+            Point2[] hole = RepeatAndClose(Rectangle(3, 3, 7, 7));
+            Point2[] component = Rectangle(20, 0, 22, 2);
+            var holes = new List<IReadOnlyList<Point2>> { hole };
+            var polygons = new List<(IReadOnlyList<Point2> Exterior, IReadOnlyList<IReadOnlyList<Point2>>? Holes)>
+                { (shell, holes), (component, null) };
+            PreparedRegion single = PreparedRegion.FromPolygon(shell, holes);
+            PreparedRegion multiple = PreparedRegion.FromPolygons(polygons);
+            True("Polygon role snapshot cleans duplicates", single.RingCount == 2 && single.VertexCount == 8);
+            True("Multiple role snapshot cleans duplicates", multiple.RingCount == 3 && multiple.VertexCount == 12);
+            Bounds("Role snapshot original bounds", multiple.Bounds, 0, 0, 22, 10);
+
+            Array.Fill(shell, new Point2(double.NaN, double.NaN));
+            Array.Clear(hole);
+            Array.Clear(component);
+            holes[0] = Array.Empty<Point2>();
+            holes.Clear();
+            polygons[0] = (Array.Empty<Point2>(), null);
+            polygons.Clear();
+            foreach (PathFillRule rule in Rules)
+            {
+                Near("Single role snapshot survives all input mutations", 84, RegionArea.FilledArea(single, rule));
+                Near("Multiple role snapshot survives all input mutations", 88, RegionArea.FilledArea(multiple, rule));
+                Near("Role snapshots remain comparable", 84, RegionArea.IntersectionArea(single, multiple, rule));
+            }
+            Bounds("Role snapshot bounds survive mutations", multiple.Bounds, 0, 0, 22, 10);
+        }
+
+        internal void PolygonValidation()
+        {
+            Point2[] shell = Rectangle(0, 0, 10, 10);
+            Throws<ArgumentNullException>("Null polygon exterior", () => PreparedRegion.FromPolygon(null!));
+            Throws<ArgumentNullException>("Null polygon collection", () => PreparedRegion.FromPolygons(null!));
+            Throws<ArgumentException>("Null polygon hole", () => PreparedRegion.FromPolygon(shell, new IReadOnlyList<Point2>[] { null! }));
+            Throws<ArgumentException>("Null multiple polygon exterior", () => PreparedRegion.FromPolygons([(null!, null)]));
+            Throws<ArgumentException>("Null multiple polygon hole", () => PreparedRegion.FromPolygons([(shell, new IReadOnlyList<Point2>[] { null! })]));
+            PreparedRegion empty = PreparedRegion.FromPolygons([]);
+            True("Empty polygon collection metadata", empty.RingCount == 0 && empty.VertexCount == 0 && empty.Bounds is null);
+            foreach (PathFillRule rule in Rules) Near("Empty polygon collection area", 0, RegionArea.FilledArea(empty, rule));
+
+            foreach (Point2[] invalid in new Point2[][]
+            {
+                [], [new(0, 0)], [new(0, 0), new(1, 1)], [new(0, 0), new(1, 1), new(0, 0)],
+                [new(0, 0), new(0, 0), new(0, 0)]
+            })
+            {
+                Throws<ArgumentException>("Invalid polygon exterior vertex count", () => PreparedRegion.FromPolygon(invalid));
+                Throws<ArgumentException>("Invalid polygon hole vertex count", () => PreparedRegion.FromPolygon(shell, [invalid]));
+                Throws<ArgumentException>("Invalid later polygon exterior vertex count", () => PreparedRegion.FromPolygons([(shell, null), (invalid, null)]));
+                Throws<ArgumentException>("Invalid later polygon hole vertex count", () => PreparedRegion.FromPolygons([(shell, null), (shell, new IReadOnlyList<Point2>[] { invalid })]));
+            }
+            foreach (double value in new[] { double.NaN, double.PositiveInfinity, double.NegativeInfinity, 1.01e100, -1.01e100 })
+            foreach (Point2 point in new[] { new Point2(value, 1), new Point2(1, value) })
+            {
+                Point2[] invalid = [new(0, 0), new(1, 0), point];
+                Throws<ArgumentException>("Invalid polygon exterior coordinates", () => PreparedRegion.FromPolygon(invalid));
+                Throws<ArgumentException>("Invalid polygon hole coordinates", () => PreparedRegion.FromPolygon(shell, [invalid]));
+                Throws<ArgumentException>("Invalid multiple polygon exterior coordinates", () => PreparedRegion.FromPolygons([(shell, null), (invalid, null)]));
+                Throws<ArgumentException>("Invalid multiple polygon hole coordinates", () => PreparedRegion.FromPolygons([(shell, null), (shell, new IReadOnlyList<Point2>[] { invalid })]));
+            }
+        }
+
         internal void RepeatedGeneratedPairs()
         {
             var random = new FixedRandom(0x4628e19b);
@@ -219,6 +352,48 @@ internal static class PreparedRegionChecks
                 Near(name + " Jaccard distance", xor / union, result.JaccardDistance!.Value);
             }
         }
+
+        private void BitAgreement(string name, PreparedRegion expected, PreparedRegion actual, PreparedRegion probe, PathFillRule rule)
+        {
+            Bits(name + " selected own", RegionArea.FilledArea(expected, rule), RegionArea.FilledArea(actual, rule));
+            Bits(name + " selected intersection", RegionArea.IntersectionArea(expected, probe, rule), RegionArea.IntersectionArea(actual, probe, rule));
+            RegionOverlapResult a = RegionArea.Compare(expected, probe, rule), b = RegionArea.Compare(actual, probe, rule);
+            Bits(name + " first", a.FirstArea, b.FirstArea);
+            Bits(name + " second", a.SecondArea, b.SecondArea);
+            Bits(name + " intersection", a.IntersectionArea, b.IntersectionArea);
+            Bits(name + " union", a.UnionArea, b.UnionArea);
+            Bits(name + " difference", a.SymmetricDifferenceArea, b.SymmetricDifferenceArea);
+            True(name + " fill rule", a.FillRule == b.FillRule);
+            if (a.IntersectionOverUnion.HasValue)
+            {
+                True(name + " IoU present", b.IntersectionOverUnion.HasValue);
+                Bits(name + " IoU", a.IntersectionOverUnion.Value, b.IntersectionOverUnion!.Value);
+            }
+            if (a.JaccardDistance.HasValue)
+            {
+                True(name + " Jaccard present", b.JaccardDistance.HasValue);
+                Bits(name + " Jaccard", a.JaccardDistance.Value, b.JaccardDistance!.Value);
+            }
+        }
+
+        private void StoredRingOrder(string name, PreparedRegion prepared, int ring, Point2[] supplied)
+        {
+            // Inspect private ownership only to verify the zero-sign contract, which filled areas cannot
+            // distinguish for a standalone ring. No storage is exposed by the public API.
+            const BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Instance;
+            var vertices = (Point2[])typeof(PreparedRegion).GetField("Vertices", flags)!.GetValue(prepared)!;
+            var starts = (int[])typeof(PreparedRegion).GetField("Starts", flags)!.GetValue(prepared)!;
+            True(name + " count", starts[ring + 1] - starts[ring] == supplied.Length);
+            for (int i = 0; i < supplied.Length; i++)
+            {
+                Bits(name + " x " + i, supplied[i].X, vertices[starts[ring] + i].X);
+                Bits(name + " y " + i, supplied[i].Y, vertices[starts[ring] + i].Y);
+            }
+        }
+
+        private void Bits(string name, double expected, double actual) =>
+            True($"{name}: expected bits {BitConverter.DoubleToInt64Bits(expected):x16}, actual bits {BitConverter.DoubleToInt64Bits(actual):x16}",
+                BitConverter.DoubleToInt64Bits(expected) == BitConverter.DoubleToInt64Bits(actual));
 
         private void Bounds(string name, Bounds2D? value, double minX, double minY, double maxX, double maxY)
         {

@@ -34,7 +34,7 @@ internal static class WindingAssemblyChecks
         "System.Collections", "System.Collections.Concurrent", "System.Numerics",
         "System.Numerics.Vectors", "System.Runtime.Numerics", "System.Runtime.Intrinsics",
         "System.Runtime.Extensions", "System.Runtime.CompilerServices.Unsafe", "System.Threading",
-        "System.Memory", "System.Linq"
+        "System.Memory", "System.Linq", "System.ComponentModel.Primitives"
     };
 
     public static int Run()
@@ -55,6 +55,9 @@ internal static class WindingAssemblyChecks
             Check(core.GetType(type.FullName!, throwOnError: true) == type, $"old assembly identity resolves {type.FullName}");
 
         CheckFrameworkClosure(winding);
+        foreach (string name in new[] { "FilledArea", "IntersectionArea" })
+            Check(typeof(WindingArea).GetMethod(name)!.GetCustomAttribute<System.ComponentModel.EditorBrowsableAttribute>()?.State
+                == System.ComponentModel.EditorBrowsableState.Never, "compatibility alias is hidden from IntelliSense: " + name);
         string snapshot = File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "winding-public-api.txt"))
             .Replace("\r\n", "\n").TrimEnd();
         string actual = PublicSurface(exported).TrimEnd();

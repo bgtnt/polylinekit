@@ -5,6 +5,7 @@
 | Start using the library | [Quick start](../README.md) |
 | Measure areas, intersection, XOR, IoU or coverage | [Area methods](area.md) |
 | Measure regions with holes and disconnected components | [Prepared regions](regions.md) |
+| Convert existing NTS Polygon/MultiPolygon input | [NetTopologySuite example](../examples/NetTopologySuiteInterop/README.md) |
 | Normalize, resample or align | [Transformations](comparison-api.md) |
 | Generate contours or use quantized comparisons | [Optional Clipper adapter](clipper.md) |
 | Integrate vertical separation between graphs | [Graph-area formula](design.md) |
@@ -12,6 +13,7 @@
 | Evaluate predicted polygons against reference annotations | [Polygon overlap example](../examples/PolygonOverlapEvaluation/README.md) |
 | Build or contribute a change | [Contributor guide](../CONTRIBUTING.md) |
 | Inspect the alpha release and evidence | [Release notes](releases/0.1.0-alpha.1.md) |
+| Inspect the next alpha's consumer improvements | [Alpha.2 preparation](releases/0.1.0-alpha.2.md) |
 | Verify packages or prepare publication | [Package verification and release guide](releasing.md) |
 
 ## Implementation reference

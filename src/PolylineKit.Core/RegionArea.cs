@@ -5,6 +5,9 @@ namespace PolylineKit;
 /// Each operand is filled independently by the selected rule. Coordinates retain their original position
 /// and scale. Results use squared coordinate units, with floating-point rounding and no output contours.
 /// Prepared regions are reusable; crossing detection and winding propagation run for each call.
+/// Raw FromRings input preserves directions: a 10-by-10 shell and same-direction 4-by-4 hole give
+/// area 100 under NonZero versus 84 under EvenOdd. Use PreparedRegion.FromPolygon or FromPolygons
+/// for explicit exterior/hole roles; NonZero is recommended for ordinary polygon input.
 /// </remarks>
 public static class RegionArea
 {

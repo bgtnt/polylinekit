@@ -110,6 +110,7 @@ public static class WindingArea
 {
     /// <summary>One filled area of an implicitly closed path, in squared coordinate units.</summary>
     /// <remarks>
+    /// Prefer <see cref="PolylineArea.FilledArea"/> for the application-facing entry point.
     /// NonZero counts points with nonzero winding once; EvenOdd counts points with odd winding once.
     /// A repeated closing point is optional. At least three vertices after consecutive duplicate removal
     /// are required. Self intersections, retracing and collinear overlap are accepted. Coordinates must
@@ -128,6 +129,7 @@ public static class WindingArea
     /// <exception cref="ArgumentNullException">The path is null.</exception>
     /// <exception cref="ArgumentException">The path is empty, has nonfinite or too large coordinates, or too few vertices.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The fill rule is not defined; checked before the path.</exception>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static double FilledArea(IReadOnlyList<Point2> path, PathFillRule fillRule = PathFillRule.NonZero)
     {
         if (fillRule != PathFillRule.NonZero && fillRule != PathFillRule.EvenOdd)
@@ -242,6 +244,7 @@ public static class WindingArea
 
     /// <summary>Area filled by both independently filled closed paths, in squared coordinate units.</summary>
     /// <remarks>
+    /// Prefer <see cref="PolylineArea.IntersectionArea"/> for the application-facing entry point.
     /// Uses the same fill, crossing and numerical rules as <see cref="FilledRegions"/>, while accumulating only
     /// the intersection boundary. Closure is implicit and a repeated closing point is optional. Each path needs
     /// at least three vertices after consecutive duplicate removal. Self intersections, retracing and collinear
@@ -250,6 +253,7 @@ public static class WindingArea
     /// <exception cref="ArgumentNullException">A path is null.</exception>
     /// <exception cref="ArgumentException">A path is empty, has nonfinite or too large coordinates, or too few vertices.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The fill rule is not defined.</exception>
+    [System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public static double IntersectionArea(IReadOnlyList<Point2> first, IReadOnlyList<Point2> second,
         PathFillRule fillRule = PathFillRule.NonZero)
     {

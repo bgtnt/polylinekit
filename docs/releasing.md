@@ -1,5 +1,38 @@
 # Install verified packages and prepare a release
 
+## Prepare alpha.2
+
+The current source prepares `0.1.0-alpha.2`; it has not yet been tagged or published.
+See its [release notes](releases/0.1.0-alpha.2.md) for the additive polygon-role
+factories and tested NTS conversion example. The public alpha.1 below is unchanged.
+
+After committing source, verify the new package pair and four external consumers:
+
+```powershell
+pwsh -File scripts/check-package-readme.ps1
+pwsh -File scripts/verify-packages.ps1 -Version 0.1.0-alpha.2 -OutputDirectory artifacts/alpha2-packages
+```
+
+`-Offline` restores outside consumers from the produced package feed and the
+already cached Clipper2 2.0.0 archive, without a remote package source. It requires
+the .NET 8/10 targeting packs and runtimes to be installed. Source projects still
+use locked restore; no dependency versions are changed. `-KeepWorkspace` preserves
+the outside applications for inspection.
+
+Package inspection reads the actual archived README and nuspec. It rejects
+release-process wording, complete version literals differing from the package's
+version, missing description/tags/license/README metadata and missing polygon,
+IoU or overlap tags. `check-package-readme.ps1` exercises rejection controls;
+external applications exercise the new factories from both package targets.
+
+Pin the clean verification's source, package hashes and record hash in
+`publish-nuget.yml`. Do not substitute a rebuild after verification. Creating
+`v0.1.0-alpha.2`, creating its GitHub prerelease and dispatching publication each
+require the owner's separate instruction. The workflow remains manual and uses
+the current confirmed NuGet username until support completes any rename.
+
+## Install the published alpha.1
+
 `0.1.0-alpha.1` is available on NuGet.org:
 [Core](https://www.nuget.org/packages/PolylineKit.Core/0.1.0-alpha.1) and
 [optional Clipper adapter](https://www.nuget.org/packages/PolylineKit.Clipper/0.1.0-alpha.1).

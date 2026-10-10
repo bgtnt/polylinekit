@@ -10,6 +10,7 @@
     <Project Path="examples/AreaChange/AreaChange.csproj" />
     <Project Path="examples/RegionCoverage/RegionCoverage.csproj" />
     <Project Path="examples/PolygonOverlapEvaluation/PolygonOverlapEvaluation.csproj" />
+    <Project Path="examples/NetTopologySuiteInterop/NetTopologySuiteInterop.csproj" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/PolylineKit.Clipper/PolylineKit.Clipper.csproj" />
