@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/PolylineKit.Core/PolylineKit.Core.csproj" />
+    <!-- This example's simplifier only; the Core library remains dependency-free. -->
+    <PackageReference Include="Clipper2" Version="2.0.0" />
+    <Content Include="../AreaChange/data/*.json" Link="data/%(Filename)%(Extension)"
+             CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" />
+    <Content Update="wwwroot/**/*" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

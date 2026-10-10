@@ -26,6 +26,8 @@ jobs:
       - run: dotnet run --project examples/ClipperContours -c Release --no-build
       - name: Area-change example contracts and frozen contour hashes (no timing)
         run: dotnet run --project examples/AreaChange -c Release --no-build -- check
+      - name: Interactive contour demo input, area budget and candidate contracts
+        run: dotnet run --project examples/ContourSimplificationDemo -c Release --no-build -- --check
       - name: Region coverage contracts and frozen GIS pairs (no timing)
         run: dotnet run --project examples/RegionCoverage -c Release --no-build -- check
       - name: Verify complete coverage source snapshots offline
@@ -33,6 +35,14 @@ jobs:
       - name: Prepared region contracts and complete GIS inputs (no timing)
         run: ./tests/PolylineKit.MultiRingChecks/run.ps1
         shell: pwsh
+      - name: Polygon factory measurement contracts (no timing)
+        shell: pwsh
+        run: |
+          $dll = (Resolve-Path src/PolylineKit.Core/bin/Release/net10.0/PolylineKit.Winding.dll).Path
+          dotnet build benchmarks/PolylineKit.PreparationBenchmarks/PolylineKit.PreparationBenchmarks.csproj -c Release -p:LibraryPath=$dll -o artifacts/preparation-ci
+          if ($LASTEXITCODE) { throw 'Preparation runner build failed' }
+          dotnet artifacts/preparation-ci/PolylineKit.PreparationBenchmarks.dll check . artifacts/preparation-ci/check.json
+          if ($LASTEXITCODE) { throw 'Preparation runner checks failed' }
       - name: NTS polygon conversion and invalid-input observations (no timing)
         run: dotnet run --project examples/NetTopologySuiteInterop -c Release --no-build -- check artifacts/nts-interop-ci/contracts.json
       - name: NTS interoperability on complete frozen GIS layers (no timing)

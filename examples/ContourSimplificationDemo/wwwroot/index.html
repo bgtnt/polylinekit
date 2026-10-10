@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#153c3c">
+  <title>Contour simplification · PolylineKit</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <div class="page">
+    <header class="page-header">
+      <a class="brand" href="https://github.com/bgtnt/polylinekit" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 23 9 6 25 10 23 26Z"/><path d="m5 23 20-13-2 16Z"/></svg>
+        <span>PolylineKit <span class="brand-divider">/</span> <span class="brand-secondary">Interactive example</span></span>
+      </a>
+      <span class="local-badge">Runs locally · no uploaded data</span>
+    </header>
+
+    <main>
+      <div class="intro">
+        <div><p class="eyebrow">FEWER POINTS, A MEASURED CHANGE</p><h1>Simplify a contour</h1></div>
+        <p>Choose a shape or draw your own. Set an area budget, inspect the difference, and export the result.</p>
+      </div>
+
+      <div class="workspace">
+        <aside class="controls" aria-label="Contour and area budget">
+          <section class="control-section">
+            <h2><span class="step-number">1</span> Choose your contour</h2>
+            <label for="preset">Example</label>
+            <select id="preset" disabled><option value="">Loading examples…</option></select>
+            <p id="preset-description" class="field-note">The bundled examples load from local files.</p>
+            <div class="button-row">
+              <button id="draw" type="button" class="button secondary" aria-pressed="false">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="m4 13 9-9 3 3-9 9-4 1Z"/><path d="m11 6 3 3"/></svg>Draw contour
+              </button>
+              <button id="clear" type="button" class="button quiet">Clear</button>
+            </div>
+            <p class="small-note">Draw one continuous gesture. It closes automatically. Up to 1,024 recorded points.</p>
+          </section>
+
+          <section class="control-section budget-section">
+            <h2><span class="step-number">2</span> Set your area budget</h2>
+            <label for="budget-number">Allowed area change (%)</label>
+            <div class="budget-input"><input id="budget-number" type="number" min="0" max="5" step="0.0001" value="0.7" inputmode="decimal"><span aria-hidden="true">%</span></div>
+            <input id="budget-range" aria-label="Allowed area change slider, percent" type="range" min="0" max="5" step="0.01" value="0.7">
+            <div class="range-labels"><span>0% · strict</span><span>5% · more change</span></div>
+            <p class="field-note">Changed filled area ÷ the union of both shapes. This is the <strong>Jaccard distance</strong>.</p>
+            <p class="cached-note"><span aria-hidden="true">↔</span> Changing this budget selects from already measured candidates.</p>
+          </section>
+
+          <section class="control-section export-section">
+            <h2><span class="step-number">3</span> Export the result</h2>
+            <div class="button-row">
+              <button id="export-svg" type="button" class="button primary" disabled>Export SVG</button>
+              <button id="export-json" type="button" class="button secondary" disabled>Export JSON</button>
+            </div>
+            <p class="small-note">The exports contain the selected simplified contour. JSON also records the budget and measured change.</p>
+          </section>
+        </aside>
+
+        <section class="preview" aria-label="Contour comparison">
+          <div class="preview-heading"><div><h2 id="contour-title">Loading contour</h2><p id="contour-subtitle">One closed contour · NonZero fill</p></div><span id="selection-badge" class="selection-badge" hidden>Within budget</span></div>
+          <div id="canvas" class="canvas">
+            <svg id="contour-svg" viewBox="0 0 1000 700" role="img" aria-label="Original and simplified contours, with added and removed regions" aria-busy="true">
+              <defs>
+                <mask id="removed-mask" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" style="mask-type:luminance">
+                  <rect id="removed-mask-background" fill="black"/>
+                  <path id="removed-original" fill="white" fill-rule="nonzero"/>
+                  <path id="removed-simplified" fill="black" fill-rule="nonzero"/>
+                </mask>
+                <mask id="added-mask" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" style="mask-type:luminance">
+                  <rect id="added-mask-background" fill="black"/>
+                  <path id="added-simplified" fill="white" fill-rule="nonzero"/>
+                  <path id="added-original" fill="black" fill-rule="nonzero"/>
+                </mask>
+              </defs>
+              <g id="geometry" fill-rule="nonzero">
+                <path id="original-fill" fill="#d9e7e5" fill-opacity="0.65"/>
+                <path id="simplified-fill" fill="#177e7d" fill-opacity="0.08"/>
+                <rect id="removed-layer" fill="#df846a" fill-opacity="0.85" mask="url(#removed-mask)"/>
+                <rect id="added-layer" fill="#dcb646" fill-opacity="0.9" mask="url(#added-mask)"/>
+                <path id="original-outline" class="original-outline"/>
+                <path id="simplified-outline" class="simplified-outline"/>
+              </g>
+            </svg>
+            <div id="canvas-placeholder" class="canvas-placeholder"><span class="placeholder-icon" aria-hidden="true">◇</span><strong>Loading the first example…</strong><span>All calculations use your local PolylineKit server.</span></div>
+            <span id="drawing-count" class="drawing-count" hidden>0 / 1,024 points</span>
+          </div>
+          <div class="legend" aria-label="Contour legend">
+            <span><i class="legend-line original" aria-hidden="true"></i>Original</span>
+            <span><i class="legend-line simplified" aria-hidden="true"></i>Simplified</span>
+            <span><i class="legend-area removed" aria-hidden="true"></i>Removed area</span>
+            <span><i class="legend-area added" aria-hidden="true"></i>Added area</span>
+          </div>
+          <div class="metrics" aria-label="Measured result">
+            <div><p>Vertices</p><strong id="vertices">—</strong><span id="vertices-note">Before → after</span></div>
+            <div><p>Vertices removed</p><strong id="vertices-removed">—</strong><span>Of the original point count</span></div>
+            <div class="area-metric"><p>Measured area change</p><strong id="measured-change">—</strong><span id="change-note">Jaccard distance</span></div>
+          </div>
+          <div id="status" class="status" data-state="loading" role="status" aria-live="polite"><span class="status-dot" aria-hidden="true"></span><span id="status-text">Loading local examples…</span></div>
+        </section>
+      </div>
+
+      <div class="explanations">
+        <details>
+          <summary>Why measure changed area, rather than total area?</summary>
+          <div class="explanation-content analytic-control">
+            <svg viewBox="-0.5 -0.5 9 5" role="img" aria-label="Analytic control: a half-unit notch and bump cancel in total area but change one square unit">
+              <g transform="translate(0 4) scale(1 -1)" fill-rule="nonzero">
+                <path d="M0 0H8V4H0Z" fill="#d9e7e5"/>
+                <path d="M1 4L2 3.5L3 4Z" fill="#df846a"/>
+                <path d="M5 4L6 4.5L7 4Z" fill="#dcb646"/>
+                <path d="M0 0H8V4H0Z" fill="none" stroke="#254d72" stroke-width=".035" stroke-dasharray=".12 .09"/>
+                <path d="M0 0H8V4H7L6 4.5L5 4H3L2 3.5L1 4H0Z" fill="none" stroke="#177e7d" stroke-width=".055"/>
+              </g>
+            </svg>
+            <div><p><strong>Same total area. A different shape.</strong> In this fixed analytic control, a half-unit notch and a half-unit bump cancel: both regions have area 32. The changed area is still 1, and its Jaccard distance is 1 / 32.5 = 3.0769%.</p><p class="small-note">This explanatory pair is specified directly; it is not a claim about a candidate generated by the simplifier. Choose “Added and removed area” to try the actual simplification flow.</p></div>
+          </div>
+        </details>
+        <details>
+          <summary>Calculation details and limits</summary>
+          <div class="explanation-content">
+            <dl class="calculation-details"><div><dt>Changed area</dt><dd id="detail-changed">—</dd></div><div><dt>Union area</dt><dd id="detail-union">—</dd></div><div><dt>Simplifier tolerance</dt><dd id="detail-epsilon">—</dd></div><div><dt>Candidate series</dt><dd id="detail-candidates">—</dd></div></dl>
+            <p>Clipper2 generates the candidates. PolylineKit measures each against the unchanged original using <code>NonZero</code> fill. The chosen result has the fewest vertices among the measured candidates within your budget, with deterministic ties. It is not a globally optimal contour.</p>
+            <p>A small changed area does not bound the largest boundary displacement or guarantee preserved topology. Thin details can disappear. This demo accepts one closed contour, including self-intersections, with at most 1,024 points.</p>
+            <p>Areas use squared coordinate units. The Natural Earth presets use a normalized local map plane; these numbers are not square kilometres. Resizing the preview changes neither coordinates nor measurements.</p>
+            <div id="skipped-diagnostics" hidden><h3>Skipped candidates</h3><ul id="skipped-list"></ul></div>
+          </div>
+        </details>
+      </div>
+    </main>
+    <footer><span>A small example of comparing filled regions.</span><a href="https://github.com/bgtnt/polylinekit/tree/main/examples/ContourSimplificationDemo" target="_blank" rel="noopener noreferrer">Source &amp; instructions <span aria-hidden="true">↗</span></a></footer>
+  </div>
+</body>
+</html>

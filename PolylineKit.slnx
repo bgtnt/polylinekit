@@ -8,6 +8,7 @@
     <Project Path="examples/Basic/Basic.csproj" />
     <Project Path="examples/ClipperContours/ClipperContours.csproj" />
     <Project Path="examples/AreaChange/AreaChange.csproj" />
+    <Project Path="examples/ContourSimplificationDemo/ContourSimplificationDemo.csproj" />
     <Project Path="examples/RegionCoverage/RegionCoverage.csproj" />
     <Project Path="examples/PolygonOverlapEvaluation/PolygonOverlapEvaluation.csproj" />
     <Project Path="examples/NetTopologySuiteInterop/NetTopologySuiteInterop.csproj" />

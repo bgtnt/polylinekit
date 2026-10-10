@@ -15,6 +15,7 @@ dotnet run --project examples/NetTopologySuiteInterop -c Release --no-build -- c
 dotnet run --project examples/NetTopologySuiteInterop -c Release --no-build -- check-gis
 dotnet run --project examples/Basic -c Release --no-build
 dotnet run --project examples/ClipperContours -c Release --no-build
+dotnet run --project examples/ContourSimplificationDemo -c Release --no-build -- --check
 ```
 
 The correctness suite is a deterministic console executable, not a `dotnet test`
