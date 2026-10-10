@@ -13,6 +13,7 @@ internal static class PreparedRegionChecks
         checks.FillSemantics();
         checks.Validation();
         checks.PolygonRoles();
+        checks.PolygonOrientationNumerics();
         checks.PolygonSnapshotOwnership();
         checks.PolygonValidation();
         checks.RepeatedGeneratedPairs();
@@ -21,11 +22,12 @@ internal static class PreparedRegionChecks
         {
             status = "passed",
             assertions = checks.Assertions,
+            polygonOrientationCases = checks.OrientationCases,
             generatedPairs = Checks.PairCount,
             generatorSeed = "0x4628e19b",
             concurrentQueries = Checks.ConcurrentQueries,
             scope = "Immutable input ownership, raw winding and explicit polygon-role factories, validation, fill semantics and repeated/concurrent queries; no topology validation or repair claim.",
-            parityReference = "Internal raw-ring route, supplemented by analytic areas; not an independent numerical oracle.",
+            parityReference = "Internal raw-ring route, supplemented by analytic areas; factory orientation is checked bitwise against the legacy ClosedPath Signed decision. Not an independent numerical oracle.",
             tolerance = "2e-12 relative to max(1, expected)."
         };
     }
@@ -35,7 +37,9 @@ internal static class PreparedRegionChecks
         internal const int PairCount = 48;
         internal const int ConcurrentQueries = 64;
         private int assertions;
+        private int orientationCases;
         internal int Assertions => assertions;
+        internal int OrientationCases => orientationCases;
         private static readonly PathFillRule[] Rules = [PathFillRule.NonZero, PathFillRule.EvenOdd];
 
         internal void SnapshotOwnership()
@@ -225,6 +229,91 @@ internal static class PreparedRegionChecks
                     BitAgreement("Zero Signed hole raw agreement", Prepare(shell, zero), interior, probe, rule);
                 }
             }
+        }
+
+        internal void PolygonOrientationNumerics()
+        {
+            var fixtures = new List<(string Name, Point2[] Points)>();
+            foreach (double length in new[] { 1e4, 1e8, 1e12, 1e16 })
+            foreach (int exponent in new[] { 0, -500 })
+            {
+                double scale = Math.ScaleB(1, exponent);
+                fixtures.Add(($"Skinny L={length:R}, scale={exponent}", [new(0, 0), new(length * scale, length * scale),
+                    new(2 * length * scale, Math.BitIncrement(2 * length) * scale)]));
+                double origin = Math.ScaleB(1, 52);
+                fixtures.Add(($"Skinny translated L={length:R}, scale={exponent}", [new(origin, origin),
+                    new(origin + length * scale, origin + length * scale),
+                    new(origin + 2 * length * scale, origin + Math.BitIncrement(2 * length) * scale)]));
+            }
+            foreach (int exponent in new[] { -538, -537, -388, 0, 300 })
+            {
+                double side = Math.ScaleB(1, exponent);
+                fixtures.Add(($"Square side=2^{exponent}", Rectangle(0, 0, side, side)));
+            }
+            double largeOrigin = Math.ScaleB(1, 52);
+            fixtures.Add(("Half-unit triangle at 2^52", [new(largeOrigin, largeOrigin),
+                new(largeOrigin + 1, largeOrigin), new(largeOrigin, largeOrigin + 1)]));
+            fixtures.Add(("Anisotropic triangle", [new(0, 0), new(Math.ScaleB(1, 300), Math.ScaleB(1, -600)),
+                new(Math.ScaleB(1, 301), Math.BitIncrement(Math.ScaleB(1, -599)))]));
+            fixtures.Add(("Large origin and tiny height", [new(Math.ScaleB(1, 300), 0),
+                new(Math.BitIncrement(Math.ScaleB(1, 300)), 0), new(Math.ScaleB(1, 300), Math.ScaleB(1, -700))]));
+            fixtures.Add(("Subnormal-coordinate rectangle", Rectangle(0, 0, Math.ScaleB(1, 300), double.Epsilon)));
+            fixtures.Add(("Coordinate cap", [new(-1e100, -1e100), new(1e100, -1e100), new(0, 1e100)]));
+            fixtures.Add(("Asymmetric exact-zero walk", [new(0, 0), new(2, 0), new(2, 3), new(0, 3), new(0, 0),
+                new(10, 0), new(10, 2), new(13, 2), new(13, 0), new(10, 0)]));
+            fixtures.Add(("Opposite repeated loops", [new(0, 0), new(4, 0), new(4, 4), new(0, 4), new(0, 0),
+                new(0, 4), new(4, 4), new(4, 0)]));
+            foreach (double distance in new[] { 1e4, 1e12, 1e16 })
+                fixtures.Add(($"Distant retraced bridge {distance:R}", [new(0, 0), new(1, 0), new(1, 1), new(0, 1), new(0, 0),
+                    new(distance, 0), new(distance + 4, 0), new(distance + 4, 4), new(distance, 4), new(distance, 0)]));
+            foreach (double height in new[] { 2.0, Math.BitIncrement(2.0), Math.BitDecrement(2.0) })
+                fixtures.Add(($"Almost cancelling lobes {height:R}", [new(0, 0), new(2, 0), new(2, 3), new(0, 3), new(0, 0),
+                    new(10, 0), new(10, height), new(13, height), new(13, 0), new(10, 0)]));
+            fixtures.Add(("Partial collinear retracing", [new(0, 0), new(4, 0), new(4, 4), new(0, 4), new(0, 0),
+                new(3, 0), new(1, 0), new(1, 3), new(3, 3), new(3, 0)]));
+            var random = new FixedRandom(0x79d6214b);
+            for (int sample = 0; sample < 32; sample++)
+            {
+                var points = new List<Point2> { new(0, 0), new(1, 0), new(0, 1) };
+                int length = 3 + random.Next(13);
+                while (points.Count < length) points.Add(new Point2(random.Next(17) - 8, random.Next(17) - 8));
+                fixtures.Add(($"Integer grid walk {sample}", points.ToArray()));
+            }
+
+            Point2[] shell = Rectangle(-20, -20, 20, 20);
+            foreach (var (name, source) in fixtures)
+            foreach (bool swap in new[] { false, true })
+            foreach (bool reverse in new[] { false, true })
+            for (int shift = 0; shift < source.Length; shift++)
+            {
+                Point2[] shifted = Enumerable.Range(0, source.Length).Select(i => source[(i + shift) % source.Length]).ToArray();
+                if (swap) shifted = shifted.Select(p => new Point2(p.Y, p.X)).ToArray();
+                if (reverse) Array.Reverse(shifted);
+                // Legacy ClosedPath cleans the supplied walk. Inspect storage rather than standalone
+                // area, which is normally unchanged by reversal and cannot establish orientation parity.
+                Point2[] cleaned = CleanRing(shifted);
+                if (cleaned.Length < 3) continue;
+                double legacySigned = WindingArea.ClosedPath(cleaned).Signed;
+                Point2[] exterior = legacySigned < 0 ? Reverse(cleaned) : cleaned;
+                Point2[] hole = legacySigned > 0 ? Reverse(cleaned) : cleaned;
+                string label = $"{name}, swap={swap}, reverse={reverse}, shift={shift}";
+                // Duplicates and repeated closure must not change the decision made on the snapshot.
+                Point2[] supplied = RepeatAndClose(shifted);
+                StoredRingOrder(label + " polygon exterior", PreparedRegion.FromPolygon(supplied), 0, exterior);
+                StoredRingOrder(label + " polygon hole", PreparedRegion.FromPolygon(shell, [supplied]), 1, hole);
+                StoredRingOrder(label + " multiple exterior", PreparedRegion.FromPolygons([(supplied, null)]), 0, exterior);
+                StoredRingOrder(label + " multiple hole", PreparedRegion.FromPolygons([(shell, new IReadOnlyList<Point2>[] { supplied })]), 1, hole);
+                orientationCases++;
+            }
+        }
+
+        private static Point2[] CleanRing(Point2[] supplied)
+        {
+            var points = new List<Point2>();
+            foreach (Point2 point in supplied)
+                if (points.Count == 0 || points[^1].X != point.X || points[^1].Y != point.Y) points.Add(point);
+            if (points.Count > 1 && points[^1].X == points[0].X && points[^1].Y == points[0].Y) points.RemoveAt(points.Count - 1);
+            return points.ToArray();
         }
 
         internal void PolygonSnapshotOwnership()

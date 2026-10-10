@@ -28,8 +28,9 @@ public sealed class PreparedRegion
     /// <summary>Copies one polygon, orienting its exterior positively and its holes negatively.</summary>
     /// <remarks>
     /// Roles are supplied explicitly: no nesting inference, topology validation or repair is performed.
-    /// Directions are normalized using <see cref="WindingArea.ClosedPath"/>'s Signed result; a ring with
-    /// exactly zero Signed area retains its supplied order after duplicate removal. Other rings are changed
+    /// Directions are normalized by algebraic signed area, using compensated edge terms and falling back
+    /// to <see cref="WindingArea.ClosedPath"/>'s Signed result when the direct sum is numerically uncertain.
+    /// A ring with exactly zero Signed area retains its supplied order after duplicate removal. Other rings are changed
     /// only by reversal. For an ordinary simple exterior with disjoint simple holes inside it, NonZero and
     /// EvenOdd give the same filled region. This agreement is not guaranteed for self-intersecting rings,
     /// overlapping holes or holes outside the exterior. Use the default NonZero rule for polygon roles.
@@ -137,9 +138,51 @@ public sealed class PreparedRegion
     private static void OrientRing(PreparedRegion region, int ring, bool positive)
     {
         int start = region.Starts[ring], length = region.Starts[ring + 1] - start;
-        var points = new Point2[length];
-        Array.Copy(region.Vertices, start, points, 0, length);
-        double signed = WindingArea.ClosedPath(points).Signed;
+        double signed;
+        if (!TrySignedArea(region, ring, start, length, out signed))
+        {
+            // Retain the previous orientation decision for cancellation, zero and tiny inputs.
+            var points = new Point2[length];
+            Array.Copy(region.Vertices, start, points, 0, length);
+            signed = WindingArea.ClosedPath(points).Signed;
+        }
         if (positive ? signed < 0 : signed > 0) Array.Reverse(region.Vertices, start, length);
+    }
+
+    private static bool TrySignedArea(PreparedRegion region, int ring, int start, int length, out double signed)
+    {
+        WindingEngine.RingBounds bounds = region.RingBounds[ring];
+        var origin = new Point2(bounds.CenterX, bounds.CenterY);
+        WindingEngine.Sum sum = default, products = default;
+        Point2[] vertices = region.Vertices;
+        int end = start + length;
+        Point2 a = vertices[end - 1];
+        for (int i = start; i < end; i++)
+        {
+            Point2 b = vertices[i];
+            double ax = a.X - origin.X, ay = a.Y - origin.Y;
+            double bx = b.X - origin.X, by = b.Y - origin.Y;
+            double left = ax * by, right = ay * bx;
+            double magnitude = Math.Abs(left) + Math.Abs(right);
+            // Relative floating-point bounds do not cover product underflow. The old engine
+            // also has exact extreme-exponent arithmetic, which remains the fallback here.
+            if ((left == 0 && ax != 0 && by != 0) || (right == 0 && ay != 0 && bx != 0)
+                || (magnitude != 0 && magnitude <= 1e-250))
+            {
+                signed = 0;
+                return false;
+            }
+            products.Add(magnitude);
+            sum.Add(RobustOrientation.TwiceDeterminant(origin, a, b));
+            a = b;
+        }
+        double total = sum.Value;
+        signed = total / 4;
+        // This is an arithmetic uncertainty guard, not a geometric epsilon. Product mass
+        // covers cancellation within determinants; the length factor also covers accumulation.
+        // Keep a generous margin over the existing compensated term's 8u accuracy budget.
+        const double UnitRoundoff = 1.1102230246251565e-16;
+        double uncertainty = (64 * UnitRoundoff * (length + 1.0)) * products.Value;
+        return Math.Abs(total) > 1e-250 && Math.Abs(total) > uncertainty;
     }
 }

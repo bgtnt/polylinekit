@@ -42,6 +42,15 @@ repeat, its four fixed acceptance cells and the earlier result. All inputs are
 included; reproduction uses the example's `benchmark-intersection` and
 `summarize-intersection` commands.
 
+## Polygon factory preparation
+
+[PreparationBenchmarks](PolylineKit.PreparationBenchmarks/README.md) compares
+`FromRings`, `FromPolygon` and `FromPolygons` against an explicit DLL. It includes
+the published alpha.2 payload, preparation plus fixed queries, and the complete
+existing Census layers. It is independent of source project references and has
+no package dependencies. Follow its commands for correctness checks and three
+processes per library; this measures factory cost rather than a new query engine.
+
 ## Graphs, transforms and engine costs
 
 The general runner provides graph, transformation, winding and Clipper suites:

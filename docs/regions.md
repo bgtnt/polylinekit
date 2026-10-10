@@ -217,10 +217,16 @@ crossing detection and winding propagation again, using per-call working storage
 
 Raw `FromRings` preparation takes work and snapshot storage proportional to the
 input vertices and rings. The role-based factories also evaluate each ring's
-signed-area direction through the existing boundary engine, then reverse copied
-vertices when needed. This orientation work can depend on crossings and overlap
-events and can allocate temporary storage; it is not a linear-time promise for
-arbitrary walks. Snapshot storage remains proportional to vertices and rings.
+algebraic signed-area direction, then reverse copied vertices when needed.
+After alpha.2, well-conditioned sums use a direct pass over the owned array,
+with a local bounds origin, compensated robust edge terms and compensated
+accumulation. An arithmetic uncertainty guard sends tiny, zero or cancelling
+sums through the previous boundary engine. That fallback can depend on crossings
+and overlap events and allocate temporary storage; arbitrary walks have no
+linear-time preparation promise. A fallback also pays for the initial direct
+pass. Snapshot storage remains proportional to vertices and rings. Numerical
+orientation checks compare the stored vertex order with the alpha.2 decision;
+they do not prove universal bitwise equivalence of the two floating calculations.
 For a measurement with `R` rings across both operands, up to 16 rings use direct
 pairwise bounds checks. Larger inputs build a balanced hierarchy of ring bounds
 in reusable working arrays, with up to four rings per leaf. Each leaf candidate

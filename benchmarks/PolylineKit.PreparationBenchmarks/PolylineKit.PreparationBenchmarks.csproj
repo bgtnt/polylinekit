@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Optimize>true</Optimize>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- An explicit DLL keeps the published and candidate inputs separate from source builds. -->
+    <Reference Include="PolylineKit.Winding">
+      <HintPath>$(LibraryPath)</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+  <Target Name="RequireLibraryPath" BeforeTargets="ResolveAssemblyReferences">
+    <Error Condition="'$(LibraryPath)' == '' Or !Exists('$(LibraryPath)')"
+           Text="Set LibraryPath to the exact PolylineKit.Winding.dll to measure." />
+  </Target>
+</Project>
