@@ -4,7 +4,7 @@
     <AssemblyName>PolylineKit</AssemblyName>
     <RootNamespace>PolylineKit</RootNamespace>
     <PackageId>PolylineKit.Clipper</PackageId>
-    <Version>0.1.0-alpha.2</Version>
+    <Version>0.1.0-alpha.3</Version>
     <Authors>PolylineKit contributors</Authors>
     <Description>Optional Clipper2 integration for quantized area comparisons and operations that also need resulting contours.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -13,7 +13,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>https://github.com/bgtnt/polylinekit</PackageProjectUrl>
     <PackageTags>geometry;polygon;polyline;area;alignment;iou;overlap;contours;clipping;intersection;fill-rule</PackageTags>
-    <PackageReleaseNotes>https://github.com/bgtnt/polylinekit/blob/main/docs/releases/0.1.0-alpha.2.md</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/bgtnt/polylinekit/blob/main/docs/releases/0.1.0-alpha.3.md</PackageReleaseNotes>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>

@@ -122,12 +122,41 @@ Console checks cover input limits and degenerate inputs, a filled bow-tie with
 zero algebraic area, exact square/collinear and added/removed controls, inclusive
 budget thresholds, percent units, deliberately nonmonotone candidate errors,
 stable ties, strict-budget fallback, skipped candidates and all frozen presets.
-The initial implementation passed 354 console assertions and 36 local checks in
-an isolated Microsoft Edge session. The browser checks exercised real pointer
-gestures, the 1024-point cap, cached budget changes, SVG/JSON coordinates, invalid
-inputs, responses arriving out of order and the narrow-screen layout. The added
-and removed fill was also inspected in the running demo. CI runs the console
-contracts; the browser checks are local delivery evidence, not a CI browser suite.
+
+The reproducible browser suite uses the pinned, **test-only** Playwright package
+in [tests/ContourSimplificationDemo.Browser](../../tests/ContourSimplificationDemo.Browser).
+It adds no Core or demo runtime dependency. Install Node.js 20 or newer and build
+the example, then run from the repository root with an existing Microsoft Edge:
+
+```sh
+dotnet restore examples/ContourSimplificationDemo --locked-mode
+dotnet build examples/ContourSimplificationDemo -c Release --no-restore
+npm ci --prefix tests/ContourSimplificationDemo.Browser
+npm run test:edge --prefix tests/ContourSimplificationDemo.Browser
+```
+
+For Playwright's pinned Chromium, including the Linux CI run:
+
+```sh
+cd tests/ContourSimplificationDemo.Browser
+npx playwright install --with-deps chromium
+npm test
+```
+
+Playwright starts and stops the real Release server on `127.0.0.1:5091` and loads
+its production HTML and `app.js`. Three tests cover real API startup, selection
+across a nonmonotone candidate series, inclusive 0.7% and 0.5% boundaries,
+scientific percent input, cached budget edits, actual JSON/SVG downloads, and an
+older HTTP response arriving after the newer one. Controlled API responses make
+the boundary and race cases deterministic; the race deliberately lets a request
+finish after abort to verify the input-version guard. Failures retain Playwright
+traces under `artifacts/contour-demo-browser`.
+
+The initial implementation also passed 354 console assertions and 36 local
+checks in an isolated Microsoft Edge session. Those broader delivery checks
+covered pointer gestures, the 1024-point cap, invalid inputs and narrow-screen
+layout; added and removed fill was inspected in the running demo. They remain
+local delivery evidence, distinct from the three committed CI browser tests.
 
 Separate `FirstOnlyArea`/`SecondOnlyArea` metrics may become useful later. They
 are not needed for this version: PolylineKit supplies XOR and union numerically,

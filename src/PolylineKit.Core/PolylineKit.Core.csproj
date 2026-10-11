@@ -4,7 +4,7 @@
     <AssemblyName>PolylineKit.Winding</AssemblyName>
     <RootNamespace>PolylineKit</RootNamespace>
     <PackageId>PolylineKit.Core</PackageId>
-    <Version>0.1.0-alpha.2</Version>
+    <Version>0.1.0-alpha.3</Version>
     <Authors>PolylineKit contributors</Authors>
     <Description>Area, intersection area and IoU of 2D polygons and paths: numbers only, no dependencies. Includes self-intersecting paths with explicit fill rules.</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
@@ -13,7 +13,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageProjectUrl>https://github.com/bgtnt/polylinekit</PackageProjectUrl>
     <PackageTags>geometry;polygon;polyline;area;intersection;coverage;iou;overlap;jaccard;polygon-area;polygon-intersection;fill-rule;self-intersection;annotation;gis</PackageTags>
-    <PackageReleaseNotes>https://github.com/bgtnt/polylinekit/blob/main/docs/releases/0.1.0-alpha.2.md</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/bgtnt/polylinekit/blob/main/docs/releases/0.1.0-alpha.3.md</PackageReleaseNotes>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>

@@ -75,8 +75,9 @@ orient each copied ring. A guarded direct sum reduces preparation of the complet
 Preparation plus 1,400 intersection queries has a smaller median reduction of
 **7–8.5%**. The intersection engine is unchanged. Tiny or cancelling rings retain
 the old orientation route after an additional pass; no universal acceleration
-or numerical equivalence is claimed. These are source changes after alpha.2,
-not improvements already present in the published package.
+or numerical equivalence is claimed. The change is included in the alpha.3
+source; see the [release status](releases/0.1.0-alpha.3.md) for delivery.
+These measurements remain pinned to `a7cad8a`, not the eventual alpha.3 binaries.
 
 See the [factory measurements, process ranges and reproduction commands](../benchmarks/PolylineKit.PreparationBenchmarks/RESULTS.md).
 

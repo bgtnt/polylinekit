@@ -31,7 +31,7 @@ Clipper2; the complete county/district coverage took **24–25% less time** than
 reusable Clipper2. At **1,024 rings per operand**, warm Core comparisons were
 **18–34% slower** than Clipper2. Selected warm geometry calls allocated **0 B**;
 preparation, first calls, growth and oversized workspaces can allocate. These
-are historical measurements, not timings of alpha.2. See
+are historical measurements, not timings of the current package version. See
 [the measured scopes and limits](docs/performance.md#recorded-results-by-scenario).
 
 ## Applications

@@ -14,6 +14,13 @@ const state = {
 const percentage = value => `${new Intl.NumberFormat("en", { maximumFractionDigits: 4 }).format(value * 100)}%`;
 const number = value => new Intl.NumberFormat("en", { maximumSignificantDigits: 8 }).format(value);
 
+// Shift the decimal exponent so 0.7% becomes the same Number as an error of 0.007.
+// Dividing by 100 can round just below the inclusive candidate boundary.
+function budgetFraction(percent) {
+  const [mantissa, exponent = "0"] = String(percent).split(/[eE]/);
+  return Number(`${mantissa}e${Number(exponent) - 2}`);
+}
+
 // Every usable candidate is inspected: its measured error need not increase with epsilon.
 export function selectCandidate(candidates, budget) {
   return candidates.filter(candidate => Number.isFinite(candidate.error) && candidate.error >= 0 && candidate.error <= budget)
@@ -299,14 +306,14 @@ controls.range.addEventListener("input", () => {
   controls.number.value = controls.range.value;
   controls.number.removeAttribute("aria-invalid");
   state.budgetValid = true;
-  state.budget = Number(controls.range.value) / 100;
+  state.budget = budgetFraction(controls.range.value);
   updateSelection();
 });
 controls.number.addEventListener("input", () => {
   const value = controls.number.valueAsNumber;
   state.budgetValid = Number.isFinite(value) && value >= 0 && value <= 5;
   controls.number.setAttribute("aria-invalid", String(!state.budgetValid));
-  if (state.budgetValid) { state.budget = value / 100; controls.range.value = String(value); }
+  if (state.budgetValid) { state.budget = budgetFraction(value); controls.range.value = String(value); }
   updateSelection();
 });
 

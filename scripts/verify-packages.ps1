@@ -1,6 +1,6 @@
 [CmdletBinding()]
 param(
-    [string]$Version = '0.1.0-alpha.2',
+    [string]$Version = '0.1.0-alpha.3',
     [string]$OutputDirectory,
     [switch]$AllowDirty,
     [switch]$KeepWorkspace,
@@ -195,7 +195,10 @@ try {
     $complete = $true
     Write-Output "PASS: inspected and executed both real NuGet packages on net10.0 and net8.0. Evidence: $output"
 } finally {
-    foreach ($name in $saved.Keys) { [Environment]::SetEnvironmentVariable($name, $saved[$name]) }
+    foreach ($name in $saved.Keys) {
+        if ($null -eq $saved[$name]) { [Environment]::SetEnvironmentVariable($name, [NullString]::Value) }
+        else { [Environment]::SetEnvironmentVariable($name, $saved[$name]) }
+    }
     Pop-Location
     if ($complete -and !$KeepWorkspace -and (Test-Path -LiteralPath $workspace)) {
         $resolved = (Resolve-Path -LiteralPath $workspace).Path

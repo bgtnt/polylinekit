@@ -29,6 +29,27 @@ jobs:
         run: dotnet run --project examples/AreaChange -c Release --no-build -- check
       - name: Interactive contour demo input, area budget and candidate contracts
         run: dotnet run --project examples/ContourSimplificationDemo -c Release --no-build -- --check
+      - name: Browser test runtime
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: tests/ContourSimplificationDemo.Browser/package-lock.json
+      - name: Interactive contour demo browser regressions
+        if: matrix.os == 'ubuntu-latest'
+        working-directory: tests/ContourSimplificationDemo.Browser
+        run: |
+          npm ci --no-audit --no-fund
+          npx playwright install --with-deps chromium
+          npm test
+      - name: Retain failed browser traces
+        if: failure() && matrix.os == 'ubuntu-latest'
+        uses: actions/upload-artifact@v4
+        with:
+          name: contour-demo-browser-failure
+          path: artifacts/contour-demo-browser/
+          if-no-files-found: ignore
       - name: Region coverage contracts and frozen GIS pairs (no timing)
         run: dotnet run --project examples/RegionCoverage -c Release --no-build -- check
       - name: Verify complete coverage source snapshots offline

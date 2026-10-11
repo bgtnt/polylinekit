@@ -39,7 +39,7 @@ areas directly from double coordinates and has no dependency on this adapter.
 Its recorded building evaluator was effectively tied with direct Clipper2, while
 its prepared intersection batch was 12% slower. Core's complete county/district
 coverage took 24–25% less time; warm generated cases with 1,024 rings per operand
-were 18–34% slower. These are historical workload results, not timings of alpha.2
+were 18–34% slower. These are historical workload results, not timings of this version
 or this adapter. See [the comparison scopes](https://github.com/bgtnt/polylinekit/blob/main/docs/performance.md#recorded-results-by-scenario).
 
 For Polygon/MultiPolygon input held in NetTopologySuite, use the tested

@@ -1,0 +1,14 @@
+{
+  "name": "polylinekit-contour-demo-browser-checks",
+  "private": true,
+  "scripts": {
+    "test": "playwright test --project=chromium",
+    "test:edge": "playwright test --project=edge"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
