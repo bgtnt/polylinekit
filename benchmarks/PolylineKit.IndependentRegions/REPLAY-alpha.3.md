@@ -57,5 +57,8 @@ The package probe checks 36 analytic backend metrics and the unchanged integer-a
 regressions. The corpus wrapper executes the actual full corpus once, retains
 its exit code and failures, and checks its narrower Core/NTS contract. Keep all
 outputs, including a failed three-way report; do not call the timing commands.
-Separate `ASSESSMENT-alpha.3.json` and `RESULTS-alpha.3.md` will record the repeat
-after the clean run completes.
+The completed [alpha.3 results](RESULTS-alpha.3.md) and
+[machine-readable assessment](ASSESSMENT-alpha.3.json) record the clean runner
+`cbcc3113de85fa7c7136585ab29768a059483347`. Core/NTS agreement passed; the full
+three-way check retained exit 1 and all 27 comparator failures. No timings were
+run. The 36 wrapper evidence controls also passed.

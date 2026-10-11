@@ -16,6 +16,10 @@ The historical commands and reports below default to alpha.2. A separate
 alpha.3 identity while preserving this frozen geometry, protocol and alpha.2
 assessment. The repeat performs no timings.
 
+**[Published alpha.3 results](RESULTS-alpha.3.md):** the clean release repeat
+also passes Core/NTS agreement and retains the same 27 three-way failures.
+The original alpha.2 report and protocol remain unchanged.
+
 The fixture contains all 34 basic districts and 1,095 prospective green/recreation
 planning features from the City of Helsinki. It preserves separate components,
 836 holes and all supplied coordinate values in EPSG:3067, in metres. Read the

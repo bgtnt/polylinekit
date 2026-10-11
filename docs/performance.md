@@ -66,6 +66,13 @@ and acceptance budgets were retained. **No timing processes were run**, so this
 assessment adds no speed ranking. It tests the published alpha.2, without the
 later source factory optimization. See the [full assessment and evidence](../benchmarks/PolylineKit.IndependentRegions/RESULTS.md).
 
+A separate [published alpha.3 replay](../benchmarks/PolylineKit.IndependentRegions/RESULTS-alpha.3.md)
+uses the same frozen inputs, exclusions, budgets, grid and comparator code.
+It checks the delivered package, including the factory optimization, rather
+than relabelling the alpha.2 evidence. Core/NTS agreement passes again; the same
+27 three-way failures remain and no timings were run. This is a release repeat
+on the existing independent corpus, not another new dataset or a speed result.
+
 ### Polygon factory construction after alpha.2
 
 The role-aware factories had been computing a complete winding result just to
