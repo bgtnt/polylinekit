@@ -50,7 +50,7 @@ internal sealed class Session
             data.AddPaths(paths, clip ? PathType.Clip : PathType.Subject, false);
             // Independently validated simple, disjoint Polygon/MultiPolygon hierarchies permit
             // the ordinary signed shell-minus-hole area. This is not arbitrary-walk filled area.
-            double area = Math.Abs(Clipper.Area(paths)) / Contracts.ClipperScale / Contracts.ClipperScale;
+            double area = IntegerArea.Area(paths);
             Box nativeBounds = Box.Of(paths.SelectMany(p => p).Select(p => new Point2(p.X / Contracts.ClipperScale,
                 p.Y / Contracts.ClipperScale)));
             return new(raw, area, new ClipperInput(data, paths), nativeBounds);
@@ -113,7 +113,7 @@ internal sealed class Session
         if (!clipper.Execute(type, rule == PathFillRule.NonZero ? FillRule.NonZero : FillRule.EvenOdd, closed!, open!))
             throw new InvalidOperationException("Clipper operation failed: " + type);
         // Output hole signs are retained; taking absolute area of each contour would overcount holes.
-        return Math.Abs(Clipper.Area(closed!)) / Contracts.ClipperScale / Contracts.ClipperScale;
+        return IntegerArea.Area(closed!);
     }
 
     internal Digest Table()

@@ -34,11 +34,13 @@ internal static class Program
             AssemblyIdentity[] assemblies = Identities();
             if (args[0] == "package-check")
             {
-                Save(output, new { SchemaVersion = 1, Utc = DateTimeOffset.UtcNow, Metadata = Metadata(null, assemblies), Validation = Validation.AnalyticPackageCheck() });
+                Save(output, new { SchemaVersion = 1, Utc = DateTimeOffset.UtcNow, Metadata = Metadata(null, assemblies),
+                    Validation = Validation.AnalyticPackageCheck(), IntegerAreaValidation = IntegerArea.Check() });
                 Console.WriteLine("PASS: published alpha.2 identity and 36 analytic metric checks.");
                 return 0;
             }
             FrozenCorpus corpus = Corpus.Load(args[1]);
+            object integerAreaChecks = IntegerArea.Check();
             string protocolHash = BenchmarkProtocolHash(corpus);
             object metadata = Metadata(corpus, assemblies);
             if (args[0] == "check")
@@ -46,7 +48,7 @@ internal static class Program
                 ValidationReport validation = Validation.Check(corpus);
                 VerifyIdentities(assemblies);
                 Contracts.Require(BenchmarkProtocolHash(corpus) == protocolHash, "Benchmark protocol changed during verification.");
-                Save(output, new { SchemaVersion = 1, Utc = DateTimeOffset.UtcNow, Metadata = metadata, Validation = validation });
+                Save(output, new { SchemaVersion = 1, Utc = DateTimeOffset.UtcNow, Metadata = metadata, Validation = validation, IntegerAreaValidation = integerAreaChecks });
                 Console.WriteLine($"{(validation.Passed ? "PASS" : "FAIL")}: {validation.Assertions} numerical assertions; {validation.ExcludedOriginalInputs} invalid original inputs explicitly excluded; {validation.FailureCount} failures.");
                 return validation.Passed ? 0 : 1;
             }
@@ -60,6 +62,7 @@ internal static class Program
                 SchemaVersion = 1, Run = run, ProcessId = Environment.ProcessId, Utc = DateTimeOffset.UtcNow,
                 Metadata = metadata,
                 Validation = new { Passed = true, Scope = "Analytic package smoke and stable timed digests. Full corpus verification is a separate check command.", Analytic = analytic },
+                IntegerAreaValidation = integerAreaChecks,
                 Measurements = rows
             });
             return 0;
@@ -92,6 +95,7 @@ internal static class Program
         SpatialReference = "EPSG:3067", CoordinateUnit = "metre", CoordinatePreparation = "Original supplied XY and traversal directions; explicit shell/hole roles. No projection, centering, repair or simplification in this runner.",
         AreaBudgetM2 = Contracts.AreaBudget, FractionBudget = Contracts.FractionBudget, ClipperGridMetres = 1 / Contracts.ClipperScale,
         ClipperRounding = "AwayFromZero; checked scaled magnitude <= 2^52",
+        ClipperAreaSummation = "Checked Int128 signed integer shoelace, preserving hole signs; full BigInteger restart on overflow. Convert the final absolute twice-area to binary64 and square-metre units.",
         TimedFillRule = "NonZero", SamplesPerCell = Measurements.SamplesPerCell, TargetMillisecondsPerSample = Measurements.TargetMilliseconds,
         MaximumIterations = Measurements.MaximumIterations,
         Scope = "Original-coordinate bounds are the common outer rejection. Parsing, input eligibility checks, result caches, delegates, sample records and serialization are outside timed counters. Preparation includes factory/copy construction and own areas. Warm queries reuse inputs and mutable per-backend scratch storage, never pair results.",
