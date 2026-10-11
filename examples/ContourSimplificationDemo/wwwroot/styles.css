@@ -12,6 +12,10 @@
   --added:#dcb646;
   font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   font-synthesis:none}
+  .json-import{
+    margin-top:14px}
+  #import-error{
+    color:#b74b34}
   *{
     box-sizing:border-box}
     body{

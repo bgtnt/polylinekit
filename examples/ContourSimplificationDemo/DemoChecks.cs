@@ -11,11 +11,22 @@ internal static class DemoChecks
     {
         checks = 0;
         InputChecks();
+        CancellationChecks();
         AreaControls();
         SelectorChecks();
         CandidateChecks();
         PresetChecks(presets);
         Console.WriteLine($"ContourSimplificationDemo: {checks} analytic, validation, finite-selection and frozen-preset checks passed.");
+    }
+
+    private static void CancellationChecks()
+    {
+        using var source = new CancellationTokenSource();
+        source.Cancel();
+        bool canceled = false;
+        try { CandidateGenerator.Generate(CandidateGenerator.Coordinates(Square), source.Token); }
+        catch (OperationCanceledException exception) { canceled = exception.CancellationToken == source.Token; }
+        True(canceled, "cancelled generation preserves the caller's cancellation token");
     }
 
     private static void InputChecks()

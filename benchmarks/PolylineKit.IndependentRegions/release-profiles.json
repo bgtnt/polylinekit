@@ -1,0 +1,18 @@
+{
+  "alpha.2": {
+    "Name": "alpha.2",
+    "Version": "0.1.0-alpha.2",
+    "SourceRevision": "5e9dcc1a5bcb34b5b2d8ae60105d328aec66a80c",
+    "CoreNet10Sha256": "bf7646066a73a9229b40a5bcc8fbfd541ccc6b7d92be8ebacf2e940354c17aca",
+    "CoreContentHash": "BtlbvGfr/PWe6a81EPWW1Nc1c85fkUJ0dxmdlij47F6GQ9wfdgixanR/QNWXSeTl5gUWnbteHEd+aHSVwEh5Sw==",
+    "LockFile": "packages.lock.json"
+  },
+  "alpha.3": {
+    "Name": "alpha.3",
+    "Version": "0.1.0-alpha.3",
+    "SourceRevision": "23c0b3280424569356d64362266c519c839b4790",
+    "CoreNet10Sha256": "bcc2bb413e5bf0087d3621b49d138f4b9ca627ac300386f55973ea49565ddc72",
+    "CoreContentHash": "MISB1t2DfnpZHavqEBQkToLTIM2Rhyg05Lm9rXg11C13NwL7NpDmCj61/6iBkJH2PEW4iiok6xo5+eQ+gX2DYw==",
+    "LockFile": "packages-alpha.3.lock.json"
+  }
+}

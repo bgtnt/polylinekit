@@ -14,7 +14,7 @@ internal sealed record ClipperInput(ReuseableDataContainer64 Data, Paths64 Paths
 /// <summary>Each session owns backend scratch buffers. No pair results are cached.</summary>
 internal sealed class Session
 {
-    internal static readonly string[] Backends = ["Core-alpha.2", "Clipper64-reused-data", "NTS-OverlayNGRobust"];
+    internal static readonly string[] Backends = [PublishedRelease.Current.Backend, "Clipper64-reused-data", "NTS-OverlayNGRobust"];
     private readonly string backend;
     private readonly PathFillRule rule;
     private readonly Clipper64? clipper;

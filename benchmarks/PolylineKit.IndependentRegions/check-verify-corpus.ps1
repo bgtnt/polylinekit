@@ -3,13 +3,14 @@ param(
     [Parameter(Mandatory)][string]$ReportPath,
     [Parameter(Mandatory)][string]$RunnerPath,
     [Parameter(Mandatory)][string]$DataRoot,
-    [Parameter(Mandatory)][string]$PackageProof
+    [Parameter(Mandatory)][string]$PackageProof,
+    [ValidateSet('alpha.2', 'alpha.3')][string]$Release = 'alpha.2'
 )
 $ErrorActionPreference = 'Stop'
 $source = Get-Content -LiteralPath $ReportPath -Raw | ConvertFrom-Json
 $proof = Get-Content -LiteralPath $PackageProof -Raw | ConvertFrom-Json
 $unused = Join-Path ([IO.Path]::GetTempPath()) ('unused-corpus-contract-' + [Guid]::NewGuid().ToString('N') + '.json')
-. (Join-Path $PSScriptRoot 'verify-corpus.ps1') -RunnerPath $RunnerPath -DataRoot $DataRoot -PackageProof $PackageProof -Output $unused
+. (Join-Path $PSScriptRoot 'verify-corpus.ps1') -Release $Release -RunnerPath $RunnerPath -DataRoot $DataRoot -PackageProof $PackageProof -Output $unused
 $tests = [Collections.Generic.List[string]]::new()
 $actualExitCode = if ($source.Validation.Passed) { 0 } else { 1 }
 $base = Assert-CorpusReport -Report $source -ActualExitCode $actualExitCode -Runner $RunnerPath -Data $DataRoot -Proof $proof
@@ -50,8 +51,8 @@ Reject-CorpusMutation 'Reject a nonfinite original-invalid Core observation' { p
 Reject-CorpusMutation 'Reject missing actual selected API calls' { param($s) $s.Report.Validation.CoreSelectedApiCalls = 0 }
 Reject-CorpusMutation 'Reject an incomplete full-comparison population' { param($s) $s.Report.Validation.FullCompareCalls-- }
 Reject-CorpusMutation 'Reject an omitted metric summary' { param($s) $s.Report.Validation.Errors = @($s.Report.Validation.Errors | Select-Object -Skip 1) }
-Reject-CorpusMutation 'Reject nonfinite Core results' { param($s) ($s.Report.Validation.Errors | Where-Object Backend -CEQ 'Core-alpha.2' | Select-Object -First 1).NonfiniteChecks = 1 }
-Reject-CorpusMutation 'Reject Core error exceeding its area budget' { param($s) ($s.Report.Validation.Errors | Where-Object { $_.Backend -ceq 'Core-alpha.2' -and $_.Metric -ceq 'OwnAreaM2' } | Select-Object -First 1).MaximumAbsoluteError = 2 }
+Reject-CorpusMutation 'Reject nonfinite Core results' { param($s) ($s.Report.Validation.Errors | Where-Object Backend -CEQ $coreBackend | Select-Object -First 1).NonfiniteChecks = 1 }
+Reject-CorpusMutation 'Reject Core error exceeding its area budget' { param($s) ($s.Report.Validation.Errors | Where-Object { $_.Backend -ceq $coreBackend -and $_.Metric -ceq 'OwnAreaM2' } | Select-Object -First 1).MaximumAbsoluteError = 2 }
 Reject-CorpusMutation 'Reject NTS error exceeding its fraction budget' { param($s) ($s.Report.Validation.Errors | Where-Object { $_.Backend -ceq 'NTS-OverlayNGRobust' -and $_.Metric -ceq 'Coverage' } | Select-Object -First 1).MaximumAbsoluteError = 1e-7 }
 Reject-CorpusMutation 'Reject an unreviewed Clipper coverage extremum' {
     param($s)
@@ -65,7 +66,7 @@ Reject-CorpusMutation 'Reject a Clipper coverage domain failure' {
 }
 Reject-CorpusMutation 'Reject a Core failure hidden among comparator limits' {
     param($s)
-    $s.Report.Validation.Failures += [pscustomobject]@{ Stage = 'Core-alpha.2/NonZero/queries-to-zones/Coverage'; Input = '112827/606'; Reason = 'Injected Core error' }
+    $s.Report.Validation.Failures += [pscustomobject]@{ Stage = "$coreBackend/NonZero/queries-to-zones/Coverage"; Input = '112827/606'; Reason = 'Injected Core error' }
     $s.Report.Validation.FailureCount++
 }
 Reject-CorpusMutation 'Reject an unexpected Clipper metric failure' {
@@ -81,6 +82,11 @@ Reject-CorpusMutation 'Reject an unreviewed Clipper coverage input' {
 Reject-CorpusMutation 'Reject omitted original failure details' { param($s) $s.Report.Validation.OmittedFailureDetails = 1 }
 Reject-CorpusMutation 'Reject relabeling a failed three-way gate as passed' { param($s) $s.Report.Validation.Passed = !$s.Report.Validation.Passed }
 Reject-CorpusMutation 'Reject an exit code inconsistent with the original gate' { param($s) $s.ExitCode = 1 - $s.ExitCode }
+Reject-CorpusMutation 'Reject a different published release' { param($s) $s.Proof.RestoredCore.Version = '0.1.0-alpha.999' }
+if ($null -ne $source.Metadata.ReleaseProfile) {
+    Reject-CorpusMutation 'Reject a relabeled release profile' { param($s) $s.Report.Metadata.ReleaseProfile = 'alpha.999' }
+    Reject-CorpusMutation 'Reject mismatched clean/development runner provenance' { param($s) $s.Report.Metadata.AssessmentSourceState = 'unproven' }
+}
 
 Write-Output "PASS: $($tests.Count) corpus-wrapper evidence contracts; no geometry calculation or timing was run."
 $tests | ForEach-Object { Write-Output "  $_" }

@@ -1,6 +1,7 @@
 const byId = id => document.getElementById(id);
 const controls = {
   preset: byId("preset"), draw: byId("draw"), clear: byId("clear"),
+  loadJson: byId("load-json"), jsonFile: byId("json-file"),
   range: byId("budget-range"), number: byId("budget-number"),
   svgExport: byId("export-svg"), jsonExport: byId("export-json")
 };
@@ -11,6 +12,8 @@ const state = {
   selected: null, label: "Contour", budget: 0.007, budgetValid: true,
   drawMode: false, pointer: null, stroke: [], capped: false, pending: false
 };
+const maximumJsonBytes = 128 * 1024;
+let importSequence = 0;
 const percentage = value => `${new Intl.NumberFormat("en", { maximumFractionDigits: 4 }).format(value * 100)}%`;
 const number = value => new Intl.NumberFormat("en", { maximumSignificantDigits: 8 }).format(value);
 
@@ -40,6 +43,28 @@ export function normalizeDrawnPoints(points) {
 function validPoints(points) {
   return Array.isArray(points) && points.length >= 3 && points.length <= 1024 && points.every(point =>
     Array.isArray(point) && point.length === 2 && point.every(value => Number.isFinite(value) && Math.abs(value) <= 1e100));
+}
+
+function parseImportedContour(text) {
+  let value;
+  try { value = JSON.parse(text); }
+  catch { throw new Error("The file is not valid JSON."); }
+  const wrapped = value !== null && typeof value === "object" && !Array.isArray(value);
+  if (wrapped && Object.hasOwn(value, "fillRule") && value.fillRule !== "NonZero") {
+    throw new Error("This demo accepts only the NonZero fill rule.");
+  }
+  const points = wrapped ? value.points : value;
+  if (!Array.isArray(points)) throw new Error("Provide an array of [x, y] points, or an object with a points array.");
+  if (points.length > 1024) throw new Error("The demo accepts at most 1,024 supplied points.");
+  // Check the supplied pairs before cleanup can hide extra coordinates or points.
+  if (!validPoints(points)) throw new Error("Provide at least three finite numeric [x, y] points, with coordinate magnitude at most 1e100.");
+  const cleaned = normalizeDrawnPoints(points);
+  if (cleaned.length < 3) throw new Error("At least three vertices must remain after duplicate removal.");
+  const label = wrapped && typeof value.name === "string" && value.name.trim() ? value.name.trim() : "Imported contour";
+  if (/[^\u0009\u000A\u000D\u0020-\uD7FF\uE000-\uFFFD\u{10000}-\u{10FFFF}]/u.test(label)) {
+    throw new Error("The contour name must contain valid XML text characters for SVG export.");
+  }
+  return { points: cleaned, label };
 }
 
 function pathText(points) {
@@ -107,6 +132,7 @@ function invalidate() {
   state.skipped = [];
   state.selected = null;
   state.pending = false;
+  byId("import-error").hidden = true;
   exportEnabled(false);
   resetMetrics();
   svg.setAttribute("aria-busy", "false");
@@ -152,17 +178,17 @@ function updateSelection() {
   setStatus(`${state.candidates.length} candidates measured against the original.${state.skipped.length ? ` ${state.skipped.length} unsuitable candidates skipped; see details.` : ""}${state.capped ? " Recording stopped at the 1,024-point limit." : ""}`);
 }
 
-async function commitContour(points, label, description) {
+async function commitContour(points, label, description, { displayDescription, previous } = {}) {
   const version = invalidate();
   setDrawMode(false);
   state.label = label;
   byId("contour-title").textContent = label;
   byId("preset-description").title = description;
-  byId("preset-description").textContent = controls.preset.value === "MIXED"
+  byId("preset-description").textContent = displayDescription ?? (controls.preset.value === "MIXED"
     ? "Equal-sized additions and removals can cancel in total area. Try a 5% budget."
     : controls.preset.value === "custom"
       ? "Your unchanged, recorded contour is the reference for every candidate."
-      : "A Natural Earth border in normalized map coordinates; area units are not square kilometres.";
+      : "A Natural Earth border in normalized map coordinates; area units are not square kilometres.");
   const cleaned = normalizeDrawnPoints(points);
   if (!validPoints(cleaned)) {
     renderGeometry(cleaned);
@@ -202,14 +228,59 @@ async function commitContour(points, label, description) {
   } catch (error) {
     if (version !== state.version || error.name === "AbortError") return;
     state.pending = false;
-    state.selected = null;
-    exportEnabled(false);
-    setStatus(error.message || "The local server could not complete the calculation. Try another contour.", "error");
+    if (previous) {
+      // Restore only a previously usable result; keep the advanced version and
+      // current controller so canceled/stale requests cannot become current again.
+      Object.assign(state, { original: previous.original, candidates: previous.candidates,
+        skipped: previous.skipped, label: previous.label, capped: previous.capped });
+      controls.preset.value = previous.preset;
+      byId("contour-title").textContent = previous.label;
+      byId("preset-description").textContent = previous.description;
+      if (previous.descriptionTitle === null) byId("preset-description").removeAttribute("title");
+      else byId("preset-description").title = previous.descriptionTitle;
+      updateSelection();
+    } else {
+      state.selected = null;
+      exportEnabled(false);
+    }
+    setStatus((error.message || "The local server could not complete the calculation. Try another contour.") +
+      (previous ? " Previous contour kept." : ""), "error");
   } finally {
     if (version === state.version) {
       svg.setAttribute("aria-busy", "false");
       state.controller = null;
     }
+  }
+}
+
+async function importContour(file) {
+  const sequence = ++importSequence, version = state.version;
+  const isCurrent = () => sequence === importSequence && version === state.version;
+  byId("import-error").hidden = true;
+  try {
+    if (file.size > maximumJsonBytes) throw new Error("The JSON file must be at most 128 KiB (131,072 bytes).");
+    const text = await file.text();
+    if (!isCurrent()) return;
+    const imported = parseImportedContour(text);
+    const previous = state.selected && !state.pending ? {
+      original: state.original, candidates: state.candidates, skipped: state.skipped,
+      label: state.label, capped: state.capped, preset: controls.preset.value,
+      description: byId("preset-description").textContent,
+      descriptionTitle: byId("preset-description").getAttribute("title")
+    } : null;
+    const pointer = state.pointer;
+    state.pointer = null;
+    if (pointer !== null && svg.hasPointerCapture(pointer)) svg.releasePointerCapture(pointer);
+    state.capped = false;
+    controls.preset.value = "custom";
+    await commitContour(imported.points, imported.label, "One contour loaded from local JSON.", {
+      displayDescription: "Your imported coordinates are the reference for every candidate. Area units are squared coordinate units.", previous
+    });
+  } catch (error) {
+    if (!isCurrent()) return;
+    const message = byId("import-error");
+    message.textContent = `Cannot load JSON: ${error.message || "The file could not be read."} Current contour kept.`;
+    message.hidden = false;
   }
 }
 
@@ -301,6 +372,12 @@ controls.preset.addEventListener("change", () => {
 });
 controls.draw.addEventListener("click", clearForDrawing);
 controls.clear.addEventListener("click", clearForDrawing);
+controls.loadJson.addEventListener("click", () => controls.jsonFile.click());
+controls.jsonFile.addEventListener("change", () => {
+  const file = controls.jsonFile.files[0];
+  controls.jsonFile.value = ""; // Selecting the same file again must trigger change.
+  if (file) void importContour(file);
+});
 
 controls.range.addEventListener("input", () => {
   controls.number.value = controls.range.value;
@@ -370,6 +447,8 @@ async function initialize() {
     svg.setAttribute("aria-busy", "false");
     setPlaceholder("The local server is unavailable", "Reload this page after starting the demo. You can still record a contour with Draw.");
     setStatus(error.message || "The local examples could not be loaded.", "error");
+  } finally {
+    controls.loadJson.disabled = false;
   }
 }
 

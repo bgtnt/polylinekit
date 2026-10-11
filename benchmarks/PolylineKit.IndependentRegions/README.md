@@ -11,6 +11,11 @@ the three-way gate fails on the fixed Clipper grid. No timings were run.**
 The cost measurement commands below describe the gated protocol, not a completed
 performance result.
 
+The historical commands and reports below default to alpha.2. A separate
+[alpha.3 replay supplement](REPLAY-alpha.3.md) selects the actual published
+alpha.3 identity while preserving this frozen geometry, protocol and alpha.2
+assessment. The repeat performs no timings.
+
 The fixture contains all 34 basic districts and 1,095 prospective green/recreation
 planning features from the City of Helsinki. It preserves separate components,
 836 holes and all supplied coordinate values in EPSG:3067, in metres. Read the

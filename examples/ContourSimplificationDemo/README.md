@@ -1,7 +1,7 @@
 # Simplify a contour within an area-change budget
 
-Draw a closed selection or choose an existing contour, set how much filled area
-may change, and export the measured simplified result. The demo compares a finite
+Draw a closed selection, load a JSON contour or choose an existing contour, set
+how much filled area may change, and export the measured simplified result. The demo compares a finite
 set of candidates with the **original** shape and chooses the one with the fewest
 vertices that satisfies your budget.
 
@@ -87,6 +87,31 @@ that the task is unique to PolylineKit or that this consumer is faster.
 
 ## Inputs, coordinates and exports
 
+Use **Load JSON** to import one contour from a local file. The file can contain
+a bare `[[x,y],...]` array or an object with a `points` array, including a JSON
+export from this demo:
+
+```json
+{"name":"My contour","fillRule":"NonZero","points":[[0,0],[8,0],[8,4],[0,4]]}
+```
+
+`name` is optional and displayed as text; it must be valid XML text for SVG export.
+An omitted fill rule uses `NonZero`; any explicit different `fillRule` is rejected.
+Other exported metadata is ignored:
+the imported points become the new original, candidates are measured afresh, and
+your current budget stays in effect. Coordinates retain their supplied units and
+values, with no scaling, resampling or topology repair.
+
+JSON files are limited to **128 KiB (131,072 bytes)** and **1,024 supplied points**,
+counting duplicates before cleanup. Each point must contain exactly two finite
+JSON numbers with magnitude at most `1e100`; numeric strings are not accepted.
+Consecutive and closing duplicates are removed, and at least three vertices must
+remain. Malformed or unsupported files are rejected before an API request and
+keep the current contour and exports. Positive finite `NonZero` filled area is
+checked by the server; if measurement rejects an imported contour, a previous
+usable result is restored when available. A newer contour or file selection
+supersedes a file that is still being read.
+
 The four Natural Earth v5.1.2, 1:50m country contours are linked directly from
 [AreaChange/data](../AreaChange/data/manifest.json). Startup verifies the pinned
 manifest, file hashes and vertex counts. No holes or islands were discarded
@@ -103,6 +128,10 @@ The SVG export contains the current simplified contour with an explicit
 `nonzero` fill rule and its actual coordinates. JSON contains the same points,
 fill rule, budget fraction, measured Jaccard distance and vertex counts. Exports
 are disabled while a changed input has no current scored result.
+
+Superseded measurement requests are canceled cooperatively between geometry
+calls and candidates. A geometry operation already executing runs to completion
+before cancellation is observed.
 
 The API uses coordinate arrays rather than serializing `Point2` implicitly:
 
@@ -122,6 +151,7 @@ Console checks cover input limits and degenerate inputs, a filled bow-tie with
 zero algebraic area, exact square/collinear and added/removed controls, inclusive
 budget thresholds, percent units, deliberately nonmonotone candidate errors,
 stable ties, strict-budget fallback, skipped candidates and all frozen presets.
+They also check cancellation before candidate generation.
 
 The reproducible browser suite uses the pinned, **test-only** Playwright package
 in [tests/ContourSimplificationDemo.Browser](../../tests/ContourSimplificationDemo.Browser).
@@ -144,11 +174,14 @@ npm test
 ```
 
 Playwright starts and stops the real Release server on `127.0.0.1:5091` and loads
-its production HTML and `app.js`. Three tests cover real API startup, selection
+its production HTML and `app.js`. Seven tests cover real API startup, selection
 across a nonmonotone candidate series, inclusive 0.7% and 0.5% boundaries,
 scientific percent input, cached budget edits, actual JSON/SVG downloads, and an
-older HTTP response arriving after the newer one. Controlled API responses make
-the boundary and race cases deterministic; the race deliberately lets a request
+older HTTP response arriving after the newer one. Import checks exercise local
+coordinates and export round trips through the real API, file/schema/size limits,
+prior-result preservation, ending an active drawing gesture and delayed file
+reads. Controlled API responses make the boundary and race cases deterministic;
+the HTTP race deliberately lets a request
 finish after abort to verify the input-version guard. Failures retain Playwright
 traces under `artifacts/contour-demo-browser`.
 
@@ -156,7 +189,7 @@ The initial implementation also passed 354 console assertions and 36 local
 checks in an isolated Microsoft Edge session. Those broader delivery checks
 covered pointer gestures, the 1024-point cap, invalid inputs and narrow-screen
 layout; added and removed fill was inspected in the running demo. They remain
-local delivery evidence, distinct from the three committed CI browser tests.
+local delivery evidence, distinct from the committed CI browser tests.
 
 Separate `FirstOnlyArea`/`SecondOnlyArea` metrics may become useful later. They
 are not needed for this version: PolylineKit supplies XOR and union numerically,

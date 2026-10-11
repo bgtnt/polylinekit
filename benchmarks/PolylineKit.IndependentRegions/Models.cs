@@ -49,7 +49,7 @@ internal static class Contracts
     internal const double AreaBudget = 1;
     internal const double FractionBudget = 1e-8;
     internal const double ClipperScale = 1e6;
-    internal const string PublishedCoreSha256 = "bf7646066a73a9229b40a5bcc8fbfd541ccc6b7d92be8ebacf2e940354c17aca";
+    internal static string PublishedCoreSha256 => PublishedRelease.Current.CoreNet10Sha256;
     internal static readonly GeometryFactory Factory = new(new PrecisionModel(), 3067);
     internal static readonly PathFillRule[] Rules = [PathFillRule.NonZero, PathFillRule.EvenOdd];
     internal static void Require(bool condition, string message)

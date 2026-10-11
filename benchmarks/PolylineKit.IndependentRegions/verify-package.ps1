@@ -2,19 +2,23 @@
 param(
     [string]$OutputDirectory,
     [string]$DataRoot,
-    [switch]$KeepWorkspace
+    [switch]$KeepWorkspace,
+    [ValidateSet('alpha.2', 'alpha.3')][string]$Release = 'alpha.2'
 )
 
 # This verification uses NuGet.org, not a local build/feed or the user's package cache.
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'ReleaseProfiles.ps1')
+$profile = Get-IndependentReleaseProfile $Release
 $repository = [IO.Path]::GetFullPath((Split-Path (Split-Path $PSScriptRoot -Parent) -Parent))
 $runId = [Guid]::NewGuid().ToString('N')
 $tempRoot = [IO.Path]::GetFullPath([IO.Path]::GetTempPath()).TrimEnd([IO.Path]::DirectorySeparatorChar)
 $workspace = Join-Path $tempRoot ('polylinekit-independent-package-' + $runId)
 $output = if ($OutputDirectory) { [IO.Path]::GetFullPath($OutputDirectory) } else { Join-Path $repository ('artifacts/independent-package-' + $runId) }
 $projectName = 'PolylineKit.IndependentRegions.csproj'
-$expectedCoreHash = 'bf7646066a73a9229b40a5bcc8fbfd541ccc6b7d92be8ebacf2e940354c17aca'
-$expectedSource = '5e9dcc1a5bcb34b5b2d8ae60105d328aec66a80c'
+$expectedCoreHash = $profile.CoreNet10Sha256
+$expectedSource = $profile.SourceRevision
+$version = $profile.Version
 $sourceUri = 'https://api.nuget.org/v3/index.json'
 $complete = $false
 $locationPushed = $false
@@ -23,7 +27,8 @@ $savedEnvironment = @{}
 $evidence = [ordered]@{
     Complete = $false
     Utc = [DateTimeOffset]::UtcNow.ToString('o')
-    Package = 'PolylineKit.Core/0.1.0-alpha.2'
+    Package = "PolylineKit.Core/$version"
+    ReleaseProfile = $Release
     ExpectedSourceRevision = $expectedSource
     Workspace = $workspace
     PublicSourceOnly = $true
@@ -47,7 +52,7 @@ function Run-Dotnet([string]$Name, [string[]]$Arguments) {
 
 function Copy-PublicSource {
     $project = Join-Path $PSScriptRoot $projectName
-    $lock = Join-Path $PSScriptRoot 'packages.lock.json'
+    $lock = Join-Path $PSScriptRoot $profile.LockFile
     Require (Test-Path -LiteralPath $lock -PathType Leaf) 'Restore the runner and commit its packages.lock.json before verifying a locked external consumer.'
     [xml]$projectXml = Get-Content -LiteralPath $project -Raw
     Require ($projectXml.SelectNodes('//ProjectReference').Count -eq 0) 'A package consumer cannot contain ProjectReference.'
@@ -69,10 +74,21 @@ function Copy-PublicSource {
         Copy-Item -LiteralPath $file.FullName -Destination $destination
         $copied += [ordered]@{ Path = $relative.Replace('\', '/'); SHA256 = Hash-File $destination }
     }
-    foreach ($file in @($projectName, 'packages.lock.json', 'NuGet.Config')) {
-        Copy-Item -LiteralPath (Join-Path $PSScriptRoot $file) -Destination (Join-Path $workspace $file)
-        $copied += [ordered]@{ Path = $file; SHA256 = Hash-File (Join-Path $workspace $file) }
+    foreach ($file in @($projectName, 'packages.lock.json', 'NuGet.Config', 'release-profiles.json')) {
+        $sourceFile = if ($file -eq 'packages.lock.json') { $profile.LockFile } else { $file }
+        $destination = Join-Path $workspace $file
+        Copy-Item -LiteralPath (Join-Path $PSScriptRoot $sourceFile) -Destination $destination
+        if ($file -eq $projectName -and $Release -ne 'alpha.2') {
+            # Keep the historical project's exact alpha.2 reference unchanged.
+            # Only this fresh external copy selects the explicit repeat profile.
+            [xml]$externalProject = Get-Content -LiteralPath $destination -Raw
+            $coreReference = @($externalProject.SelectNodes('//PackageReference') | Where-Object { $_.GetAttribute('Include') -eq 'PolylineKit.Core' })[0]
+            $coreReference.SetAttribute('Version', "[$version]")
+            $externalProject.Save($destination)
+        }
+        $copied += [ordered]@{ Path = $file; SourcePath = $sourceFile; SHA256 = Hash-File $destination }
     }
+    $evidence.ReleaseProfilesSHA256 = Hash-File (Join-Path $workspace 'release-profiles.json')
     [xml]$config = Get-Content -LiteralPath (Join-Path $workspace 'NuGet.Config') -Raw
     Require ($null -ne $config.SelectSingleNode('/configuration/packageSources/clear')) 'NuGet.Config must clear inherited package sources.'
     Require ($null -ne $config.SelectSingleNode('/configuration/fallbackPackageFolders/clear')) 'NuGet.Config must clear inherited fallback package caches.'
@@ -99,6 +115,14 @@ try {
     $evidence.PackageCache = $cache
     $evidence.PackageCacheInitiallyEmpty = $true
     Copy-PublicSource
+    $assessmentRevision = (& git -C $repository rev-parse HEAD).Trim()
+    Require ($LASTEXITCODE -eq 0 -and $assessmentRevision -cmatch '^[0-9a-f]{40}$') 'Could not identify the assessment source revision.'
+    $relativeRoot = 'benchmarks/PolylineKit.IndependentRegions/'
+    $runnerInputs = @('*.cs', '*.ps1', '*.csproj', 'packages*.lock.json', 'release-profiles.json', 'NuGet.Config') | ForEach-Object { $relativeRoot + $_ }
+    $dirtyRunner = @(& git -C $repository status --porcelain -- @runnerInputs).Count -ne 0
+    $assessmentState = if ($dirtyRunner) { 'development' } else { 'clean' }
+    $evidence.AssessmentRevision = $assessmentRevision
+    $evidence.AssessmentSourceState = $assessmentState
     foreach ($name in @('NUGET_PACKAGES', 'NUGET_HTTP_CACHE_PATH', 'NUGET_PLUGINS_CACHE_PATH')) {
         $savedEnvironment[$name] = [Environment]::GetEnvironmentVariable($name)
     }
@@ -114,7 +138,7 @@ try {
     # an extra source or shared cache in this isolated consumer.
     $isolatedBuild = @('-p:ImportDirectoryBuildProps=false', '-p:ImportDirectoryBuildTargets=false',
         '-p:DisableImplicitNuGetFallbackFolder=true', '-p:RestoreFallbackFolders=',
-        '-p:DisableImplicitLibraryPacksFolder=true')
+        '-p:DisableImplicitLibraryPacksFolder=true', "-p:AssessmentRevision=$assessmentRevision", "-p:AssessmentSourceState=$assessmentState")
     $restoreArguments = @('restore', $project, '--configfile', $config, '--packages', $cache, '--no-cache', '--locked-mode', '-p:NuGetAudit=false') + $isolatedBuild
     $evidence.RestoreArguments = $restoreArguments
     Run-Dotnet 'restore' $restoreArguments
@@ -126,22 +150,24 @@ try {
     Require (@($assets.packageFolders.Keys).Count -eq 1 -and
         [IO.Path]::GetFullPath(@($assets.packageFolders.Keys)[0]).TrimEnd([IO.Path]::DirectorySeparatorChar) -eq $cache) 'Restore added a shared or fallback package cache.'
     Require (@($assets.project.restore.sources.Keys).Count -eq 1 -and $assets.project.restore.sources.ContainsKey($sourceUri)) 'Restore used a package source other than NuGet.org.'
-    $coreKey = 'PolylineKit.Core/0.1.0-alpha.2'
+    $coreKey = "PolylineKit.Core/$version"
     Require ($assets.libraries[$coreKey].type -eq 'package') 'Core was not restored as a package.'
     Require (@($assets.libraries.Values | Where-Object { $_.type -ne 'package' }).Count -eq 0) 'A source project entered the dependency graph.'
     $expectedAsset = 'lib/net10.0/PolylineKit.Winding.dll'
     $selectedCore = $assets.targets['net10.0'][$coreKey]
     Require (@($selectedCore.runtime.Keys).Count -eq 1 -and $selectedCore.runtime.ContainsKey($expectedAsset)) 'The consumer did not select the net10.0 runtime asset.'
     Require (@($selectedCore.compile.Keys).Count -eq 1 -and $selectedCore.compile.ContainsKey($expectedAsset)) 'The consumer did not select the net10.0 compile asset.'
-    $cachedCore = Join-Path $cache 'polylinekit.core/0.1.0-alpha.2'
+    $cachedCore = Join-Path $cache "polylinekit.core/$version"
     $metadataPath = Join-Path $cachedCore '.nupkg.metadata'
     $origin = Get-Content -LiteralPath $metadataPath -Raw | ConvertFrom-Json -AsHashtable
     Require ($origin.source.TrimEnd('/') -eq $sourceUri.TrimEnd('/')) 'The restored Core archive did not originate at NuGet.org.'
     $cachedCoreDll = Join-Path $cachedCore $expectedAsset
-    Require ((Hash-File $cachedCoreDll) -eq $expectedCoreHash) 'The NuGet Core DLL differs from the recorded published alpha.2.'
+    Require ((Hash-File $cachedCoreDll) -eq $expectedCoreHash -and $assets.libraries[$coreKey].sha512 -ceq $profile.CoreContentHash -and
+        $origin.contentHash -ceq $profile.CoreContentHash) 'The NuGet Core payload differs from the recorded published release.'
     $evidence.RestoredDependencies = @($assets.libraries.Keys | Sort-Object)
-    $evidence.RestoredCore = [ordered]@{ Type = 'package'; Version = '0.1.0-alpha.2'; Source = $origin.source; RuntimeAsset = $expectedAsset; SHA256 = Hash-File $cachedCoreDll; PackageSHA256 = Hash-File (Join-Path $cachedCore 'polylinekit.core.0.1.0-alpha.2.nupkg') }
+    $evidence.RestoredCore = [ordered]@{ Type = 'package'; Version = $version; Source = $origin.source; RuntimeAsset = $expectedAsset; SHA256 = Hash-File $cachedCoreDll; ContentHash = $origin.contentHash; PackageSHA256 = Hash-File (Join-Path $cachedCore "polylinekit.core.$version.nupkg") }
     $buildArguments = @('build', $project, '-c', 'Release', '--no-restore') + $isolatedBuild
+    $evidence.BuildArguments = $buildArguments
     Run-Dotnet 'build' $buildArguments
     $consumerDll = Join-Path $workspace 'bin/Release/net10.0/PolylineKit.IndependentRegions.dll'
     $loadedCoreDll = Join-Path (Split-Path $consumerDll -Parent) 'PolylineKit.Winding.dll'
@@ -154,25 +180,26 @@ try {
     Require ($coreIdentities.Count -eq 1) 'The runtime report lacks a unique loaded Core assembly.'
     $coreIdentity = $coreIdentities[0]
     Require ($coreIdentity.Sha256 -eq $expectedCoreHash -and
-        $coreIdentity.InformationalVersion.Split('+')[0] -eq '0.1.0-alpha.2' -and
-        $coreIdentity.InformationalVersion.Contains($expectedSource) -and
+        $coreIdentity.InformationalVersion -ceq "$version+$expectedSource" -and
         $coreIdentity.TargetFramework -eq '.NETCoreApp,Version=v10.0' -and
         [IO.Path]::GetFullPath($coreIdentity.Location) -eq [IO.Path]::GetFullPath($loadedCoreDll)) 'The runtime loaded a different published DLL/source or asset target.'
     Require ($packageCheck.Validation.Passed -eq $true -and $packageCheck.Validation.Checks -gt 0) 'The published package analytic smoke did not pass.'
+    Require ($packageCheck.Metadata.ReleaseProfile -ceq $Release -and $packageCheck.Metadata.ReleaseProfilesSha256 -ceq $evidence.ReleaseProfilesSHA256 -and
+        $packageCheck.Metadata.AssessmentRevision -ceq $assessmentRevision -and $packageCheck.Metadata.AssessmentSourceState -ceq $assessmentState) 'Runtime release profile or assessment source differs.'
     $evidence.PackageCheck = $packageCheck
     if ($DataRoot) {
         Run-Dotnet 'check' @($consumerDll, 'check', $DataRoot, (Join-Path $output 'check.json'))
         $evidence.DatasetCheck = Get-Content -LiteralPath (Join-Path $output 'check.json') -Raw | ConvertFrom-Json -AsHashtable
     }
     Copy-Item -LiteralPath $metadataPath -Destination (Join-Path $output 'core.nupkg.metadata.json')
-    foreach ($file in @($projectName, 'packages.lock.json', 'NuGet.Config')) {
+    foreach ($file in @($projectName, 'packages.lock.json', 'NuGet.Config', 'release-profiles.json')) {
         Copy-Item -LiteralPath (Join-Path $workspace $file) -Destination (Join-Path $output $file)
     }
     $evidence.ConsumerSHA256 = Hash-File $consumerDll
     $evidence.SDK = (& dotnet --version).Trim()
     $evidence.Complete = $true
     $complete = $true
-    Write-Output "PASS: outside-checkout consumer restored and ran the published alpha.2 from NuGet.org. Evidence: $output"
+    Write-Output "PASS: outside-checkout consumer restored and ran published $Release from NuGet.org ($assessmentState runner). Evidence: $output"
 } catch {
     $evidence.Error = $_.Exception.Message
     throw

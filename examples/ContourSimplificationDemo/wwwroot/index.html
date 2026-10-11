@@ -21,7 +21,7 @@
     <main>
       <div class="intro">
         <div><p class="eyebrow">FEWER POINTS, A MEASURED CHANGE</p><h1>Simplify a contour</h1></div>
-        <p>Choose a shape or draw your own. Set an area budget, inspect the difference, and export the result.</p>
+        <p>Choose a shape, load JSON or draw your own. Set an area budget, inspect the difference, and export the result.</p>
       </div>
 
       <div class="workspace">
@@ -38,6 +38,12 @@
               <button id="clear" type="button" class="button quiet">Clear</button>
             </div>
             <p class="small-note">Draw one continuous gesture. It closes automatically. Up to 1,024 recorded points.</p>
+            <div class="json-import">
+              <button id="load-json" type="button" class="button secondary" aria-describedby="json-import-note" disabled>Load JSON</button>
+              <input id="json-file" type="file" accept=".json,application/json" aria-label="Contour JSON file" hidden>
+              <p id="json-import-note" class="small-note">One XY contour · up to 1,024 supplied points and 128 KiB.</p>
+              <p id="import-error" class="small-note" role="alert" hidden></p>
+            </div>
           </section>
 
           <section class="control-section budget-section">

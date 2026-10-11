@@ -3,12 +3,16 @@ param(
     [Parameter(Mandatory)][string]$RunnerPath,
     [Parameter(Mandatory)][string]$DataRoot,
     [Parameter(Mandatory)][string]$PackageProof,
-    [Parameter(Mandatory)][string]$Output
+    [Parameter(Mandatory)][string]$Output,
+    [ValidateSet('alpha.2', 'alpha.3')][string]$Release = 'alpha.2'
 )
 
 # A Core/NTS CI check is deliberately distinct from the unchanged three-way
 # accuracy gate. The original check report, its exit code and all failures remain.
 $ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'ReleaseProfiles.ps1')
+$profile = Get-IndependentReleaseProfile $Release
+$coreBackend = 'Core-' + $Release
 
 function Require-Corpus([bool]$Condition, [string]$Message) {
     if (!$Condition) { throw $Message }
@@ -37,15 +41,22 @@ function Assert-CorpusReport {
     $validation = $Report.Validation
     $metadata = $Report.Metadata
     Require-Corpus ($Proof.Complete -eq $true -and $Proof.PublicSourceOnly -eq $true -and $Proof.PackageCacheInitiallyEmpty -eq $true -and
-        $Proof.Package -ceq 'PolylineKit.Core/0.1.0-alpha.2' -and $Proof.ExpectedSourceRevision -ceq '5e9dcc1a5bcb34b5b2d8ae60105d328aec66a80c' -and
-        $Proof.RestoredCore.Type -ceq 'package' -and $Proof.RestoredCore.Version -ceq '0.1.0-alpha.2' -and
+        $Proof.Package -ceq "PolylineKit.Core/$($profile.Version)" -and $Proof.ExpectedSourceRevision -ceq $profile.SourceRevision -and
+        $Proof.RestoredCore.Type -ceq 'package' -and $Proof.RestoredCore.Version -ceq $profile.Version -and
         $Proof.RestoredCore.Source -ceq 'https://api.nuget.org/v3/index.json' -and
         $Proof.RestoredCore.RuntimeAsset -ceq 'lib/net10.0/PolylineKit.Winding.dll' -and
-        $Proof.RestoredCore.SHA256 -ceq 'bf7646066a73a9229b40a5bcc8fbfd541ccc6b7d92be8ebacf2e940354c17aca' -and
+        $Proof.RestoredCore.SHA256 -ceq $profile.CoreNet10Sha256 -and
         $Proof.PackageCheck.SchemaVersion -eq 1 -and $Proof.PackageCheck.Validation.Passed -eq $true -and
         $Proof.PackageCheck.Validation.Checks -eq 36) 'Published-package isolation/analytic proof is incomplete or differs.'
     Require-Corpus ($metadata.AssessmentRevision -cmatch '^[0-9a-f]{40}$' -and
         $metadata.AssessmentRevision -ceq $Proof.PackageCheck.Metadata.AssessmentRevision) 'Assessment source revision differs from package proof.'
+    if ($Release -eq 'alpha.3' -or $null -ne $metadata.ReleaseProfile) {
+        Require-Corpus ($metadata.ReleaseProfile -ceq $Release -and $Proof.ReleaseProfile -ceq $Release -and
+            $metadata.ReleaseProfilesSha256 -ceq (Corpus-Hash (Join-Path $PSScriptRoot 'release-profiles.json')) -and
+            $metadata.ReleaseProfilesSha256 -ceq $Proof.ReleaseProfilesSHA256 -and
+            $metadata.AssessmentSourceState -cin @('clean', 'development') -and $metadata.AssessmentSourceState -ceq $Proof.AssessmentSourceState -and
+            $metadata.AssessmentSourceState -ceq $Proof.PackageCheck.Metadata.AssessmentSourceState) 'Release profile or clean/development runner provenance differs.'
+    }
     $expectedAssemblies = @('Clipper2Lib', 'NetTopologySuite', 'PolylineKit.IndependentRegions', 'PolylineKit.Winding')
     foreach ($set in @($metadata.Assemblies, $Proof.PackageCheck.Metadata.Assemblies)) {
         Require-Corpus (@($set).Count -eq 4 -and !(Compare-Object $expectedAssemblies @($set.Assembly | Sort-Object))) 'Incomplete loaded assembly identity inventory.'
@@ -61,10 +72,10 @@ function Assert-CorpusReport {
     $coreIdentity = @($metadata.Assemblies | Where-Object Assembly -CEQ 'PolylineKit.Winding')[0]
     Require-Corpus ([IO.Path]::GetFullPath($runnerIdentity.Location) -ceq [IO.Path]::GetFullPath($Runner) -and
         $Proof.ConsumerSHA256 -ceq $runnerIdentity.Sha256 -and (Corpus-Hash $Runner) -ceq $runnerIdentity.Sha256 -and
-        $coreIdentity.Sha256 -ceq 'bf7646066a73a9229b40a5bcc8fbfd541ccc6b7d92be8ebacf2e940354c17aca' -and
-        $coreIdentity.InformationalVersion -ceq '0.1.0-alpha.2+5e9dcc1a5bcb34b5b2d8ae60105d328aec66a80c' -and
-        $coreIdentity.TargetFramework -ceq '.NETCoreApp,Version=v10.0') 'The check did not use the proven published alpha.2 consumer.'
-    foreach ($pair in @(@('PolylineKit.Core', '0.1.0-alpha.2'), @('Clipper2', '2.0.0'), @('NetTopologySuite', '2.6.0'))) {
+        $coreIdentity.Sha256 -ceq $profile.CoreNet10Sha256 -and
+        $coreIdentity.InformationalVersion -ceq ($profile.Version + '+' + $profile.SourceRevision) -and
+        $coreIdentity.TargetFramework -ceq '.NETCoreApp,Version=v10.0') 'The check did not use the proven published release consumer.'
+    foreach ($pair in @(@('PolylineKit.Core', $profile.Version), @('Clipper2', '2.0.0'), @('NetTopologySuite', '2.6.0'))) {
         Require-Corpus ($metadata.PackageVersions.PSObject.Properties[$pair[0]].Value -ceq $pair[1]) ('Package version differs: ' + $pair[0])
     }
     Require-Corpus (@($metadata.PackageVersions.PSObject.Properties).Count -eq 3 -and $metadata.SpatialReference -ceq 'EPSG:3067' -and
@@ -130,7 +141,7 @@ function Assert-CorpusReport {
         '112857/919','112857/922','112857/924','112857/925','117935/136')
     $rows = @($validation.Errors)
     $keys = @($rows | ForEach-Object { $_.Backend + '/' + $_.FillRule + '/' + $_.Direction + '/' + $_.Metric })
-    $expectedKeys = @(foreach ($backend in @('Core-alpha.2','Clipper64-reused-data','NTS-OverlayNGRobust')) {
+    $expectedKeys = @(foreach ($backend in @($coreBackend,'Clipper64-reused-data','NTS-OverlayNGRobust')) {
         foreach ($rule in @('NonZero','EvenOdd')) { foreach ($direction in @('zones-to-queries','queries-to-zones')) {
             foreach ($metric in $metrics) { "$backend/$rule/$direction/$metric" }
         } }
@@ -173,6 +184,8 @@ function Assert-CorpusReport {
     $threeWayPassed = $failures.Count -eq 0
     Require-Corpus ($validation.Passed -eq $threeWayPassed -and $ActualExitCode -eq $(if ($threeWayPassed) { 0 } else { 1 })) 'Original three-way status/exit code disagrees with its retained failures.'
     return [ordered]@{
+        ReleaseProfile = $Release; Package = "PolylineKit.Core/$($profile.Version)"; AssessmentRevision = $metadata.AssessmentRevision
+        AssessmentSourceState = $metadata.AssessmentSourceState
         CoreAgreementPassed = $true; ThreeWayPassed = $threeWayPassed; OriginalCheckExitCode = $ActualExitCode
         ThreeWayFailureCount = $failures.Count; KnownComparatorLimits = @($failures.Stage | Sort-Object -Unique)
         SourceFeatures = 1129; OriginalNtsInvalidFeatures = 31; AdmittedPairsPerDirection = 36176
@@ -212,7 +225,7 @@ $result = Assert-CorpusReport -Report $report -ActualExitCode $actualExitCode -R
 $result.CheckReportSha256 = Corpus-Hash $destination
 $result.PackageProofSha256 = Corpus-Hash $proofPath
 $result | ConvertTo-Json -Depth 12 | Set-Content -LiteralPath $summaryPath -Encoding utf8
-Write-Output "PASS: published alpha.2 Core/NTS agreement on the frozen corpus. Evidence: $destination"
+Write-Output "PASS: published $Release Core/NTS agreement on the frozen corpus. Evidence: $destination"
 if (!$result.ThreeWayPassed) {
     Write-Output "FAILED: original three-way accuracy gate; exit $actualExitCode and $($result.ThreeWayFailureCount) comparator failures retained. Timings remain forbidden."
 }

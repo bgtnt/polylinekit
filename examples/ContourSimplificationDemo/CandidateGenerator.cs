@@ -16,10 +16,12 @@ internal static class CandidateGenerator
         .075, .1
     ];
 
-    internal static CandidateResponse Generate(double[][]? supplied)
+    internal static CandidateResponse Generate(double[][]? supplied, CancellationToken cancellationToken = default)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         Point2[] original = Validate(supplied);
         double originalArea = PolylineArea.FilledArea(original, PathFillRule.NonZero);
+        cancellationToken.ThrowIfCancellationRequested();
         if (!double.IsFinite(originalArea) || originalArea <= 0)
             throw new InputException("The contour must have positive finite NonZero filled area.");
         var candidates = new List<Candidate>();
@@ -32,6 +34,7 @@ internal static class CandidateGenerator
         int index = 0;
         foreach (double ratio in RelativeTolerances)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             index++;
             double epsilon = length * ratio;
             // Each candidate comes directly from the same original, never from another simplification.
@@ -39,7 +42,9 @@ internal static class CandidateGenerator
             foreach (Point2 point in original) path.Add(new(point.X, point.Y));
             Point2[] simplified = Clipper.SimplifyPath(path, epsilon, isClosedPath: true)
                 .Select(p => new Point2(p.x, p.y)).ToArray();
+            cancellationToken.ThrowIfCancellationRequested();
             Candidate? scored = Score(original, simplified, index, epsilon, out string? reason);
+            cancellationToken.ThrowIfCancellationRequested();
             if (scored is null) skipped.Add(new(index, epsilon, reason!));
             else candidates.Add(scored);
         }

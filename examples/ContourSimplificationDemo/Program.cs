@@ -27,7 +27,11 @@ app.MapPost("/api/candidates", async (HttpContext context) =>
     {
         CandidateRequest? request = await context.Request.ReadFromJsonAsync<CandidateRequest>(context.RequestAborted);
         if (request is null) return Results.BadRequest(new { error = "Provide a JSON object with a points array." });
-        return Results.Json(CandidateGenerator.Generate(request.Points));
+        return Results.Json(CandidateGenerator.Generate(request.Points, context.RequestAborted));
+    }
+    catch (OperationCanceledException) when (context.RequestAborted.IsCancellationRequested)
+    {
+        return Results.StatusCode(StatusCodes.Status499ClientClosedRequest);
     }
     catch (InputException exception)
     {

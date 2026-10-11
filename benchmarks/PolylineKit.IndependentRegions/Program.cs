@@ -36,7 +36,7 @@ internal static class Program
             {
                 Save(output, new { SchemaVersion = 1, Utc = DateTimeOffset.UtcNow, Metadata = Metadata(null, assemblies),
                     Validation = Validation.AnalyticPackageCheck(), IntegerAreaValidation = IntegerArea.Check() });
-                Console.WriteLine("PASS: published alpha.2 identity and 36 analytic metric checks.");
+                Console.WriteLine($"PASS: published {PublishedRelease.Current.Name} identity and 36 analytic metric checks.");
                 return 0;
             }
             FrozenCorpus corpus = Corpus.Load(args[1]);
@@ -79,13 +79,15 @@ internal static class Program
     private static object Metadata(FrozenCorpus? corpus, AssemblyIdentity[] assemblies) => new
     {
         Runtime = RuntimeInformation.FrameworkDescription, OS = RuntimeInformation.OSDescription,
-        AssessmentRevision = Environment.GetEnvironmentVariable("POLYLINEKIT_ASSESSMENT_REVISION"),
+        AssessmentRevision = AssessmentMetadata("AssessmentRevision", "POLYLINEKIT_ASSESSMENT_REVISION"),
+        AssessmentSourceState = AssessmentMetadata("AssessmentSourceState", "POLYLINEKIT_ASSESSMENT_SOURCE_STATE"),
+        ReleaseProfile = PublishedRelease.Current.Name, ReleaseProfilesSha256 = PublishedRelease.ProfilesSha256,
         Architecture = RuntimeInformation.ProcessArchitecture.ToString(), Processor = Environment.GetEnvironmentVariable("PROCESSOR_IDENTIFIER"),
         ProcessorCount = Environment.ProcessorCount, StopwatchFrequency = Stopwatch.Frequency,
         TieredCompilation = Environment.GetEnvironmentVariable("DOTNET_TieredCompilation"), TieredPGO = Environment.GetEnvironmentVariable("DOTNET_TieredPGO"),
         HardwareIntrinsics = Environment.GetEnvironmentVariable("DOTNET_EnableHWIntrinsic"),
         Assemblies = assemblies,
-        PackageVersions = new Dictionary<string, string> { ["PolylineKit.Core"] = "0.1.0-alpha.2", ["Clipper2"] = "2.0.0", ["NetTopologySuite"] = "2.6.0" },
+        PackageVersions = new Dictionary<string, string> { ["PolylineKit.Core"] = PublishedRelease.Current.Version, ["Clipper2"] = "2.0.0", ["NetTopologySuite"] = "2.6.0" },
         SourceFiles = corpus?.Sources, DerivedFiles = corpus?.Derived, ManifestSha256 = corpus?.ManifestSha256,
         SourceProtocolSha256 = corpus?.ProtocolSha256, BenchmarkProtocolSha256 = corpus is null ? null : BenchmarkProtocolHash(corpus),
         Zones = corpus?.Zones.Inventory, Queries = corpus?.Queries.Inventory,
@@ -109,13 +111,16 @@ internal static class Program
             Corpus.Hash(File.ReadAllBytes(a.Location)), a.GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion ?? "unavailable",
             a.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkName)).ToArray();
         AssemblyIdentity core = identities.Single(i => i.Assembly == "PolylineKit.Winding");
-        Contracts.Require(core.Sha256 == Contracts.PublishedCoreSha256 && core.InformationalVersion.Split('+')[0] == "0.1.0-alpha.2" &&
-            core.InformationalVersion.Contains("5e9dcc1a5bcb34b5b2d8ae60105d328aec66a80c", StringComparison.Ordinal) &&
-            core.TargetFramework == ".NETCoreApp,Version=v10.0", "The runner did not load the declared published alpha.2 net10.0 binary.");
+        Contracts.Require(core.Sha256 == Contracts.PublishedCoreSha256 &&
+            core.InformationalVersion == PublishedRelease.Current.Version + "+" + PublishedRelease.Current.SourceRevision &&
+            core.TargetFramework == ".NETCoreApp,Version=v10.0", "The runner did not load the declared published release's net10.0 binary.");
         return identities;
     }
 
     private static void VerifyIdentities(AssemblyIdentity[] expected) => Contracts.Require(Identities().SequenceEqual(expected), "A loaded binary changed during the process.");
+    private static string? AssessmentMetadata(string key, string legacyEnvironment) =>
+        typeof(Program).Assembly.GetCustomAttributes<AssemblyMetadataAttribute>().SingleOrDefault(a => a.Key == key)?.Value
+        ?? Environment.GetEnvironmentVariable(legacyEnvironment);
     private static string BenchmarkProtocolHash(FrozenCorpus corpus) => Corpus.Hash(File.ReadAllBytes(Path.Combine(corpus.Root, "..", "PROTOCOL.md")));
     private static void Save(string path, object value)
     {

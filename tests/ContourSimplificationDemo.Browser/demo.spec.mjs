@@ -26,6 +26,10 @@ async function downloadText(page, button) {
   return readFile(await download.path(), "utf8");
 }
 
+function jsonFile(name, text) {
+  return { name, mimeType: "application/json", buffer: Buffer.from(text) };
+}
+
 test("the real server loads the default contour and measures candidates", async ({ page }) => {
   const responsePromise = page.waitForResponse(response => response.url().endsWith("/api/candidates"));
   await page.goto("/");
@@ -161,5 +165,171 @@ test("an older HTTP response cannot replace the newer contour or its export", as
   const json = JSON.parse(await downloadText(page, "#export-json"));
   expect(json.name).toBe("Next contour");
   expect(json.points).toEqual(newerPoints);
+  expect(requests).toBe(2);
+});
+
+test("local JSON coordinates round-trip through the real API and actual export", async ({ page }) => {
+  const requests = [];
+  page.on("request", request => {
+    if (request.url().endsWith("/api/candidates")) requests.push(request.postDataJSON().points);
+  });
+  await page.goto("/");
+  await expect(page.getByRole("button", { name: "Load JSON" })).toBeEnabled();
+  await page.locator("#budget-number").fill("0");
+  await page.locator("#draw").click();
+
+  const points = [[120.25, -30.5], [128.25, -30.5], [128.25, -22.5], [120.25, -22.5]];
+  const name = "My <img src=x> & XY contour 📐";
+  const chooserPromise = page.waitForEvent("filechooser");
+  await page.getByRole("button", { name: "Load JSON" }).click();
+  await (await chooserPromise).setFiles(jsonFile("own.json", JSON.stringify({
+    name, fillRule: "NonZero", points: [...points, points[0]],
+    budget: 0.05, measuredJaccardDistance: 1, epsilon: 999 // Export metadata is recomputed.
+  })));
+  await expect(page.locator("#contour-title")).toHaveText(name);
+  await expect(page.locator("#contour-title img")).toHaveCount(0);
+  await expect(page.locator("#draw")).toHaveAttribute("aria-pressed", "false");
+  await expect(page.locator("#status")).toHaveAttribute("data-state", "ready");
+  await expect(page.locator("#budget-number")).toHaveValue("0");
+  expect(requests[1]).toEqual(points);
+  const exported = await downloadText(page, "#export-json");
+  expect(JSON.parse(exported)).toEqual({
+    name, fillRule: "NonZero", budget: 0, measuredJaccardDistance: 0,
+    originalVertexCount: 4, simplifiedVertexCount: 4, epsilon: 0, points
+  });
+  const svg = await downloadText(page, "#export-svg");
+  const exportedTitle = await page.evaluate(text => {
+    const document = new DOMParser().parseFromString(text, "image/svg+xml");
+    return { valid: !document.querySelector("parsererror"), title: document.querySelector("title")?.textContent };
+  }, svg);
+  expect(exportedTitle).toEqual({ valid: true, title: `${name} — simplified contour` });
+
+  await page.locator("#json-file").setInputFiles(jsonFile("round-trip.json", exported));
+  await expect.poll(() => requests.length).toBe(3);
+  await expect(page.locator("#status")).toHaveAttribute("data-state", "ready");
+  expect(JSON.parse(await downloadText(page, "#export-json"))).toEqual(JSON.parse(exported));
+
+  // Exactly 1,024 supplied points are allowed, before duplicate cleanup.
+  // Importing while a pointer is captured must end the old drawing gesture.
+  await page.locator("#draw").click();
+  const canvas = await page.locator("#contour-svg").boundingBox();
+  await page.mouse.move(canvas.x + canvas.width / 3, canvas.y + canvas.height / 3);
+  await page.mouse.down();
+  await page.mouse.move(canvas.x + canvas.width / 2, canvas.y + canvas.height / 2);
+  const supplied = [...points, ...Array.from({ length: 1020 }, () => points[3])];
+  await page.locator("#json-file").setInputFiles(jsonFile("bare-array.json", JSON.stringify(supplied)));
+  await expect(page.locator("#contour-title")).toHaveText("Imported contour");
+  await expect(page.locator("#status")).toHaveAttribute("data-state", "ready");
+  await expect(page.locator("#draw")).toHaveAttribute("aria-pressed", "false");
+  await page.mouse.up();
+  const bare = JSON.parse(await downloadText(page, "#export-json"));
+  expect(bare.points).toEqual(points);
+  expect(requests[3]).toEqual(points);
+  expect(requests).toHaveLength(4);
+});
+
+test("invalid JSON files preserve the usable contour and send no API request", async ({ page }) => {
+  let requests = 0;
+  await page.route("**/api/presets", route => route.fulfill({ json: presets }));
+  await page.route("**/api/candidates", route => { requests++; return route.fulfill({ json: measured }); });
+  await page.goto("/");
+  await expect(page.getByRole("button", { name: "Load JSON" })).toBeEnabled();
+  const invalid = [
+    ["malformed.json", "{", "not valid JSON"],
+    ["missing.json", "{}", "points array"],
+    ["extra-coordinate.json", "[[0,0,9],[3,0],[0,3]]", "numeric [x, y]"],
+    ["string-coordinate.json", '[["0",0],[3,0],[0,3]]', "numeric [x, y]"],
+    ["null-coordinate.json", "[[null,0],[3,0],[0,3]]", "numeric [x, y]"],
+    ["nonfinite.json", "[[1e309,0],[3,0],[0,3]]", "finite numeric"],
+    ["magnitude.json", "[[1e101,0],[3,0],[0,3]]", "magnitude"],
+    ["fill-rule.json", JSON.stringify({ fillRule: "EvenOdd", points: chosenPoints }), "only the NonZero"],
+    ["null-fill-rule.json", JSON.stringify({ fillRule: null, points: chosenPoints }), "only the NonZero"],
+    ["control-name.json", JSON.stringify({ name: "A\u0001B", points: chosenPoints }), "valid XML text"],
+    ["surrogate-name.json", JSON.stringify({ name: "A\uD800B", points: chosenPoints }), "valid XML text"],
+    ["duplicates.json", "[[0,0],[0,0],[0,0]]", "duplicate removal"],
+    ["too-many.json", JSON.stringify([...chosenPoints, ...Array.from({ length: 1022 }, () => chosenPoints[2])]), "1,024 supplied"],
+    ["oversized.json", " ".repeat(128 * 1024 + 1), "128 KiB"]
+  ];
+  for (const [name, text, message] of invalid) {
+    await page.locator("#json-file").setInputFiles(jsonFile(name, text));
+    await expect(page.locator("#import-error")).toBeVisible();
+    await expect(page.locator("#import-error")).toContainText(message);
+    await expect(page.locator("#contour-title")).toHaveText("Boundary fixture");
+    await expect(page.locator("#vertices")).toHaveText("6 → 3");
+    await expect(page.locator("#simplified-outline")).toHaveAttribute("d", "M1,2 L9,2 L4,9 Z");
+    await expect(page.locator("#export-json")).toBeEnabled();
+    await expect(page.locator("#export-svg")).toBeEnabled();
+    expect(requests).toBe(1);
+  }
+  const exported = JSON.parse(await downloadText(page, "#export-json"));
+  expect(exported.name).toBe("Boundary fixture");
+  expect(exported.points).toEqual(chosenPoints);
+});
+
+test("a server-rejected imported contour restores the prior usable result", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.getByRole("button", { name: "Load JSON" })).toBeEnabled();
+  const before = await downloadText(page, "#export-json");
+  const outline = await page.locator("#original-outline").getAttribute("d");
+  const title = await page.locator("#contour-title").textContent();
+  const responsePromise = page.waitForResponse(response => response.url().endsWith("/api/candidates"));
+  await page.locator("#json-file").setInputFiles(jsonFile("collinear.json", "[[0,0],[1,1],[2,2]]"));
+  expect((await responsePromise).status()).toBe(400);
+  await expect(page.locator("#status-text")).toContainText("Previous contour kept.");
+  await expect(page.locator("#contour-svg")).toHaveAttribute("aria-busy", "false");
+  await expect(page.locator("#contour-title")).toHaveText(title);
+  await expect(page.locator("#original-outline")).toHaveAttribute("d", outline);
+  await expect(page.locator("#preset")).toHaveValue("BGR");
+  await expect(page.locator("#export-svg")).toBeEnabled();
+  expect(JSON.parse(await downloadText(page, "#export-json"))).toEqual(JSON.parse(before));
+});
+
+test("a delayed file read cannot replace a newer preset or newer file selection", async ({ page }) => {
+  await page.addInitScript(() => {
+    const text = File.prototype.text;
+    window.__releaseImportReads = {};
+    window.__finishedImportReads = 0;
+    File.prototype.text = function () {
+      if (!this.name.startsWith("slow-")) return text.call(this);
+      return new Promise(resolve => {
+        window.__releaseImportReads[this.name] = async () => {
+          resolve(await text.call(this));
+          setTimeout(() => window.__finishedImportReads++, 0);
+        };
+      });
+    };
+  });
+  const nextPoints = [[101, 2], [109, 2], [104, 9]];
+  const next = { ...measured, original: presets[1].points, candidates: [{ ...candidates[3], points: nextPoints }] };
+  let requests = 0;
+  await page.route("**/api/presets", route => route.fulfill({ json: presets }));
+  await page.route("**/api/candidates", route => {
+    requests++;
+    return route.fulfill({ json: requests === 1 ? measured : next });
+  });
+  await page.goto("/");
+  await expect(page.getByRole("button", { name: "Load JSON" })).toBeEnabled();
+  await page.locator("#json-file").setInputFiles(jsonFile("slow-preset.json", JSON.stringify(chosenPoints)));
+  await page.waitForFunction(() => Boolean(window.__releaseImportReads["slow-preset.json"]));
+  await page.locator("#preset").selectOption("NEXT");
+  await expect(page.locator("#simplified-outline")).toHaveAttribute("d", "M101,2 L109,2 L104,9 Z");
+  await page.evaluate(() => window.__releaseImportReads["slow-preset.json"]());
+  await expect.poll(() => page.evaluate(() => window.__finishedImportReads)).toBe(1);
+  await expect(page.locator("#contour-title")).toHaveText("Next contour");
+  await expect(page.locator("#import-error")).toBeHidden();
+  expect(requests).toBe(2);
+
+  // A newer invalid file leaves the contour version unchanged, so this case
+  // also needs the file-selection serial rather than the contour version alone.
+  await page.locator("#json-file").setInputFiles(jsonFile("slow-import.json", JSON.stringify(chosenPoints)));
+  await page.waitForFunction(() => Boolean(window.__releaseImportReads["slow-import.json"]));
+  await page.locator("#json-file").setInputFiles(jsonFile("newer-invalid.json", "{"));
+  await expect(page.locator("#import-error")).toContainText("not valid JSON");
+  await page.evaluate(() => window.__releaseImportReads["slow-import.json"]());
+  await expect.poll(() => page.evaluate(() => window.__finishedImportReads)).toBe(2);
+  await expect(page.locator("#contour-title")).toHaveText("Next contour");
+  await expect(page.locator("#simplified-outline")).toHaveAttribute("d", "M101,2 L109,2 L104,9 Z");
+  await expect(page.locator("#import-error")).toContainText("not valid JSON");
+  expect(JSON.parse(await downloadText(page, "#export-json")).points).toEqual(nextPoints);
   expect(requests).toBe(2);
 });
