@@ -14,6 +14,10 @@ $sdkFeed = Join-Path $tempRoot ('polylinekit-sdk-feed-regression-' + $runId)
 $output = if ($OutputDirectory) { [IO.Path]::GetFullPath($OutputDirectory) } else { Join-Path $repository ('artifacts/package-isolation-regression-' + $runId) }
 $variable = '_WorkloadLibraryPacksFolder'
 $previousFeed = [Environment]::GetEnvironmentVariable($variable)
+$previousPackageEnvironment = @{}
+foreach ($name in @('NUGET_PACKAGES', 'NUGET_HTTP_CACHE_PATH', 'NUGET_PLUGINS_CACHE_PATH')) {
+    $previousPackageEnvironment[$name] = [Environment]::GetEnvironmentVariable($name)
+}
 $injected = $false
 $ownedFeed = $false
 $ownedOutput = $false
@@ -64,8 +68,22 @@ try {
     $report.Error = $_.Exception.Message
     throw
 } finally {
-    if ($injected) { [Environment]::SetEnvironmentVariable($variable, $previousFeed) }
+    if ($injected) {
+        # A PowerShell null argument otherwise becomes an empty string, which
+        # .NET 10 preserves as an existing variable instead of deleting it.
+        if ($null -eq $previousFeed) {
+            [Environment]::SetEnvironmentVariable($variable, [NullString]::Value)
+        } else {
+            [Environment]::SetEnvironmentVariable($variable, $previousFeed)
+        }
+    }
     $report.EnvironmentRestored = [Environment]::GetEnvironmentVariable($variable) -ceq $previousFeed
+    $report.NuGetEnvironmentRestored = $true
+    foreach ($name in $previousPackageEnvironment.Keys) {
+        $report.NuGetEnvironmentRestored = $report.NuGetEnvironmentRestored -and
+            ([Environment]::GetEnvironmentVariable($name) -ceq $previousPackageEnvironment[$name])
+    }
+    $report.Passed = $report.Passed -and $report.EnvironmentRestored -and $report.NuGetEnvironmentRestored
     if ($ownedFeed -and (Test-Path -LiteralPath $sdkFeed)) {
         # Delete only our verified empty immediate child of the temporary directory.
         $resolved = (Resolve-Path -LiteralPath $sdkFeed).Path
@@ -78,4 +96,5 @@ try {
         $report | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $output 'isolation-check.json') -Encoding utf8
     }
     Require-Isolation $report.EnvironmentRestored 'The original SDK-feed environment setting was not restored.'
+    Require-Isolation $report.NuGetEnvironmentRestored 'The original NuGet environment settings were not restored.'
 }

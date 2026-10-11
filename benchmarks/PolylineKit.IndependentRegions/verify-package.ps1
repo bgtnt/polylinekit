@@ -179,8 +179,21 @@ try {
 } finally {
     if ($locationPushed) { Pop-Location }
     foreach ($name in $savedEnvironment.Keys) {
-        [Environment]::SetEnvironmentVariable($name, $savedEnvironment[$name])
+        # PowerShell binds a null string argument as an empty string. .NET 10
+        # retains empty environment values, so use a real null to restore absence.
+        if ($null -eq $savedEnvironment[$name]) {
+            [Environment]::SetEnvironmentVariable($name, [NullString]::Value)
+        } else {
+            [Environment]::SetEnvironmentVariable($name, $savedEnvironment[$name])
+        }
     }
+    $packageEnvironmentRestored = $true
+    foreach ($name in $savedEnvironment.Keys) {
+        $packageEnvironmentRestored = $packageEnvironmentRestored -and
+            ([Environment]::GetEnvironmentVariable($name) -ceq $savedEnvironment[$name])
+    }
+    $evidence.PackageEnvironmentRestored = $packageEnvironmentRestored
+    $evidence.Complete = $complete -and $packageEnvironmentRestored
     if ($outputOwned -and (Test-Path -LiteralPath $output -PathType Container)) {
         $evidence | ConvertTo-Json -Depth 30 | Set-Content -LiteralPath (Join-Path $output 'verification.json') -Encoding utf8
     }
@@ -193,4 +206,5 @@ try {
     } elseif (Test-Path -LiteralPath $workspace) {
         Write-Output "External consumer workspace retained: $workspace"
     }
+    Require $packageEnvironmentRestored 'The original NuGet environment settings were not restored.'
 }
