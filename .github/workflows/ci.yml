@@ -43,6 +43,26 @@ jobs:
           if ($LASTEXITCODE) { throw 'Preparation runner build failed' }
           dotnet artifacts/preparation-ci/PolylineKit.PreparationBenchmarks.dll check . artifacts/preparation-ci/check.json
           if ($LASTEXITCODE) { throw 'Preparation runner checks failed' }
+      - name: Verify independent Helsinki source snapshots offline
+        run: python benchmarks/PolylineKit.IndependentRegions/data/freeze.py
+      - name: Published alpha.2 consumer and independent Core/NTS agreement (no timing)
+        shell: pwsh
+        run: |
+          $tool = 'benchmarks/PolylineKit.IndependentRegions'
+          $env:POLYLINEKIT_ASSESSMENT_REVISION = (git rev-parse HEAD).Trim()
+          & "$tool/verify-package.ps1" -OutputDirectory artifacts/independent-regions-ci/package -KeepWorkspace
+          $proofPath = 'artifacts/independent-regions-ci/package/verification.json'
+          $proof = Get-Content $proofPath -Raw | ConvertFrom-Json
+          $runner = Join-Path $proof.Workspace 'bin/Release/net10.0/PolylineKit.IndependentRegions.dll'
+          & "$tool/verify-corpus.ps1" -RunnerPath $runner -DataRoot "$tool/data" -PackageProof $proofPath -Output artifacts/independent-regions-ci/check.json
+          & "$tool/check-verify-corpus.ps1" -ReportPath artifacts/independent-regions-ci/check.json -RunnerPath $runner -DataRoot "$tool/data" -PackageProof $proofPath
+      - name: Retain independent assessment and original comparator failures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: independent-regions-${{ matrix.os }}
+          path: artifacts/independent-regions-ci/
+          if-no-files-found: ignore
       - name: NTS polygon conversion and invalid-input observations (no timing)
         run: dotnet run --project examples/NetTopologySuiteInterop -c Release --no-build -- check artifacts/nts-interop-ci/contracts.json
       - name: NTS interoperability on complete frozen GIS layers (no timing)

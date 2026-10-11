@@ -1,0 +1,1290 @@
+{
+  "SchemaVersion": 1,
+  "Utc": "2026-10-11T05:52:20.330618+00:00",
+  "CoreAgreementPassed": true,
+  "ThreeWayPassed": false,
+  "TimingPerformed": false,
+  "Meaning": "Observed published alpha.2 agreement with the configured NTS reference. The unchanged three-way gate failed; no performance claim, exact oracle, or independent human adoption.",
+  "Metadata": {
+    "Runtime": ".NET 10.0.12",
+    "OS": "Microsoft Windows 10.0.26300",
+    "AssessmentRevision": "1dcdfe8f1e7010c7c3bc6ca80db8ffa8e839fab2",
+    "Architecture": "X64",
+    "Processor": "Intel64 Family 6 Model 158 Stepping 12, GenuineIntel",
+    "ProcessorCount": 16,
+    "StopwatchFrequency": 10000000,
+    "TieredCompilation": null,
+    "TieredPGO": null,
+    "HardwareIntrinsics": null,
+    "Assemblies": [
+      {
+        "Assembly": "PolylineKit.IndependentRegions",
+        "Sha256": "fd7a7202e856242ec339f583dcb8b20ed72f64e236ec6f62ae3819b0b1acfeea",
+        "InformationalVersion": "1.0.0",
+        "TargetFramework": ".NETCoreApp,Version=v10.0"
+      },
+      {
+        "Assembly": "PolylineKit.Winding",
+        "Sha256": "bf7646066a73a9229b40a5bcc8fbfd541ccc6b7d92be8ebacf2e940354c17aca",
+        "InformationalVersion": "0.1.0-alpha.2+5e9dcc1a5bcb34b5b2d8ae60105d328aec66a80c",
+        "TargetFramework": ".NETCoreApp,Version=v10.0"
+      },
+      {
+        "Assembly": "Clipper2Lib",
+        "Sha256": "e9bf01e01f494ef6072cd46c792ed4f3004288a92b1e98c1f44931e558b8a5d0",
+        "InformationalVersion": "2.0.0",
+        "TargetFramework": ".NETStandard,Version=v2.0"
+      },
+      {
+        "Assembly": "NetTopologySuite",
+        "Sha256": "98fa6bae8b75b5f9445236679883fa27750d990aec11e985b85b57a30c37a858",
+        "InformationalVersion": "2.6.0 (compatible with JTS 1.20.0)+97d26b92586448b52d5a4f0c060217f94f882c75",
+        "TargetFramework": ".NETStandard,Version=v2.1"
+      }
+    ],
+    "PackageVersions": {
+      "PolylineKit.Core": "0.1.0-alpha.2",
+      "Clipper2": "2.0.0",
+      "NetTopologySuite": "2.6.0"
+    },
+    "SourceFiles": [
+      {
+        "File": "source/capabilities.xml",
+        "Bytes": 303715,
+        "Sha256": "db9f7345936ea32cf594d23f853af4a918552aa83f3e553b3170f0c23f2f57bc"
+      },
+      {
+        "File": "source/districts-metadata.html",
+        "Bytes": 44994,
+        "Sha256": "25480063bf5ef13a97ab70568ad51e49874dfbb6a032c16afe8eceed9aebb479"
+      },
+      {
+        "File": "source/vistra-metadata.html",
+        "Bytes": 41126,
+        "Sha256": "852ef41766fba2111683dad54c3e5ad6024e81c4d6db316344f0c48e78ece0ae"
+      },
+      {
+        "File": "source/city-geodata-terms.html",
+        "Bytes": 208313,
+        "Sha256": "2e7f7294747bf47e550f3ab0824f4fd4f18227e403cc1355fd2fb5b77e142473"
+      },
+      {
+        "File": "source/districts-schema.xsd",
+        "Bytes": 2202,
+        "Sha256": "17baf7cd1dd8463bb912268c178f22fa3d33a07e4c5d4cc7e2338a76393c58bc"
+      },
+      {
+        "File": "source/districts-hits-before.xml",
+        "Bytes": 746,
+        "Sha256": "9c3e9fece151b16f6ee40b88df5c6ea78a1b91e2e33744860ed07fb9c5931d87"
+      },
+      {
+        "File": "source/districts.geojson",
+        "Bytes": 333183,
+        "Sha256": "fa41b7e391d9b5042e816d25d7723d222aba139436e3470ce1afbc0580e7da44"
+      },
+      {
+        "File": "source/districts-hits-after.xml",
+        "Bytes": 746,
+        "Sha256": "18da004dc1f73db8fb54c5ad242073df650b025ece76e8e220f995973045496b"
+      },
+      {
+        "File": "source/vistra-schema.xsd",
+        "Bytes": 1978,
+        "Sha256": "25b99907e0c27ee3b9184989317fe6766fdcb09218bde28692507cced496e982"
+      },
+      {
+        "File": "source/vistra-hits-before.xml",
+        "Bytes": 782,
+        "Sha256": "6976c48e697e811fd8f95f968095b9b9297cf05132179ac3f82e67b71cc2fd08"
+      },
+      {
+        "File": "source/vistra.geojson",
+        "Bytes": 7657646,
+        "Sha256": "6bcf9a8e493be6743cad66c55a8bedf213a30c5b1a190423bb0aaf81f676465a"
+      },
+      {
+        "File": "source/vistra-hits-after.xml",
+        "Bytes": 782,
+        "Sha256": "db4cb9e2de08ce0f7fd0e99fbdef024e157fa22f6bfc4e1966e7df79980cdf1e"
+      }
+    ],
+    "DerivedFiles": [
+      {
+        "File": "zones.json",
+        "Bytes": 333089,
+        "Sha256": "c6b430681a4ed88a08c55a4dae50e1451517301a27c6b4c221e1e1db96fbc617"
+      },
+      {
+        "File": "queries.json",
+        "Bytes": 7676613,
+        "Sha256": "59078c91426659dd9998b6b144e90db021c0cbbe1ac1e557d86087af12d66876"
+      }
+    ],
+    "ManifestSha256": "f182a14e2640e5a73eecdfa18072bf9bf9c42ab827b1d27b692030145a0a4d14",
+    "SourceProtocolSha256": "953c545b6eeeec5e6589d81806151cd08b5fa67023cbfa25e73971ea48da74e6",
+    "BenchmarkProtocolSha256": "0d684e4fbeaa4b39ed120022627c5ccda99369a93dc0a9c629e776caf5f1112a",
+    "Zones": {
+      "SourceFeatures": 34,
+      "EligibleFeatures": 34,
+      "Components": 34,
+      "Rings": 34,
+      "Holes": 0,
+      "SourceVertices": 9165,
+      "EligibleComponents": 34,
+      "EligibleRings": 34,
+      "EligibleHoles": 0,
+      "EligibleSourceVertices": 9165
+    },
+    "Queries": {
+      "SourceFeatures": 1095,
+      "EligibleFeatures": 1064,
+      "Components": 1296,
+      "Rings": 2132,
+      "Holes": 836,
+      "SourceVertices": 207665,
+      "EligibleComponents": 1213,
+      "EligibleRings": 1675,
+      "EligibleHoles": 462,
+      "EligibleSourceVertices": 159601
+    },
+    "SourcePairsPerDirection": 37230,
+    "SourceBoundingBoxCandidatesPerDirection": 2560,
+    "EligiblePairsPerDirection": 36176,
+    "EligibleBoundingBoxCandidatesPerDirection": 2426,
+    "MaximumQuantizationDisplacement": 5.00120222568512e-07,
+    "SpatialReference": "EPSG:3067",
+    "CoordinateUnit": "metre",
+    "CoordinatePreparation": "Original supplied XY and traversal directions; explicit shell/hole roles. No projection, centering, repair or simplification in this runner.",
+    "AreaBudgetM2": 1,
+    "FractionBudget": 1e-08,
+    "ClipperGridMetres": 1e-06,
+    "ClipperRounding": "AwayFromZero; checked scaled magnitude <= 2^52",
+    "ClipperAreaSummation": "Checked Int128 signed integer shoelace, preserving hole signs; full BigInteger restart on overflow. Convert the final absolute twice-area to binary64 and square-metre units.",
+    "TimedFillRule": "NonZero",
+    "SamplesPerCell": 5,
+    "TargetMillisecondsPerSample": 10,
+    "MaximumIterations": 16384,
+    "Scope": "Original-coordinate bounds are the common outer rejection. Parsing, input eligibility checks, result caches, delegates, sample records and serialization are outside timed counters. Preparation includes factory/copy construction and own areas. Warm queries reuse inputs and mutable per-backend scratch storage, never pair results.",
+    "DigestMeaning": "warm/fresh: intersection sum, coverage sum and bbox candidates; prepare-only: first own-area sum, second own-area sum and prepared feature count."
+  },
+  "PackageIsolation": {
+    "Complete": true,
+    "PublicSourceOnly": true,
+    "PackageCacheInitiallyEmpty": true,
+    "IndependentHumanAdoption": false,
+    "RestoredCore": {
+      "Type": "package",
+      "Version": "0.1.0-alpha.2",
+      "Source": "https://api.nuget.org/v3/index.json",
+      "RuntimeAsset": "lib/net10.0/PolylineKit.Winding.dll",
+      "SHA256": "bf7646066a73a9229b40a5bcc8fbfd541ccc6b7d92be8ebacf2e940354c17aca",
+      "PackageSHA256": "c7b2bee531075391fdb7907ec1fec4249a202fd1429f215599bd80824979f124"
+    },
+    "AnalyticAssertions": 36,
+    "IntegerAreaRegressionAssertions": 30
+  },
+  "Checks": {
+    "SourceZones": 34,
+    "SourceQueries": 1095,
+    "EligibleZones": 34,
+    "EligibleQueries": 1064,
+    "ExcludedOriginalInputs": 31,
+    "ComparisonsUseOnlyValidOriginalTopology": true,
+    "PairsPerDirection": 36176,
+    "BoundingBoxCandidatesPerDirection": 2426,
+    "QuantizedBoundsMembershipChanges": 0,
+    "SelectedIntersectionCalls": 434112,
+    "CoreSelectedApiCalls": 144704,
+    "FullCompareCalls": 29880,
+    "FullPairs": 2490,
+    "Assertions": 1090560,
+    "FailureCount": 27,
+    "OmittedFailureDetails": 0
+  },
+  "CoreNumericalAssertions": 363520,
+  "DisjointFullPairIds": [
+    "112825/1",
+    "112825/10",
+    "112825/100",
+    "112825/1001",
+    "112825/1002",
+    "112825/1003",
+    "112825/1004",
+    "112825/1005",
+    "112825/1006",
+    "112825/1007",
+    "112825/1008",
+    "112825/1009",
+    "112825/101",
+    "112825/1010",
+    "112825/1011",
+    "112825/1012",
+    "112825/1013",
+    "112825/1014",
+    "112825/1015",
+    "112825/1016",
+    "112825/1017",
+    "112825/1018",
+    "112825/1019",
+    "112825/102",
+    "112825/1020",
+    "112825/1021",
+    "112825/1022",
+    "112825/1023",
+    "112825/1024",
+    "112825/1025",
+    "112825/1026",
+    "112825/1028",
+    "112825/1029",
+    "112825/103",
+    "112825/1030",
+    "112825/1031",
+    "112825/1032",
+    "112825/1033",
+    "112825/1034",
+    "112825/1035",
+    "112825/1036",
+    "112825/1037",
+    "112825/1038",
+    "112825/104",
+    "112825/1040",
+    "112825/1041",
+    "112825/1042",
+    "112825/1043",
+    "112825/1044",
+    "112825/1045",
+    "112825/1046",
+    "112825/1047",
+    "112825/1048",
+    "112825/1049",
+    "112825/105",
+    "112825/1050",
+    "112825/1051",
+    "112825/1052",
+    "112825/1054",
+    "112825/1055",
+    "112825/1057",
+    "112825/1058",
+    "112825/1059",
+    "112825/106"
+  ],
+  "SelectedIntersectionInventory": [
+    {
+      "Backend": "Clipper64-reused-data",
+      "ZeroValues": 34971,
+      "PositiveValues": 1205,
+      "NegativeValues": 0
+    },
+    {
+      "Backend": "Core-alpha.2",
+      "ZeroValues": 34970,
+      "PositiveValues": 1206,
+      "NegativeValues": 0
+    },
+    {
+      "Backend": "NTS-OverlayNGRobust",
+      "ZeroValues": 34970,
+      "PositiveValues": 1206,
+      "NegativeValues": 0
+    }
+  ],
+  "MaximumObservedDifferences": [
+    {
+      "Backend": "Core-alpha.2",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "Coverage",
+      "Budget": 1e-08,
+      "MaximumAbsoluteError": 6.395634022382524e-12,
+      "WorstInput": "112831/813",
+      "ActualAtWorst": 0.09506879608507171,
+      "ReferenceAtWorst": 0.09506879609146734,
+      "ChecksAcrossBothRulesAndDirections": 144704,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "Core-alpha.2",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "FirstAreaM2",
+      "Budget": 1,
+      "MaximumAbsoluteError": 2.5331974029541016e-07,
+      "WorstInput": "112825/5",
+      "ActualAtWorst": 99843164.42496057,
+      "ReferenceAtWorst": 99843164.42496082,
+      "ChecksAcrossBothRulesAndDirections": 9960,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "Core-alpha.2",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "FullIntersectionM2",
+      "Budget": 1,
+      "MaximumAbsoluteError": 1.5087425708770752e-06,
+      "WorstInput": "112826/6",
+      "ActualAtWorst": 9629991.92603858,
+      "ReferenceAtWorst": 9629991.926040089,
+      "ChecksAcrossBothRulesAndDirections": 9960,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "Core-alpha.2",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "IoU",
+      "Budget": 1e-08,
+      "MaximumAbsoluteError": 7.829847881168917e-14,
+      "WorstInput": "112828/651",
+      "ActualAtWorst": 0.04532967143186346,
+      "ReferenceAtWorst": 0.04532967143178516,
+      "ChecksAcrossBothRulesAndDirections": 9960,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "Core-alpha.2",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "OwnAreaM2",
+      "Budget": 1,
+      "MaximumAbsoluteError": 2.5331974029541016e-07,
+      "WorstInput": "5",
+      "ActualAtWorst": 99843164.42496057,
+      "ReferenceAtWorst": 99843164.42496082,
+      "ChecksAcrossBothRulesAndDirections": 4392,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "Core-alpha.2",
+      "FillRule": "EvenOdd",
+      "Direction": "zones-to-queries",
+      "Metric": "SecondAreaM2",
+      "Budget": 1,
+      "MaximumAbsoluteError": 2.5331974029541016e-07,
+      "WorstInput": "112825/5",
+      "ActualAtWorst": 99843164.42496057,
+      "ReferenceAtWorst": 99843164.42496082,
+      "ChecksAcrossBothRulesAndDirections": 9960,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "Core-alpha.2",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "SelectedIntersectionM2",
+      "Budget": 1,
+      "MaximumAbsoluteError": 1.5087425708770752e-06,
+      "WorstInput": "112826/6",
+      "ActualAtWorst": 9629991.92603858,
+      "ReferenceAtWorst": 9629991.926040089,
+      "ChecksAcrossBothRulesAndDirections": 144704,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "Core-alpha.2",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "SelectedVsFullIntersectionM2",
+      "Budget": 1,
+      "MaximumAbsoluteError": 0,
+      "WorstInput": "112825/1",
+      "ActualAtWorst": 0,
+      "ReferenceAtWorst": 0,
+      "ChecksAcrossBothRulesAndDirections": 9960,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "Core-alpha.2",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "SymmetricDifferenceM2",
+      "Budget": 1,
+      "MaximumAbsoluteError": 3.7401914596557617e-06,
+      "WorstInput": "112826/5",
+      "ActualAtWorst": 119079322.47124538,
+      "ReferenceAtWorst": 119079322.47124912,
+      "ChecksAcrossBothRulesAndDirections": 9960,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "Core-alpha.2",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "UnionM2",
+      "Budget": 1,
+      "MaximumAbsoluteError": 2.771615982055664e-06,
+      "WorstInput": "112826/5",
+      "ActualAtWorst": 173713721.95239985,
+      "ReferenceAtWorst": 173713721.95240262,
+      "ChecksAcrossBothRulesAndDirections": 9960,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "Clipper64-reused-data",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "Coverage",
+      "Budget": 1e-08,
+      "MaximumAbsoluteError": 2.9049912253498178e-08,
+      "WorstInput": "112828/1065",
+      "ActualAtWorst": 0.6859554835712601,
+      "ReferenceAtWorst": 0.6859555126211724,
+      "ChecksAcrossBothRulesAndDirections": 144704,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "Clipper64-reused-data",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "FirstAreaM2",
+      "Budget": 1,
+      "MaximumAbsoluteError": 0.0030520930886268616,
+      "WorstInput": "112826/6",
+      "ActualAtWorst": 39556708.78843891,
+      "ReferenceAtWorst": 39556708.785386816,
+      "ChecksAcrossBothRulesAndDirections": 9960,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "Clipper64-reused-data",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "FullIntersectionM2",
+      "Budget": 1,
+      "MaximumAbsoluteError": 0.005258360877633095,
+      "WorstInput": "112826/6",
+      "ActualAtWorst": 9629991.93129845,
+      "ReferenceAtWorst": 9629991.926040089,
+      "ChecksAcrossBothRulesAndDirections": 9960,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "Clipper64-reused-data",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "IoU",
+      "Budget": 1e-08,
+      "MaximumAbsoluteError": 2.674050980644438e-10,
+      "WorstInput": "112850/94",
+      "ActualAtWorst": 0.38397242456182334,
+      "ReferenceAtWorst": 0.38397242429441825,
+      "ChecksAcrossBothRulesAndDirections": 9960,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "Clipper64-reused-data",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "OwnAreaM2",
+      "Budget": 1,
+      "MaximumAbsoluteError": 0.0030520930886268616,
+      "WorstInput": "6",
+      "ActualAtWorst": 39556708.78843891,
+      "ReferenceAtWorst": 39556708.785386816,
+      "ChecksAcrossBothRulesAndDirections": 4392,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "Clipper64-reused-data",
+      "FillRule": "EvenOdd",
+      "Direction": "zones-to-queries",
+      "Metric": "SecondAreaM2",
+      "Budget": 1,
+      "MaximumAbsoluteError": 0.0030520930886268616,
+      "WorstInput": "112826/6",
+      "ActualAtWorst": 39556708.78843891,
+      "ReferenceAtWorst": 39556708.785386816,
+      "ChecksAcrossBothRulesAndDirections": 9960,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "Clipper64-reused-data",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "SelectedIntersectionM2",
+      "Budget": 1,
+      "MaximumAbsoluteError": 0.005258360877633095,
+      "WorstInput": "112826/6",
+      "ActualAtWorst": 9629991.93129845,
+      "ReferenceAtWorst": 9629991.926040089,
+      "ChecksAcrossBothRulesAndDirections": 144704,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "Clipper64-reused-data",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "SelectedVsFullIntersectionM2",
+      "Budget": 1,
+      "MaximumAbsoluteError": 0,
+      "WorstInput": "112825/1",
+      "ActualAtWorst": 0,
+      "ReferenceAtWorst": 0,
+      "ChecksAcrossBothRulesAndDirections": 9960,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "Clipper64-reused-data",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "SymmetricDifferenceM2",
+      "Budget": 1,
+      "MaximumAbsoluteError": 0.005973786115646362,
+      "WorstInput": "112826/6",
+      "ActualAtWorst": 148801681.93593043,
+      "ReferenceAtWorst": 148801681.94190422,
+      "ChecksAcrossBothRulesAndDirections": 9960,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "Clipper64-reused-data",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "UnionM2",
+      "Budget": 1,
+      "MaximumAbsoluteError": 0.00770878791809082,
+      "WorstInput": "112853/6",
+      "ActualAtWorst": 357155298.45537204,
+      "ReferenceAtWorst": 357155298.44766325,
+      "ChecksAcrossBothRulesAndDirections": 9960,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "NTS-OverlayNGRobust",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "Coverage",
+      "Budget": 1e-08,
+      "MaximumAbsoluteError": 3.1086244689504383e-15,
+      "WorstInput": "112856/303",
+      "ActualAtWorst": 0.9628248683227001,
+      "ReferenceAtWorst": 0.9628248683227032,
+      "ChecksAcrossBothRulesAndDirections": 144704,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "NTS-OverlayNGRobust",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "FirstAreaM2",
+      "Budget": 1,
+      "MaximumAbsoluteError": 0,
+      "WorstInput": "112825/1",
+      "ActualAtWorst": 406571.40574325505,
+      "ReferenceAtWorst": 406571.40574325505,
+      "ChecksAcrossBothRulesAndDirections": 9960,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "NTS-OverlayNGRobust",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "FullIntersectionM2",
+      "Budget": 1,
+      "MaximumAbsoluteError": 1.564621925354004e-07,
+      "WorstInput": "112853/5",
+      "ActualAtWorst": 41080052.53057194,
+      "ReferenceAtWorst": 41080052.530572094,
+      "ChecksAcrossBothRulesAndDirections": 9960,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "NTS-OverlayNGRobust",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "IoU",
+      "Budget": 1e-08,
+      "MaximumAbsoluteError": 1.2212453270876722e-15,
+      "WorstInput": "112842/661",
+      "ActualAtWorst": 0.4379230647586389,
+      "ReferenceAtWorst": 0.4379230647586377,
+      "ChecksAcrossBothRulesAndDirections": 9960,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "NTS-OverlayNGRobust",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "OwnAreaM2",
+      "Budget": 1,
+      "MaximumAbsoluteError": 0,
+      "WorstInput": "1",
+      "ActualAtWorst": 406571.40574325505,
+      "ReferenceAtWorst": 406571.40574325505,
+      "ChecksAcrossBothRulesAndDirections": 4392,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "NTS-OverlayNGRobust",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "SecondAreaM2",
+      "Budget": 1,
+      "MaximumAbsoluteError": 0,
+      "WorstInput": "112825/1",
+      "ActualAtWorst": 4028463.7805881714,
+      "ReferenceAtWorst": 4028463.7805881714,
+      "ChecksAcrossBothRulesAndDirections": 9960,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "NTS-OverlayNGRobust",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "SelectedIntersectionM2",
+      "Budget": 1,
+      "MaximumAbsoluteError": 1.564621925354004e-07,
+      "WorstInput": "112853/5",
+      "ActualAtWorst": 41080052.53057194,
+      "ReferenceAtWorst": 41080052.530572094,
+      "ChecksAcrossBothRulesAndDirections": 144704,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "NTS-OverlayNGRobust",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "SelectedVsFullIntersectionM2",
+      "Budget": 1,
+      "MaximumAbsoluteError": 0,
+      "WorstInput": "112825/1",
+      "ActualAtWorst": 0,
+      "ReferenceAtWorst": 0,
+      "ChecksAcrossBothRulesAndDirections": 9960,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "NTS-OverlayNGRobust",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "SymmetricDifferenceM2",
+      "Budget": 1,
+      "MaximumAbsoluteError": 7.152557373046875e-07,
+      "WorstInput": "112853/993",
+      "ActualAtWorst": 348149077.70175534,
+      "ReferenceAtWorst": 348149077.7017546,
+      "ChecksAcrossBothRulesAndDirections": 9960,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    },
+    {
+      "Backend": "NTS-OverlayNGRobust",
+      "FillRule": "EvenOdd",
+      "Direction": "queries-to-zones",
+      "Metric": "UnionM2",
+      "Budget": 1,
+      "MaximumAbsoluteError": 2.980232238769531e-07,
+      "WorstInput": "112853/5",
+      "ActualAtWorst": 406288418.4160121,
+      "ReferenceAtWorst": 406288418.4160124,
+      "ChecksAcrossBothRulesAndDirections": 9960,
+      "NonfiniteChecks": 0,
+      "DomainBudgetViolations": 0
+    }
+  ],
+  "OriginalInvalidInputs": [
+    {
+      "Role": "queries",
+      "Id": "2",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (390674.40022187, 6671059.84462196)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 39917280.02754345,
+        "EvenOdd": 39917280.027543955
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "17",
+      "Stage": "original-NTS",
+      "Reason": "Self-intersection at or near point (387480.41303665, 6675521.89574425)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 464162.87433526496,
+        "EvenOdd": 464162.87433526496
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "73",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (386901.52363587, 6676389.49688422)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 673888.521580072,
+        "EvenOdd": 673888.521580072
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "80",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (390445.31616318, 6671306.12829498)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 248428.11356419715,
+        "EvenOdd": 248428.11356419715
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "254",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (382160.52791983, 6679721.0262254)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 46851.011193836006,
+        "EvenOdd": 46851.011193836006
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "598",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (392317.71306748, 6677330.79164113)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 71180.31722692071,
+        "EvenOdd": 71180.31722692071
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "612",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (380319.29452704, 6681894.42844235)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 531929.0497510087,
+        "EvenOdd": 531929.0497510087
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "622",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (391073.21789002, 6683464.48989546)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 331992.4165730259,
+        "EvenOdd": 331992.4165730259
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "640",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (383815.54951407, 6671896.64116586)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 10818.376149202759,
+        "EvenOdd": 10818.376149202759
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "642",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (394411.4975514, 6671041.22914294)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 7337.093158233737,
+        "EvenOdd": 7337.093158233737
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "645",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (393253.34059525, 6675125.35642257)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 136545.26736730867,
+        "EvenOdd": 136545.26736730867
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "647",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (381650.38970796, 6677314.92354649)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 1927691.8151074692,
+        "EvenOdd": 1927691.8151074692
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "650",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (392147.66991199, 6672119.27750806)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 764169.995846878,
+        "EvenOdd": 764169.995846878
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "652",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (390399.5150622, 6672340.46824586)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 351919.9290886115,
+        "EvenOdd": 351919.9290886115
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "653",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (390069.20882589, 6672070.87702803)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 177249.0701950533,
+        "EvenOdd": 177249.0701950533
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "654",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (390502.3371696, 6673019.91257199)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 327534.23848708026,
+        "EvenOdd": 327534.23848708026
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "656",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (388229.35698937, 6676374.66471916)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 75088.9875390369,
+        "EvenOdd": 75088.9875390369
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "657",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (387865.00680182, 6677219.61841459)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 167141.86366213218,
+        "EvenOdd": 167141.86366213218
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "658",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (397946.5894153, 6677061.12824092)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 445818.62642790214,
+        "EvenOdd": 445818.62642790214
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "659",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (387824.19659493, 6679893.15539831)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 194281.64871520823,
+        "EvenOdd": 194281.64871520823
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "660",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (387754.22639778, 6680289.83979697)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 1578939.377327528,
+        "EvenOdd": 1578939.377327528
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "662",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (388649.2502333, 6679443.42976477)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 344363.6714040514,
+        "EvenOdd": 344363.6714040514
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "664",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (396003.46230137, 6677997.14863647)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 873992.2356276258,
+        "EvenOdd": 873992.2356276258
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "665",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (387787.28593739, 6678096.46336639)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 429554.9646160173,
+        "EvenOdd": 429554.9646160173
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "667",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (385117.11173596, 6678150.78925253)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 991235.1734482826,
+        "EvenOdd": 991235.1734482826
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "668",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (398427.26606943, 6678092.09671072)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 3374323.7693097377,
+        "EvenOdd": 3374323.7693097377
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "670",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (382187.33167896, 6679036.59021423)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 1025179.6441372526,
+        "EvenOdd": 1025179.6441372526
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "979",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (383642.22537573, 6674035.87139383)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 5689304.567580128,
+        "EvenOdd": 5689304.567580128
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "980",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (392347.10029968, 6674558.90415605)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 260083.70211034943,
+        "EvenOdd": 260083.70211034943
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "981",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (388251.99485276, 6676641.04436602)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 5774195.905772161,
+        "EvenOdd": 5774195.905772161
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    },
+    {
+      "Role": "queries",
+      "Id": "1000",
+      "Stage": "original-NTS",
+      "Reason": "Ring Self-intersection at or near point (381017.79186464, 6672165.83642549)",
+      "CoreUnreferencedAreasM2": {
+        "NonZero": 841065.307140839,
+        "EvenOdd": 841065.307140839
+      },
+      "Meaning": "Finite fill observations only; invalid topology has no NTS area-accuracy reference."
+    }
+  ],
+  "QuantizedInputIssues": [
+    {
+      "Role": "queries",
+      "Id": "78",
+      "Stage": "quantized-NTS",
+      "Reason": "Self-intersection at or near point (380484.634567, 6679939.83688)"
+    }
+  ],
+  "ThreeWayFailures": [
+    {
+      "Stage": "quantized-NTS",
+      "Input": "queries/78",
+      "Reason": "Self-intersection at or near point (380484.634567, 6679939.83688)",
+      "Actual": null,
+      "Reference": null
+    },
+    {
+      "Stage": "Clipper64-reused-data/NonZero/queries-to-zones/Coverage",
+      "Input": "112827/606",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.9959112278882895",
+      "Reference": "0.9959112140305657"
+    },
+    {
+      "Stage": "Clipper64-reused-data/EvenOdd/queries-to-zones/Coverage",
+      "Input": "112827/606",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.9959112278882895",
+      "Reference": "0.9959112140305657"
+    },
+    {
+      "Stage": "Clipper64-reused-data/NonZero/queries-to-zones/Coverage",
+      "Input": "112828/152",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.9945855825798025",
+      "Reference": "0.9945855982226975"
+    },
+    {
+      "Stage": "Clipper64-reused-data/EvenOdd/queries-to-zones/Coverage",
+      "Input": "112828/152",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.9945855825798025",
+      "Reference": "0.9945855982226975"
+    },
+    {
+      "Stage": "Clipper64-reused-data/NonZero/queries-to-zones/Coverage",
+      "Input": "112828/606",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.004088771113726417",
+      "Reference": "0.004088785969261652"
+    },
+    {
+      "Stage": "Clipper64-reused-data/EvenOdd/queries-to-zones/Coverage",
+      "Input": "112828/606",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.004088771113726417",
+      "Reference": "0.004088785969261652"
+    },
+    {
+      "Stage": "Clipper64-reused-data/NonZero/queries-to-zones/Coverage",
+      "Input": "112828/1065",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.6859554835712601",
+      "Reference": "0.6859555126211724"
+    },
+    {
+      "Stage": "Clipper64-reused-data/EvenOdd/queries-to-zones/Coverage",
+      "Input": "112828/1065",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.6859554835712601",
+      "Reference": "0.6859555126211724"
+    },
+    {
+      "Stage": "Clipper64-reused-data/NonZero/queries-to-zones/Coverage",
+      "Input": "112829/813",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.9049311821725776",
+      "Reference": "0.9049312039072088"
+    },
+    {
+      "Stage": "Clipper64-reused-data/EvenOdd/queries-to-zones/Coverage",
+      "Input": "112829/813",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.9049311821725776",
+      "Reference": "0.9049312039072088"
+    },
+    {
+      "Stage": "Clipper64-reused-data/NonZero/queries-to-zones/Coverage",
+      "Input": "112830/168",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.9061316071983372",
+      "Reference": "0.9061315872918548"
+    },
+    {
+      "Stage": "Clipper64-reused-data/EvenOdd/queries-to-zones/Coverage",
+      "Input": "112830/168",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.9061316071983372",
+      "Reference": "0.9061315872918548"
+    },
+    {
+      "Stage": "Clipper64-reused-data/NonZero/queries-to-zones/Coverage",
+      "Input": "112830/1065",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.3140445063712487",
+      "Reference": "0.31404448737670654"
+    },
+    {
+      "Stage": "Clipper64-reused-data/EvenOdd/queries-to-zones/Coverage",
+      "Input": "112830/1065",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.3140445063712487",
+      "Reference": "0.31404448737670654"
+    },
+    {
+      "Stage": "Clipper64-reused-data/NonZero/queries-to-zones/Coverage",
+      "Input": "112831/128",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.9888003450033417",
+      "Reference": "0.9888003739253864"
+    },
+    {
+      "Stage": "Clipper64-reused-data/EvenOdd/queries-to-zones/Coverage",
+      "Input": "112831/128",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.9888003450033417",
+      "Reference": "0.9888003739253864"
+    },
+    {
+      "Stage": "Clipper64-reused-data/NonZero/queries-to-zones/Coverage",
+      "Input": "112831/813",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.09506881531784166",
+      "Reference": "0.09506879609146734"
+    },
+    {
+      "Stage": "Clipper64-reused-data/EvenOdd/queries-to-zones/Coverage",
+      "Input": "112831/813",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.09506881531784166",
+      "Reference": "0.09506879609146734"
+    },
+    {
+      "Stage": "Clipper64-reused-data/NonZero/queries-to-zones/Coverage",
+      "Input": "112834/258",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.9850659739098168",
+      "Reference": "0.9850659894152559"
+    },
+    {
+      "Stage": "Clipper64-reused-data/EvenOdd/queries-to-zones/Coverage",
+      "Input": "112834/258",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.9850659739098168",
+      "Reference": "0.9850659894152559"
+    },
+    {
+      "Stage": "Clipper64-reused-data/NonZero/queries-to-zones/Coverage",
+      "Input": "112840/235",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.9429481106248848",
+      "Reference": "0.9429481262149233"
+    },
+    {
+      "Stage": "Clipper64-reused-data/EvenOdd/queries-to-zones/Coverage",
+      "Input": "112840/235",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.9429481106248848",
+      "Reference": "0.9429481262149233"
+    },
+    {
+      "Stage": "Clipper64-reused-data/NonZero/queries-to-zones/Coverage",
+      "Input": "112840/261",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.9879179674941192",
+      "Reference": "0.9879179804406069"
+    },
+    {
+      "Stage": "Clipper64-reused-data/EvenOdd/queries-to-zones/Coverage",
+      "Input": "112840/261",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.9879179674941192",
+      "Reference": "0.9879179804406069"
+    },
+    {
+      "Stage": "Clipper64-reused-data/NonZero/queries-to-zones/Coverage",
+      "Input": "117935/136",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.9974937713967227",
+      "Reference": "0.9974937893729374"
+    },
+    {
+      "Stage": "Clipper64-reused-data/EvenOdd/queries-to-zones/Coverage",
+      "Input": "117935/136",
+      "Reason": "Difference exceeds the predeclared budget",
+      "Actual": "0.9974937713967227",
+      "Reference": "0.9974937893729374"
+    }
+  ],
+  "Query78Orientation": {
+    "OriginalBinary64ExactSign": -1,
+    "OriginalBinary64ExactCross": -1.6352702676613803e-06,
+    "LatticeExactSign": 1,
+    "LatticeExactCross": 1.0096541999999999e-05,
+    "LatticeCrossInteger": "10096542"
+  },
+  "EarlierUncorrectedComparator": {
+    "AssessmentRevision": "d75c2fc48eecc9db79ae2be4647c348093277eba",
+    "FailureCount": 43,
+    "Evidence": {
+      "File": "artifacts/independent-helsinki-assessment/check.json",
+      "Sha256": "c7deabe26447010b06c3ea9769d496b055419be3ee89d3ac133c6dd06ea2e39d"
+    },
+    "Meaning": "Clipper.Area cancellation corrected in the assessment adapter; never counted as a Core advantage."
+  },
+  "Evidence": [
+    {
+      "File": "artifacts/independent-helsinki-assessment/check-exact-integer-area.json",
+      "Sha256": "4f5333b61344099ff00a38a6dfab51e7b21ccb440113c0a323051302f06bfbb1"
+    },
+    {
+      "File": "artifacts/independent-helsinki-package-probe-r4/verification.json",
+      "Sha256": "7f64640404115748f48b1651cf3d928df9ac0fe6244216b345a1e1f931f97e82"
+    },
+    {
+      "File": "benchmarks/PolylineKit.IndependentRegions/PROTOCOL.md",
+      "Sha256": "0d684e4fbeaa4b39ed120022627c5ccda99369a93dc0a9c629e776caf5f1112a"
+    },
+    {
+      "File": "benchmarks/PolylineKit.IndependentRegions/data/manifest.json",
+      "Sha256": "f182a14e2640e5a73eecdfa18072bf9bf9c42ab827b1d27b692030145a0a4d14"
+    }
+  ]
+}

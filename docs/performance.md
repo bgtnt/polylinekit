@@ -48,6 +48,24 @@ exclude initialization and retained storage.
 
 ## Recorded results by scenario
 
+### Published alpha.2 on new Helsinki regions
+
+An isolated consumer restored the actual NuGet.org alpha.2 and used `FromPolygon`
+and `FromPolygons` on a new corpus of 34 city districts and 1,095 planning areas.
+The comparable population excludes 31 explicitly reported NTS-invalid originals:
+34 × 1,064 features, 36,176 pairs and 2,426 bounds candidates per direction.
+Core agrees with NTS within the fixed budgets under both fill rules and both
+directions; its maximum observed XOR difference is **3.74e-6 m²** and IoU
+difference **7.83e-14**. These are observed reference differences, not absolute
+accuracy guarantees.
+
+The three-way gate **did not pass**. After correcting cancellation in the
+Clipper area-summation adapter, the fixed 1e-6 m grid still produces 26 coverage
+differences beyond 1e-8 and changes one source feature's topology. Inputs, grid
+and acceptance budgets were retained. **No timing processes were run**, so this
+assessment adds no speed ranking. It tests the published alpha.2, without the
+later source factory optimization. See the [full assessment and evidence](../benchmarks/PolylineKit.IndependentRegions/RESULTS.md).
+
 ### Polygon factory construction after alpha.2
 
 The role-aware factories had been computing a complete winding result just to

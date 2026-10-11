@@ -51,6 +51,16 @@ existing Census layers. It is independent of source project references and has
 no package dependencies. Follow its commands for correctness checks and three
 processes per library; this measures factory cost rather than a new query engine.
 
+## Published package on an independent region corpus
+
+[IndependentRegions](PolylineKit.IndependentRegions/README.md) restores the actual
+published alpha.2 into a fresh outside-checkout consumer and checks role-aware
+factories on complete Helsinki district and planning-area snapshots. Its
+[recorded assessment](PolylineKit.IndependentRegions/RESULTS.md) separates Core/NTS
+agreement from the failed three-way comparator gate. There are no timings or new
+speed claims for this corpus. The source attribution, exclusions, fixed grid and
+budgets, observed differences and reproducible commands are included.
+
 ## Graphs, transforms and engine costs
 
 The general runner provides graph, transformation, winding and Clipper suites:
