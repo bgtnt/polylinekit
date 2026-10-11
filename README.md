@@ -74,14 +74,14 @@ dotnet add MyApp/MyApp.csproj package PolylineKit.Core --prerelease
 ```
 
 The [package guide](docs/releasing.md) covers installation and the optional adapter.
-Alpha.2 is published on NuGet.org:
-[Core](https://www.nuget.org/packages/PolylineKit.Core/0.1.0-alpha.2) and the
-[optional Clipper adapter](https://www.nuget.org/packages/PolylineKit.Clipper/0.1.0-alpha.2).
-It includes the polygon-role factories; see the
-[alpha.2 release notes](docs/releases/0.1.0-alpha.2.md). The
-[GitHub prerelease](https://github.com/bgtnt/polylinekit/releases/tag/v0.1.0-alpha.2)
-preserves the verified original packages. Alpha.1 remains available but does not
-include those factories.
+Alpha.3 is published on NuGet.org:
+[Core](https://www.nuget.org/packages/PolylineKit.Core/0.1.0-alpha.3) and the
+[optional Clipper adapter](https://www.nuget.org/packages/PolylineKit.Clipper/0.1.0-alpha.3).
+It delivers the guarded orientation optimization for the polygon-role factories;
+see the [alpha.3 release notes](docs/releases/0.1.0-alpha.3.md). The
+[GitHub prerelease](https://github.com/bgtnt/polylinekit/releases/tag/v0.1.0-alpha.3)
+preserves the verified original packages. Alpha.1 and alpha.2 remain unchanged;
+the polygon-role factories were introduced in alpha.2.
 
 Alternatively, use a project reference:
 
@@ -219,7 +219,8 @@ Read the [area guide](docs/area.md) for fill rules, examples and contracts, or t
 - [Documentation index](docs/README.md)
 - [Performance and memory](docs/performance.md)
 - [Build, tests and contributing](CONTRIBUTING.md)
-- [Alpha.2 changes and release status](docs/releases/0.1.0-alpha.2.md)
+- [Alpha.3 changes and delivery](docs/releases/0.1.0-alpha.3.md)
+- [Alpha.2 polygon-role factories and delivery](docs/releases/0.1.0-alpha.2.md)
 - [Published alpha.1 release notes](docs/releases/0.1.0-alpha.1.md)
 
 Original code is [MIT licensed](LICENSE). Dependencies, data and algorithm

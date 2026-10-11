@@ -3,8 +3,8 @@
 This executable uses `PackageReference`, with no source-project references. It is outside
 the main solution so library builds do not require restoring a delivered package.
 
-Version `0.1.0-alpha.2` is available on
-[NuGet.org](https://www.nuget.org/packages/PolylineKit.Core/0.1.0-alpha.2).
+Version `0.1.0-alpha.3` is available on
+[NuGet.org](https://www.nuget.org/packages/PolylineKit.Core/0.1.0-alpha.3).
 Restore and run from the repository root:
 
 ```powershell
@@ -24,7 +24,7 @@ coverage **35%**, union **29 m²**, and IoU **7/29**. The example calculates the
 zone's area once and treats coverage as undefined when that area is zero.
 
 To also exercise contour output, restore the
-[optional adapter](https://www.nuget.org/packages/PolylineKit.Clipper/0.1.0-alpha.2)
+[optional adapter](https://www.nuget.org/packages/PolylineKit.Clipper/0.1.0-alpha.3)
 with the same adapter property. See the [package guide](../../docs/releasing.md)
 if an older locally built candidate is already cached, or to use the verified
 GitHub release files through a local feed.

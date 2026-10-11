@@ -7,9 +7,9 @@ without constructing output contours. They are part of the dependency-free
 
 Use `PreparedRegion.FromPolygon(exterior, holes)` when your input has explicit
 shell/hole roles, and `FromPolygons` for several such polygons. These factories
-are added in [alpha.2](releases/0.1.0-alpha.2.md). The published alpha.1 contains
-the raw `FromRings` API; check the release status before using newer APIs from
-the current source. For one ordered walk per operand, the existing
+are available in alpha.2 and later; [alpha.3](releases/0.1.0-alpha.3.md) optimizes
+their orientation step. Alpha.1 contains only the raw `FromRings` API.
+For one ordered walk per operand, the existing
 [PolylineArea methods](area.md) remain available with their original contract.
 
 ## Supply a polygon's exterior and holes
@@ -218,7 +218,7 @@ crossing detection and winding propagation again, using per-call working storage
 Raw `FromRings` preparation takes work and snapshot storage proportional to the
 input vertices and rings. The role-based factories also evaluate each ring's
 algebraic signed-area direction, then reverse copied vertices when needed.
-After alpha.2, well-conditioned sums use a direct pass over the owned array,
+From alpha.3, well-conditioned sums use a direct pass over the owned array,
 with a local bounds origin, compensated robust edge terms and compensated
 accumulation. An arithmetic uncertainty guard sends tiny, zero or cancelling
 sums through the previous boundary engine. That fallback can depend on crossings

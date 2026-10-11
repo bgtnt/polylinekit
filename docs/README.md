@@ -12,7 +12,8 @@
 | Understand speed, allocations and memory | [Performance](performance.md) |
 | Evaluate predicted polygons against reference annotations | [Polygon overlap example](../examples/PolygonOverlapEvaluation/README.md) |
 | Build or contribute a change | [Contributor guide](../CONTRIBUTING.md) |
-| Inspect the current alpha's consumer improvements and delivery | [Alpha.2 release notes](releases/0.1.0-alpha.2.md) |
+| Inspect the current alpha's preparation optimization and delivery | [Alpha.3 release notes](releases/0.1.0-alpha.3.md) |
+| Inspect the polygon-role factory and NTS integration release | [Alpha.2 release notes](releases/0.1.0-alpha.2.md) |
 | Inspect the original alpha and historical evidence | [Alpha.1 release notes](releases/0.1.0-alpha.1.md) |
 | Verify packages or prepare publication | [Package verification and release guide](releasing.md) |
 
