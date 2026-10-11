@@ -1,0 +1,113 @@
+# A published-package check on new Helsinki regions
+
+This optional assessment answers a concrete numerical question: **how much of
+each planning-area feature lies in each city district?** It uses the published
+`PolylineKit.Core` **0.1.0-alpha.2** package, its role-aware polygon factories,
+and a real corpus not used to develop the library. It compares area results and
+preparation/query costs with Clipper2 C# 2.0.0 and NetTopologySuite 2.6.0.
+
+The fixture contains all 34 basic districts and 1,095 prospective green/recreation
+planning features from the City of Helsinki. It preserves separate components,
+836 holes and all supplied coordinate values in EPSG:3067, in metres. Read the
+[source inventory and CC BY 4.0 attribution](data/README.md) before interpreting
+results. Planning categories may overlap; summing feature coverage is not the
+union area of current parks.
+
+The [protocol](PROTOCOL.md) fixes the population, comparators, acceptance budgets
+and timing policy before results. Invalid source topology is reported separately;
+there is no silent repair, fallback or removal of numerical disagreements.
+The runner has exact PackageReferences and **no source ProjectReference**. Its
+NTS and Clipper dependencies are only assessment tools; Core remains unchanged.
+
+## Verify the frozen input
+
+From the repository root, using Python's standard library:
+
+```sh
+python benchmarks/PolylineKit.IndependentRegions/data/freeze.py
+```
+
+This is offline. It verifies source and protocol hashes, complete count queries,
+the explicit shell/hole hierarchy, every coordinate and both derived files.
+
+## Run a fresh ordinary package consumer
+
+Install the .NET 10 SDK and PowerShell 7. Run:
+
+```powershell
+$tool = 'benchmarks/PolylineKit.IndependentRegions'
+$data = (Resolve-Path "$tool/data").Path
+$revision = (git rev-parse HEAD).Trim()
+$evidence = [IO.Path]::GetFullPath("artifacts/independent-helsinki-$revision")
+if (Test-Path -LiteralPath $evidence) { throw 'Choose a fresh evidence directory.' }
+$env:POLYLINEKIT_ASSESSMENT_REVISION = $revision
+& "$tool/verify-package.ps1" -OutputDirectory "$evidence/package" -KeepWorkspace
+```
+
+The script copies only public runner code/configuration/lock files into a new
+directory outside the checkout. It restores from **nuget.org only**, with an
+initially empty package cache, builds and runs an analytic package probe. It
+checks the dependency graph, runtime asset, archive origin, loaded Core DLL hash
+and package source revision. Failed workspaces remain available for diagnosis.
+The retained path is in `package/verification.json`.
+
+An outside-checkout consumer verifies package integration; it does **not** prove
+adoption by an external developer. Do not call it an external production user.
+
+Next, use that same frozen consumer for the full corpus checks:
+
+```powershell
+$proof = Get-Content "$evidence/package/verification.json" -Raw | ConvertFrom-Json
+if (!$proof.Complete) { throw 'Package isolation proof failed.' }
+$runner = Join-Path $proof.Workspace 'bin/Release/net10.0/PolylineKit.IndependentRegions.dll'
+dotnet $runner check $data "$evidence/check.json"
+if ($LASTEXITCODE) { throw 'Full corpus check failed; retain the report and do not time it.' }
+```
+
+The JSON records source/admitted populations, every invalid-input ID/reason,
+quantization changes and maximum observed discrepancies with worst pair IDs.
+Selected intersection covers every admitted pair under both fills and directions;
+full metrics cover all original-bounds candidates and the fixed first 64 disjoint
+pairs. Reference union and XOR use separate overlay operations. There is no
+numeric pass threshold hidden in the timing code.
+
+## Measure three independent processes
+
+Stop other builds/benchmarks. After successful full checks, retain the same
+runner, package binaries, fixture and protocol for all three processes:
+
+```powershell
+$previousTiering = $env:DOTNET_TieredCompilation
+$previousPgo = $env:DOTNET_TieredPGO
+$windows = @()
+try {
+    $env:DOTNET_TieredCompilation = '0'
+    $env:DOTNET_TieredPGO = '0'
+    foreach ($run in 1..3) {
+        $started = [DateTimeOffset]::UtcNow
+        dotnet $runner benchmark $data $run "$evidence/run-$run.json"
+        $exitCode = $LASTEXITCODE
+        $windows += [ordered]@{ Run = $run; StartUtc = $started; EndUtc = [DateTimeOffset]::UtcNow; ExitCode = $exitCode }
+        $windows | ConvertTo-Json | Set-Content "$evidence/process-order.json"
+        if ($exitCode) { throw "Benchmark process $run failed." }
+    }
+    & "$tool/summarize.ps1" -Reports @("$evidence/run-1.json", "$evidence/run-2.json", "$evidence/run-3.json") -Output "$evidence/summary.json"
+}
+finally {
+    $env:DOTNET_TieredCompilation = $previousTiering
+    $env:DOTNET_TieredPGO = $previousPgo
+    Remove-Item Env:POLYLINEKIT_ASSESSMENT_REVISION -ErrorAction SilentlyContinue
+}
+```
+
+There are 18 matching direction/backend/scope cells, five samples each, across
+three processes: 270 samples. Preparation, warm table and preparation plus one
+table are separate. Managed allocation counters exclude initial and retained
+workspace. The table consumes intersection and first-feature coverage, not
+output polygons or a materialized result matrix. Report unfavorable cells and
+the range of process medians alongside median timings; do not turn one corpus
+into a universal ranking.
+
+The assessment's alpha.2 binary does not include the later source preparation
+optimization. This runner makes no new speed claim for current `main`, changes no
+public library API and does not publish a new NuGet package.

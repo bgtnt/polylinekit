@@ -7,3 +7,9 @@ benchmarks/PolylineKit.AreaBenchmarks/data/layer.json -text
 # Preserve upstream license bytes and whitespace checked by the evidence bundler.
 scripts/evidence-licenses/Clipper2-2.0.0.txt -text -whitespace
 scripts/evidence-licenses/NetTopologySuite-2.6.0.md -text -whitespace
+
+# Frozen provider responses must retain their exact bytes on every platform.
+# Their hashes and readable inventory are in the Helsinki manifest.
+benchmarks/PolylineKit.IndependentRegions/data/source/** -text -diff
+benchmarks/PolylineKit.IndependentRegions/data/*.json -text
+benchmarks/PolylineKit.IndependentRegions/data/PROTOCOL.md -text

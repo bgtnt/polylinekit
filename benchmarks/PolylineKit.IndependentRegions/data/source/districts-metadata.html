@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<!--[if IE 9]> <html lang="fi" class="ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="fi"  > <!--<![endif]-->
+  <head>
+    <meta charset="utf-8" />
+      <meta name="csrf_field_name" content="_csrf_token" />
+      <meta name="_csrf_token" content="IjUxMTc4OGI3ODE5Zjc3NjgzMDQzYWY5OGQyZDY5Yzg3MWJlYTQ5YzEi.assfEQ.SSk3z8E1xvthLG43lztz36rfK3w" />
+
+      <meta name="generator" content="ckan 2.11.6" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Helsingin piirijako - Helsinki Region Infoshare</title>
+
+    
+    <link rel="shortcut icon" href="/images/icons/ckan.ico" />
+    
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="/wp-content/themes/sixodp/css/v4-shims.css" rel="stylesheet" />
+  <link rel="shortcut icon" href="/assets/images/favicon.ico" />
+
+  
+    <script src="https://cdn.cookiehub.eu/c2/eb7c1da0.js"></script>
+    <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", function(event) {
+        var cpm = {
+          onInitialise: function(status) {
+            if (this.hasConsented('analytics')) {
+              console.log('The analytics category is allowed');
+              _paq.push(['setCookieConsentGiven']);
+            }
+          },
+          onStatusChange: function(status, previousStatus) {
+            if (this.hasConsented("analytics")) {
+              console.log('The analytics category is allowed');
+              _paq.push(['setCookieConsentGiven']);
+            }
+          },
+          onAllow: function(category) {
+            if (category == 'analytics') {
+              console.log('The analytics category was just allowed');
+              _paq.push(['setCookieConsentGiven']);
+            }
+          },
+          onRevoke: function(category) {
+            if (category == 'analytics') {
+              console.log('The analytics category was just revoked');
+              _paq.push(['forgetCookieConsentGiven']);
+            }
+          }
+        };
+        window.cookiehub.load(cpm);
+      });
+    </script>
+  
+
+  
+  
+
+  <link href="https://hri.fi/data/vendor/photoswipe.css" rel="stylesheet" />
+  <link href="https://hri.fi/data/vendor/default-skin/default-skin.css" rel="stylesheet" />
+
+
+    
+    <link href="/data/webassets/sixodp/sixodp.css?a3d9c048" rel="stylesheet"/>
+    
+  
+  
+  
+  
+    
+
+  
+
+
+  <!-- Matomo -->
+<script type="text/javascript">
+  var _paq = window._paq = window._paq || [];
+  /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+  _paq.push(['requireCookieConsent']);
+  _paq.push(['trackPageView']);
+  _paq.push(['enableLinkTracking']);
+  (function() {
+    var u="//webanalytics.digiaiiris.com/js/";
+    _paq.push(['setTrackerUrl', u+'tracker.php']);
+    _paq.push(['setSiteId', '1186']);
+    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+    g.type='text/javascript'; g.async=true; g.src='//webanalytics.digiaiiris.com/js/' + 'piwik.min.js'; s.parentNode.insertBefore(g,s);
+  })();
+</script>
+<!-- End Matomo Code -->
+
+  
+  <meta property="og:title" content="Helsingin piirijako - Helsinki Region Infoshare">
+  <meta property="og:description" content="Helsingin piirijako -aineisto sisältää kaupungin piirijakoalueiden rajaviivat sekä alueiden nimet ja tunnukset. Helsingin piirijakojärjestelmä on hallinnollisiin tarkoituksiin luotu aluejako koko...">
+
+  
+  <meta property="og:title" content="Helsingin piirijako - Helsinki Region Infoshare">
+  <meta property="og:description" content="Helsingin piirijako -aineisto sisältää kaupungin piirijakoalueiden rajaviivat sekä alueiden nimet ja tunnukset. Helsingin piirijakojärjestelmä on hallinnollisiin tarkoituksiin luotu aluejako koko...">
+
+  <link rel="canonical" href="/data/dataset/helsingin-piirijako" >
+
+
+  </head>
+
+  
+  <body data-site-root="https://hri.fi/data/" data-locale-root="https://hri.fi/data/" >
+
+    
+  
+      
+      
+  <div class="nav-wrapper">
+      
+      <nav class="navbar navbar-light navbar-expand-lg" id="main-navbar">
+        <div class="container">
+
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#top-nav-collapse" aria-expanded="false">
+              <span class="sr-only">_('Toggle navigation')</span>
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          </div>
+
+          <div class="collapse navbar-collapse" id="top-nav-collapse">
+            
+            <a href="#content" class="sr-only sr-only-focusable">Siirry sisältöön</a>
+            
+            
+  <ul class="navbar-nav me-auto">
+    <li class="nav-item"><a class="nav-link" href="https://hri.fi/fi/">Etusivu</a></li><li class="nav-item"><a class="nav-link" href="/data/fi/dataset/">Data</a><button class="subnav-toggle"><span class="sr-only">Näytä alavalikkoData</span><i class="fa fa-chevron-down"></i></button><ul class="navbar-nav subnav"><li class="nav-item"><a class="nav-link" href="/data/fi/dataset/"><span class="fa fa-long-arrow-right"></span>Datahaku</a></li><li class="nav-item"><a class="nav-link" href="https://www.hri.fi/data/fi/submit-data"><span class="fa fa-long-arrow-right"></span>Ilmoita uusi data</a></li><li class="nav-item"><a class="nav-link" href="https://hri.fi/fi/uusi-datatoive/"><span class="fa fa-long-arrow-right"></span>Uusi datatoive</a></li><li class="nav-item"><a class="nav-link" href="https://www.hri.fi/data_request/"><span class="fa fa-long-arrow-right"></span>Kaikki datatoiveet</a></li><li class="nav-item"><a class="nav-link" href="https://www.hri.fi/data/group"><span class="fa fa-long-arrow-right"></span>Kategoriat</a></li><li class="nav-item"><a class="nav-link" href="/data/organization"><span class="fa fa-long-arrow-right"></span>Organisaatiot</a></li><li class="nav-item"><a class="nav-link" href="/data/fi/collection/"><span class="fa fa-long-arrow-right"></span>Datakokoelmat</a></li></ul></li><li class="nav-item"><a class="nav-link" href="/data/fi/showcase">Sovellukset</a><button class="subnav-toggle"><span class="sr-only">Näytä alavalikkoSovellukset</span><i class="fa fa-chevron-down"></i></button><ul class="navbar-nav subnav"><li class="nav-item"><a class="nav-link" href="/data/fi/showcase"><span class="fa fa-long-arrow-right"></span>Kaikki sovellukset</a></li><li class="nav-item"><a class="nav-link" href="/data/fi/submit-showcase"><span class="fa fa-long-arrow-right"></span>Ilmoita uusi sovellus</a></li><li class="nav-item"><a class="nav-link" href="/showcase_idea/"><span class="fa fa-long-arrow-right"></span>Sovellusideat</a></li><li class="nav-item"><a class="nav-link" href="https://www.hri.fi/fi/uusi-sovellusidea/"><span class="fa fa-long-arrow-right"></span>Ilmoita uusi sovellusidea</a></li></ul></li><li class="nav-item"><a class="nav-link" href="/fi/category/ajankohtaista/">Ajankohtaista</a><button class="subnav-toggle"><span class="sr-only">Näytä alavalikkoAjankohtaista</span><i class="fa fa-chevron-down"></i></button><ul class="navbar-nav subnav"><li class="nav-item"><a class="nav-link" href="/fi/category/ajankohtaista/"><span class="fa fa-long-arrow-right"></span>Artikkelit</a></li><li class="nav-item"><a class="nav-link" href="https://www.hri.fi/fi/ajankohtaista/viimeisimmat-paivitykset/"><span class="fa fa-long-arrow-right"></span>Viimeisimmät päivitykset</a></li></ul></li><li class="nav-item"><a class="nav-link" href="https://hri.fi/fi/ohjeet/">Ohjeet</a><button class="subnav-toggle"><span class="sr-only">Näytä alavalikkoOhjeet</span><i class="fa fa-chevron-down"></i></button><ul class="navbar-nav subnav"><li class="nav-item"><a class="nav-link" href="https://www.hri.fi/fi/ohjeet/mita-on-avoin-data/"><span class="fa fa-long-arrow-right"></span>Mitä on avoin data?</a></li><li class="nav-item"><a class="nav-link" href="https://www.hri.fi/fi/ohjeet/datan-avaajalle/"><span class="fa fa-long-arrow-right"></span>Datan avaajalle</a></li><li class="nav-item"><a class="nav-link" href="https://www.hri.fi/fi/ohjeet/datan-hyodyntajalle/"><span class="fa fa-long-arrow-right"></span>Datan hyödyntäjälle</a></li></ul></li><li class="nav-item"><a class="nav-link" href="https://hri.fi/fi/hri-palvelu/">Mikä HRI?</a><button class="subnav-toggle"><span class="sr-only">Näytä alavalikkoMikä HRI?</span><i class="fa fa-chevron-down"></i></button><ul class="navbar-nav subnav"><li class="nav-item"><a class="nav-link" href="https://www.hri.fi/fi/hri-palvelu/mika-hri/"><span class="fa fa-long-arrow-right"></span>Mikä HRI?</a></li><li class="nav-item"><a class="nav-link" href="https://www.hri.fi/fi/hri-palvelu/materiaalit-ja-logot/"><span class="fa fa-long-arrow-right"></span>Materiaalit ja logot</a></li><li class="nav-item"><a class="nav-link" href="https://hri.fi/fi/hri-palvelu/tietoa-palvelusta/"><span class="fa fa-long-arrow-right"></span>Tietoa palvelusta</a></li><li class="nav-item"><a class="nav-link" href="https://www.hri.fi/fi/hri-palvelu/yhteystiedot/"><span class="fa fa-long-arrow-right"></span>Yhteystiedot</a></li></ul></li>
+  </ul>
+  <ul class="nav navbar-nav navbar-right">
+    <li class="navbar-search">
+  <div class="input-group navbar-search-form">
+      <button class="btn btn-tertiary navbar-search-submit-btn" aria-label="Hae"
+        type="button">
+        <span class="fa fa-search" aria-hidden="true"></span>
+      </button>
+    <input type="text" class="form-control navbar-search-input" id="navbar-search-q" aria-label="...">
+  </div>
+  <button class="btn btn-tertiary navbar-search-btn" type="button" aria-label="Hae"><span class="fa fa-search" aria-hidden="true"></span></button>
+</li>
+    
+    
+
+
+<li class="language-changer nav-inline">
+  <a href="/data/fi/dataset/helsingin-piirijako"
+      class="nav-link active" aria-label="Suomeksi">
+    FI
+  </a>
+</li>
+<li class="language-changer nav-inline">
+  <a href="/data/en_GB/dataset/helsingin-piirijako"
+     class="nav-link" aria-label="=Englanniksi">
+    EN
+  </a>
+</li>
+<li class="language-changer nav-inline">
+  <a href="/data/sv/dataset/helsingin-piirijako"
+      class="nav-link" aria-label="Ruotsiksi">
+    SV
+  </a>
+</li>
+  </ul>
+  <div class="navbar-footer">
+    <button type="button"
+            class="navbar-toggle-footer collapsed"
+            data-bs-toggle="collapse"
+            data-bs-target="#top-nav-collapse"
+            aria-expanded="false">
+      <span class="fa fa-chevron-up"></span>
+    </button>
+  </div>
+
+          </div>
+        </div>
+        
+          
+        
+      </nav>
+    </div>
+  
+  <div class="logos" role="banner">
+    <span class="logos-links desktop-only">
+      <a class="logos-link" href="/data/dataset/?vocab_geographical_coverage=Helsinki">Helsinki</a>
+      <span class="logos-separator">&#8226;</span>
+      <a class="logos-link" href="/data/dataset/?vocab_geographical_coverage=Espoo">Espoo</a>
+    </span>
+      <img src="/assets/images/hero_logo.png" alt="Site logo" />
+    <span class="logos-links desktop-only">
+      <a class="logos-link" href="/data/dataset/?vocab_geographical_coverage=Vantaa">Vantaa</a>
+      <span class="logos-separator">&#8226;</span>
+      <a class="logos-link" href="/data/dataset/?vocab_geographical_coverage=Kauniainen">Kauniainen</a>
+    </span>
+    <div class="mobile-only">
+      <a class="logos-link" href="/data/dataset/?vocab_geographical_coverage=Helsinki">Helsinki</a>
+      <span class="logos-separator">&#8226;</span>
+      <a class="logos-link" href="/data/dataset/?vocab_geographical_coverage=Espoo">Espoo</a>
+      <span class="logos-separator">&#8226;</span>
+      <a class="logos-link" href="/data/dataset/?vocab_geographical_coverage=Vantaa">Vantaa</a>
+      <span class="logos-separator">&#8226;</span>
+      <a class="logos-link" href="/data/dataset/?vocab_geographical_coverage=Kauniainen">Kauniainen</a>
+    </div>
+  </div>
+
+  
+   <div role="main" id="main" class="content-area">
+      <div id="mobile-indicator"></div>
+      <div id="content">
+        
+          
+            
+
+
+          
+          <div class="row wrapper">
+            
+            <div class="pre-primary">
+              
+                <div class="page-hero"></div>
+                
+                  <div class="toolbar">
+                    <div class="container">
+                      
+                        
+                          <ol class="breadcrumb">
+                            
+<li class="home breadcrumb-item"><a href="/data/"><span> Etusivu</span></a></li>
+                            
+    
+        
+        
+            
+            
+            <li class="breadcrumb-item"><a href="/data/organization/">Organisaatiot</a></li>
+            
+            
+                <li class="breadcrumb-item"><a href="/data/organization/helsinki">Helsinki</a></li>
+            
+            <li class="breadcrumb-item"><a href="/data/organization/helsingin-kaupunkiympariston-toimiala">Helsingin...</a></li>
+        
+        <li class="breadcrumb-item"  class="active"><a class=" active" href="/data/dataset/helsingin-piirijako">Helsingin piirijako</a></li>
+    
+
+
+                          </ol>
+                        
+                      
+                    </div>
+                  </div>
+                  
+                  <div class="toolbar--site-subtitle">
+                    <h1>Helsingin piirijako</h1>
+                  </div>
+                  
+                
+              
+            </div>
+
+            <div class="container">
+              
+              <div class="flash-messages">
+                
+                
+                
+              </div>
+              
+              
+
+              
+                <div class="primary border-left col-md-9 col-sm-12 col-xs-12">
+                  
+                  
+                    <article class="module">
+                      
+                        <header class="module-content page-header">
+                          
+                          
+  
+    
+    
+  
+
+  
+    <div class="page-subheading">
+      <span class="dataset-created">1.1.2025</span>
+      <span> - </span>
+      <a class="dataset-organization" href="/data/organization/helsingin-kaupunkiympariston-toimiala">
+        Helsingin kaupunkiympäristön toimiala
+      </a>
+    </div>
+  
+
+                          <ul class="nav nav-tabs">
+                            
+  
+  <li class="active"><a href="/data/dataset/helsingin-piirijako">Tietoaineisto</a></li>
+  <li><a href="/data/dataset/showcases/helsingin-piirijako">Sovellukset</a></li>
+  <li><a href="/data/dataset/activity/helsingin-piirijako">Aktiivisuusvirta</a></li>
+  
+
+  
+
+                          </ul>
+                        </header>
+                      
+                      <div class="module-content main-content">
+                        
+                        
+  
+                        
+  
+    
+
+    
+    <div class="notes embedded-content show-more-content hide-content">
+      <div class="text-content">
+        <p>Helsingin piirijako -aineisto sisältää kaupungin piirijakoalueiden rajaviivat sekä alueiden nimet ja tunnukset. Helsingin piirijakojärjestelmä on hallinnollisiin tarkoituksiin luotu aluejako koko Helsingin alueesta.</p>
+<p>Piirijako koostuu seuraavista aluetasoista: suurpiiri (<em>stordistrikt</em>), peruspiiri (<em>distrikt</em>), osa-alue (<em>delområde</em>) ja pienalue (<em>småområde</em>). Piirijakojen ylläpidon lähtötietoina ovat Kantakartta sekä ajantasaiset asemakaavat. Aineistoa ylläpidetään vektorimuodossa Oracle Spatial -tietokannassa. Piirijakoaineistoa päivitetään jatkuvasti kaupungingeodeetin päätösten perusteella.</p>
+<p>Aineistoa ylläpitää Helsingin kaupunkiympäristötoimialan kaupunkimittauspalvelut. Piirijako-aineisto julkaistaan avoimena datana tarpeen mukaan rajojen muuttuessa.</p>
+<p><strong>Aineistojen esikatselu kartta.hel.fi -palvelussa:</strong></p>
+<ul>
+<li><a href="https://kartta.hel.fi/link/dBxyPD">Suurpiiri</a></li>
+<li><a href="https://kartta.hel.fi/link/dBy5wU">Peruspiirit</a></li>
+<li><a href="https://kartta.hel.fi/link/dByF8N">Pienalueet</a></li>
+<li><a href="https://kartta.hel.fi/link/dBwxnX">Kaikki piirijaot aktiivisena</a></li>
+<li>Kaikki piirijakojen tasot löytyvät sivuilta: <a href="https://kartta.hel.fi/">https://kartta.hel.fi/</a> &gt; Aineistot &gt; Aluejaot</li>
+</ul>
+<p><strong>Koordinaatisto(t):</strong></p>
+<ul>
+<li>ETRS-GK25 (EPSG:3879). Ylläpitokoordinaatisto. Aineisto voidaan projektoida myös muihin koordinaatistoihin. Muut mahdolliset koordinaatistot löytyvät rajapintapalvelun GetCapabilities-dokumentista.</li>
+</ul>
+<p><strong>Rajapintapalvelujen osoitteet:</strong></p>
+<ul>
+<li>WMS-rajapinta: <a href="https://kartta.hel.fi/ws/geoserver/avoindata/wms?request=getCapabilities">https://kartta.hel.fi/ws/geoserver/avoindata/wms</a></li>
+<li>WFS-rajapinta: <a href="https://kartta.hel.fi/ws/geoserver/avoindata/wfs?request=getCapabilities">https://kartta.hel.fi/ws/geoserver/avoindata/wfs</a></li>
+</ul>
+<p><strong>Julkaistut tasot:</strong></p>
+<ul>
+<li>Piirijako_suurpiiri</li>
+<li>Piirijako_peruspiiri</li>
+<li>Piirijako_osaalue</li>
+<li>Piirijako_pienalue</li>
+</ul>
+<p><strong>Piirijakojen ominaisuustiedot, tietotyypit ja niiden selite ja luotettavuustiedot tietopalveluissa:</strong></p>
+<ul>
+<li>id (int). Kohteen yksilöivä tunniste. Luotettava, kattavasti olemassa oleva tieto.</li>
+<li>aluejako (string). Aluejaon tyyppi. Luotettava, kattavasti olemassa oleva tieto.</li>
+<li>kunta (string). Kunta. Luotettava, kattavasti olemassa oleva tieto.</li>
+<li>tunnus (string). Piirijaon tunnus. Luotettava, kattavasti olemassa oleva tieto.</li>
+<li>nimi_fi (string). Piirijaon suomenkielinen nimi. Luotettava, kattavasti olemassa oleva tieto.</li>
+<li>nimi_se (string). Piirijaon ruotsinkielinen nimi. Luotettava, kattavasti olemassa oleva tieto.</li>
+<li>yhtluontipvm (date). Kohteen luontipäivämäärä (yyyy-mm-dd). Luotettava, kattavasti olemassa oleva tieto.</li>
+<li>yhtmuokkauspvm (date). Kohteen edellinen muokkauspäivämäärä (yyyy-mm-dd). Luotettava, kattavasti olemassa oleva tieto.</li>
+<li>yhtdatanomistaja (string). Aineiston omistaja. Luotettava, kattavasti olemassa oleva tieto.</li>
+<li>kokotunnus (string). Piirijakojen yhdistelmä tunnus. Luotettava, kattavasti olemassa oleva tieto.</li>
+<li>paivitetty_tietopalveluun (date). Tietopalvelun tallennuspäivämäärä (yyyy-mm-dd). Luotettava, kattavasti olemassa oleva tieto.</li>
+<li>datanomistaja (string). Aineiston omistaja. Luotettava, kattavasti olemassa oleva tieto.</li>
+<li>geom (GeometryPropertyType). Kohteen geometria.</li>
+</ul>
+<h2>Helsingin piirijakorajat 1995-2024</h2>
+<p>Helsingin piirijakorajat 1995-2024 -aineisto sisältää Helsingin kaupungin piirijakoalueiden rajaviivat sekä alueiden nimet ja tunnukset vuosilta 1995-2024. Vuosien 1995-2000 osalta aineistosta puuttuu pienalueiden rajat. Julkaisun tietolähteenä on HSY:n tuottama Seutu-CD sekä siinä julkaistu Seutukartta.</p>
+<p>Oheisessa <a href="https://www.hel.fi/hel2/tietokeskus/data/helsinki/Helsingin_aluejaot_2016.xlsx">Excel-tiedostossa</a> on Helsingin vuoden 2016 aluejaot, jossa on kaikki aluetasot. Tiedostossa on Seutukartan aluekoodit, Helsingin virallinen aluenimistö sekä Tilastokeskuksen aineistoissaan käyttämä koodi+nimi. Toisena aineistona on omilla välilehdillään osa-alueiden ja pienalueiden postialuekoodit. Varsinkaan osa-alueet eivät mene kaikilla alueilla täsmällisesti postialueiden sisään (ks. <a href="https://www.hel.fi/hel2/tietokeskus/data/helsinki/Postialue_Osaalue.jpg">kartta</a>).</p>
+      </div>
+      <div class="fadeout"></div>
+    </div>
+    <div class="show-more">
+      <a class="show-more-link">Näytä lisää</a>
+      <a class="show-less-link">Näytä vähemmän</a>
+    </div>
+  
+
+  
+
+  
+    
+<section id="dataset-resources" class="resources">
+    <h2>Data ja resurssit</h2>
+    
+    
+    <ul class="resource-list">
+        
+        
+        
+        
+
+<li class="resource-item" data-id="7e4e4d44-fa1e-4e73-ab5b-8af38074c0c9">
+  <div class="row">
+    <div class="col-9 resource-col">
+      <a href="/data/dataset/helsingin-piirijako/resource/7e4e4d44-fa1e-4e73-ab5b-8af38074c0c9" title="WMS-rajapinta">
+        
+          WMS-rajapinta
+          <span class="format-label" property="dc:format" data-format="wms">
+            WMS
+          </span>
+        
+        
+      </a>
+    </div>
+    <div class="col-3 resource-col">
+      
+        <div class="resource-labels">
+
+        
+          
+
+        
+
+        
+        <a href="https://kartta.hel.fi/ws/geoserver/avoindata/wms" class="btn btn-primary resource-url-analytics resource-download" target="_blank">
+          <i class="icon-large icon-download"></i>
+          Lataa
+        </a>
+
+        
+        </div>
+      
+    </div>
+  </div>
+</li>
+        
+        
+
+<li class="resource-item" data-id="f46d5cde-3d33-42f6-b98c-04f37b6be5d9">
+  <div class="row">
+    <div class="col-9 resource-col">
+      <a href="/data/dataset/helsingin-piirijako/resource/f46d5cde-3d33-42f6-b98c-04f37b6be5d9" title="WFS-rajapinta">
+        
+          WFS-rajapinta
+          <span class="format-label" property="dc:format" data-format="wfs">
+            WFS
+          </span>
+        
+        
+      </a>
+    </div>
+    <div class="col-3 resource-col">
+      
+        <div class="resource-labels">
+
+        
+          
+
+        
+
+        
+        <a href="https://kartta.hel.fi/ws/geoserver/avoindata/wfs" class="btn btn-primary resource-url-analytics resource-download" target="_blank">
+          <i class="icon-large icon-download"></i>
+          Lataa
+        </a>
+
+        
+        </div>
+      
+    </div>
+  </div>
+</li>
+        
+        
+
+<li class="resource-item" data-id="642459f9-9f59-43b8-9b8f-cdbde299111c">
+  <div class="row">
+    <div class="col-9 resource-col">
+      <a href="/data/dataset/helsingin-piirijako/resource/642459f9-9f59-43b8-9b8f-cdbde299111c" title=" Helsingin piirialuejako vuosilta 1995-2024 (MapInfo)">
+        
+           Helsingin piirialuejako vuosilta 1995-2024 (MapInfo)
+          <span class="format-label" property="dc:format" data-format="tab">
+            TAB
+          </span>
+        
+        
+      </a>
+    </div>
+    <div class="col-3 resource-col">
+      
+        <div class="resource-labels">
+
+        
+          
+
+        
+
+        
+        <a href="https://kartta.hel.fi/avoindata/Helsingin-piirijakorajat-eri-vuosilta-TAB.zip" class="btn btn-primary resource-url-analytics resource-download" target="_blank">
+          <i class="icon-large icon-download"></i>
+          Lataa
+        </a>
+
+        
+        </div>
+      
+    </div>
+  </div>
+</li>
+        
+        
+
+<li class="resource-item" data-id="d3ba5385-f19a-4a4a-a80e-7a91607795c9">
+  <div class="row">
+    <div class="col-9 resource-col">
+      <a href="/data/dataset/helsingin-piirijako/resource/d3ba5385-f19a-4a4a-a80e-7a91607795c9" title="Helsingin piirialuejako vuosilta 1995-2024 (GeoPackage)">
+        
+          Helsingin piirialuejako vuosilta 1995-2024 (GeoPackage)
+          <span class="format-label" property="dc:format" data-format="gpkg">
+            GPKG
+          </span>
+        
+        
+      </a>
+    </div>
+    <div class="col-3 resource-col">
+      
+        <div class="resource-labels">
+
+        
+          
+
+        
+
+        
+        <a href="https://kartta.hel.fi/avoindata/Helsingin-piirijakorajat-eri-vuosilta-gpkg.zip" class="btn btn-primary resource-url-analytics resource-download" target="_blank">
+          <i class="icon-large icon-download"></i>
+          Lataa
+        </a>
+
+        
+        </div>
+      
+    </div>
+  </div>
+</li>
+        
+        
+    </ul>
+    
+    
+</section>
+  
+
+  
+  
+
+  
+  <section class="additional-info">
+  <h2>Lisätiedot</h2>
+
+  
+    <div class="api-link d-grid">
+      <a class="btn btn-transparent--inverse" href="https://hri.fi/data/api/action/package_show?id=helsingin-piirijako">
+        Metadata API <i class="material-icons">arrow_forward</i>
+      </a>
+    </div>
+  
+
+  <table class="table table-condensed table-borderless table-striped">
+    <thead> </thead>
+    <tbody>
+      
+  
+    
+    <tr>
+      <th scope="row" class="dataset-label">Ylläpitäjä</th>
+      <td class="dataset-details"property="dc:contributor"><a href=mailto:kaupunkimittaus@hel.fi>Helsingin kaupunkiympäristön toimiala / Kaupunkimittauspalvelut</a></td>
+    </tr>
+  
+
+  
+    
+    <tr>
+      <th scope="row" class="dataset-label">Ylläpitäjän verkkosivusto</th>
+      <td class="dataset-details"property="dc:contributor"><a href="https://kartta.hel.fi/avoindata" rel="dc:contributornoopener noreferrer" target="_blank">https://kartta.hel.fi/avoindata</a></td>
+    </tr>
+  
+
+
+  
+
+  
+    
+    <tr>
+      <th scope="row" class="dataset-label">Julkaistu</th>
+      <td class="dataset-details">
+  09.02.2015
+</td>
+    </tr>
+  
+
+
+  
+    
+    <tr>
+      <th scope="row" class="dataset-label">Päivitetty</th>
+      <td class="dataset-details">
+  01.01.2025
+</td>
+    </tr>
+  
+
+  
+    
+    <tr>
+      <th scope="row" class="dataset-label">Päivitystiheys</th>
+      <td class="dataset-details">
+  <section class="tags">
+    
+      <ul class="tag-list">
+        
+          
+          <li>
+            <a class="tag" href="/data/dataset/?vocab_update_frequency_fi=vuosi">
+              vuosi
+            </a>
+          </li>
+        
+      </ul>
+    
+  </section></td>
+    </tr>
+  
+
+  
+    
+    <tr>
+      <th scope="row" class="dataset-label">Lisätietoja</th>
+      <td class="dataset-details"><ol><li><a href="https://kartta.hel.fi/paikkatietohakemisto/pth/?id=139" rel="" target="_blank">https://kartta.hel.fi/paikkatietohakemisto/pth/?id=139</a></li><li><a href="" rel="" target="_blank"></a></li></ol></td>
+    </tr>
+  
+
+
+  
+  
+    <tr>
+      <th scope="row" class="dataset-label">Kategoriat</th>
+      <td class="dataset-details">
+        <section class="tags">
+          <ul class="tag-list">
+            
+              <li><a class="tag" href="/data/group/kartat">Kartat</a></li>
+            
+          </ul>
+        </section>
+      </td>
+    </tr>
+  
+
+  
+  
+    <tr>
+      <th scope="row" class="dataset-label">Datakokoelmat</th>
+      <td class="dataset-details">
+        <section class="tags">
+          <ul class="tag-list">
+            
+              <li><a class="tag" href="/data/collection/rajapinnat">Rajapinnat</a></li>
+            
+          </ul>
+        </section>
+      </td>
+    </tr>
+  
+
+  <tr>
+          <th scope="row" class="dataset-label">Avainsanat</th>
+          <td class="dataset-details">
+  <section class="tags">
+    
+      <ul class="tag-list">
+        
+          
+          <li>
+            <a class="tag" href="/data/dataset/?vocab_keywords_fi=alueet">
+              alueet
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="tag" href="/data/dataset/?vocab_keywords_fi=aluejaot">
+              aluejaot
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="tag" href="/data/dataset/?vocab_keywords_fi=hallinto">
+              hallinto
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="tag" href="/data/dataset/?vocab_keywords_fi=hallintoalue">
+              hallintoalue
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="tag" href="/data/dataset/?vocab_keywords_fi=osa-alueet">
+              osa-alueet
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="tag" href="/data/dataset/?vocab_keywords_fi=peruspiirit">
+              peruspiirit
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="tag" href="/data/dataset/?vocab_keywords_fi=pienalueet">
+              pienalueet
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="tag" href="/data/dataset/?vocab_keywords_fi=piirijako">
+              piirijako
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="tag" href="/data/dataset/?vocab_keywords_fi=suuralueet">
+              suuralueet
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="tag" href="/data/dataset/?vocab_keywords_fi=suurpiirit">
+              suurpiirit
+            </a>
+          </li>
+        
+          
+          <li>
+            <a class="tag" href="/data/dataset/?vocab_keywords_fi=tilastoalueet">
+              tilastoalueet
+            </a>
+          </li>
+        
+      </ul>
+    
+  </section></td>
+        </tr><tr>
+          <th scope="row" class="dataset-label">Alueet</th>
+          <td class="dataset-details">
+<section class="tags">
+    
+    <ul class="tag-list">
+        
+        
+        <li>
+            <a class="tag" href="/data/dataset/?vocab_geographical_coverage=Helsinki">
+                Helsinki
+            </a>
+        </li>
+        
+    </ul>
+    
+    <section class="tags"></td>
+        </tr><tr>
+          <th scope="row" class="dataset-label">Aikasarja alkaa</th>
+          <td class="dataset-details">1995</td>
+        </tr><tr>
+          <th scope="row" class="dataset-label">Aikasarjan tarkkuus</th>
+          <td class="dataset-details">vuosi</td>
+        </tr>
+
+  <tr>
+    <th>Lisenssi</th>
+    <td class="dataset-details">
+  
+    <a href="https://creativecommons.org/licenses/by/4.0/" rel="dc:rights">Creative Commons Attribution 4.0</a>
+  
+</td>
+  </tr>
+
+
+  <tr>
+    <th scope="row" class="dataset-label">Viittaustapa</th>
+    <td class="dataset-details">Lähde:
+      <a href="/data/dataset/helsingin-piirijako">Helsingin piirijako.
+      </a>
+       Datan ylläpitäjä on Helsingin kaupunkiympäristön toimiala / Kaupunkimittauspalvelut.
+       Data on ladattu <a href="https://hri.fi">Helsinki Region Infoshare</a> -palvelusta 11.10.2026 lisenssillä <a href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0</a>.
+      
+    </td>
+  </tr>
+
+
+    </tbody>
+  </table>
+</section>
+
+
+  
+    <div class="mobile-only">
+      
+
+
+  
+    
+      
+        <section class="module module-narrow module-shallow license">
+          
+            <h2 class="module-heading"><i class="fa fa-medium fa-lock"></i> Lisenssi</h2>
+          
+          
+            <p class="module-content">
+              
+                
+  
+    <a href="https://creativecommons.org/licenses/by/4.0/deed.fi" rel="dc:rights">Creative Commons Nimeä 4.0</a>
+  
+<br>
+                
+                  <a href="https://creativecommons.org/licenses/by/4.0/deed.fi" title="Creative Commons Nimeä 4.0">
+                    <img class="open-data" src="/assets/images/CC-BY-4.0.png" alt="CC-BY-4.0" />
+                  </a>
+                
+                
+                  <a href="http://opendefinition.org/okd/" title="Tämä data täyttää avoimen datan määritelmän.">
+                    <img class="open-data" src="/data/base/images/od_80x15_blue.png" alt="[Open Data]" />
+                  </a>
+                
+              
+            </p>
+          
+        </section>
+      
+    
+  
+
+      
+      
+      
+
+
+
+      
+      
+      
+
+  <section class="module module-narrow social">
+    
+      <ul class="nav nav-simple">
+        <li class="nav-item"><a href="https://www.linkedin.com/sharing/share-offsite/?url=https://hri.fi/data/dataset/helsingin-piirijako" target="_blank"><i class="icon-linkedin-sign icon-2x" aria-label="LinkedIn"></i></a></li>
+        <li class="nav-item"><a href="https://twitter.com/share?url=https://hri.fi/data/dataset/helsingin-piirijako" target="_blank"><i class="icon-twitter-sign icon-2x" aria-label="Twitter"></i></a></li>
+        <li class="nav-item"><a href="https://www.facebook.com/sharer.php?u=https://hri.fi/data/dataset/helsingin-piirijako" target="_blank"><i class="icon-facebook-sign icon-2x" aria-label="Facebook"></i></a></li>
+      </ul>
+    
+  </section>
+
+    </div>
+  
+
+
+
+
+                      </div>
+                    </article>
+                  
+                </div>
+              
+
+              
+                
+  <aside class="secondary border-right col-sm-3 hidden-xs">
+
+    
+
+      
+        <div class="license-container">
+          
+
+
+  
+    
+      
+        <section class="module module-narrow module-shallow license">
+          
+            <h2 class="module-heading"><i class="fa fa-medium fa-lock"></i> Lisenssi</h2>
+          
+          
+            <p class="module-content">
+              
+                
+  
+    <a href="https://creativecommons.org/licenses/by/4.0/deed.fi" rel="dc:rights">Creative Commons Nimeä 4.0</a>
+  
+<br>
+                
+                  <a href="https://creativecommons.org/licenses/by/4.0/deed.fi" title="Creative Commons Nimeä 4.0">
+                    <img class="open-data" src="/assets/images/CC-BY-4.0.png" alt="CC-BY-4.0" />
+                  </a>
+                
+                
+                  <a href="http://opendefinition.org/okd/" title="Tämä data täyttää avoimen datan määritelmän.">
+                    <img class="open-data" src="/data/base/images/od_80x15_blue.png" alt="[Open Data]" />
+                  </a>
+                
+              
+            </p>
+          
+        </section>
+      
+    
+  
+
+        </div>
+      
+
+      
+      
+
+      
+      
+      
+
+      
+        
+
+
+
+      
+
+      
+<div class="module module-narrow">
+  <h2 class="module-heading">Tilastot</h2>
+  <section class="module-content">
+    
+    <div>Viikoittaiset vierailut viimeisten 12kk ajalta</div>
+    <div>Data 1.6.2014 alkaen</div>
+    <div id="chart_div"></div>
+    
+    
+    
+    
+    
+    
+    <dl class="list-unstyled">
+      <dt>Sivunäytöt:</dt>
+      <dd>Viimeisten 30 päivän aikana: 79</dd>
+      <dd>Viimeisten 12 kk aikana: 801</dd>
+      <dd>1.6.2014 alkaen: 4777</dd>
+      
+    </dl>
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {packages: ['corechart']});
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          
+            ["edellinen vuosi", "Sivunäytöt"],
+            
+              ["edellinen viikko" + ' ' + 41 + ', ' + 2025, 0],
+            
+              ["edellinen viikko" + ' ' + 42 + ', ' + 2025, 20],
+            
+              ["edellinen viikko" + ' ' + 43 + ', ' + 2025, 15],
+            
+              ["edellinen viikko" + ' ' + 44 + ', ' + 2025, 21],
+            
+              ["edellinen viikko" + ' ' + 45 + ', ' + 2025, 17],
+            
+              ["edellinen viikko" + ' ' + 46 + ', ' + 2025, 24],
+            
+              ["edellinen viikko" + ' ' + 47 + ', ' + 2025, 13],
+            
+              ["edellinen viikko" + ' ' + 48 + ', ' + 2025, 17],
+            
+              ["edellinen viikko" + ' ' + 49 + ', ' + 2025, 25],
+            
+              ["edellinen viikko" + ' ' + 50 + ', ' + 2025, 29],
+            
+              ["edellinen viikko" + ' ' + 51 + ', ' + 2025, 29],
+            
+              ["edellinen viikko" + ' ' + 52 + ', ' + 2025, 0],
+            
+              ["edellinen viikko" + ' ' + 1 + ', ' + 2026, 10],
+            
+              ["edellinen viikko" + ' ' + 2 + ', ' + 2026, 8],
+            
+              ["edellinen viikko" + ' ' + 3 + ', ' + 2026, 25],
+            
+              ["edellinen viikko" + ' ' + 4 + ', ' + 2026, 12],
+            
+              ["edellinen viikko" + ' ' + 5 + ', ' + 2026, 30],
+            
+              ["edellinen viikko" + ' ' + 6 + ', ' + 2026, 26],
+            
+              ["edellinen viikko" + ' ' + 7 + ', ' + 2026, 30],
+            
+              ["edellinen viikko" + ' ' + 8 + ', ' + 2026, 9],
+            
+              ["edellinen viikko" + ' ' + 9 + ', ' + 2026, 23],
+            
+              ["edellinen viikko" + ' ' + 10 + ', ' + 2026, 21],
+            
+              ["edellinen viikko" + ' ' + 11 + ', ' + 2026, 15],
+            
+              ["edellinen viikko" + ' ' + 12 + ', ' + 2026, 8],
+            
+              ["edellinen viikko" + ' ' + 13 + ', ' + 2026, 30],
+            
+              ["edellinen viikko" + ' ' + 14 + ', ' + 2026, 15],
+            
+              ["edellinen viikko" + ' ' + 15 + ', ' + 2026, 17],
+            
+              ["edellinen viikko" + ' ' + 16 + ', ' + 2026, 13],
+            
+              ["edellinen viikko" + ' ' + 17 + ', ' + 2026, 15],
+            
+              ["edellinen viikko" + ' ' + 18 + ', ' + 2026, 14],
+            
+              ["edellinen viikko" + ' ' + 19 + ', ' + 2026, 17],
+            
+              ["edellinen viikko" + ' ' + 20 + ', ' + 2026, 21],
+            
+              ["edellinen viikko" + ' ' + 21 + ', ' + 2026, 3],
+            
+              ["edellinen viikko" + ' ' + 22 + ', ' + 2026, 15],
+            
+              ["edellinen viikko" + ' ' + 23 + ', ' + 2026, 14],
+            
+              ["edellinen viikko" + ' ' + 24 + ', ' + 2026, 2],
+            
+              ["edellinen viikko" + ' ' + 25 + ', ' + 2026, 13],
+            
+              ["edellinen viikko" + ' ' + 26 + ', ' + 2026, 14],
+            
+              ["edellinen viikko" + ' ' + 27 + ', ' + 2026, 16],
+            
+              ["edellinen viikko" + ' ' + 28 + ', ' + 2026, 6],
+            
+              ["edellinen viikko" + ' ' + 29 + ', ' + 2026, 10],
+            
+              ["edellinen viikko" + ' ' + 30 + ', ' + 2026, 21],
+            
+              ["edellinen viikko" + ' ' + 31 + ', ' + 2026, 6],
+            
+              ["edellinen viikko" + ' ' + 32 + ', ' + 2026, 8],
+            
+              ["edellinen viikko" + ' ' + 33 + ', ' + 2026, 14],
+            
+              ["edellinen viikko" + ' ' + 34 + ', ' + 2026, 5],
+            
+              ["edellinen viikko" + ' ' + 35 + ', ' + 2026, 0],
+            
+              ["edellinen viikko" + ' ' + 36 + ', ' + 2026, 6],
+            
+              ["edellinen viikko" + ' ' + 37 + ', ' + 2026, 1],
+            
+              ["edellinen viikko" + ' ' + 38 + ', ' + 2026, 12],
+            
+              ["edellinen viikko" + ' ' + 39 + ', ' + 2026, 35],
+            
+              ["edellinen viikko" + ' ' + 40 + ', ' + 2026, 14],
+            
+          
+      ]);
+
+        var options = {
+          hAxis: {
+            textPosition: 'none',
+            gridlines: {
+              count : 0
+            }
+          },
+          vAxis: {
+            minValue: 4
+          },
+          legend: { position: 'bottom' },
+          chartArea: {
+            left: 32
+          },
+          series: {
+            0: {
+              lineDashStyle: null
+            },
+            
+          },
+          focusTarget: 'category'
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+
+        chart.draw(data, options);
+      }
+    </script>
+  </section>
+</div>
+
+
+      
+        
+
+  <section class="module module-narrow social">
+    
+      <ul class="nav nav-simple">
+        <li class="nav-item"><a href="https://www.linkedin.com/sharing/share-offsite/?url=https://hri.fi/data/dataset/helsingin-piirijako" target="_blank"><i class="icon-linkedin-sign icon-2x" aria-label="LinkedIn"></i></a></li>
+        <li class="nav-item"><a href="https://twitter.com/share?url=https://hri.fi/data/dataset/helsingin-piirijako" target="_blank"><i class="icon-twitter-sign icon-2x" aria-label="Twitter"></i></a></li>
+        <li class="nav-item"><a href="https://www.facebook.com/sharer.php?u=https://hri.fi/data/dataset/helsingin-piirijako" target="_blank"><i class="icon-facebook-sign icon-2x" aria-label="Facebook"></i></a></li>
+      </ul>
+    
+  </section>
+
+      
+    
+
+  </aside>
+
+              
+            </div>
+          </div>
+        
+      </div>
+    </div>
+  
+    
+    
+
+    <footer id="colophon" class="site-footer bgcolor-primary" role="contentinfo">
+  <div class="container">
+    
+      <div class="row row-compensate footer-row justify-content-end">
+        <div class="col-md-4 footer-column">
+          <div class="popper">
+            <ul class="popper__list">
+              <li class="popper__item">
+                <a href="/data/user/login" class="popper__link">Dataportaali <i class="material-icons">arrow_forward</i></a>
+              </li>
+              <li class="popper__item">
+                <a href="/admin" class="popper__link">Sisällönhallinta <i class="material-icons">arrow_forward</i></a>
+              </li>
+            </ul>
+          </div>
+          <button type="button" class="float-end btn btn-transparent" data-trigger="popper">Ylläpito</button>
+        </div>
+      </div>
+      <div class="row row-compensate">
+        <div class="col-md-2 footer-column">
+          <div class="footer-logo-wrapper">
+            <img class="footer-logo" src="/assets/images/footer_logo.png" alt="Site logo">
+          </div>
+        </div>
+        <div class="col-md-4 footer-column">
+          <!-- Placeholder for additional city logos -->
+        </div>
+        <div class="col-md-6 pull-right footer-column">
+          
+          <div class="row row-compensate footer-row">
+            <div class="col-xs-12 text-right">
+              <div class="footer-follow-links">
+                <span class="footer-follow-title">Seuraa meitä</span>
+                
+                  
+                  <a href="https://www.linkedin.com/company/helsinki-region-infoshare" title="LinkedIn" class="footer-follow-link"><i class="fa-brands fa-linkedin fa-2x"></i></a>
+                
+                  
+                  <a href="https://bsky.app/profile/hrinfoshare.bsky.social" title="BlueSky" class="footer-follow-link"><i class="fa-brands fa-bluesky fa-2x"></i></a>
+                
+                  
+                  <a href="http://www.facebook.com/helsinkiregioninfoshare" title="Facebook" class="footer-follow-link"><i class="fa-brands fa-square-facebook fa-2x"></i></a>
+                
+                  
+                  <a href="http://github.com/6aika/sixodp" title="Github" class="footer-follow-link"><i class="fa-brands fa-square-github fa-2x"></i></a>
+                
+                  
+                  <a href="https://www.youtube.com/user/HRInfoshare" title="Youtube" class="footer-follow-link"><i class="fa-brands fa-youtube-square fa-2x"></i></a>
+                
+                  
+                  <a href="http://hri.fi/fi/uutiskirje" title="Uutiskirje" class="footer-follow-link"><i class="fa-solid fa-envelope fa-2x"></i></a>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <hr />
+      
+      <div class="row row-compensate footer-row">
+        <div class="col-md-12 footer-section footer-section--links">
+          <ul class="footer-links">
+            
+              <li class="footer__item"><a href="/fi/kayttoehdot/" class="footer__link" title="Käyttöehdot">Käyttöehdot</a></li>
+            
+              <li class="footer__item"><a href="https://hri.fi/fi/saavutettavuusseloste/" class="footer__link" title="Saavutettavuus">Saavutettavuus</a></li>
+            
+              <li class="footer__item"><a href="https://www.hel.fi/fi/paatoksenteko-ja-hallinto/tietoa-helsingista/tietosuoja-ja-tiedonhallinta/tietosuoja" class="footer__link" title="Tietosuoja">Tietosuoja</a></li>
+            
+              <li class="footer__item"><a href="/fi/hri-palvelu/yhteystiedot/" class="footer__link" title="Yhteystiedot">Yhteystiedot</a></li>
+            
+          </ul>
+        </div>
+      </div>
+    
+  </div>
+</footer>
+
+  
+    
+    
+    
+
+    
+  
+  
+  
+  
+  
+  
+  
+    
+  
+      
+      <div class="js-hide" data-module="matomo"></div>
+  
+
+  
+  <script src="https://hri.fi/data/vendor/photoswipe.min.js"></script>
+  <script src="https://hri.fi/data/vendor/photoswipe-ui-default.min.js"></script>
+
+
+  
+
+
+
+
+  
+  
+
+
+    
+    
+    <link href="/data/webassets/vendor/f3b8236b_select2.css" rel="stylesheet"/>
+<link href="/data/webassets/vendor/53df638c_fontawesome.css" rel="stylesheet"/>
+    <script src="/data/webassets/vendor/240e5086_jquery.js" type="text/javascript"></script>
+<script src="/data/webassets/vendor/71bc2bbc_vendor.js" type="text/javascript"></script>
+<script src="/data/webassets/vendor/6d1ad7e6_bootstrap.js" type="text/javascript"></script>
+<script src="/data/webassets/vendor/529a0eb7_htmx.js" type="text/javascript"></script>
+<script src="/data/webassets/base/2f3fa565_main.js" type="text/javascript"></script>
+<script src="/data/webassets/base/8ed2013a_ckan.js" type="text/javascript"></script>
+<script src="/data/webassets/sixodp/sixodp.js?05ee4774" type="text/javascript"></script>
+<script src="/data/webassets/ckanext-matomo/8de4186d_event_tracking.js" type="text/javascript"></script>
+<script src="/data/webassets/ckanext-sixodp_showcasea887ea78.js" type="text/javascript"></script>
+<script src="/data/webassets/activity/0fdb5ee0_activity.js" type="text/javascript"></script>
+  </body>
+</html>
