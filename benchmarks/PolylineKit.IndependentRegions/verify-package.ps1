@@ -109,13 +109,19 @@ try {
     $locationPushed = $true
     $project = Join-Path $workspace $projectName
     $config = Join-Path $workspace 'NuGet.Config'
+    # Some SDK installations append their own library-packs feed even when the
+    # explicit config clears sources. Disable that SDK feed rather than accepting
+    # an extra source or shared cache in this isolated consumer.
     $isolatedBuild = @('-p:ImportDirectoryBuildProps=false', '-p:ImportDirectoryBuildTargets=false',
-        '-p:DisableImplicitNuGetFallbackFolder=true', '-p:RestoreFallbackFolders=')
+        '-p:DisableImplicitNuGetFallbackFolder=true', '-p:RestoreFallbackFolders=',
+        '-p:DisableImplicitLibraryPacksFolder=true')
     $restoreArguments = @('restore', $project, '--configfile', $config, '--packages', $cache, '--no-cache', '--locked-mode', '-p:NuGetAudit=false') + $isolatedBuild
     $evidence.RestoreArguments = $restoreArguments
     Run-Dotnet 'restore' $restoreArguments
     $assetsPath = Join-Path $workspace 'obj/project.assets.json'
     $assets = Get-Content -LiteralPath $assetsPath -Raw | ConvertFrom-Json -AsHashtable
+    # Preserve the actual restore graph even if an isolation guard rejects it.
+    Copy-Item -LiteralPath $assetsPath -Destination (Join-Path $output 'project.assets.json')
     Require ([IO.Path]::GetFullPath($assets.project.restore.packagesPath).TrimEnd([IO.Path]::DirectorySeparatorChar) -eq $cache) 'Restore selected an unexpected package cache.'
     Require (@($assets.packageFolders.Keys).Count -eq 1 -and
         [IO.Path]::GetFullPath(@($assets.packageFolders.Keys)[0]).TrimEnd([IO.Path]::DirectorySeparatorChar) -eq $cache) 'Restore added a shared or fallback package cache.'
@@ -158,7 +164,6 @@ try {
         Run-Dotnet 'check' @($consumerDll, 'check', $DataRoot, (Join-Path $output 'check.json'))
         $evidence.DatasetCheck = Get-Content -LiteralPath (Join-Path $output 'check.json') -Raw | ConvertFrom-Json -AsHashtable
     }
-    Copy-Item -LiteralPath $assetsPath -Destination (Join-Path $output 'project.assets.json')
     Copy-Item -LiteralPath $metadataPath -Destination (Join-Path $output 'core.nupkg.metadata.json')
     foreach ($file in @($projectName, 'packages.lock.json', 'NuGet.Config')) {
         Copy-Item -LiteralPath (Join-Path $workspace $file) -Destination (Join-Path $output $file)

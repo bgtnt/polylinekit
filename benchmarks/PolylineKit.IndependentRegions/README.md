@@ -56,6 +56,12 @@ checks the dependency graph, runtime asset, archive origin, loaded Core DLL hash
 and package source revision. Failed workspaces remain available for diagnosis.
 The retained path is in `package/verification.json`.
 
+The probe disables the SDK's implicit `library-packs` feed as well as inherited
+fallback folders. CI uses `check-package-isolation.ps1` to inject an existing SDK
+feed directory and verify that the same isolated restore still uses only
+NuGet.org. It runs the ordinary probe once and preserves its proof; this does not
+relax the source checks or change any geometric input.
+
 An outside-checkout consumer verifies package integration; it does **not** prove
 adoption by an external developer. Do not call it an external production user.
 

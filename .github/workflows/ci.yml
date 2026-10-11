@@ -3,6 +3,7 @@ on: [push, pull_request, workflow_dispatch]
 jobs:
   verify:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
@@ -50,7 +51,7 @@ jobs:
         run: |
           $tool = 'benchmarks/PolylineKit.IndependentRegions'
           $env:POLYLINEKIT_ASSESSMENT_REVISION = (git rev-parse HEAD).Trim()
-          & "$tool/verify-package.ps1" -OutputDirectory artifacts/independent-regions-ci/package -KeepWorkspace
+          & "$tool/check-package-isolation.ps1" -OutputDirectory artifacts/independent-regions-ci/package -KeepWorkspace
           $proofPath = 'artifacts/independent-regions-ci/package/verification.json'
           $proof = Get-Content $proofPath -Raw | ConvertFrom-Json
           $runner = Join-Path $proof.Workspace 'bin/Release/net10.0/PolylineKit.IndependentRegions.dll'
