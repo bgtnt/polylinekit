@@ -30,6 +30,30 @@ function jsonFile(name, text) {
   return { name, mimeType: "application/json", buffer: Buffer.from(text) };
 }
 
+async function allowLateCandidateResponses(page) {
+  // Let the transport finish after abort, independently testing the input-version guard.
+  await page.addInitScript(() => {
+    const fetch = window.fetch.bind(window);
+    window.__candidateResponsesRead = 0;
+    window.__candidateAborts = 0;
+    window.fetch = async (url, options) => {
+      const isCandidate = url === "/api/candidates";
+      if (isCandidate) options.signal.addEventListener("abort", () => window.__candidateAborts++, { once: true });
+      const response = await fetch(url, isCandidate ? { ...options, signal: undefined } : options);
+      if (isCandidate) {
+        const json = response.json.bind(response);
+        response.json = async () => {
+          const result = await json();
+          // Observe completion after the app's await/continuation, not before it.
+          setTimeout(() => window.__candidateResponsesRead++, 0);
+          return result;
+        };
+      }
+      return response;
+    };
+  });
+}
+
 test("the real server loads the default contour and measures candidates", async ({ page }) => {
   const responsePromise = page.waitForResponse(response => response.url().endsWith("/api/candidates"));
   await page.goto("/");
@@ -114,27 +138,7 @@ test("nonmonotone candidates, inclusive budget and exports use the chosen contou
 });
 
 test("an older HTTP response cannot replace the newer contour or its export", async ({ page }) => {
-  // Simulate a transport that completes after abort: the production version guard
-  // must protect the DOM and downloads independently of AbortController.
-  await page.addInitScript(() => {
-    const fetch = window.fetch.bind(window);
-    window.__candidateResponsesRead = 0;
-    window.fetch = async (url, options) => {
-      const isCandidate = url === "/api/candidates";
-      const response = await fetch(url, isCandidate ? { ...options, signal: undefined } : options);
-      if (isCandidate) {
-        const json = response.json.bind(response);
-        response.json = async () => {
-          const result = await json();
-          // Run after the app's await/continuation, so the final assertions cannot
-          // pass prematurely while the stale response is still being processed.
-          setTimeout(() => window.__candidateResponsesRead++, 0);
-          return result;
-        };
-      }
-      return response;
-    };
-  });
+  await allowLateCandidateResponses(page);
   const newerPoints = [[101, 2], [109, 2], [104, 9]];
   const newer = {
     ...measured, original: presets[1].points,
@@ -283,6 +287,127 @@ test("a server-rejected imported contour restores the prior usable result", asyn
   await expect(page.locator("#export-svg")).toBeEnabled();
   expect(JSON.parse(await downloadText(page, "#export-json"))).toEqual(JSON.parse(before));
 });
+
+test("overlapping imports restore the last success with the current budget and ignore the late response", async ({ page }) => {
+  await allowLateCandidateResponses(page);
+  let pendingRoute;
+  let requests = 0;
+  await page.route("**/api/presets", route => route.fulfill({ json: presets }));
+  await page.route("**/api/candidates", route => {
+    requests++;
+    if (requests === 1) return route.fulfill({ json: measured });
+    if (requests === 2) { pendingRoute = route; return; }
+    return route.continue(); // Rejected imports use the real server's geometry validation.
+  });
+  await page.goto("/");
+  await expect(page.getByRole("button", { name: "Load JSON" })).toBeEnabled();
+  const description = await page.locator("#preset-description").textContent();
+  const descriptionTitle = await page.locator("#preset-description").getAttribute("title");
+  await page.locator("#json-file").setInputFiles(jsonFile("pending-b.json", JSON.stringify({
+    name: "Pending B", points: presets[1].points
+  })));
+  await expect.poll(() => requests).toBe(2);
+  await expect(page.locator("#contour-svg")).toHaveAttribute("aria-busy", "true");
+  await expect(page.locator("#export-json")).toBeDisabled();
+  await page.locator("#budget-number").fill("0.5");
+  const rejectedResponse = page.waitForResponse(response => response.url().endsWith("/api/candidates"));
+  await page.locator("#json-file").setInputFiles(jsonFile("rejected-c.json", "[[0,0],[1,1],[2,2]]"));
+  expect((await rejectedResponse).status()).toBe(400);
+
+  await expect(page.locator("#status-text")).toContainText("Previous contour kept.");
+  await expect(page.locator("#contour-title")).toHaveText("Boundary fixture");
+  await expect(page.locator("#preset")).toHaveValue("BGR");
+  await expect(page.locator("#preset-description")).toHaveText(description);
+  await expect(page.locator("#preset-description")).toHaveAttribute("title", descriptionTitle);
+  await expect(page.locator("#vertices")).toHaveText("6 → 5");
+  await expect(page.locator("#measured-change")).toHaveText("0.5%");
+  await expect(page.locator("#contour-svg")).toHaveAttribute("aria-busy", "false");
+  await expect(page.locator("#original-outline")).toHaveAttribute("d", "M0,0 L10,0 L10,8 L6,10 L0,10 L-1,5 Z");
+  await expect(page.locator("#simplified-outline")).toHaveAttribute("d", "M0,0 L10,0 L10,8 L6,10 L0,10 Z");
+  const restoredJson = await downloadText(page, "#export-json");
+  expect(JSON.parse(restoredJson)).toEqual({
+    name: "Boundary fixture", fillRule: "NonZero", budget: 0.005,
+    measuredJaccardDistance: 0.005, originalVertexCount: 6, simplifiedVertexCount: 5,
+    epsilon: 1, points: original.slice(0, 5)
+  });
+  const restoredSvg = await downloadText(page, "#export-svg");
+  expect(restoredSvg).toContain("Boundary fixture — simplified contour");
+  expect(restoredSvg).toContain('d="M0,0 L10,0 L10,8 L6,10 L0,10 Z"');
+  expect(await page.evaluate(() => window.__candidateAborts)).toBe(1);
+
+  await pendingRoute.fulfill({ json: {
+    ...measured, original: presets[1].points,
+    candidates: [{ ...candidates[0], points: presets[1].points }]
+  } });
+  await expect.poll(() => page.evaluate(() => window.__candidateResponsesRead)).toBe(3);
+  await expect(page.locator("#status-text")).toContainText("Previous contour kept.");
+  expect(await downloadText(page, "#export-json")).toBe(restoredJson);
+  expect(await downloadText(page, "#export-svg")).toBe(restoredSvg);
+
+  // The late B response must not poison the fallback used by another rejected import.
+  await page.locator("#json-file").setInputFiles(jsonFile("rejected-after-late-b.json", "[[0,0],[1,1],[2,2]]"));
+  await expect.poll(() => page.evaluate(() => window.__candidateResponsesRead)).toBe(4);
+  await expect(page.locator("#status-text")).toContainText("Previous contour kept.");
+  expect(await downloadText(page, "#export-json")).toBe(restoredJson);
+
+  // A valid current result replaces A even while an invalid budget disables selection.
+  await page.locator("#budget-number").fill("");
+  const newestPoints = [[20, 0], [28, 0], [28, 8], [20, 8]];
+  await page.locator("#json-file").setInputFiles(jsonFile("new-success.json", JSON.stringify({
+    name: "Newest successful contour", points: newestPoints
+  })));
+  await expect.poll(() => page.evaluate(() => window.__candidateResponsesRead)).toBe(5);
+  await expect(page.locator("#contour-title")).toHaveText("Newest successful contour");
+  await expect(page.locator("#export-json")).toBeDisabled();
+  await page.locator("#json-file").setInputFiles(jsonFile("rejected-d.json", "[[0,0],[1,1],[2,2]]"));
+  await expect.poll(() => page.evaluate(() => window.__candidateResponsesRead)).toBe(6);
+  await expect(page.locator("#status-text")).toContainText("Previous contour kept.");
+  await expect(page.locator("#contour-title")).toHaveText("Newest successful contour");
+  await expect(page.locator("#budget-number")).toHaveValue("");
+  await expect(page.locator("#export-json")).toBeDisabled();
+  await page.locator("#budget-number").fill("0.5");
+  const newestExport = JSON.parse(await downloadText(page, "#export-json"));
+  expect(newestExport.name).toBe("Newest successful contour");
+  expect(newestExport.points).toEqual(newestPoints);
+  expect(newestExport.budget).toBe(0.005);
+  expect(requests).toBe(6);
+});
+
+for (const replacement of ["clear", "preset"]) {
+  test(`an explicit ${replacement} retires the import rollback contour`, async ({ page }) => {
+    await allowLateCandidateResponses(page);
+    let pendingRoute;
+    let requests = 0;
+    await page.route("**/api/presets", route => route.fulfill({ json: presets }));
+    await page.route("**/api/candidates", route => {
+      requests++;
+      if (requests === 1) return route.fulfill({ json: measured });
+      if (replacement === "preset" && requests === 2) { pendingRoute = route; return; }
+      return route.continue();
+    });
+    await page.goto("/");
+    await expect(page.getByRole("button", { name: "Load JSON" })).toBeEnabled();
+    if (replacement === "preset") {
+      await page.locator("#preset").selectOption("NEXT");
+      await expect.poll(() => requests).toBe(2);
+    } else await page.locator("#clear").click();
+    await page.locator("#json-file").setInputFiles(jsonFile("rejected.json", JSON.stringify({
+      name: "Rejected after replacement", points: [[0, 0], [1, 1], [2, 2]]
+    })));
+    await expect(page.locator("#contour-svg")).toHaveAttribute("aria-busy", "false");
+    await expect(page.locator("#status-text")).toContainText("positive finite NonZero filled area");
+    await expect(page.locator("#status-text")).not.toContainText("Previous contour kept.");
+    await expect(page.locator("#contour-title")).toHaveText("Rejected after replacement");
+    await expect(page.locator("#export-json")).toBeDisabled();
+    await expect(page.locator("#export-svg")).toBeDisabled();
+    if (pendingRoute) {
+      await pendingRoute.fulfill({ json: { ...measured, original: presets[1].points } });
+      await expect.poll(() => page.evaluate(() => window.__candidateResponsesRead)).toBe(3);
+      await expect(page.locator("#contour-title")).toHaveText("Rejected after replacement");
+      await expect(page.locator("#export-json")).toBeDisabled();
+    }
+  });
+}
 
 test("a delayed file read cannot replace a newer preset or newer file selection", async ({ page }) => {
   await page.addInitScript(() => {

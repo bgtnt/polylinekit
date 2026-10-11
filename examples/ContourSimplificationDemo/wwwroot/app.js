@@ -10,7 +10,8 @@ const geometry = byId("geometry");
 const state = {
   version: 0, controller: null, presets: [], original: [], candidates: [], skipped: [],
   selected: null, label: "Contour", budget: 0.007, budgetValid: true,
-  drawMode: false, pointer: null, stroke: [], capped: false, pending: false
+  drawMode: false, pointer: null, stroke: [], capped: false, pending: false,
+  lastSuccessfulSnapshot: null
 };
 const maximumJsonBytes = 128 * 1024;
 let importSequence = 0;
@@ -123,7 +124,7 @@ function resetMetrics() {
   byId("skipped-diagnostics").hidden = true;
 }
 
-function invalidate() {
+function invalidate(preserveSuccessfulSnapshot = false) {
   state.version++;
   state.controller?.abort();
   state.controller = null;
@@ -132,6 +133,9 @@ function invalidate() {
   state.skipped = [];
   state.selected = null;
   state.pending = false;
+  // Imports retain the last accepted measurement across pending replacements.
+  // Explicit preset/drawing changes retire it instead of resurrecting old input.
+  if (!preserveSuccessfulSnapshot) state.lastSuccessfulSnapshot = null;
   byId("import-error").hidden = true;
   exportEnabled(false);
   resetMetrics();
@@ -178,8 +182,9 @@ function updateSelection() {
   setStatus(`${state.candidates.length} candidates measured against the original.${state.skipped.length ? ` ${state.skipped.length} unsuitable candidates skipped; see details.` : ""}${state.capped ? " Recording stopped at the 1,024-point limit." : ""}`);
 }
 
-async function commitContour(points, label, description, { displayDescription, previous } = {}) {
-  const version = invalidate();
+async function commitContour(points, label, description, { displayDescription, restoreOnFailure = false } = {}) {
+  const previous = restoreOnFailure ? state.lastSuccessfulSnapshot : null;
+  const version = invalidate(restoreOnFailure);
   setDrawMode(false);
   state.label = label;
   byId("contour-title").textContent = label;
@@ -224,12 +229,20 @@ async function commitContour(points, label, description, { displayDescription, p
     state.candidates = result.candidates;
     state.skipped = Array.isArray(result.skipped) ? result.skipped : [];
     state.pending = false;
+    // Keep the measured data independently of the current budget or selection.
+    // Version/controller/pending state are never part of a rollback snapshot.
+    state.lastSuccessfulSnapshot = Object.freeze({
+      original: state.original, candidates: state.candidates, skipped: state.skipped,
+      label: state.label, capped: state.capped, preset: controls.preset.value,
+      description: byId("preset-description").textContent,
+      descriptionTitle: byId("preset-description").getAttribute("title")
+    });
     updateSelection();
   } catch (error) {
     if (version !== state.version || error.name === "AbortError") return;
     state.pending = false;
     if (previous) {
-      // Restore only a previously usable result; keep the advanced version and
+      // Restore the last accepted measurement; keep the advanced version and
       // current controller so canceled/stale requests cannot become current again.
       Object.assign(state, { original: previous.original, candidates: previous.candidates,
         skipped: previous.skipped, label: previous.label, capped: previous.capped });
@@ -262,19 +275,14 @@ async function importContour(file) {
     const text = await file.text();
     if (!isCurrent()) return;
     const imported = parseImportedContour(text);
-    const previous = state.selected && !state.pending ? {
-      original: state.original, candidates: state.candidates, skipped: state.skipped,
-      label: state.label, capped: state.capped, preset: controls.preset.value,
-      description: byId("preset-description").textContent,
-      descriptionTitle: byId("preset-description").getAttribute("title")
-    } : null;
     const pointer = state.pointer;
     state.pointer = null;
     if (pointer !== null && svg.hasPointerCapture(pointer)) svg.releasePointerCapture(pointer);
     state.capped = false;
     controls.preset.value = "custom";
     await commitContour(imported.points, imported.label, "One contour loaded from local JSON.", {
-      displayDescription: "Your imported coordinates are the reference for every candidate. Area units are squared coordinate units.", previous
+      displayDescription: "Your imported coordinates are the reference for every candidate. Area units are squared coordinate units.",
+      restoreOnFailure: true
     });
   } catch (error) {
     if (!isCurrent()) return;

@@ -108,9 +108,11 @@ JSON numbers with magnitude at most `1e100`; numeric strings are not accepted.
 Consecutive and closing duplicates are removed, and at least three vertices must
 remain. Malformed or unsupported files are rejected before an API request and
 keep the current contour and exports. Positive finite `NonZero` filled area is
-checked by the server; if measurement rejects an imported contour, a previous
-usable result is restored when available. A newer contour or file selection
-supersedes a file that is still being read.
+checked by the server; if measurement rejects an imported contour, the last
+successfully measured contour is restored when available, even across overlapping
+imports. Selection uses your current budget. Choosing a preset or starting a new
+drawing clears that fallback. A newer contour or file selection supersedes a file
+that is still being read.
 
 The four Natural Earth v5.1.2, 1:50m country contours are linked directly from
 [AreaChange/data](../AreaChange/data/manifest.json). Startup verifies the pinned
@@ -174,13 +176,14 @@ npm test
 ```
 
 Playwright starts and stops the real Release server on `127.0.0.1:5091` and loads
-its production HTML and `app.js`. Seven tests cover real API startup, selection
+its production HTML and `app.js`. Ten tests cover real API startup, selection
 across a nonmonotone candidate series, inclusive 0.7% and 0.5% boundaries,
 scientific percent input, cached budget edits, actual JSON/SVG downloads, and an
 older HTTP response arriving after the newer one. Import checks exercise local
 coordinates and export round trips through the real API, file/schema/size limits,
-prior-result preservation, ending an active drawing gesture and delayed file
-reads. Controlled API responses make the boundary and race cases deterministic;
+prior-result preservation across overlapping imports, selection under the current
+budget, retiring the fallback after an explicit replacement, ending an active
+drawing gesture and delayed file reads. Controlled API responses make the boundary and race cases deterministic;
 the HTTP race deliberately lets a request
 finish after abort to verify the input-version guard. Failures retain Playwright
 traces under `artifacts/contour-demo-browser`.
