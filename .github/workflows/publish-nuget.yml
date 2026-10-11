@@ -37,16 +37,16 @@ jobs:
         run: |
           $ErrorActionPreference = 'Stop'
           # Clean package-source commit; subsequent commits only pin delivery metadata.
-          $source = '5e9dcc1a5bcb34b5b2d8ae60105d328aec66a80c'
-          $version = '0.1.0-alpha.2'
+          $source = '23c0b3280424569356d64362266c519c839b4790'
+          $version = '0.1.0-alpha.3'
           $base = "https://github.com/bgtnt/polylinekit/releases/download/v$version"
           $destination = Join-Path $env:RUNNER_TEMP 'polylinekit-alpha-publish'
           if (Test-Path -LiteralPath $destination) { throw 'Use a fresh publication directory.' }
           New-Item -ItemType Directory -Path $destination | Out-Null
           $expected = [ordered]@{
-            'verification.json' = '3195345de38ba9986a99f9ccf6bd10ae394260b4c4cae6ab73adf88a48a7bdfe'
-            'PolylineKit.Core.0.1.0-alpha.2.nupkg' = 'd8891f397288e7fd0f0148da6704a3bf10bf5edcdb928f6f755221c1a86dcf0a'
-            'PolylineKit.Clipper.0.1.0-alpha.2.nupkg' = '311a473b41c7c898c18158c61fbf7f73b304c343f6f3a6e9d2e902cbcf2a812e'
+            'verification.json' = 'ec370eee58188662e1f686b3dacf04578a9683e50b1592767668915fb301da10'
+            'PolylineKit.Core.0.1.0-alpha.3.nupkg' = 'c99fd6bd279758306937a7687ae09f420f69233fe926b43bb8dd2fcb0de3587a'
+            'PolylineKit.Clipper.0.1.0-alpha.3.nupkg' = 'b5659caa95d38d6a6f4dbb5f1b38abcec3bc32ca65dad5de94e09abaa34623df'
           }
           if ($source -notmatch '^[0-9a-f]{40}$' -or @($expected.Values | Where-Object { $_ -notmatch '^[0-9a-f]{64}$' }).Count) {
             throw 'Pin the verified clean release source and SHA256 values before attempting publication.'
@@ -90,7 +90,7 @@ jobs:
           $ErrorActionPreference = 'Stop'
           if ([string]::IsNullOrWhiteSpace($env:NUGET_API_KEY)) { throw 'NuGet login returned no credential.' }
           $destination = Join-Path $env:RUNNER_TEMP 'polylinekit-alpha-publish'
-          foreach ($name in @('PolylineKit.Core.0.1.0-alpha.2.nupkg', 'PolylineKit.Clipper.0.1.0-alpha.2.nupkg')) {
+          foreach ($name in @('PolylineKit.Core.0.1.0-alpha.3.nupkg', 'PolylineKit.Clipper.0.1.0-alpha.3.nupkg')) {
             dotnet nuget push (Join-Path $destination $name) --source https://api.nuget.org/v3/index.json
             if ($LASTEXITCODE) { throw "NuGet publication failed: $name" }
           }
