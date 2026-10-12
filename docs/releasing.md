@@ -87,7 +87,7 @@ Pin the clean verification's source, package hashes and record hash in
 `publish-nuget.yml`. Do not substitute a rebuild after verification. Release
 actions require the owner's authorization. Alpha.3 tagging, GitHub delivery and
 NuGet publication are complete. The workflow remains manual and uses the current
-confirmed NuGet username until support completes any rename.
+NuGet username `bgtnt` after the account rename on 2026-10-12.
 
 ## Preserved alpha.2 release
 
@@ -299,12 +299,13 @@ to obtain a temporary credential. It does not rebuild the packages. No permanent
 API key or GitHub secret is needed. The workflow runs only on this repository's
 `main` branch and serializes publication attempts.
 
-The configured policy in the `wowbagger` NuGet account uses these fields:
+The policy in the [`bgtnt` NuGet account](https://www.nuget.org/profiles/bgtnt)
+uses these fields:
 
 | Field | Value |
 | --- | --- |
 | Policy Name | `PolylineKit publishing` |
-| Package Owner | `wowbagger` |
+| Package Owner | `bgtnt` |
 | CI/CD Provider | `GitHub Actions` |
 | Repository Owner | `bgtnt` |
 | Repository | `polylinekit` |
@@ -315,14 +316,19 @@ The configured policy in the `wowbagger` NuGet account uses these fields:
 
 Save the policy with **Create**. An empty policy list means none has been created;
 this process does not issue a key for you to copy. The workflow's login username
-is the NuGet profile name `wowbagger`, distinct from the GitHub owner `bgtnt`.
+is the NuGet profile name `bgtnt`, matching the GitHub owner. The NuGet account
+was renamed from `wowbagger` to `bgtnt` on 2026-10-12; this does not change the
+existing package versions or reissue their binaries.
 
 From GitHub **Actions**, select **Publish verified alpha to NuGet.org**, then
-**Run workflow** on `main`. Leave `publish` false to verify public downloads
-without requesting a credential or pushing. For a new version, update the pinned
-release inputs first; set `publish` true only for its authorized publication after
-the policy is active. Publishing is not triggered by a commit,
-pull request or tag.
+**Run workflow** on `main`. Leave both `publish` and `verify_login` false for the
+default public-download check without requesting a credential or pushing. Set
+`verify_login` true while leaving `publish` false to check the configured Trusted
+Publishing login and temporary credential without uploading packages. This can
+verify authentication after an account rename while preserving the delivered
+alpha.3 packages. For a new version, update the pinned release inputs first;
+set `publish` true only for its authorized publication after the policy is active.
+Publishing is not triggered by a commit, pull request or tag.
 
 After a successful push, wait for NuGet validation and indexing, verify both
 public package identities and assembly contents, and check an external consumer

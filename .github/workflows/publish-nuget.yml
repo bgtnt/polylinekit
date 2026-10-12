@@ -4,7 +4,12 @@ on:
   workflow_dispatch:
     inputs:
       publish:
-        description: Publish the verified packages (false only checks public downloads)
+        description: Publish the verified packages (false never pushes packages)
+        required: true
+        type: boolean
+        default: false
+      verify_login:
+        description: Verify Trusted Publishing login without pushing packages
         required: true
         type: boolean
         default: false
@@ -76,11 +81,19 @@ jobs:
           "Verified both delivered packages from $source; no rebuild." | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
 
       - name: Obtain a temporary NuGet credential
-        if: inputs.publish
+        if: inputs.publish || inputs.verify_login
         id: login
         uses: NuGet/login@8d196754b4036150537f80ac539e15c2f1028841 # v1.2.0
         with:
-          user: wowbagger
+          user: bgtnt
+
+      - name: Confirm Trusted Publishing login
+        if: inputs.publish || inputs.verify_login
+        env:
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
+        run: |
+          if ([string]::IsNullOrWhiteSpace($env:NUGET_API_KEY)) { throw 'NuGet login returned no credential.' }
+          'Trusted Publishing login succeeded for bgtnt.' | Add-Content -LiteralPath $env:GITHUB_STEP_SUMMARY
 
       - name: Push the verified package pair
         if: inputs.publish
