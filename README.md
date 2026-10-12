@@ -17,6 +17,10 @@ Point2[] second = [new(1, 0), new(3, 0), new(3, 2), new(1, 2)];
 double? iou = PolylineArea.CompareRegions(first, second).IntersectionOverUnion; // 1/3
 ```
 
+Trying it on your own polygons? Follow the [short walkthrough](docs/introducing-polylinekit.md)
+and [share your result](https://github.com/bgtnt/polylinekit/issues/new?template=polygon-trial.yml),
+including where the input or API needs to be clearer.
+
 ## PolylineKit, Clipper2 or NetTopologySuite?
 
 | You need | Use |

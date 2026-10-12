@@ -3,6 +3,7 @@
 | Task | Guide |
 |---|---|
 | Start using the library | [Quick start](../README.md) |
+| Try your own polygon pair and share feedback | [Short walkthrough](introducing-polylinekit.md) |
 | Measure areas, intersection, XOR, IoU or coverage | [Area methods](area.md) |
 | Measure regions with holes and disconnected components | [Prepared regions](regions.md) |
 | Convert existing NTS Polygon/MultiPolygon input | [NetTopologySuite example](../examples/NetTopologySuiteInterop/README.md) |

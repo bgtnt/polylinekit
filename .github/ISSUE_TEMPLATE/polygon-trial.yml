@@ -1,0 +1,42 @@
+name: Share a polygon trial
+description: Tell us how area, IoU or coverage worked with your application's polygons.
+title: "[Polygon trial]: "
+body:
+  - type: textarea
+    id: task
+    attributes:
+      label: Your task
+      description: What did you want to measure, and how will your application use it?
+      placeholder: "Example: compare predicted building outlines with reference annotations."
+    validations:
+      required: true
+  - type: input
+    id: versions
+    attributes:
+      label: Package and .NET versions
+      placeholder: "PolylineKit.Core 0.1.0-alpha.3, .NET 10, Windows or Linux"
+    validations:
+      required: true
+  - type: dropdown
+    id: rule
+    attributes:
+      label: Fill rule
+      options:
+        - NonZero
+        - EvenOdd
+        - Unsure
+    validations:
+      required: true
+  - type: textarea
+    id: input
+    attributes:
+      label: Small input or reproduction
+      description: Include shareable C# or JSON coordinates, units, the method called and how shells/holes were supplied. A synthetic example reproducing the behavior is useful too.
+      placeholder: "Two polygon inputs and the call to CompareRegions, RegionArea.Compare or IntersectionArea."
+  - type: textarea
+    id: result
+    attributes:
+      label: Result and feedback
+      description: What worked? What was confusing? If a value differed from your expectation, include the expected and observed values and how you obtained the expectation.
+    validations:
+      required: true
