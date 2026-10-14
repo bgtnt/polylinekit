@@ -4,7 +4,7 @@ Install `PolylineKit.Clipper` only when you need resolved output contours or
 the existing quantized `PolylineComparison` operations:
 
 ```sh
-dotnet add MyApp/MyApp.csproj package PolylineKit.Clipper --version 0.1.0-alpha.1 --source https://api.nuget.org/v3/index.json
+dotnet add MyApp/MyApp.csproj package PolylineKit.Clipper --version 0.1.0-alpha.3 --source https://api.nuget.org/v3/index.json
 ```
 
 For a source checkout, use a project reference to
@@ -16,8 +16,8 @@ It adds **one third-party runtime package, Clipper2 2.0.0**, and references
 `includeContours: false`. Its decimal-grid contract differs from the core's
 area methods; choosing not to return contours does not switch its engine.
 
-Version `0.1.0-alpha.1` is available on
-[NuGet.org](https://www.nuget.org/packages/PolylineKit.Clipper/0.1.0-alpha.1).
+Version `0.1.0-alpha.3` is available on
+[NuGet.org](https://www.nuget.org/packages/PolylineKit.Clipper/0.1.0-alpha.3).
 The [package guide](releasing.md) also covers verified GitHub originals and
 external consumer checks on both supplied target assemblies.
 

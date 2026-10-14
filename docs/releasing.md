@@ -2,7 +2,7 @@
 
 ## Install from NuGet.org
 
-`0.1.0-alpha.3` is published on NuGet.org:
+Use `0.1.0-alpha.3` for new installations; it is published on NuGet.org:
 [Core](https://www.nuget.org/packages/PolylineKit.Core/0.1.0-alpha.3) and the
 [optional Clipper adapter](https://www.nuget.org/packages/PolylineKit.Clipper/0.1.0-alpha.3).
 A source build is not required:
@@ -117,14 +117,16 @@ or gallery ownership. See [the completed alpha.3 checks](releases/0.1.0-alpha.3.
 
 ## Preserved alpha.1 release
 
-`0.1.0-alpha.1` is available on NuGet.org:
+`0.1.0-alpha.1` was unlisted from NuGet.org on 2026-10-14:
 [Core](https://www.nuget.org/packages/PolylineKit.Core/0.1.0-alpha.1) and
 [optional Clipper adapter](https://www.nuget.org/packages/PolylineKit.Clipper/0.1.0-alpha.1).
+Both packages remain available through exact-version restore. Use alpha.3 for
+new installations. NuGet listing changes may take several hours to propagate.
 The [GitHub prerelease](https://github.com/bgtnt/polylinekit/releases/tag/v0.1.0-alpha.1)
 preserves the original packages from source
 `a07ac5528da4cd0fc00c29d9bff01fae4d76c031`. Package and assembly names differ
 intentionally; see the [release notes](releases/0.1.0-alpha.1.md).
-Alpha.1 remains listed and unchanged. It includes the raw multi-ring API but not
+Alpha.1's package contents are unchanged. It includes the raw multi-ring API but not
 alpha.2's polygon-role factories. Its original package files, embedded READMEs
 and historical measurement archives remain preserved in that release.
 
@@ -284,7 +286,8 @@ contain original build paths; the bundle excludes private project files and PDBs
 Both `0.1.0-alpha.3` packages were published on NuGet.org on 2026-10-11 through
 [GitHub Trusted Publishing](https://github.com/bgtnt/polylinekit/actions/runs/38125856419),
 using the verified GitHub files without rebuilding. Alpha.1 and alpha.2 remain
-published. All delivered versions are immutable: do not repeat `publish=true`
+published; alpha.1 was unlisted on 2026-10-14 and retains exact-version restore.
+All delivered versions are immutable: do not repeat `publish=true`
 or push them again.
 For a new release, recheck package ownership and version availability before
 pushing, and update the workflow's version, source and pinned hashes together.

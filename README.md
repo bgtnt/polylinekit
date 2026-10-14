@@ -86,8 +86,10 @@ Alpha.3 is published on NuGet.org:
 It delivers the guarded orientation optimization for the polygon-role factories;
 see the [alpha.3 release notes](docs/releases/0.1.0-alpha.3.md). The
 [GitHub prerelease](https://github.com/bgtnt/polylinekit/releases/tag/v0.1.0-alpha.3)
-preserves the verified original packages. Alpha.1 and alpha.2 remain unchanged;
-the polygon-role factories were introduced in alpha.2.
+preserves the verified original packages. Alpha.1 and alpha.2 package contents
+remain unchanged. Alpha.1 was unlisted on NuGet.org on 2026-10-14 and remains
+available through exact-version restore; use alpha.3 for new installations.
+The polygon-role factories were introduced in alpha.2.
 
 Alternatively, use a project reference:
 
@@ -227,7 +229,7 @@ Read the [area guide](docs/area.md) for fill rules, examples and contracts, or t
 - [Build, tests and contributing](CONTRIBUTING.md)
 - [Alpha.3 changes and delivery](docs/releases/0.1.0-alpha.3.md)
 - [Alpha.2 polygon-role factories and delivery](docs/releases/0.1.0-alpha.2.md)
-- [Published alpha.1 release notes](docs/releases/0.1.0-alpha.1.md)
+- [Alpha.1 release notes and unlisting status](docs/releases/0.1.0-alpha.1.md)
 
 Original code is [MIT licensed](LICENSE). Dependencies, data and algorithm
 attribution are documented in [third-party notices](THIRD-PARTY-NOTICES.md).
